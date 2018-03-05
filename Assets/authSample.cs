@@ -68,7 +68,9 @@ public class authSample : MonoBehaviour {
                 .WithValue("code_challenge", codeChallenge)
                 .WithValue("code_challenge_method", "S256")
                 .Build();
-        Application.OpenURL(authUrl.ToString());
+       Application.OpenURL(authUrl.ToString());
+       //TODO OpenUrl doesn't work on mac, i suspect other workflows like web will have different methods also
+       // System.Diagnostics.Process.Start(authUrl.ToString());
 
         // wait for the auth response & extract authorization code
         var context = await http.GetContextAsync();
