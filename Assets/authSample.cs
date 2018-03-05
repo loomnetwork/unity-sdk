@@ -100,18 +100,27 @@ public class authSample : MonoBehaviour {
         ServicePointManager.ServerCertificateValidationCallback = CertificateValidationCallback;
 
         // exchange auth code for an access token
-        var response = await client.GetTokenAsync(new AuthorizationCodePkceTokenRequest
+        try
         {
-            ClientId = clientId,
-            Code = code,
-            CodeVerifier = codeVerifier,
-            RedirectUri = redirectUrl
-        });
-
-        ServicePointManager.ServerCertificateValidationCallback = oldValidationCallback;
-
-        statusTextRef.text = "Access Token Acquired!";
-        Debug.Log("Access Token: " + response.AccessToken);
+            var response = await client.GetTokenAsync(new AuthorizationCodePkceTokenRequest
+            {
+                ClientId = clientId,
+                Code = code,
+                CodeVerifier = codeVerifier,
+                RedirectUri = redirectUrl
+            });
+            statusTextRef.text = "Access Token Acquired!";
+            Debug.Log("Access Token: " + response.AccessToken);
+        }
+        catch (Exception e)
+        {
+            statusTextRef.text = "Error: " + e.Message;
+            throw e;
+        }
+        finally
+        {
+            ServicePointManager.ServerCertificateValidationCallback = oldValidationCallback;
+        }
     }
 
     static bool CertificateValidationCallback(System.Object sender, X509Certificate certificate, X509Chain chain, SslPolicyErrors sslPolicyErrors)
