@@ -11,6 +11,9 @@ using System.Text;
 using UnityEngine;
 using UnityEngine.UI;
 
+// TODO: Add auth flow for Android & OSX
+// TODO: Add auth for Unity Web Player
+
 public class authSample : MonoBehaviour {
     public Text statusTextRef;
 
@@ -31,6 +34,8 @@ public class authSample : MonoBehaviour {
         GetAuth0AccessToken();
     }
 
+    // Implements Proof Key for Code Exchange (PKCE) auth flow for native desktop apps on Windows/Mac/Linux,
+    // see also https://auth0.com/docs/api-auth/grant/authorization-code-pkce
     async void GetAuth0AccessToken()
     {
         // TODO: start listening for http redirect on 127.0.0.1
@@ -63,17 +68,33 @@ public class authSample : MonoBehaviour {
                 .WithResponseType(AuthorizationResponseType.Code)
                 .WithClient(clientId)
                 .WithRedirectUrl(redirectUrl)
-                .WithScope("openid profile email picture")
+                .WithScope(WebUtility.UrlEncode("openid profile email picture"))
                 .WithAudience("io.loomx.unity3d")
                 .WithValue("code_challenge", codeChallenge)
                 .WithValue("code_challenge_method", "S256")
                 .Build();
 
         Debug.Log(authUrl.ToString());
-        // NOTE: Application.OpenURL() doesn't seem to work on OSX, using Process.Start() instead.
-        // Application.OpenURL(authUrl.ToString());
-        System.Diagnostics.Process.Start(authUrl.ToString());
 
+        switch (Application.platform)
+        {
+            case RuntimePlatform.WindowsPlayer:
+            case RuntimePlatform.WindowsEditor:
+                Application.OpenURL(authUrl.ToString());
+                break;
+            case RuntimePlatform.OSXPlayer:
+            case RuntimePlatform.OSXEditor:
+                // NOTE: Application.OpenURL() doesn't seem to work on OSX
+                System.Diagnostics.Process.Start("open", authUrl.ToString());
+                break;
+            case RuntimePlatform.LinuxPlayer:
+            case RuntimePlatform.LinuxEditor:
+                System.Diagnostics.Process.Start("xdg-open", authUrl.ToString());
+                break;
+            default:
+                throw new NotImplementedException("PKCE auth flow is not supported on the current platform");
+        }
+        
         // wait for the auth response & extract authorization code
         var context = await http.GetContextAsync();
         var code = context.Request.QueryString["code"];
