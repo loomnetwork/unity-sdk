@@ -35,7 +35,7 @@ public class authSample : MonoBehaviour {
     {
         // TODO: start listening for http redirect on 127.0.0.1
         // create a redirect URI using an available port on the loopback address.
-        var redirectUrl = "http://127.0.0.1:8080/auth/auth0/";
+        var redirectUrl = "http://127.0.0.1:9999/auth/auth0/";
 
         byte[] randomBytes = new byte[32];
         rngCsp.GetBytes(randomBytes);
@@ -68,9 +68,11 @@ public class authSample : MonoBehaviour {
                 .WithValue("code_challenge", codeChallenge)
                 .WithValue("code_challenge_method", "S256")
                 .Build();
-       Application.OpenURL(authUrl.ToString());
-       //TODO OpenUrl doesn't work on mac, i suspect other workflows like web will have different methods also
-       // System.Diagnostics.Process.Start(authUrl.ToString());
+
+        Debug.Log(authUrl.ToString());
+        // NOTE: Application.OpenURL() doesn't seem to work on OSX, using Process.Start() instead.
+        // Application.OpenURL(authUrl.ToString());
+        System.Diagnostics.Process.Start(authUrl.ToString());
 
         // wait for the auth response & extract authorization code
         var context = await http.GetContextAsync();
