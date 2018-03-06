@@ -34,3 +34,6 @@ sysinfo.txt
 *.apk
 *.unitypackage
 .DS_Store
+Assets/Plugins/AsyncAwaitUtil/Documentation.meta
+Assets/Plugins/AsyncAwaitUtil/Documentation/*
+/packages/*
