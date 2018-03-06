@@ -1,8 +1,6 @@
 ﻿using Auth0.AuthenticationApi;
 using Auth0.AuthenticationApi.Models;
 using System;
-using System.Collections;
-using System.Collections.Generic;
 using System.Net;
 using System.Net.Security;
 using System.Security.Cryptography;
@@ -10,7 +8,6 @@ using System.Security.Cryptography.X509Certificates;
 using System.Text;
 using System.Threading.Tasks;
 using UnityEngine;
-using UnityEngine.UI;
 
 // TODO: Add auth flow for Android & OSX
 // TODO: Add auth for Unity Web Player
@@ -79,30 +76,28 @@ public class LoomAuthClient
                 .WithResponseType(AuthorizationResponseType.Code)
                 .WithClient(clientId)
                 .WithRedirectUrl(redirectUrl)
-                // FIXME: fix url builder to encode spaces properly (should replace them with %20), attempting to encode
-                // manually by calling WebUtility.UrlEncode here doesn't work because the builder then encodes the %20!
                 .WithScope("openid profile email picture")
                 .WithAudience(audience)
                 .WithValue("code_challenge", codeChallenge)
                 .WithValue("code_challenge_method", "S256")
                 .Build();
 
-        Debug.Log(authUrl.ToString());
+        Debug.Log(authUrl.AbsoluteUri);
 
         switch (Application.platform)
         {
             case RuntimePlatform.WindowsPlayer:
             case RuntimePlatform.WindowsEditor:
-                Application.OpenURL(authUrl.ToString());
+                Application.OpenURL(authUrl.AbsoluteUri);
                 break;
             case RuntimePlatform.OSXPlayer:
             case RuntimePlatform.OSXEditor:
                 // NOTE: Application.OpenURL() doesn't seem to work on OSX
-                System.Diagnostics.Process.Start("open", authUrl.ToString());
+                System.Diagnostics.Process.Start("open", authUrl.AbsoluteUri);
                 break;
             case RuntimePlatform.LinuxPlayer:
             case RuntimePlatform.LinuxEditor:
-                System.Diagnostics.Process.Start("xdg-open", authUrl.ToString());
+                System.Diagnostics.Process.Start("xdg-open", authUrl.AbsoluteUri);
                 break;
             default:
                 throw new NotImplementedException("PKCE auth flow is not supported on the current platform");
