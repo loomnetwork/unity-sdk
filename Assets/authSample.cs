@@ -45,5 +45,6 @@ public class authSample : MonoBehaviour {
         };
         var payload = chainClient.SignTx(tx, this.identity.PrivateKey);
         var result = await chainClient.CommitTx(payload);
+        this.statusTextRef.text = "Commited Tx to Block " + result.Height;
     }
 }
