@@ -27,19 +27,6 @@ public class LoomAuthClient
         this.auth0Client = new AuthenticationApiClient(new Uri("https://loomx.auth0.com"));
     }
 
-    public async Task<LoomIdentity> SignInFromNativeApp()
-    {
-        var accessToken = await this.GetAccessTokenForNativeApp();
-        return await this.GetLoomIdentity(accessToken);
-        /*
-        return new LoomIdentity
-        {
-            Username = "",
-            PrivateKey = new byte[] { }
-        };
-        */
-    }
-
     /// <summary>
     /// Opens the default web browser to the Auth0 sign-in page, and retrieves an access token after
     /// the user signs in.

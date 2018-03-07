@@ -1,5 +1,6 @@
 ﻿using Chaos.NaCl;
 using System.Security.Cryptography;
+using System.Threading.Tasks;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -7,8 +8,6 @@ public class authSample : MonoBehaviour {
     public Text statusTextRef;
 
     private LoomIdentity identity;
-
-    private static RNGCryptoServiceProvider rngCsp = new RNGCryptoServiceProvider();
 
     // Use this for initialization
     void Start () {
@@ -22,9 +21,15 @@ public class authSample : MonoBehaviour {
 
     public async void SignIn()
     {
-        var authClient = new LoomAuthClient();
-        this.identity = await authClient.SignInFromNativeApp();
+        this.identity = await SignInFromNativeApp();
         this.statusTextRef.text = "Signed in as " + this.identity.Username;
+    }
+
+    public async Task<LoomIdentity> SignInFromNativeApp()
+    {
+        var authClient = new LoomAuthClient();
+        var accessToken = await authClient.GetAccessTokenForNativeApp();
+        return await authClient.GetLoomIdentity(accessToken);
     }
 
     public async void SendTx()
