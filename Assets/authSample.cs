@@ -41,8 +41,9 @@ public class authSample : MonoBehaviour {
         var chainClient = new LoomChainClient("http://stage-rancher.loomapps.io:46657");
         var tx = new DummyTx
         {
-            Val = "Hello World!"
+            Val = "Hello World " + (Random.value * 100000)
         };
+        Debug.Log("Tx Val: " + tx.Val);
         var payload = chainClient.SignTx(tx, this.identity.PrivateKey);
         var result = await chainClient.CommitTx(payload);
         this.statusTextRef.text = "Committed Tx to Block " + result.Height;
