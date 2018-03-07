@@ -11,7 +11,9 @@ public class authSample : MonoBehaviour {
 
     // Use this for initialization
     void Start () {
-
+        // By default the editor won't respond to network IO or anything if it doesn't have input focus,
+        // which is super annoying when input focus is given to the web browser for the Auth0 sign-in.
+        Application.runInBackground = true;
     }
 
     // Update is called once per frame
