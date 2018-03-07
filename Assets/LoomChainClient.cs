@@ -30,6 +30,33 @@ internal class TxJsonRpcRequest
     }
 }
 
+public class TxJsonRpcResponse
+{
+    [JsonProperty("jsonrpc")]
+    public string Version { get; set; }
+
+    /// <summary>
+    /// ID of the request associated with this response.
+    /// </summary>
+    [JsonProperty("id")]
+    public string Id { get; set; }
+
+    public class ErrorData
+    {
+        [JsonProperty("code")]
+        public long Code { get; set; }
+
+        [JsonProperty("message")]
+        public string Message { get; set; }
+
+        [JsonProperty("data")]
+        public string Data { get; set; }
+    }
+
+    [JsonProperty("error")]
+    public ErrorData Error;
+}
+
 public class BroadcastTxResult
 {
     [JsonProperty("code")]
@@ -38,21 +65,24 @@ public class BroadcastTxResult
     [JsonProperty("data")]
     public string Data { get; set; }
 
+    /// <summary>
+    /// Error message.
+    /// </summary>
     [JsonProperty("log")]
     public string Log { get; set; }
 
     [JsonProperty("hash")]
     public string Hash { get; set; }
+
+    /// <summary>
+    /// Block height at which the Tx was committed.
+    /// </summary>
+    [JsonProperty("height")]
+    public long Height { get; set; }
 }
 
-public class BroadcastTxResponse
+public class BroadcastTxResponse : TxJsonRpcResponse
 {
-    [JsonProperty("jsonrpc")]
-    public string Version { get; set; }
-
-    [JsonProperty("id")]
-    public string Id { get; set; }
-
     [JsonProperty("result")]
     public BroadcastTxResult Result { get; set; }
 }
@@ -89,8 +119,15 @@ public class LoomChainClient
 
     public async Task<BroadcastTxResult> CommitTx(string signedTx)
     {
+        // TODO: generate a GUID for the request ID
         var req = new TxJsonRpcRequest("broadcast_tx_commit", new string[] { signedTx }, "whatever");
-        return (await this.PostTx(req)).Result;
+        var resp = await this.PostTx(req);
+        if (resp.Error != null)
+        {
+            throw new System.Exception(String.Format("Failed to commit Tx: {0} / {1} / {2}",
+                resp.Error.Code, resp.Error.Message, resp.Error.Data));
+        }
+        return resp.Result;
     }
 
     private async Task<BroadcastTxResponse> PostTx(TxJsonRpcRequest tx)
