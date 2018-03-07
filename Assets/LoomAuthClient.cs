@@ -15,6 +15,9 @@ using UnityEngine;
 public class LoomIdentity
 {
     public string Username { get; internal set; }
+    /// <summary>
+    /// 32-byte private key.
+    /// </summary>
     public byte[] PrivateKey { get; internal set; }
 }
 
@@ -130,9 +133,7 @@ public class LoomAuthClient
                 CodeVerifier = codeVerifier,
                 RedirectUri = redirectUrl
             });
-            //statusTextRef.text = "Access Token Acquired!";
             Debug.Log("Access Token: " + response.AccessToken);
-            Debug.Log("ID Token: " + response.IdToken);
             return response.AccessToken;
         }
         finally
@@ -156,7 +157,7 @@ public class LoomAuthClient
         if (keys.Length > 0)
         {
             // existing account
-            var parts = keys[0].Split('/');
+            var parts = keys[0].Split('/'); // TODO: This doesn't really do much atm
             var privateKey = await vaultStore.GetPrivateKeyAsync(keys[0]);
             return new LoomIdentity
             {
