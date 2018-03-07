@@ -35,3 +35,15 @@ The relevant command will look something like this:
 ```cmd
 protoc -I=<install path>/protoc-3.5.1/include -I=<project path>\Assets\Protobuf --csharp_out=<project path>/Assets/Protobuf <project path>/Assets/Protobuf/MyTransactions.proto
 ```
+
+## Samples
+
+Currently there is only once appropriately named scene that renders a couple of buttons that
+are hooked up to call the corresponding methods in `Assets/authSample.cs`, these
+must be pressed in the correct order. First press the `Sign In` button, this should open a new
+browser window, once you've signed up/in you should see the text above the button change to
+`Signed in as ...`. Once the textbox indicates you're signed in you can press the `Send Tx`
+button to generate, sign, and commit a new dummy transaction to the Loom DAppChain running at
+`http://stage-rancher.loomapps.io:46657`, if the transaction is accepted by the DAppChain the
+textbox should change to `Committed Tx to Block ...` - indicating the block the transaction was
+committed to, then you can press the `Send Tx` button again to create another transaction.
