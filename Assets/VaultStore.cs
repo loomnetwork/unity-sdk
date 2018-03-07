@@ -25,16 +25,19 @@ public class VaultStore
 
     public async Task<byte[]> GetPrivateKeyAsync(string key)
     {
-        var data = await this.client.GetAsync<VaultGetPrivateKeyResponse>(this.prefix + key);
-        return Convert.FromBase64String(data.PrivateKey);
+        var resp = await this.client.GetAsync<VaultGetPrivateKeyResponse>(this.prefix + key);
+        return Convert.FromBase64String(resp.Data.PrivateKey);
     }
 
     public async Task<string[]> GetKeysAsync()
     {
         try
         {
-            var keyList = await this.client.ListAsync(this.prefix);
-            return keyList.Keys;
+            var resp = await this.client.ListAsync(this.prefix);
+            if (resp != null)
+            {
+                return resp.Data.Keys;
+            }
         }
         catch (VaultError e)
         {
@@ -42,7 +45,7 @@ public class VaultStore
             if (e.Errors != null) {
                 throw e;
             }
-            return new string[] { };
         }
+        return new string[] { };
     }
 }

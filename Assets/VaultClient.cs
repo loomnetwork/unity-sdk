@@ -31,22 +31,28 @@ public class VaultError : System.Exception
     }
 }
 
+public class VaultResponse
+{
+    [JsonProperty("request_id")]
+    string RequestId { get; set; }
+}
+
 public class VaultCreateTokenRequest
 {
     [JsonProperty("access_token")]
     public string AccessToken { get; set; }
 }
 
-public class VaultAuthData
-{
-    [JsonProperty("client_token")]
-    public string ClientToken { get; set; }
-}
-
 public class VaultCreateTokenResponse
 {
+    public class AuthData
+    {
+        [JsonProperty("client_token")]
+        public string ClientToken { get; set; }
+    }
+
     [JsonProperty("auth")]
-    public VaultAuthData Auth { get; set; }
+    public AuthData Auth { get; set; }
 }
 
 public class VaultStorePrivateKeyRequest
@@ -55,16 +61,28 @@ public class VaultStorePrivateKeyRequest
     public string PrivateKey { get; set; }
 }
 
-public class VaultGetPrivateKeyResponse
+public class VaultGetPrivateKeyResponse : VaultResponse
 {
-    [JsonProperty("privateKey")]
-    public string PrivateKey { get; set; }
+    public class KeyData
+    {
+        [JsonProperty("privateKey")]
+        public string PrivateKey { get; set; }
+    }
+
+    [JsonProperty("data")]
+    public KeyData Data;
 }
 
-public class VaultKeyList
+public class VaultListSecretsResponse : VaultResponse
 {
-    [JsonProperty("keys")]
-    public string[] Keys { get; set; }
+    public class KeyData
+    {
+        [JsonProperty("keys")]
+        public string[] Keys { get; set; }
+    }
+
+    [JsonProperty("data")]
+    public KeyData Data { get; set; }
 }
 
 public class VaultErrorResponse
@@ -84,22 +102,20 @@ public class VaultClient {
         this.Token = token;
     }
 
-    public async Task<VaultKeyList> ListAsync(string path)
+    public async Task<VaultListSecretsResponse> ListAsync(string path)
     {
         using (var r = new UnityWebRequest(this.url + path, "LIST"))
         {
+            r.downloadHandler = (DownloadHandler)new DownloadHandlerBuffer();
             SetRequestHeaders(r);
             await r.SendWebRequest();
             HandleError(r);
             if (r.downloadHandler != null && !String.IsNullOrEmpty(r.downloadHandler.text))
             {
                 Debug.Log("HTTP response body: " + r.downloadHandler.text);
-                return JsonConvert.DeserializeObject<VaultKeyList>(r.downloadHandler.text);
+                return JsonConvert.DeserializeObject<VaultListSecretsResponse>(r.downloadHandler.text);
             }
-            return new VaultKeyList
-            {
-                Keys = new string[] { }
-            };
+            return null;
         }
     }
 
