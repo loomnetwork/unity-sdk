@@ -24,10 +24,12 @@ public class LoomIdentity
 public class LoomAuthClient
 {
     private AuthenticationApiClient auth0Client;
+    private string vaultPrefix;
 
-    public LoomAuthClient()
+    public LoomAuthClient(string vaultPrefix)
     {
         this.auth0Client = new AuthenticationApiClient(new Uri("https://loomx.auth0.com"));
+        this.vaultPrefix = vaultPrefix.EndsWith("/") ? vaultPrefix : (vaultPrefix + "/");
     }
 
     /// <summary>
@@ -152,7 +154,7 @@ public class LoomAuthClient
             AccessToken = accessToken
         });
         vaultClient.Token = resp.Auth.ClientToken;
-        var vaultStore = new VaultStore(vaultClient, "delegatecall/");
+        var vaultStore = new VaultStore(vaultClient, this.vaultPrefix);
         var keys = await vaultStore.GetKeysAsync();
         if (keys.Length > 0)
         {

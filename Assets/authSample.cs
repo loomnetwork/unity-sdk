@@ -27,7 +27,7 @@ public class authSample : MonoBehaviour {
 
     public async Task<LoomIdentity> SignInFromNativeApp()
     {
-        var authClient = new LoomAuthClient();
+        var authClient = new LoomAuthClient("unity3d-sdk");
         var accessToken = await authClient.GetAccessTokenForNativeApp();
         return await authClient.GetLoomIdentity(accessToken);
     }
@@ -45,6 +45,6 @@ public class authSample : MonoBehaviour {
         };
         var payload = chainClient.SignTx(tx, this.identity.PrivateKey);
         var result = await chainClient.CommitTx(payload);
-        this.statusTextRef.text = "Commited Tx to Block " + result.Height;
+        this.statusTextRef.text = "Committed Tx to Block " + result.Height;
     }
 }

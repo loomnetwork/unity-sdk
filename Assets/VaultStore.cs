@@ -42,7 +42,7 @@ public class VaultStore
         catch (VaultError e)
         {
             // allow 404 on path to pass
-            if (e.Errors != null) {
+            if (e.Errors != null && e.Errors.Length > 0) {
                 throw e;
             }
         }
