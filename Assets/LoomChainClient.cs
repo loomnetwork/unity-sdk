@@ -66,15 +66,14 @@ public class LoomChainClient
         this.url = url;
     }
 
-    public string SignTx(DummyTx tx, byte[] privateKey, byte[] publicKey)
+    public string SignTx(DummyTx tx, byte[] privateKey)
     {
-        var txBytes = tx.ToByteArray();
-        var sigBytes = Ed25519.Sign(txBytes, privateKey);
+        var sig = LoomCrypto.Sign(tx.ToByteArray(), privateKey);
 
         var signer = new Signer
         {
-            Signature = ByteString.CopyFrom(sigBytes),
-            PublicKey = ByteString.CopyFrom(publicKey)
+            Signature = ByteString.CopyFrom(sig.Signature),
+            PublicKey = ByteString.CopyFrom(sig.PublicKey)
         };
 
         var signedTx = new SignedTx
