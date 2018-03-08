@@ -5,11 +5,18 @@ This repo contains the SDK code and a **Unity 2017.3** project that provides exa
 The SDK currently supports the following Unity targets:
 - Desktop Win/MacOS/Linux
 
+
+## Requirements
+
+- Unity 2017.3 or later.
+- `Build Settings` -> `Player Settings` -> `Configuration` set as follows:
+  - `Scripting Runtime Version`: `Experimental (.NET 4.6 Equivalent)`
+  - `API Compatibility Level`: `.NET 4.6`
+
 ## Overview
 
 `LoomAuthClient` should be used to obtain a `LoomIdentity`, once you have a `LoomIdentity` you
 can use the associated private key to sign and then commit transactions using `LoomChainClient`.
-
 
 ## Authorization Flows
 
@@ -47,3 +54,29 @@ button to generate, sign, and commit a new dummy transaction to the Loom DAppCha
 `http://stage-rancher.loomapps.io:46657`, if the transaction is accepted by the DAppChain the
 textbox should change to `Committed Tx to Block ...` - indicating the block the transaction was
 committed to, then you can press the `Send Tx` button again to create another transaction.
+
+## Dependencies
+
+For ease of use all necessary prebuilt dependencies are located in the `Assets/Plugins` directory in
+this repo, the assemblies are built to target `Any CPU`. The rest of this section contains some
+useful notes in case you need to rebuild the dependencies.
+
+### Auth0.Authentication and Auth0.Core
+
+The Auth0 assemblies only target .NET Standard 1.1/2, and at the time of writing Unity 2017.3 only
+targets .NET Framework 4.6, so attempting to install Auth0 via NuGet in the SDK project fails.
+Building the assemblies from source and copying them into the SDK project also fails
+(with `error CS0012: The type 'System.Object' is defined in an assembly that is not referenced`).
+To get around these issues the Auth0 assemblies must be rebuilt from the `net4.6-target`
+branch in this repo https://github.com/loomnetwork/auth0.net - then copy the built assemblies
+from `src/Auth0.AuthenticationApi/bin/Release/net46` to the Unity project.
+
+### Chaos.NaCl
+
+Build from source https://github.com/CodesInChaos/Chaos.NaCl - then copy the build assemblies from
+`Chaos.NaCl/Chaos.NaCl/bin/Release` to `Assets/Plugins`.
+
+### Google Protocol Buffers
+
+Install prebuilt [Google.Protobuf 3.5](https://www.nuget.org/packages/Google.Protobuf) from NuGet
+and copy them to `Assets/Plugins`.
