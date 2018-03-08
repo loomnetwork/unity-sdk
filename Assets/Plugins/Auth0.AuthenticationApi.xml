@@ -1,0 +1,1450 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>Auth0.AuthenticationApi</name>
+    </assembly>
+    <members>
+        <member name="T:Auth0.AuthenticationApi.AuthenticationApiClient">
+            <summary>
+            Client for communicating with the Auth0 Authentication API.
+            </summary>
+            <remarks>
+            Full documentation for the Authentication API is available at https://auth0.com/docs/auth-api
+            </remarks>
+        </member>
+        <member name="F:Auth0.AuthenticationApi.AuthenticationApiClient.apiConnection">
+            <summary>
+            The API connection
+            </summary>
+        </member>
+        <member name="F:Auth0.AuthenticationApi.AuthenticationApiClient.baseUri">
+            <summary>
+            The base URI
+            </summary>
+        </member>
+        <member name="M:Auth0.AuthenticationApi.AuthenticationApiClient.#ctor(System.Uri,Auth0.Core.Http.DiagnosticsHeader,System.Net.Http.HttpMessageHandler)">
+            <summary>
+            Initializes a new instance of the <see cref="T:Auth0.AuthenticationApi.AuthenticationApiClient" /> class.
+            </summary>
+            <param name="baseUri">The base URI.</param>
+            <param name="diagnostics">The diagnostics.</param>
+            <param name="handler">The <see cref="T:System.Net.Http.HttpMessageHandler"/> which is used for HTTP requests</param>
+        </member>
+        <member name="M:Auth0.AuthenticationApi.AuthenticationApiClient.#ctor(System.Uri,System.Net.Http.HttpMessageHandler)">
+            <summary>
+            Initializes a new instance of the <see cref="T:Auth0.AuthenticationApi.AuthenticationApiClient" /> class.
+            </summary>
+            <param name="baseUri">The base URI.</param>
+            <param name="handler">The <see cref="T:System.Net.Http.HttpMessageHandler"/> which is used for HTTP requests</param>
+        </member>
+        <member name="M:Auth0.AuthenticationApi.AuthenticationApiClient.#ctor(System.Uri,Auth0.Core.Http.DiagnosticsHeader)">
+            <summary>
+            Initializes a new instance of the <see cref="T:Auth0.AuthenticationApi.AuthenticationApiClient" /> class.
+            </summary>
+            <param name="baseUri">The base URI.</param>
+            <param name="diagnostics">The diagnostics.</param>
+        </member>
+        <member name="M:Auth0.AuthenticationApi.AuthenticationApiClient.#ctor(System.Uri)">
+            <summary>
+            Initializes a new instance of the <see cref="T:Auth0.AuthenticationApi.AuthenticationApiClient" /> class.
+            </summary>
+            <param name="baseUri">The base URI.</param>
+        </member>
+        <member name="M:Auth0.AuthenticationApi.AuthenticationApiClient.#ctor(System.String,Auth0.Core.Http.DiagnosticsHeader,System.Net.Http.HttpMessageHandler)">
+            <summary>
+            Initializes a new instance of the <see cref="T:Auth0.AuthenticationApi.AuthenticationApiClient" /> class.
+            </summary>
+            <param name="domain">Your Auth0 domain, e.g. mydomain.auth0.com.</param>
+            <param name="diagnostics">The diagnostics.</param>
+            <param name="handler">The <see cref="T:System.Net.Http.HttpMessageHandler"/> which is used for HTTP requests</param>
+        </member>
+        <member name="M:Auth0.AuthenticationApi.AuthenticationApiClient.#ctor(System.String,System.Net.Http.HttpMessageHandler)">
+            <summary>
+            Initializes a new instance of the <see cref="T:Auth0.AuthenticationApi.AuthenticationApiClient" /> class.
+            </summary>
+            <param name="domain">Your Auth0 domain, e.g. mydomain.auth0.com.</param>
+            <param name="handler">The <see cref="T:System.Net.Http.HttpMessageHandler"/> which is used for HTTP requests</param>
+        </member>
+        <member name="M:Auth0.AuthenticationApi.AuthenticationApiClient.#ctor(System.String,Auth0.Core.Http.DiagnosticsHeader)">
+            <summary>
+            Initializes a new instance of the <see cref="T:Auth0.AuthenticationApi.AuthenticationApiClient" /> class.
+            </summary>
+            <param name="domain">Your Auth0 domain, e.g. mydomain.auth0.com.</param>
+            <param name="diagnostics">The diagnostics.</param>
+        </member>
+        <member name="M:Auth0.AuthenticationApi.AuthenticationApiClient.#ctor(System.String)">
+            <summary>
+            Initializes a new instance of the <see cref="T:Auth0.AuthenticationApi.AuthenticationApiClient" /> class.
+            </summary>
+            <param name="domain">Your Auth0 domain, e.g. mydomain.auth0.com.</param>
+        </member>
+        <member name="P:Auth0.AuthenticationApi.AuthenticationApiClient.Connection">
+            <summary>
+            The <see cref="T:Auth0.Core.Http.IApiConnection" /> used to communicate between the client and the Auth0 API.
+            </summary>
+            <value>The connection.</value>
+        </member>
+        <!-- Badly formed XML comment ignored for member "M:Auth0.AuthenticationApi.AuthenticationApiClient.AuthenticateAsync(Auth0.AuthenticationApi.Models.AuthenticationRequest)" -->
+        <member name="M:Auth0.AuthenticationApi.AuthenticationApiClient.BuildAuthorizationUrl">
+            <summary>
+            Creates a <see cref="T:Auth0.AuthenticationApi.Builders.AuthorizationUrlBuilder" /> which is used to build an authorization URL.
+            </summary>
+            <returns>A new <see cref="T:Auth0.AuthenticationApi.Builders.AuthorizationUrlBuilder" /> instance.</returns>
+        </member>
+        <member name="M:Auth0.AuthenticationApi.AuthenticationApiClient.BuildLogoutUrl">
+            <summary>
+            Creates a <see cref="T:Auth0.AuthenticationApi.Builders.LogoutUrlBuilder" /> which is used to build a logout URL.
+            </summary>
+            <returns>A new <see cref="T:Auth0.AuthenticationApi.Builders.LogoutUrlBuilder" /> instance.</returns>
+        </member>
+        <member name="M:Auth0.AuthenticationApi.AuthenticationApiClient.BuildSamlUrl(System.String)">
+            <summary>
+            Creates a <see cref="T:Auth0.AuthenticationApi.Builders.SamlUrlBuilder" /> which is used to build a SAML authentication URL.
+            </summary>
+            <param name="client">The name of the client.</param>
+            <returns>A new <see cref="T:Auth0.AuthenticationApi.Builders.SamlUrlBuilder" /> instance.</returns>
+        </member>
+        <member name="M:Auth0.AuthenticationApi.AuthenticationApiClient.BuildWsFedUrl">
+            <summary>
+            Creates a <see cref="T:Auth0.AuthenticationApi.Builders.WsFedUrlBuilder" /> which is used to build a WS-FED authentication URL.
+            </summary>
+            <returns>A new <see cref="T:Auth0.AuthenticationApi.Builders.WsFedUrlBuilder" /> instance.</returns>
+        </member>
+        <member name="M:Auth0.AuthenticationApi.AuthenticationApiClient.ChangePasswordAsync(Auth0.AuthenticationApi.Models.ChangePasswordRequest)">
+            <summary>
+            Given the user's details, Auth0 will send a forgot password email.
+            </summary>
+            <param name="request">The <see cref="T:Auth0.AuthenticationApi.Models.ChangePasswordRequest" /> specifying the user and connection details.</param>
+            <returns>A string containing the message returned from Auth0.</returns>
+        </member>
+        <member name="M:Auth0.AuthenticationApi.AuthenticationApiClient.ExchangeCodeForAccessTokenAsync(Auth0.AuthenticationApi.Models.ExchangeCodeRequest)">
+            <summary>
+            Exhanges an OAuth authorization code for an access token. This needs to be called as part of the OAuth authentication process, after the user has
+            authenticated and the redirect URI is called with an authorization code. 
+            </summary>
+            <param name="request">The <see cref="T:Auth0.AuthenticationApi.Models.ExchangeCodeRequest"/> containing the authorization code and other information needed to exchange the code for an access token.</param>
+            <returns></returns>
+        </member>
+        <member name="M:Auth0.AuthenticationApi.AuthenticationApiClient.GetImpersonationUrlAsync(Auth0.AuthenticationApi.Models.ImpersonationRequest)">
+            <summary>
+            Generates a link that can be used once to log in as a specific user.
+            </summary>
+            <param name="request">The <see cref="T:Auth0.AuthenticationApi.Models.ImpersonationRequest"/> containing the details of the user to impersonate.</param>
+            <returns>A <see cref="T:System.Uri"/> which can be used to sign in as the specified user.</returns>
+        </member>
+        <member name="M:Auth0.AuthenticationApi.AuthenticationApiClient.GetSamlMetadataAsync(System.String)">
+            <summary>
+            Returns the SAML 2.0 meta data for a client.
+            </summary>
+            <param name="clientId">The client (App) ID for which meta data must be returned.</param>
+            <returns>The meta data XML .</returns>
+        </member>
+        <member name="M:Auth0.AuthenticationApi.AuthenticationApiClient.GetTokenAsync(Auth0.AuthenticationApi.Models.AuthorizationCodeTokenRequest)">
+            <summary>
+            Request an Access Token using the Authorization Code Grant flow.
+            </summary>
+            <param name="request">The <see cref="T:Auth0.AuthenticationApi.Models.AuthorizationCodeTokenRequest"/> containing the information of the request.</param>
+            <returns>An <see cref="T:Auth0.AuthenticationApi.Models.AccessTokenResponse"/> containing the token information</returns>
+        </member>
+        <member name="M:Auth0.AuthenticationApi.AuthenticationApiClient.GetTokenAsync(Auth0.AuthenticationApi.Models.AuthorizationCodePkceTokenRequest)">
+            <summary>
+            Request an Access Token using the Authorization Code (PKCE) flow.
+            </summary>
+            <param name="request">The <see cref="T:Auth0.AuthenticationApi.Models.AuthorizationCodePkceTokenRequest"/> containing the information of the request.</param>
+            <returns>An <see cref="T:Auth0.AuthenticationApi.Models.AccessTokenResponse"/> containing the token information</returns>
+        </member>
+        <member name="M:Auth0.AuthenticationApi.AuthenticationApiClient.GetTokenAsync(Auth0.AuthenticationApi.Models.ClientCredentialsTokenRequest)">
+            <summary>
+            Request an Access Token using the Client Credentials Grant flow.
+            </summary>
+            <param name="request">The <see cref="T:Auth0.AuthenticationApi.Models.ClientCredentialsTokenRequest"/> containing the information of the request.</param>
+            <returns>An <see cref="T:Auth0.AuthenticationApi.Models.AccessTokenResponse"/> containing the token information</returns>
+        </member>
+        <member name="M:Auth0.AuthenticationApi.AuthenticationApiClient.GetTokenAsync(Auth0.AuthenticationApi.Models.RefreshTokenRequest)">
+            <summary>
+            Given a <see cref="T:Auth0.AuthenticationApi.Models.RefreshTokenRequest"/>, it will retrieve a refreshed access token from the authorization server.
+            </summary>
+            <param name="request">The refresh token request details, containing a valid refresh token.</param>
+            <returns>The new token issued by the server.</returns>
+        </member>
+        <!-- Badly formed XML comment ignored for member "M:Auth0.AuthenticationApi.AuthenticationApiClient.GetTokenAsync(Auth0.AuthenticationApi.Models.ResourceOwnerTokenRequest)" -->
+        <member name="M:Auth0.AuthenticationApi.AuthenticationApiClient.GetUserInfoAsync(System.String)">
+            <summary>
+            Returns the user information based on the Auth0 access token (obtained during login).
+            </summary>
+            <param name="accessToken">The access token.</param>
+            <returns>The <see cref="T:Auth0.AuthenticationApi.Models.UserInfo"/> associated with the token.</returns>
+        </member>
+        <member name="M:Auth0.AuthenticationApi.AuthenticationApiClient.GetWsFedMetadataAsync">
+            <summary>
+            Returns the WS Federation meta data.
+            </summary>
+            <returns>The meta data XML</returns>
+        </member>
+        <member name="M:Auth0.AuthenticationApi.AuthenticationApiClient.SignupUserAsync(Auth0.AuthenticationApi.Models.SignupUserRequest)">
+            <summary>
+            Given the user credentials, the connection specified and the Auth0 account information, it will create a new user.
+            </summary>
+            <param name="request">The <see cref="T:Auth0.AuthenticationApi.Models.SignupUserRequest" /> containing information of the user to sign up.</param>
+            <returns>A <see cref="T:Auth0.AuthenticationApi.Models.SignupUserResponse" /> with the information of the signed up user.</returns>
+        </member>
+        <member name="M:Auth0.AuthenticationApi.AuthenticationApiClient.StartPasswordlessEmailFlowAsync(Auth0.AuthenticationApi.Models.PasswordlessEmailRequest)">
+            <summary>
+            Starts a new Passwordless email flow.
+            </summary>
+            <param name="request">The <see cref="T:Auth0.AuthenticationApi.Models.PasswordlessEmailRequest" /> containing the information about the new Passwordless flow to start.</param>
+            <returns>A <see cref="T:Auth0.AuthenticationApi.Models.PasswordlessEmailResponse" /> containing the response.</returns>
+        </member>
+        <member name="M:Auth0.AuthenticationApi.AuthenticationApiClient.StartPasswordlessSmsFlowAsync(Auth0.AuthenticationApi.Models.PasswordlessSmsRequest)">
+            <summary>
+            Starts a new Passwordless SMS flow.
+            </summary>
+            <param name="request">The <see cref="T:Auth0.AuthenticationApi.Models.PasswordlessSmsRequest" /> containing the information about the new Passwordless flow to start.</param>
+            <returns>A <see cref="T:Auth0.AuthenticationApi.Models.PasswordlessSmsResponse" /> containing the response.</returns>
+        </member>
+        <member name="M:Auth0.AuthenticationApi.AuthenticationApiClient.UnlinkUserAsync(Auth0.AuthenticationApi.Models.UnlinkUserRequest)">
+            <summary>
+            Unlinks a secondary account from a primary account.
+            </summary>
+            <param name="request">The <see cref="T:Auth0.AuthenticationApi.Models.UnlinkUserRequest"/> containing the information of the accounts to unlink.</param>
+            <returns>Nothing</returns>
+        </member>
+        <member name="M:Auth0.AuthenticationApi.AuthenticationApiClient.UsernamePasswordLoginAsync(Auth0.AuthenticationApi.Models.UsernamePasswordLoginRequest)">
+            <summary>
+            Given an <see cref="T:Auth0.AuthenticationApi.Models.UsernamePasswordLoginRequest"/>, it will do the authentication on the provider and return a <see cref="T:Auth0.AuthenticationApi.Models.UsernamePasswordLoginResponse"/>
+            </summary>
+            <param name="request">The authentication request details containing information regarding the connection, username, password etc.</param>
+            <returns>A <see cref="T:Auth0.AuthenticationApi.Models.UsernamePasswordLoginResponse"/> containing the WS-Federation Login Form, which can be posted by the user to trigger a server-side login.</returns>
+        </member>
+        <member name="T:Auth0.AuthenticationApi.Builders.AuthorizationUrlBuilder">
+            <summary>
+            Used to build am authorization URL.
+            </summary>
+        </member>
+        <member name="M:Auth0.AuthenticationApi.Builders.AuthorizationUrlBuilder.#ctor(System.String)">
+            <summary>
+            Initializes a new instance of the <see cref="T:Auth0.AuthenticationApi.Builders.AuthorizationUrlBuilder"/> class.
+            </summary>
+            <param name="baseUrl">The base URL of the Authentication API.</param>
+        </member>
+        <member name="M:Auth0.AuthenticationApi.Builders.AuthorizationUrlBuilder.WithAccessToken(System.String)">
+            <summary>
+            Adds an access_token query string parameter.
+            </summary>
+            <param name="accessToken"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Auth0.AuthenticationApi.Builders.AuthorizationUrlBuilder.WithClient(System.String)">
+            <summary>
+            Adds a new client_id query string parameter.
+            </summary>
+            <param name="clientId">The client identifier.</param>
+            <returns>The <see cref="T:Auth0.AuthenticationApi.Builders.AuthorizationUrlBuilder"/>.</returns>
+        </member>
+        <member name="M:Auth0.AuthenticationApi.Builders.AuthorizationUrlBuilder.WithConnection(System.String)">
+            <summary>
+            Add a new connection query string parameter.
+            </summary>
+            <param name="connectionName">Name of the connection.</param>
+            <returns>The <see cref="T:Auth0.AuthenticationApi.Builders.AuthorizationUrlBuilder"/>.</returns>
+        </member>
+        <member name="M:Auth0.AuthenticationApi.Builders.AuthorizationUrlBuilder.WithRedirectUrl(System.String)">
+            <summary>
+            Adds a new redirect_uri query string parameter
+            </summary>
+            <param name="url">The URL of the redirect URI</param>
+            <returns>The <see cref="T:Auth0.AuthenticationApi.Builders.AuthorizationUrlBuilder"/>.</returns>
+        </member>
+        <member name="M:Auth0.AuthenticationApi.Builders.AuthorizationUrlBuilder.WithResponseType(Auth0.AuthenticationApi.Models.AuthorizationResponseType[])">
+            <summary>
+            Adds a new response_type query string parameter indicating 
+            the type of response that the client expects.
+            </summary>
+            <param name="responseType">Type of the response.</param>
+            <returns>The <see cref="T:Auth0.AuthenticationApi.Builders.AuthorizationUrlBuilder"/>.</returns>
+        </member>
+        <member name="M:Auth0.AuthenticationApi.Builders.AuthorizationUrlBuilder.WithScope(System.String)">
+            <summary>
+            Adds a new scope query string parameter.
+            </summary>
+            <param name="scope">The scope. Multiple scopes must be separated by a space character.</param>
+            <returns>The <see cref="T:Auth0.AuthenticationApi.Builders.AuthorizationUrlBuilder"/>.</returns>
+        </member>
+        <member name="M:Auth0.AuthenticationApi.Builders.AuthorizationUrlBuilder.WithState(System.String)">
+            <summary>
+            Adds a new state query string parameter.
+            </summary>
+            <param name="state">The state.</param>
+            <returns>The <see cref="T:Auth0.AuthenticationApi.Builders.AuthorizationUrlBuilder"/>.</returns>
+        </member>
+        <member name="M:Auth0.AuthenticationApi.Builders.AuthorizationUrlBuilder.WithAudience(System.String)">
+            <summary>
+            Adds a new audience query string parameter.
+            </summary>
+            <param name="audience">The audience.</param>
+            <returns>The <see cref="T:Auth0.AuthenticationApi.Builders.AuthorizationUrlBuilder"/>.</returns>
+        </member>
+        <member name="M:Auth0.AuthenticationApi.Builders.AuthorizationUrlBuilder.WithNonce(System.String)">
+            <summary>
+            Adds a new nonce query string parameter.
+            </summary>
+            <param name="nonce">The nonce.</param>
+            <returns>The <see cref="T:Auth0.AuthenticationApi.Builders.AuthorizationUrlBuilder"/>.</returns>
+        </member>
+        <member name="M:Auth0.AuthenticationApi.Builders.AuthorizationUrlBuilder.WithResponseMode(Auth0.AuthenticationApi.Models.AuthorizationResponseMode)">
+            <summary>
+            Adds a new response_mode query string parameter.
+            </summary>
+            <param name="responseMode">The response mode.</param>
+            <returns>The <see cref="T:Auth0.AuthenticationApi.Builders.AuthorizationUrlBuilder"/>.</returns>
+        </member>
+        <member name="T:Auth0.AuthenticationApi.Builders.LogoutUrlBuilder">
+            <summary>
+            Used to build a logout URL.
+            </summary>
+        </member>
+        <member name="M:Auth0.AuthenticationApi.Builders.LogoutUrlBuilder.#ctor(System.String)">
+            <summary>
+            Initializes a new instance of the <see cref="T:Auth0.AuthenticationApi.Builders.LogoutUrlBuilder"/> class.
+            </summary>
+            <param name="baseUrl">The base URL.</param>
+        </member>
+        <member name="M:Auth0.AuthenticationApi.Builders.LogoutUrlBuilder.WithReturnUrl(System.String)">
+            <summary>
+            Adds a returnTo query string parameter.
+            </summary>
+            <param name="url">The URL.</param>
+            <returns>The <see cref="T:Auth0.AuthenticationApi.Builders.LogoutUrlBuilder"/>.</returns>
+        </member>
+        <member name="M:Auth0.AuthenticationApi.Builders.LogoutUrlBuilder.WithClientId(System.String)">
+            <summary>
+            Adds a client_id query string parameter.
+            </summary>
+            <param name="clientId">The URL.</param>
+            <returns>The <see cref="T:Auth0.AuthenticationApi.Builders.LogoutUrlBuilder"/>.</returns>
+        </member>
+        <member name="M:Auth0.AuthenticationApi.Builders.LogoutUrlBuilder.Federated">
+            <summary>
+            Adds a federated query string parameter.
+            </summary>
+            <returns>The <see cref="T:Auth0.AuthenticationApi.Builders.LogoutUrlBuilder"/>.</returns>
+        </member>
+        <member name="T:Auth0.AuthenticationApi.Builders.SamlUrlBuilder">
+            <summary>
+            Used to build a SAML authorization URL.
+            </summary>
+        </member>
+        <member name="M:Auth0.AuthenticationApi.Builders.SamlUrlBuilder.#ctor(System.String,System.String)">
+            <summary>
+            Initializes a new instance of the <see cref="T:Auth0.AuthenticationApi.Builders.SamlUrlBuilder"/> class.
+            </summary>
+            <param name="baseUrl">The base URL.</param>
+            <param name="client">The client id.</param>
+        </member>
+        <member name="M:Auth0.AuthenticationApi.Builders.SamlUrlBuilder.WithConnection(System.String)">
+            <summary>
+            Adds a connection query string parameter.
+            </summary>
+            <param name="connectionName">Name of the connection.</param>
+            <returns>The <see cref="T:Auth0.AuthenticationApi.Builders.SamlUrlBuilder"/>.</returns>
+        </member>
+        <member name="M:Auth0.AuthenticationApi.Builders.SamlUrlBuilder.WithRelayState(System.String)">
+            <summary>
+            Adds a relayState query string parameter.
+            </summary>
+            <param name="value">A string with the value of relayState parameter. Must be in a name-value pair format, e.g. xcrf=abc&amp;ru=/foo</param>
+            <returns>The <see cref="T:Auth0.AuthenticationApi.Builders.SamlUrlBuilder"/>.</returns>
+        </member>
+        <member name="M:Auth0.AuthenticationApi.Builders.SamlUrlBuilder.WithRelayState(System.Collections.Generic.IDictionary{System.String,System.String})">
+            <summary>
+            Adds a relayState query string parameter.
+            </summary>
+            <param name="values">A dictionary containing the name-value pairs of the relayState parameter.</param>
+            <returns>The <see cref="T:Auth0.AuthenticationApi.Builders.SamlUrlBuilder"/>.</returns>
+        </member>
+        <member name="T:Auth0.AuthenticationApi.Builders.UrlBuilderBase`1">
+            <summary>
+            The base class for all URL builders.
+            </summary>
+            <typeparam name="T"></typeparam>
+        </member>
+        <member name="M:Auth0.AuthenticationApi.Builders.UrlBuilderBase`1.#ctor(System.String,System.String)">
+            <summary>
+            Initializes a new instance of the <see cref="T:Auth0.AuthenticationApi.Builders.UrlBuilderBase`1"/> class.
+            </summary>
+            <param name="baseUrl">The base URL.</param>
+            <param name="resource">The resource being accessed.</param>
+            <exception cref="T:System.ArgumentNullException">
+            </exception>
+        </member>
+        <member name="M:Auth0.AuthenticationApi.Builders.UrlBuilderBase`1.AddUrlSegment(System.String,System.String)">
+            <summary>
+            Adds a new URL segment.
+            </summary>
+            <remarks>
+            When specifying the resource, a URL segment can be specified with curly braces. For example, the resource can specified as "samlp/{client}". This method
+            can be used to specify a value for the {client} segment of the resource.
+            </remarks>
+            <param name="name">The name of the segment (without the curly braces).</param>
+            <param name="value">The value of the segment.</param>
+        </member>
+        <member name="M:Auth0.AuthenticationApi.Builders.UrlBuilderBase`1.AddQueryString(System.String,System.String)">
+            <summary>
+            Adds the query string parameter to the URL.
+            </summary>
+            <param name="name">The name of the query string parameter.</param>
+            <param name="value">The value of the query string parameter.</param>
+        </member>
+        <member name="M:Auth0.AuthenticationApi.Builders.UrlBuilderBase`1.WithValue(System.String,System.String)">
+            <summary>
+            Adds an arbitrary query string parameter to the URL.
+            </summary>
+            <param name="name">The name of the query string parameter.</param>
+            <param name="value">The value of the query string parameter.</param>
+            <returns>T.</returns>
+        </member>
+        <member name="M:Auth0.AuthenticationApi.Builders.UrlBuilderBase`1.Build">
+            <summary>
+            Builds the URL.
+            </summary>
+            <returns>A <see cref="T:System.Uri"/> with the URL.</returns>
+        </member>
+        <member name="T:Auth0.AuthenticationApi.Builders.WsFedUrlBuilder">
+            <summary>
+            Used to build a WS Federation authorization URL.
+            </summary>
+        </member>
+        <member name="M:Auth0.AuthenticationApi.Builders.WsFedUrlBuilder.#ctor(System.String)">
+            <summary>
+            Initializes a new instance of the <see cref="T:Auth0.AuthenticationApi.Builders.WsFedUrlBuilder"/> class.
+            </summary>
+            <param name="baseUrl">The base URL.</param>
+        </member>
+        <member name="M:Auth0.AuthenticationApi.Builders.WsFedUrlBuilder.WithClient(System.String)">
+            <summary>
+            Specifies the client ID for the URL.
+            </summary>
+            <param name="clientId">The client ID.</param>
+            <returns>WsFedUrlBuilder.</returns>
+        </member>
+        <member name="M:Auth0.AuthenticationApi.Builders.WsFedUrlBuilder.WithWhr(System.String)">
+            <summary>
+            Adds a qhr query string parameter.
+            </summary>
+            <param name="value">The value of the whr parameter.</param>
+            <returns>WsFedUrlBuilder.</returns>
+        </member>
+        <member name="M:Auth0.AuthenticationApi.Builders.WsFedUrlBuilder.WithWctx(System.String)">
+            <summary>
+            Adds a wctx query string parameter.
+            </summary>
+            <param name="value">A string with the value of the wctx parameter. Must be in a name-value pair format, e.g. xcrf=abc&amp;ru=/foo</param>
+            <returns>WsFedUrlBuilder.</returns>
+        </member>
+        <member name="M:Auth0.AuthenticationApi.Builders.WsFedUrlBuilder.WithWctx(System.Collections.Generic.IDictionary{System.String,System.String})">
+            <summary>
+            Adds a wctx query string parameter.
+            </summary>
+            <param name="values">A dictionary containing the name-value pairs of the wctx parameter.</param>
+            <returns>WsFedUrlBuilder.</returns>
+        </member>
+        <member name="M:Auth0.AuthenticationApi.Builders.WsFedUrlBuilder.WithWtrealm(System.String)">
+            <summary>
+            Adds a wtrealm query string parameter.
+            </summary>
+            <param name="value">The value of the wtrealm query string parameter.</param>
+            <returns>WsFedUrlBuilder.</returns>
+        </member>
+        <member name="T:Auth0.AuthenticationApi.IAuthenticationApiClient">
+            <summary>
+            Client for communicating with the Auth0 Authentication API.
+            </summary>
+            <remarks>
+            Full documentation for the Authentication API is available at https://auth0.com/docs/auth-api
+            </remarks>
+        </member>
+        <!-- Badly formed XML comment ignored for member "M:Auth0.AuthenticationApi.IAuthenticationApiClient.AuthenticateAsync(Auth0.AuthenticationApi.Models.AuthenticationRequest)" -->
+        <member name="M:Auth0.AuthenticationApi.IAuthenticationApiClient.BuildAuthorizationUrl">
+            <summary>
+            Creates a <see cref="T:Auth0.AuthenticationApi.Builders.AuthorizationUrlBuilder"/> which is used to build an authorization URL.
+            </summary>
+            <returns>A new <see cref="T:Auth0.AuthenticationApi.Builders.AuthorizationUrlBuilder"/> instance.</returns>
+        </member>
+        <member name="M:Auth0.AuthenticationApi.IAuthenticationApiClient.BuildLogoutUrl">
+            <summary>
+            Creates a <see cref="T:Auth0.AuthenticationApi.Builders.LogoutUrlBuilder"/> which is used to build a logout URL.
+            </summary>
+            <returns>A new <see cref="T:Auth0.AuthenticationApi.Builders.LogoutUrlBuilder"/> instance.</returns>
+        </member>
+        <member name="M:Auth0.AuthenticationApi.IAuthenticationApiClient.BuildSamlUrl(System.String)">
+            <summary>
+            Creates a <see cref="T:Auth0.AuthenticationApi.Builders.SamlUrlBuilder" /> which is used to build a SAML authentication URL.
+            </summary>
+            <param name="client">The name of the client.</param>
+            <returns>A new <see cref="T:Auth0.AuthenticationApi.Builders.SamlUrlBuilder" /> instance.</returns>
+        </member>
+        <member name="M:Auth0.AuthenticationApi.IAuthenticationApiClient.BuildWsFedUrl">
+            <summary>
+            Creates a <see cref="T:Auth0.AuthenticationApi.Builders.WsFedUrlBuilder"/> which is used to build a WS-FED authentication URL.
+            </summary>
+            <returns>A new <see cref="T:Auth0.AuthenticationApi.Builders.WsFedUrlBuilder"/> instance.</returns>
+        </member>
+        <member name="M:Auth0.AuthenticationApi.IAuthenticationApiClient.ChangePasswordAsync(Auth0.AuthenticationApi.Models.ChangePasswordRequest)">
+            <summary>
+            Given the user's details, Auth0 will send a forgot password email.
+            </summary>
+            <param name="request">The <see cref="T:Auth0.AuthenticationApi.Models.ChangePasswordRequest"/> specifying the user and connection details.</param>
+            <returns>A task object with a string containing the message returned from Auth0.</returns>
+        </member>
+        <member name="M:Auth0.AuthenticationApi.IAuthenticationApiClient.ExchangeCodeForAccessTokenAsync(Auth0.AuthenticationApi.Models.ExchangeCodeRequest)">
+            <summary>
+            Exhanges an OAuth authorization code for an access token. This needs to be called as part of the OAuth authentication process, after the user has
+            authenticated and the redirect URI is called with an authorization code. 
+            </summary>
+            <param name="request">The <see cref="T:Auth0.AuthenticationApi.Models.ExchangeCodeRequest"/> containing the authorization code and other information needed to exchange the code for an access token.</param>
+            <returns></returns>
+        </member>
+        <member name="M:Auth0.AuthenticationApi.IAuthenticationApiClient.GetImpersonationUrlAsync(Auth0.AuthenticationApi.Models.ImpersonationRequest)">
+            <summary>
+            Generates a link that can be used once to log in as a specific user.
+            </summary>
+            <param name="request">The <see cref="T:Auth0.AuthenticationApi.Models.ImpersonationRequest"/> containing the details of the user to impersonate.</param>
+            <returns>A <see cref="T:System.Uri"/> which can be used to sign in as the specified user.</returns>
+        </member>
+        <member name="M:Auth0.AuthenticationApi.IAuthenticationApiClient.GetSamlMetadataAsync(System.String)">
+            <summary>
+            Returns the SAML 2.0 meta data for a client.
+            </summary>
+            <param name="clientId">The client (App) ID for which meta data must be returned.</param>
+            <returns>The meta data XML .</returns>
+        </member>
+        <member name="M:Auth0.AuthenticationApi.IAuthenticationApiClient.GetUserInfoAsync(System.String)">
+            <summary>
+            Returns the user information based on the Auth0 access token (obtained during login).
+            </summary>
+            <param name="accessToken">The access token.</param>
+            <returns>The <see cref="T:Auth0.AuthenticationApi.Models.UserInfo"/> associated with the token.</returns>
+        </member>
+        <member name="M:Auth0.AuthenticationApi.IAuthenticationApiClient.GetWsFedMetadataAsync">
+            <summary>
+            Returns the WS Federation meta data.
+            </summary>
+            <returns>The meta data XML</returns>
+        </member>
+        <member name="M:Auth0.AuthenticationApi.IAuthenticationApiClient.SignupUserAsync(Auth0.AuthenticationApi.Models.SignupUserRequest)">
+            <summary>
+            Given the user credentials, the connection specified and the Auth0 account information, it will create a new user. 
+            </summary>
+            <param name="request">The <see cref="T:Auth0.AuthenticationApi.Models.SignupUserRequest"/> containing information of the user to sign up.</param>
+            <returns>A <see cref="T:Auth0.AuthenticationApi.Models.SignupUserResponse"/> with the information of the signed up user.</returns>
+        </member>
+        <member name="M:Auth0.AuthenticationApi.IAuthenticationApiClient.StartPasswordlessEmailFlowAsync(Auth0.AuthenticationApi.Models.PasswordlessEmailRequest)">
+            <summary>
+            Starts a new Passwordless email flow.
+            </summary>
+            <param name="request">The <see cref="T:Auth0.AuthenticationApi.Models.PasswordlessEmailRequest"/> containing the information about the new Passwordless flow to start.</param>
+            <returns>A <see cref="T:Auth0.AuthenticationApi.Models.PasswordlessEmailResponse"/> containing the response.</returns>
+        </member>
+        <member name="M:Auth0.AuthenticationApi.IAuthenticationApiClient.StartPasswordlessSmsFlowAsync(Auth0.AuthenticationApi.Models.PasswordlessSmsRequest)">
+            <summary>
+            Starts a new Passwordless SMS flow.
+            </summary>
+            <param name="request">The <see cref="T:Auth0.AuthenticationApi.Models.PasswordlessSmsRequest"/> containing the information about the new Passwordless flow to start.</param>
+            <returns>A <see cref="T:Auth0.AuthenticationApi.Models.PasswordlessSmsResponse"/> containing the response.</returns>
+        </member>
+        <member name="M:Auth0.AuthenticationApi.IAuthenticationApiClient.UnlinkUserAsync(Auth0.AuthenticationApi.Models.UnlinkUserRequest)">
+            <summary>
+            Unlinks a secondary account from a primary account.
+            </summary>
+            <param name="request">The <see cref="T:Auth0.AuthenticationApi.Models.UnlinkUserRequest"/> containing the information of the accounts to unlink.</param>
+            <returns>Nothing</returns>
+        </member>
+        <member name="M:Auth0.AuthenticationApi.IAuthenticationApiClient.UsernamePasswordLoginAsync(Auth0.AuthenticationApi.Models.UsernamePasswordLoginRequest)">
+            <summary>
+            Given an <see cref="T:Auth0.AuthenticationApi.Models.UsernamePasswordLoginRequest"/>, it will do the authentication on the provider and return a <see cref="T:Auth0.AuthenticationApi.Models.UsernamePasswordLoginResponse"/>
+            </summary>
+            <param name="request">The authentication request details containing information regarding the connection, username, password etc.</param>
+            <returns>A <see cref="T:Auth0.AuthenticationApi.Models.UsernamePasswordLoginResponse"/> containing the WS-Federation Login Form, which can be posted by the user to trigger a server-side login.</returns>
+        </member>
+        <member name="M:Auth0.AuthenticationApi.IAuthenticationApiClient.GetTokenAsync(Auth0.AuthenticationApi.Models.AuthorizationCodeTokenRequest)">
+            <summary>
+            Request an Access Token using the Authorization Code Grant flow.
+            </summary>
+            <param name="request">The <see cref="T:Auth0.AuthenticationApi.Models.ClientCredentialsTokenRequest"/> containing the information of the request.</param>
+            <returns>An <see cref="T:Auth0.AuthenticationApi.Models.AccessTokenResponse"/> containing the token information</returns>
+        </member>
+        <member name="M:Auth0.AuthenticationApi.IAuthenticationApiClient.GetTokenAsync(Auth0.AuthenticationApi.Models.AuthorizationCodePkceTokenRequest)">
+            <summary>
+            Request an Access Token using the Authorization Code (PKCE) flow.
+            </summary>
+            <param name="request">The <see cref="T:Auth0.AuthenticationApi.Models.ClientCredentialsTokenRequest"/> containing the information of the request.</param>
+            <returns>An <see cref="T:Auth0.AuthenticationApi.Models.AccessTokenResponse"/> containing the token information</returns>
+        </member>
+        <member name="M:Auth0.AuthenticationApi.IAuthenticationApiClient.GetTokenAsync(Auth0.AuthenticationApi.Models.ClientCredentialsTokenRequest)">
+            <summary>
+            Request an Access Token using the Client Credentials Grant flow.
+            </summary>
+            <param name="request">The <see cref="T:Auth0.AuthenticationApi.Models.ClientCredentialsTokenRequest"/> containing the information of the request.</param>
+            <returns>An <see cref="T:Auth0.AuthenticationApi.Models.AccessTokenResponse"/> containing the token information</returns>
+        </member>
+        <member name="M:Auth0.AuthenticationApi.IAuthenticationApiClient.GetTokenAsync(Auth0.AuthenticationApi.Models.RefreshTokenRequest)">
+            <summary>
+            Given a <see cref="T:Auth0.AuthenticationApi.Models.RefreshTokenRequest"/>, it will retrieve a refreshed access token from the authorization server.
+            </summary>
+            <param name="request">The refresh token request details, containing a valid refresh token.</param>
+            <returns>The new token issued by the server.</returns>
+        </member>
+        <!-- Badly formed XML comment ignored for member "M:Auth0.AuthenticationApi.IAuthenticationApiClient.GetTokenAsync(Auth0.AuthenticationApi.Models.ResourceOwnerTokenRequest)" -->
+        <member name="T:Auth0.AuthenticationApi.Models.AccessTokenResponse">
+            <summary>
+            Represents an access token response.
+            </summary>
+        </member>
+        <member name="P:Auth0.AuthenticationApi.Models.AccessTokenResponse.IdToken">
+            <summary>
+            Gets or sets the identifier token.
+            </summary>
+        </member>
+        <member name="P:Auth0.AuthenticationApi.Models.AccessTokenResponse.ExpiresIn">
+            <summary>
+            Gets or sets the expiry time in seconds.
+            </summary>
+        </member>
+        <member name="P:Auth0.AuthenticationApi.Models.AccessTokenResponse.RefreshToken">
+            <summary>
+            Gets or sets the refresh token
+            </summary>
+        </member>
+        <member name="T:Auth0.AuthenticationApi.Models.AuthenticationRequest">
+            <summary>
+            Represents a request to authenticate with a connection.
+            </summary>
+        </member>
+        <member name="P:Auth0.AuthenticationApi.Models.AuthenticationRequest.ClientId">
+            <summary>
+            Gets or sets the client (app) identifier.
+            </summary>
+        </member>
+        <member name="P:Auth0.AuthenticationApi.Models.AuthenticationRequest.ClientSecret">
+            <summary>
+            Gets or sets the client (app) secret.
+            </summary>
+        </member>
+        <member name="P:Auth0.AuthenticationApi.Models.AuthenticationRequest.Realm">
+            <summary>
+            Gets or sets the realm where to do the authentication.
+            </summary>
+        </member>
+        <member name="P:Auth0.AuthenticationApi.Models.AuthenticationRequest.GrantType">
+            <summary>
+            Gets or sets the grant type requested.
+            </summary>
+        </member>
+        <member name="P:Auth0.AuthenticationApi.Models.AuthenticationRequest.Password">
+            <summary>
+            Gets or sets the password.
+            </summary>
+        </member>
+        <member name="P:Auth0.AuthenticationApi.Models.AuthenticationRequest.Scope">
+            <summary>
+            Gets or sets the requested scope.
+            </summary>
+        </member>
+        <member name="P:Auth0.AuthenticationApi.Models.AuthenticationRequest.Username">
+            <summary>
+            Gets or sets the username.
+            </summary>
+        </member>
+        <member name="T:Auth0.AuthenticationApi.Models.AuthorizationCodePkceTokenRequest">
+            <summary>
+            Represents a request to exchange an authorization code (PKCE) for an access token during the OAuth authentication flow.
+            </summary>
+        </member>
+        <member name="P:Auth0.AuthenticationApi.Models.AuthorizationCodePkceTokenRequest.Code">
+            <summary>
+            The authorization code which will be exchanged
+            </summary>
+        </member>
+        <member name="P:Auth0.AuthenticationApi.Models.AuthorizationCodePkceTokenRequest.ClientId">
+            <summary>
+            The client ID of the Application
+            </summary>
+        </member>
+        <member name="P:Auth0.AuthenticationApi.Models.AuthorizationCodePkceTokenRequest.CodeVerifier">
+            <summary>
+            Cryptographically random key that was used to generate the code_challenge passed to the /authorize endpoint.
+            </summary>
+        </member>
+        <member name="P:Auth0.AuthenticationApi.Models.AuthorizationCodePkceTokenRequest.RedirectUri">
+            <summary>
+            The redirect URI which was passed during the login process
+            </summary>
+        </member>
+        <member name="T:Auth0.AuthenticationApi.Models.AuthorizationCodeTokenRequest">
+            <summary>
+            Represents a request to exchange an authorization code for an access token during the OAuth authentication flow.
+            </summary>
+        </member>
+        <member name="P:Auth0.AuthenticationApi.Models.AuthorizationCodeTokenRequest.Code">
+            <summary>
+            The authorization code which will be exchanged
+            </summary>
+        </member>
+        <member name="P:Auth0.AuthenticationApi.Models.AuthorizationCodeTokenRequest.ClientId">
+            <summary>
+            The client ID of the Application
+            </summary>
+        </member>
+        <member name="P:Auth0.AuthenticationApi.Models.AuthorizationCodeTokenRequest.ClientSecret">
+            <summary>
+            The client secret of the application.
+            </summary>
+        </member>
+        <member name="P:Auth0.AuthenticationApi.Models.AuthorizationCodeTokenRequest.RedirectUri">
+            <summary>
+            The redirect URI which was passed during the login process
+            </summary>
+        </member>
+        <member name="T:Auth0.AuthenticationApi.Models.AuthorizationResponseMode">
+            <summary>
+            Represents an authentication response mode.
+            </summary>
+        </member>
+        <member name="F:Auth0.AuthenticationApi.Models.AuthorizationResponseMode.FormPost">
+            <summary>
+            The response will be a form POST.
+            </summary>
+        </member>
+        <member name="T:Auth0.AuthenticationApi.Models.AuthorizationResponseType">
+            <summary>
+            Represents an authentication reponse type.
+            </summary>
+        </member>
+        <member name="F:Auth0.AuthenticationApi.Models.AuthorizationResponseType.Code">
+            <summary>
+            The response type is an authorization code.
+            </summary>
+        </member>
+        <member name="F:Auth0.AuthenticationApi.Models.AuthorizationResponseType.Token">
+            <summary>
+            The response type is an access_token.
+            </summary>
+        </member>
+        <member name="F:Auth0.AuthenticationApi.Models.AuthorizationResponseType.IdToken">
+            <summary>
+            The response type is an id_token.
+            </summary>
+        </member>
+        <member name="T:Auth0.AuthenticationApi.Models.ChangePasswordRequest">
+            <summary>
+            Represents a request to change a user's password.
+            </summary>
+        </member>
+        <member name="T:Auth0.AuthenticationApi.Models.ClientCredentialsTokenRequest">
+            <summary>
+            Represents a request get a token using the Client Credentials Grant flow
+            </summary>
+        </member>
+        <member name="P:Auth0.AuthenticationApi.Models.ClientCredentialsTokenRequest.Audience">
+            <summary>
+            The unique identifier of the target API you want to access.
+            </summary>
+        </member>
+        <member name="P:Auth0.AuthenticationApi.Models.ClientCredentialsTokenRequest.ClientId">
+            <summary>
+            Your application's Client ID
+            </summary>
+        </member>
+        <member name="P:Auth0.AuthenticationApi.Models.ClientCredentialsTokenRequest.ClientSecret">
+            <summary>
+            Your application's Client Secret.
+            </summary>
+        </member>
+        <member name="T:Auth0.AuthenticationApi.Models.DelegationRequestBase">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="P:Auth0.AuthenticationApi.Models.DelegationRequestBase.ApiType">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="P:Auth0.AuthenticationApi.Models.DelegationRequestBase.GrantType">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="P:Auth0.AuthenticationApi.Models.DelegationRequestBase.Scope">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="P:Auth0.AuthenticationApi.Models.DelegationRequestBase.SourceClientId">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="P:Auth0.AuthenticationApi.Models.DelegationRequestBase.TargetClientId">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="M:Auth0.AuthenticationApi.Models.DelegationRequestBase.#ctor">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="M:Auth0.AuthenticationApi.Models.DelegationRequestBase.#ctor(System.String,System.String)">
+            <summary>
+            
+            </summary>
+            <param name="sourceClientId"></param>
+            <param name="targetClientId"></param>
+        </member>
+        <member name="M:Auth0.AuthenticationApi.Models.DelegationRequestBase.#ctor(System.String,System.String,System.String)">
+            <summary>
+            
+            </summary>
+            <param name="sourceClientId"></param>
+            <param name="targetClientId"></param>
+            <param name="apiType"></param>
+        </member>
+        <member name="T:Auth0.AuthenticationApi.Models.ExchangeCodeRequest">
+            <summary>
+            Represents a request to exchange an authorization code for an access token during the OAuth authentication flow.
+            </summary>
+        </member>
+        <member name="P:Auth0.AuthenticationApi.Models.ExchangeCodeRequest.AuthorizationCode">
+            <summary>
+            The authorization code which will be exchanged
+            </summary>
+        </member>
+        <member name="P:Auth0.AuthenticationApi.Models.ExchangeCodeRequest.ClientId">
+            <summary>
+            The client ID of the Application
+            </summary>
+        </member>
+        <member name="P:Auth0.AuthenticationApi.Models.ExchangeCodeRequest.ClientSecret">
+            <summary>
+            The client secret of the application.
+            </summary>
+        </member>
+        <member name="P:Auth0.AuthenticationApi.Models.ExchangeCodeRequest.RedirectUri">
+            <summary>
+            The redirect URI which was passed during the login process
+            </summary>
+        </member>
+        <member name="T:Auth0.AuthenticationApi.Models.IdTokenDelegationRequest">
+            <summary>
+            Represents an identifier token delegation request.
+            </summary>
+        </member>
+        <member name="P:Auth0.AuthenticationApi.Models.IdTokenDelegationRequest.IdToken">
+            <summary>
+            Gets or sets the identifier token.
+            </summary>
+        </member>
+        <member name="P:Auth0.AuthenticationApi.Models.IdTokenDelegationRequest.ApiType">
+            <summary>
+            Gets or sets the type of the API.
+            </summary>
+        </member>
+        <member name="M:Auth0.AuthenticationApi.Models.IdTokenDelegationRequest.#ctor(System.String,System.String,System.String)">
+            <summary>
+            Initializes a new instance of the <see cref="T:Auth0.AuthenticationApi.Models.IdTokenDelegationRequest"/> class.
+            </summary>
+            <param name="sourceClientId">The source client identifier.</param>
+            <param name="targetClientId">The target client identifier.</param>
+            <param name="idToken">The identifier token.</param>
+        </member>
+        <member name="T:Auth0.AuthenticationApi.Models.ImpersonationRequest">
+            <summary>
+            Represents a request to impersonate a user.
+            </summary>
+        </member>
+        <member name="P:Auth0.AuthenticationApi.Models.ImpersonationRequest.ClientId">
+            <summary>
+            The client ID of the application
+            </summary>
+        </member>
+        <member name="P:Auth0.AuthenticationApi.Models.ImpersonationRequest.ImpersonateId">
+            <summary>
+            The ID of the user who is impersonated.
+            </summary>
+        </member>
+        <member name="P:Auth0.AuthenticationApi.Models.ImpersonationRequest.ImpersonatorId">
+            <summary>
+            The ID of the user doing the impersonation.
+            </summary>
+        </member>
+        <member name="P:Auth0.AuthenticationApi.Models.ImpersonationRequest.Protocol">
+            <summary>
+            The protocol to use. Can be one of oauth2, wsfed, wsfed-rms, samlp
+            </summary>
+        </member>
+        <member name="P:Auth0.AuthenticationApi.Models.ImpersonationRequest.ResponseType">
+            <summary>
+            The response type
+            </summary>
+        </member>
+        <member name="P:Auth0.AuthenticationApi.Models.ImpersonationRequest.State">
+            <summary>
+            The state parameter to pass
+            </summary>
+        </member>
+        <member name="P:Auth0.AuthenticationApi.Models.ImpersonationRequest.Token">
+            <summary>
+            The bearer token to pass along with the request in the Authorization header.
+            </summary>
+        </member>
+        <member name="T:Auth0.AuthenticationApi.Models.PasswordlessEmailRequest">
+            <summary>
+            Represents a request to start a Passwordless email flow.
+            </summary>
+        </member>
+        <member name="P:Auth0.AuthenticationApi.Models.PasswordlessEmailRequest.ClientId">
+            <summary>
+            Gets or sets the client (app) identifier.
+            </summary>
+        </member>
+        <member name="P:Auth0.AuthenticationApi.Models.PasswordlessEmailRequest.Email">
+            <summary>
+            Gets or sets the email to which the link or code must be sent.
+            </summary>
+        </member>
+        <member name="P:Auth0.AuthenticationApi.Models.PasswordlessEmailRequest.Type">
+            <summary>
+            Gets or sets the type of response - either code or link.
+            </summary>
+        </member>
+        <member name="P:Auth0.AuthenticationApi.Models.PasswordlessEmailRequest.AuthenticationParameters">
+            <summary>
+            Gets or sets extra authentication parameters.
+            </summary>
+        </member>
+        <member name="T:Auth0.AuthenticationApi.Models.PasswordlessEmailRequestType">
+            <summary>
+            The type of Passwordless email request.
+            </summary>
+        </member>
+        <member name="F:Auth0.AuthenticationApi.Models.PasswordlessEmailRequestType.Link">
+            <summary>
+            Sends a link.
+            </summary>
+        </member>
+        <member name="F:Auth0.AuthenticationApi.Models.PasswordlessEmailRequestType.Code">
+            <summary>
+            Sends a code.
+            </summary>
+        </member>
+        <member name="T:Auth0.AuthenticationApi.Models.PasswordlessEmailResponse">
+            <summary>
+            Represents a Passwordless email response.
+            </summary>
+        </member>
+        <member name="P:Auth0.AuthenticationApi.Models.PasswordlessEmailResponse.Id">
+            <summary>
+            The identifier of the request.
+            </summary>
+        </member>
+        <member name="P:Auth0.AuthenticationApi.Models.PasswordlessEmailResponse.Email">
+            <summary>
+            The email to which the request was sent.
+            </summary>
+        </member>
+        <member name="T:Auth0.AuthenticationApi.Models.PasswordlessSmsRequest">
+            <summary>
+            Represents a Passwordless SMS flow.
+            </summary>
+        </member>
+        <member name="P:Auth0.AuthenticationApi.Models.PasswordlessSmsRequest.ClientId">
+            <summary>
+            Gets or sets the client (app) identifier.
+            </summary>
+        </member>
+        <member name="P:Auth0.AuthenticationApi.Models.PasswordlessSmsRequest.PhoneNumber">
+            <summary>
+            The phone number to which the code must be sent.
+            </summary>
+        </member>
+        <member name="T:Auth0.AuthenticationApi.Models.PasswordlessSmsResponse">
+            <summary>
+            Represents the response from a Passwordless SMS request.
+            </summary>
+        </member>
+        <member name="P:Auth0.AuthenticationApi.Models.PasswordlessSmsResponse.Id">
+            <summary>
+            Gets or sets the identifier of the request.
+            </summary>
+        </member>
+        <member name="P:Auth0.AuthenticationApi.Models.PasswordlessSmsResponse.PhoneNumber">
+            <summary>
+            The phone number to which the code was sent.
+            </summary>
+        </member>
+        <member name="P:Auth0.AuthenticationApi.Models.PasswordlessSmsResponse.RequestLanguage">
+            <summary>
+            The language is which the message was sent.
+            </summary>
+        </member>
+        <member name="T:Auth0.AuthenticationApi.Models.RefreshTokenDelegationRequest">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="P:Auth0.AuthenticationApi.Models.RefreshTokenDelegationRequest.RefreshToken">
+            <summary>
+            The current RefreshToken to update.
+            </summary>
+        </member>
+        <member name="M:Auth0.AuthenticationApi.Models.RefreshTokenDelegationRequest.#ctor(System.String,System.String,System.String)">
+            <summary>
+            
+            </summary>
+            <param name="sourceClientId"></param>
+            <param name="targetClientId"></param>
+            <param name="refreshToken"></param>
+        </member>
+        <member name="T:Auth0.AuthenticationApi.Models.RefreshTokenRequest">
+            <summary>
+            Represents a request to get a new token,
+            based on a previously issued refresh token.
+            </summary>
+        </member>
+        <member name="P:Auth0.AuthenticationApi.Models.RefreshTokenRequest.RefreshToken">
+            <summary>
+            A valid refresh token previously issued to the client.
+            </summary>
+        </member>
+        <member name="P:Auth0.AuthenticationApi.Models.RefreshTokenRequest.Scope">
+            <summary>
+            Gets or sets an optional scope for the access request.
+            </summary>
+            <remarks>
+            The requested scope must not include any scope not originally granted
+            by the resource owner, and if omitted is trated as equal to the scope originally
+            granted by the resource owner.
+            </remarks>
+        </member>
+        <member name="P:Auth0.AuthenticationApi.Models.RefreshTokenRequest.ClientId">
+            <summary>
+            The client id for which the refresh token was issued.
+            </summary>
+        </member>
+        <member name="P:Auth0.AuthenticationApi.Models.RefreshTokenRequest.ClientSecret">
+            <summary>
+            The secret of the client for which the refresh token was issued.
+            </summary>
+        </member>
+        <member name="T:Auth0.AuthenticationApi.Models.ResourceOwnerTokenRequest">
+            <summary>
+            Represents a request get a token using the Resource Owner Grant flow
+            </summary>
+        </member>
+        <member name="P:Auth0.AuthenticationApi.Models.ResourceOwnerTokenRequest.Audience">
+            <summary>
+            The unique identifier of the target API you want to access.
+            </summary>
+        </member>
+        <member name="P:Auth0.AuthenticationApi.Models.ResourceOwnerTokenRequest.ClientId">
+            <summary>
+            Gets or sets the client (app) identifier.
+            </summary>
+        </member>
+        <member name="P:Auth0.AuthenticationApi.Models.ResourceOwnerTokenRequest.ClientSecret">
+            <summary>
+            Gets or sets the client (app) secret.
+            </summary>
+        </member>
+        <member name="P:Auth0.AuthenticationApi.Models.ResourceOwnerTokenRequest.Realm">
+            <summary>
+            Gets or sets the realm where to do the authentication.
+            </summary>
+        </member>
+        <member name="P:Auth0.AuthenticationApi.Models.ResourceOwnerTokenRequest.Password">
+            <summary>
+            Gets or sets the password.
+            </summary>
+        </member>
+        <member name="P:Auth0.AuthenticationApi.Models.ResourceOwnerTokenRequest.Scope">
+            <summary>
+            Gets or sets the requested scope.
+            </summary>
+        </member>
+        <member name="P:Auth0.AuthenticationApi.Models.ResourceOwnerTokenRequest.Username">
+            <summary>
+            Gets or sets the username.
+            </summary>
+        </member>
+        <member name="T:Auth0.AuthenticationApi.Models.SignupUserRequest">
+            <summary>
+            Represents a request to sign up a new user.
+            </summary>
+        </member>
+        <member name="P:Auth0.AuthenticationApi.Models.SignupUserRequest.UserMetadata">
+            <summary>
+            Contains user meta data. The user has read/write access to this.
+            </summary>
+        </member>
+        <member name="T:Auth0.AuthenticationApi.Models.SignupUserResponse">
+            <summary>
+                Represents the response from signing up a new user.
+            </summary>
+        </member>
+        <member name="P:Auth0.AuthenticationApi.Models.SignupUserResponse.Email">
+            <summary>
+                The email address of the new user.
+            </summary>
+        </member>
+        <member name="P:Auth0.AuthenticationApi.Models.SignupUserResponse.EmailVerified">
+            <summary>
+                Indicates whether the email has been verified..
+            </summary>
+            <value><c>true</c> if the email is verified; otherwise, <c>false</c>.</value>
+        </member>
+        <member name="P:Auth0.AuthenticationApi.Models.SignupUserResponse.Id">
+            <summary>
+                Gets or sets the identifier of the response..
+            </summary>
+        </member>
+        <member name="P:Auth0.AuthenticationApi.Models.SignupUserResponse.UserMetadata">
+            <summary>
+                Contains user meta data.
+            </summary>
+        </member>
+        <member name="P:Auth0.AuthenticationApi.Models.SignupUserResponse.Username">
+            <summary>
+                The username of the user.
+            </summary>
+        </member>
+        <member name="T:Auth0.AuthenticationApi.Models.TokenBase">
+            <summary>
+            Base class for all authentication tokens.
+            </summary>
+        </member>
+        <member name="P:Auth0.AuthenticationApi.Models.TokenBase.AccessToken">
+            <summary>
+            Gets or sets the access token.
+            </summary>
+        </member>
+        <member name="P:Auth0.AuthenticationApi.Models.TokenBase.TokenType">
+            <summary>
+            Gets or sets the type of the token.
+            </summary>
+        </member>
+        <member name="T:Auth0.AuthenticationApi.Models.UnlinkUserRequest">
+            <summary>
+            Represents a request to unlink a secondary user account from a primary user account.
+            </summary>
+        </member>
+        <member name="P:Auth0.AuthenticationApi.Models.UnlinkUserRequest.Token">
+            <summary>
+            The access token for the primary user account
+            </summary>
+        </member>
+        <member name="P:Auth0.AuthenticationApi.Models.UnlinkUserRequest.UserId">
+            <summary>
+            The ID of the secondary user account.
+            </summary>
+            <remarks>
+            Should be in the format provider|id
+            </remarks>
+        </member>
+        <member name="T:Auth0.AuthenticationApi.Models.UserInfo">
+            <summary>
+            Represents the information of a user as available from
+            a standard OIDC /userinfo endpoint.
+            http://openid.net/specs/openid-connect-core-1_0.html#StandardClaims
+            </summary>
+        </member>
+        <member name="P:Auth0.AuthenticationApi.Models.UserInfo.UserId">
+            <summary>
+            The Subject-Identifier for the user at the issuer. It's a unique value to identify
+            the user.
+            </summary>
+        </member>
+        <member name="P:Auth0.AuthenticationApi.Models.UserInfo.FullName">
+            <summary>
+            Gets or sets the user's full name in displayable form including all name parts, 
+            possibly including titles and suffixes, ordered according to the user's locale and preferences.
+            </summary>
+        </member>
+        <member name="P:Auth0.AuthenticationApi.Models.UserInfo.FirstName">
+            <summary>
+            Gets or sets the given name(s) or first name(s) of the user. 
+            </summary>
+            <remarks>
+            Note that in some cultures, 
+            people can have multiple given names; all can be present, with the names being separated by space characters.
+            </remarks>
+        </member>
+        <member name="P:Auth0.AuthenticationApi.Models.UserInfo.LastName">
+            <summary>
+            Gets or sets the surname(s) or last name(s) of the user. 
+            </summary>
+            <remarks>
+            Note that in some cultures, people can have multiple family names or no family name; 
+            all can be present, with the names being separated by space characters.
+            </remarks>
+        </member>
+        <member name="P:Auth0.AuthenticationApi.Models.UserInfo.MiddleName">
+            <summary>
+            Gets or sets the middle name(s) of the user. 
+            </summary>
+            <remarks>
+            Note that in some cultures, people can have multiple middle names; all can be present, with the names 
+            being separated by space characters. Also note that in some cultures, middle names are not used.
+            </remarks>
+        </member>
+        <member name="P:Auth0.AuthenticationApi.Models.UserInfo.NickName">
+            <summary>
+            Gets or sets a casual name of the user that may or may not be the same as the given_name. 
+            For instance, a nickname value of 'Mike' might be returned alongside a given_name value of 'Michael'.
+            </summary>
+        </member>
+        <member name="P:Auth0.AuthenticationApi.Models.UserInfo.PreferredUsername">
+            <summary>
+            Gets or sets the shorthand name by which the user wishes to be referred to at the RP, such as janedoe or j.doe. 
+            This value MAY be any valid JSON string including special characters such as @, /, or whitespace. 
+            The RP MUST NOT rely upon this value being unique.
+            </summary>
+        </member>
+        <member name="P:Auth0.AuthenticationApi.Models.UserInfo.Profile">
+            <summary>
+            Gets or sets the URL of the user's profile page. The contents of this Web page SHOULD be about the End-User.
+            </summary>
+        </member>
+        <member name="P:Auth0.AuthenticationApi.Models.UserInfo.Picture">
+            <summary>
+            Gets or sets the 	URL of the user's profile picture. This URL MUST refer to an image file 
+            (for example, a PNG, JPEG, or GIF image file), rather than to a Web page containing an image. 
+            </summary>
+            <remarks>
+            Note that this URL SHOULD specifically reference a profile photo of the End-User suitable for 
+            displaying when describing the user, rather than an arbitrary photo taken by the user.
+            </remarks>
+        </member>
+        <member name="P:Auth0.AuthenticationApi.Models.UserInfo.Website">
+            <summary>
+            Gets or sets the URL of the user's Web page or blog. This Web page SHOULD contain information
+            published by the End-User or an organization that the End-User is affiliated with.
+            </summary>
+        </member>
+        <member name="P:Auth0.AuthenticationApi.Models.UserInfo.Email">
+            <summary>
+            Gets or sets the user's preferred e-mail address. 
+            </summary>
+            <remarks>
+            The RP MUST NOT rely upon this value being unique.
+            </remarks>
+        </member>
+        <member name="P:Auth0.AuthenticationApi.Models.UserInfo.EmailVerified">
+            <summary>
+            True if the user's e-mail address has been verified; otherwise false. 
+            </summary>
+            <remarks>
+            When this Claim Value is true, this means that the OP took affirmative steps to ensure that this e-mail 
+            address was controlled by the user at the time the verification was performed. The means by which an 
+            e-mail address is verified is context-specific, and dependent upon the trust framework or contractual 
+            agreements within which the parties are operating.
+            </remarks>
+        </member>
+        <member name="P:Auth0.AuthenticationApi.Models.UserInfo.Gender">
+            <summary>
+            Gets or sets the user's gender. Values defined by this specification are female and male. Other values 
+            MAY be used when neither of the defined values are applicable.
+            </summary>
+        </member>
+        <member name="P:Auth0.AuthenticationApi.Models.UserInfo.Birthdate">
+            <summary>
+            Gets or sets the user's birthday, represented as an ISO 8601:2004 [ISO8601‑2004] YYYY-MM-DD format. 
+            The year MAY be 0000, indicating that it is omitted. To represent only the year, YYYY format is allowed. 
+            </summary>
+        </member>
+        <member name="P:Auth0.AuthenticationApi.Models.UserInfo.ZoneInformation">
+            <summary>
+            Gets or sets a string from zoneinfo [http://openid.net/specs/openid-connect-core-1_0.html#zoneinfo] time zone
+            database representing the End-User's time zone. For example, Europe/Paris or America/Los_Angeles.
+            </summary>
+        </member>
+        <member name="P:Auth0.AuthenticationApi.Models.UserInfo.Locale">
+            <summary>
+            Gets or sets the user's locale, represented as a BCP47 [RFC5646] language tag. This is typically an ISO 639-1 Alpha-2 [ISO639‑1] 
+            language code in lowercase and an ISO 3166-1 Alpha-2 [ISO3166‑1] country code in uppercase, separated by a dash. 
+            For example, en-US or fr-CA. 
+            </summary>
+            <remarks>
+            As a compatibility note, some implementations have used an underscore as the separator rather than a dash, 
+            for example, en_US; Relying Parties MAY choose to accept this locale syntax as well.
+            </remarks>
+        </member>
+        <member name="P:Auth0.AuthenticationApi.Models.UserInfo.PhoneNumber">
+            <summary>
+            Gets or sets the user's preferred telephone number. E.164 [E.164] is RECOMMENDED as the format of this Claim, for example, 
+            +1 (425) 555-1212 or +56 (2) 687 2400. If the phone number contains an extension, it is RECOMMENDED that the 
+            extension be represented using the RFC 3966 [RFC3966] extension syntax, for example, +1 (604) 555-1234;ext=5678.
+            </summary>
+        </member>
+        <member name="P:Auth0.AuthenticationApi.Models.UserInfo.PhoneNumberVerified">
+            <summary>
+            True if the End-User's phone number has been verified; otherwise false. When this Claim Value is true, 
+            this means that the OP took affirmative steps to ensure that this phone number was controlled by the user at 
+            the time the verification was performed. The means by which a phone number is verified is context-specific, and 
+            dependent upon the trust framework or contractual agreements within which the parties are operating. 
+            When true, the phone_number Claim MUST be in E.164 format and any extensions MUST be represented in RFC 3966 format.
+            </summary>
+        </member>
+        <member name="P:Auth0.AuthenticationApi.Models.UserInfo.Address">
+            <summary>
+            Gets or sets the user's preferred postal address.
+            </summary>
+        </member>
+        <member name="P:Auth0.AuthenticationApi.Models.UserInfo.UpdatedAt">
+            <summary>
+            Gets or sets the time the user's information was last updated. 
+            Its value is a JSON number representing the number of seconds from 1970-01-01T0:0:0Z as measured in UTC until the date/time.
+            </summary>
+        </member>
+        <member name="P:Auth0.AuthenticationApi.Models.UserInfo.AdditionalClaims">
+            <summary>
+            Gets or sets additional claims about the user that are not represented by 
+            properties of the <see cref="T:Auth0.AuthenticationApi.Models.UserInfo">UserInfo</see> class.
+            </summary>
+        </member>
+        <member name="T:Auth0.AuthenticationApi.Models.UserInfoAddress">
+            <summary>
+            Represents a physical mailing address of an user.
+            </summary>
+        </member>
+        <member name="P:Auth0.AuthenticationApi.Models.UserInfoAddress.Formatted">
+            <summary>
+            Gets or sets the full mailing address, formatted for display or use on a mailing label.
+            </summary>
+            <remarks>
+            This field MAY contain multiple lines, separated by newlines.
+            Newlines can be represented either as a carriage return/line feed pair ("\r\n") or as a single line feed character ("\n").
+            </remarks>
+        </member>
+        <member name="P:Auth0.AuthenticationApi.Models.UserInfoAddress.StreetAddress">
+            <summary>
+            Gets or sets the full street address component, which MAY include house number, 
+            street name, Post Office Box, and multi-line extended street address information.
+            </summary>
+            <remarks>
+            This field MAY contain multiple lines, separated by newlines. Newlines can be represented 
+            either as a carriage return/line feed pair ("\r\n") or as a single line feed character ("\n").
+            </remarks>
+        </member>
+        <member name="P:Auth0.AuthenticationApi.Models.UserInfoAddress.Locality">
+            <summary>
+            Gets or sets the city or locality component of the address.
+            </summary>
+        </member>
+        <member name="P:Auth0.AuthenticationApi.Models.UserInfoAddress.Region">
+            <summary>
+            Gets or sets the state, province, prefecture, or region component of the address.
+            </summary>
+        </member>
+        <member name="P:Auth0.AuthenticationApi.Models.UserInfoAddress.PostalCode">
+            <summary>
+            Gets or sets the zip code or postal code component of the address.
+            </summary>
+        </member>
+        <member name="P:Auth0.AuthenticationApi.Models.UserInfoAddress.Country">
+            <summary>
+            Gets or sets the country component of the address.
+            </summary>
+        </member>
+        <member name="T:Auth0.AuthenticationApi.Models.UserMaintenanceRequestBase">
+            <summary>
+            Base class for user maintenance requests.
+            </summary>
+        </member>
+        <member name="P:Auth0.AuthenticationApi.Models.UserMaintenanceRequestBase.ClientId">
+            <summary>
+            Gets or sets the client (app) identifier.
+            </summary>
+        </member>
+        <member name="P:Auth0.AuthenticationApi.Models.UserMaintenanceRequestBase.Connection">
+            <summary>
+            Gets or sets the connection.
+            </summary>
+        </member>
+        <member name="P:Auth0.AuthenticationApi.Models.UserMaintenanceRequestBase.Email">
+            <summary>
+            Gets or sets the user's email address.
+            </summary>
+        </member>
+        <member name="P:Auth0.AuthenticationApi.Models.UserMaintenanceRequestBase.Password">
+            <summary>
+            Gets or sets the user's password.
+            </summary>
+        </member>
+        <member name="T:Auth0.AuthenticationApi.Models.UsernamePasswordLoginRequest">
+            <summary>
+            Represents an active authentication request with SSO support.
+            </summary>
+        </member>
+        <member name="P:Auth0.AuthenticationApi.Models.UsernamePasswordLoginRequest.ClientId">
+            <summary>
+            Gets or sets the client (app) identifier.
+            </summary>
+        </member>
+        <member name="P:Auth0.AuthenticationApi.Models.UsernamePasswordLoginRequest.Connection">
+            <summary>
+            Gets or sets the connection.
+            </summary>
+        </member>
+        <member name="P:Auth0.AuthenticationApi.Models.UsernamePasswordLoginRequest.RedirectUri">
+            <summary>
+            Gets or sets redirect uri.
+            </summary>
+        </member>
+        <member name="P:Auth0.AuthenticationApi.Models.UsernamePasswordLoginRequest.ResponseType">
+            <summary>
+            Gets or sets the response type.
+            </summary>
+        </member>
+        <member name="P:Auth0.AuthenticationApi.Models.UsernamePasswordLoginRequest.IdToken">
+            <summary>
+            Gets or sets the identifier token.
+            </summary>
+        </member>
+        <member name="P:Auth0.AuthenticationApi.Models.UsernamePasswordLoginRequest.Password">
+            <summary>
+            Gets or sets the password.
+            </summary>
+        </member>
+        <member name="P:Auth0.AuthenticationApi.Models.UsernamePasswordLoginRequest.Scope">
+            <summary>
+            Gets or sets the requested scope.
+            </summary>
+        </member>
+        <member name="P:Auth0.AuthenticationApi.Models.UsernamePasswordLoginRequest.Username">
+            <summary>
+            Gets or sets the username.
+            </summary>
+        </member>
+        <member name="P:Auth0.AuthenticationApi.Models.UsernamePasswordLoginRequest.Tenant">
+            <summary>
+            Gets or sets the tenant.
+            </summary>
+        </member>
+        <member name="P:Auth0.AuthenticationApi.Models.UsernamePasswordLoginRequest.Device">
+            <summary>
+            Gets or sets the device.
+            </summary>
+        </member>
+        <member name="T:Auth0.AuthenticationApi.Models.UsernamePasswordLoginResponse">
+            <summary>
+            Represents an active authentication response with SSO support (a WS-Federation Login Form).
+            </summary>
+        </member>
+        <member name="P:Auth0.AuthenticationApi.Models.UsernamePasswordLoginResponse.HtmlForm">
+            <summary>
+            The HTML form.
+            </summary>
+        </member>
+    </members>
+</doc>

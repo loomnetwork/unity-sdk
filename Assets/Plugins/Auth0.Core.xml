@@ -1,0 +1,492 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>Auth0.Core</name>
+    </assembly>
+    <members>
+        <member name="T:Auth0.Core.ApiError">
+            <summary>
+            Contains information about an error returned from the API.
+            </summary>
+        </member>
+        <member name="P:Auth0.Core.ApiError.Error">
+            <summary>
+            The error description for the HTTP Status Code
+            </summary>
+        </member>
+        <member name="P:Auth0.Core.ApiError.ErrorCode">
+            <summary>
+            The error code returned by the API
+            </summary>
+        </member>
+        <member name="P:Auth0.Core.ApiError.Message">
+            <summary>
+            The desription for the error.
+            </summary>
+        </member>
+        <member name="P:Auth0.Core.ApiError.StatusCode">
+            <summary>
+            The HTTP Status code.
+            </summary>
+        </member>
+        <member name="T:Auth0.Core.Collections.IPagedList`1">
+            <summary>
+            A list which contains paged data from the API.
+            </summary>
+            <typeparam name="T"></typeparam>
+        </member>
+        <member name="T:Auth0.Core.Collections.PagedList`1">
+            <summary>
+            A list which contains paged data from the API.
+            </summary>
+            <typeparam name="T"></typeparam>
+        </member>
+        <member name="M:Auth0.Core.Collections.PagedList`1.#ctor">
+            <summary>
+            Initializes a new instance of the <see cref="T:Auth0.Core.Collections.PagedList`1"/> class that is empty and has the default initial capacity.
+            </summary>
+        </member>
+        <member name="M:Auth0.Core.Collections.PagedList`1.#ctor(System.Collections.Generic.IEnumerable{`0})">
+            <summary>
+            Initializes a new instance of the <see cref="T:Auth0.Core.Collections.PagedList`1"/> class that contains elements copied from the specified collection and has sufficient capacity to accommodate the number of elements copied.
+            </summary>
+            <param name="collection">The collection whose elements are copied to the new list.</param><exception cref="T:System.ArgumentNullException"><paramref name="collection"/> is null.</exception>
+        </member>
+        <member name="M:Auth0.Core.Collections.PagedList`1.#ctor(System.Collections.Generic.IEnumerable{`0},Auth0.Core.PagingInformation)">
+            <summary>
+            Initializes a new instance of the <see cref="T:Auth0.Core.Collections.PagedList`1"/> class that contains elements copied from the specified collection and has sufficient capacity to accommodate the number of elements copied.
+            </summary>
+            <param name="collection">The collection whose elements are copied to the new list.</param>
+            <param name="paging">Information about the current page of information contained in the list.</param>
+            <exception cref="T:System.ArgumentNullException"><paramref name="collection"/> is null.</exception>
+        </member>
+        <member name="M:Auth0.Core.Collections.PagedList`1.#ctor(System.Int32)">
+            <summary>
+            Initializes a new instance of the <see cref="T:System.Collections.Generic.List`1"/> class that is empty and has the specified initial capacity.
+            </summary>
+            <param name="capacity">The number of elements that the new list can initially store.</param><exception cref="T:System.ArgumentOutOfRangeException"><paramref name="capacity"/> is less than 0. </exception>
+        </member>
+        <member name="P:Auth0.Core.Collections.PagedList`1.Paging">
+            <summary>
+            Contains information about the current page of data which is contained in the list.
+            </summary>
+        </member>
+        <member name="T:Auth0.Core.DelegatedIdToken">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="P:Auth0.Core.DelegatedIdToken.IdToken">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="T:Auth0.Core.DelegatedRefreshToken">
+            <summary>
+            Represents a delegated refresh token.
+            </summary>
+        </member>
+        <member name="P:Auth0.Core.DelegatedRefreshToken.RefreshToken">
+            <summary>
+            The refresh token.
+            </summary>
+        </member>
+        <member name="T:Auth0.Core.DelegatedTokenBase">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="P:Auth0.Core.DelegatedTokenBase.TokenType">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="P:Auth0.Core.DelegatedTokenBase.ExpiresIn">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="T:Auth0.Core.Exceptions.ApiException">
+            <summary>
+            Represents errors that occur when making API calls.
+            </summary>
+        </member>
+        <member name="P:Auth0.Core.Exceptions.ApiException.ApiError">
+            <summary>
+                The exception payload from the response
+            </summary>
+        </member>
+        <member name="P:Auth0.Core.Exceptions.ApiException.StatusCode">
+            <summary>
+                The HTTP status code associated with the repsonse
+            </summary>
+        </member>
+        <member name="M:Auth0.Core.Exceptions.ApiException.#ctor(System.String,System.Exception)">
+            <summary>
+            Initializes a new instance of the <see cref="T:Auth0.Core.Exceptions.ApiException"/> class.
+            </summary>
+            <param name="message">The message.</param>
+            <param name="innerException">The inner exception.</param>
+        </member>
+        <member name="M:Auth0.Core.Exceptions.ApiException.#ctor(System.Net.HttpStatusCode)">
+            <summary>
+            Initializes a new instance of the <see cref="T:Auth0.Core.Exceptions.ApiException"/> class.
+            </summary>
+            <param name="statusCode">The HTTP status code.</param>
+        </member>
+        <member name="M:Auth0.Core.Exceptions.ApiException.#ctor(System.Net.HttpStatusCode,Auth0.Core.ApiError)">
+            <summary>
+            Initializes a new instance of the <see cref="T:Auth0.Core.Exceptions.ApiException"/> class.
+            </summary>
+            <param name="statusCode">The status code.</param>
+            <param name="apiError">The API error.</param>
+        </member>
+        <member name="T:Auth0.Core.Http.ApiConnection">
+            <summary>
+                The communication layer between the various API clients and the actual API backend.
+            </summary>
+        </member>
+        <member name="P:Auth0.Core.Http.ApiConnection.ApiInfo">
+            <summary>
+                Contains information about the last API call made by the connection.
+            </summary>
+        </member>
+        <member name="M:Auth0.Core.Http.ApiConnection.#ctor(System.String,System.String,Auth0.Core.Http.DiagnosticsHeader,System.Net.Http.HttpMessageHandler)">
+            <summary>
+                Initializes a new instance of the <see cref="T:Auth0.Core.Http.ApiConnection" /> class.
+            </summary>
+            <param name="token">The API token.</param>
+            <param name="baseUrl">The base URL of the requests.</param>
+            <param name="diagnostics">The diagnostics. header</param>
+            <param name="handler"></param>
+        </member>
+        <member name="M:Auth0.Core.Http.ApiConnection.BuildMessageContent(System.Object,System.Collections.Generic.IDictionary{System.String,System.Object},System.Collections.Generic.IList{Auth0.Core.Http.FileUploadParameter})">
+            <summary>
+                Builds the content of the message. This will build the appropriate <see cref="T:System.Net.Http.HttpContent" /> for the request based
+                on the type of the parameters passed in.
+            </summary>
+            <param name="body">The body.</param>
+            <param name="parameters">The parameters.</param>
+            <param name="fileParameters">The file parameters.</param>
+            <returns>HttpContent.</returns>
+        </member>
+        <member name="M:Auth0.Core.Http.ApiConnection.BuildRequestUri(System.String,System.Collections.Generic.IDictionary{System.String,System.String},System.Collections.Generic.IDictionary{System.String,System.String})">
+            <summary>
+                Builds up the URL for the request by substituting values for URL segments and adding query string parameters.
+            </summary>
+            <param name="resource">The resource.</param>
+            <param name="urlSegments">The URL segments.</param>
+            <param name="queryStrings">The query strings.</param>
+            <returns>Uri.</returns>
+        </member>
+        <member name="M:Auth0.Core.Http.ApiConnection.DeleteAsync``1(System.String,System.Collections.Generic.IDictionary{System.String,System.String},System.Collections.Generic.IDictionary{System.String,System.String})">
+            <summary>
+                Performs an HTTP DELETE.
+            </summary>
+            <typeparam name="T"></typeparam>
+            <param name="resource">The resource.</param>
+            <param name="urlSegments">The URL segments.</param>
+            <param name="queryStrings"></param>
+            <returns>Task&lt;T&gt;.</returns>
+        </member>
+        <member name="M:Auth0.Core.Http.ApiConnection.GetAsync``1(System.String,System.Collections.Generic.IDictionary{System.String,System.String},System.Collections.Generic.IDictionary{System.String,System.String},System.Collections.Generic.IDictionary{System.String,System.Object},Newtonsoft.Json.JsonConverter[])">
+            <summary>
+                Performs an HTTP GET.
+            </summary>
+            <typeparam name="T"></typeparam>
+            <param name="resource">The resource.</param>
+            <param name="urlSegments">The URL segments.</param>
+            <param name="queryStrings">The query strings.</param>
+            <param name="headers">The headers.</param>
+            <param name="converters">The list of <see cref="T:Newtonsoft.Json.JsonConverter" /> to use during deserialization.</param>
+            <returns>Task&lt;T&gt;.</returns>
+        </member>
+        <member name="M:Auth0.Core.Http.ApiConnection.HandleErrors(System.Net.Http.HttpResponseMessage)">
+            <summary>
+                Handles errors returned from the API. It will check the response code, deserialize any relevant JSON error payload
+                and throw an appropriate exception.
+            </summary>
+            <param name="response">The <see cref="T:System.Net.Http.HttpResponseMessage" /> returned from the API.</param>
+            <returns>A <see cref="T:System.Threading.Tasks.Task" />.</returns>
+            <exception cref="T:Auth0.Core.Exceptions.ApiException"></exception>
+        </member>
+        <member name="M:Auth0.Core.Http.ApiConnection.PatchAsync``1(System.String,System.Object,System.Collections.Generic.Dictionary{System.String,System.String})">
+            <summary>
+                Performs an HTTP PATCH.
+            </summary>
+            <typeparam name="T"></typeparam>
+            <param name="resource">The resource.</param>
+            <param name="body">The body.</param>
+            <param name="urlSegments">The URL segments.</param>
+            <returns>Task&lt;T&gt;.</returns>
+        </member>
+        <member name="M:Auth0.Core.Http.ApiConnection.PostAsync``1(System.String,System.Object,System.Collections.Generic.IDictionary{System.String,System.Object},System.Collections.Generic.IList{Auth0.Core.Http.FileUploadParameter},System.Collections.Generic.IDictionary{System.String,System.String},System.Collections.Generic.IDictionary{System.String,System.Object},System.Collections.Generic.IDictionary{System.String,System.String})">
+            <summary>
+                Performs an HTTP POST.
+            </summary>
+            <typeparam name="T"></typeparam>
+            <param name="resource">The resource.</param>
+            <param name="body">The body.</param>
+            <param name="parameters">The parameters.</param>
+            <param name="fileParameters">The file parameters.</param>
+            <param name="urlSegments">The URL segments.</param>
+            <param name="headers">The headers.</param>
+            <param name="queryStrings">The query strings.</param>
+            <returns>Task&lt;T&gt;.</returns>
+        </member>
+        <member name="M:Auth0.Core.Http.ApiConnection.PutAsync``1(System.String,System.Object,System.Collections.Generic.IDictionary{System.String,System.Object},System.Collections.Generic.IList{Auth0.Core.Http.FileUploadParameter},System.Collections.Generic.IDictionary{System.String,System.String},System.Collections.Generic.IDictionary{System.String,System.Object},System.Collections.Generic.IDictionary{System.String,System.String})">
+            <summary>
+                Performs an HTTP PUT.
+            </summary>
+            <typeparam name="T"></typeparam>
+            <param name="resource">The resource.</param>
+            <param name="body">The body.</param>
+            <param name="parameters">The parameters.</param>
+            <param name="fileParameters">The file parameters.</param>
+            <param name="urlSegments">The URL segments.</param>
+            <param name="headers">The headers.</param>
+            <param name="queryStrings">The query strings.</param>
+            <returns>Task&lt;T&gt;.</returns>
+        </member>
+        <member name="M:Auth0.Core.Http.ApiConnection.RunAsync``1(System.String,System.Net.Http.HttpMethod,System.Object,System.Collections.Generic.IDictionary{System.String,System.String},System.Collections.Generic.IDictionary{System.String,System.String},System.Collections.Generic.IDictionary{System.String,System.Object},System.Collections.Generic.IDictionary{System.String,System.Object},System.Collections.Generic.IList{Auth0.Core.Http.FileUploadParameter},Newtonsoft.Json.JsonConverter[])">
+            <summary>
+                Executes the request. All requests will pass through this method as it will apply the headers, do the JSON
+                formatting, check for errors on return, etc.
+            </summary>
+            <typeparam name="T"></typeparam>
+            <param name="resource">The resource.</param>
+            <param name="httpMethod">The HTTP method.</param>
+            <param name="body">The body.</param>
+            <param name="urlSegments">The URL segments.</param>
+            <param name="queryStrings">The query strings.</param>
+            <param name="parameters">The parameters.</param>
+            <param name="headers">The headers.</param>
+            <param name="fileParameters">The file parameters.</param>
+            <param name="converters">The list of <see cref="T:Newtonsoft.Json.JsonConverter" /> to use during deserialization.</param>
+            <returns>Task&lt;T&gt;.</returns>
+        </member>
+        <member name="T:Auth0.Core.Http.ApiInfo">
+            <summary>
+            Represents information about an API call.
+            </summary>
+        </member>
+        <member name="P:Auth0.Core.Http.ApiInfo.RateLimit">
+            <summary>
+            Information about the current rate limit.
+            </summary>
+        </member>
+        <member name="M:Auth0.Core.Http.ApiInfo.#ctor(Auth0.Core.Http.RateLimit)">
+            <summary>
+            Creates a new instance of the ApiInfo class.
+            </summary>
+            <param name="rateLimit">The current rate limit information.</param>
+        </member>
+        <member name="T:Auth0.Core.Http.DiagnosticsComponent">
+            <summary>
+            Represents information about a software component that's used for diagnostic purposes.
+            </summary>
+        </member>
+        <member name="M:Auth0.Core.Http.DiagnosticsComponent.#ctor(System.String,System.Object)">
+            <summary>
+            Creates a new instance with the specified name and version.
+            </summary>
+        </member>
+        <member name="M:Auth0.Core.Http.DiagnosticsComponent.#ctor(System.Reflection.AssemblyName)">
+            <summary>
+            Creates a new instance by examining the specified <see cref="T:System.Reflection.AssemblyName"/>.
+            </summary>
+        </member>
+        <member name="P:Auth0.Core.Http.DiagnosticsComponent.Name">
+            <summary>
+            Gets the name of the component.
+            </summary>
+        </member>
+        <member name="P:Auth0.Core.Http.DiagnosticsComponent.Version">
+            <summary>
+            Gets the version of the component.
+            </summary>
+        </member>
+        <member name="T:Auth0.Core.Http.DiagnosticsHeader">
+            <summary>
+                Represents important information pertaining to the SDK that is sent to Auth0 for diagnostic purposes.
+            </summary>
+        </member>
+        <member name="P:Auth0.Core.Http.DiagnosticsHeader.Default">
+            <summary>
+                Gets the <see cref="T:Auth0.Core.Http.DiagnosticsHeader" /> instance that contains the default set of SDK information.
+            </summary>
+        </member>
+        <member name="P:Auth0.Core.Http.DiagnosticsHeader.Dependencies">
+            <summary>
+                Gets the set of components that represent the SDK's 3rd party dependencies.
+            </summary>
+        </member>
+        <member name="P:Auth0.Core.Http.DiagnosticsHeader.Environments">
+            <summary>
+                Gets a set of components that represent the SDK's execution environment.
+            </summary>
+        </member>
+        <member name="P:Auth0.Core.Http.DiagnosticsHeader.Suppress">
+            <summary>
+                Gets the <see cref="T:Auth0.Core.Http.DiagnosticsHeader" /> instance that tells the SDK to not send the diagnostic header.
+            </summary>
+        </member>
+        <member name="M:Auth0.Core.Http.DiagnosticsHeader.AddDependency(Auth0.Core.Http.DiagnosticsComponent)">
+            <summary>
+                Adds a new dependency instance to the SDK's <see cref="P:Auth0.Core.Http.DiagnosticsHeader.Dependencies" />.
+            </summary>
+        </member>
+        <member name="M:Auth0.Core.Http.DiagnosticsHeader.AddDependency(System.String,System.Object)">
+            <summary>
+                Adds a new dependency to the SDK's <see cref="P:Auth0.Core.Http.DiagnosticsHeader.Dependencies" />.
+            </summary>
+        </member>
+        <member name="M:Auth0.Core.Http.DiagnosticsHeader.AddEnvironment(Auth0.Core.Http.DiagnosticsComponent)">
+            <summary>
+                Adds a new environment entry instance to the SDK's Environment />.
+            </summary>
+        </member>
+        <member name="M:Auth0.Core.Http.DiagnosticsHeader.AddEnvironment(System.String,System.Object)">
+            <summary>
+                Adds a new environment to the SDK's Environment />.
+            </summary>
+        </member>
+        <member name="M:Auth0.Core.Http.DiagnosticsHeader.Reset">
+            <summary>
+                Resets the <see cref="P:Auth0.Core.Http.DiagnosticsHeader.Default" /> and <see cref="P:Auth0.Core.Http.DiagnosticsHeader.Suppress" /> instances.
+            </summary>
+        </member>
+        <member name="M:Auth0.Core.Http.DiagnosticsHeader.ToString">
+            <summary>
+                Returns a string representation of the <see cref="T:Auth0.Core.Http.DiagnosticsHeader" /> that is safe for HTTP transport.
+            </summary>
+        </member>
+        <member name="T:Auth0.Core.Http.FileUploadParameter">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="T:Auth0.Core.Http.IApiConnection">
+            <summary>
+                The communication layer between the various API clients and the actual API back-end. All API calls happen through
+                this interface.
+            </summary>
+        </member>
+        <member name="M:Auth0.Core.Http.IApiConnection.DeleteAsync``1(System.String,System.Collections.Generic.IDictionary{System.String,System.String},System.Collections.Generic.IDictionary{System.String,System.String})">
+            <summary>
+                Performs an HTTP DELETE.
+            </summary>
+            <typeparam name="T"></typeparam>
+            <param name="resource">The resource.</param>
+            <param name="urlSegments">The URL segments.</param>
+            <param name="queryStrings"></param>
+            <returns>Task&lt;T&gt;.</returns>
+        </member>
+        <member name="M:Auth0.Core.Http.IApiConnection.GetAsync``1(System.String,System.Collections.Generic.IDictionary{System.String,System.String},System.Collections.Generic.IDictionary{System.String,System.String},System.Collections.Generic.IDictionary{System.String,System.Object},Newtonsoft.Json.JsonConverter[])">
+            <summary>
+                Performs an HTTP GET.
+            </summary>
+            <typeparam name="T"></typeparam>
+            <param name="resource">The resource.</param>
+            <param name="urlSegments">The URL segments.</param>
+            <param name="queryStrings">The query strings.</param>
+            <param name="headers">The headers.</param>
+            <param name="converters">The list of <see cref="T:Newtonsoft.Json.JsonConverter" /> to use during deserialization.</param>
+            <returns>Task&lt;T&gt;.</returns>
+        </member>
+        <member name="M:Auth0.Core.Http.IApiConnection.PatchAsync``1(System.String,System.Object,System.Collections.Generic.Dictionary{System.String,System.String})">
+            <summary>
+                Performs an HTTP PATCH.
+            </summary>
+            <typeparam name="T"></typeparam>
+            <param name="resource">The resource.</param>
+            <param name="body">The body.</param>
+            <param name="urlSegments">The URL segments.</param>
+            <returns>Task&lt;T&gt;.</returns>
+        </member>
+        <member name="M:Auth0.Core.Http.IApiConnection.PostAsync``1(System.String,System.Object,System.Collections.Generic.IDictionary{System.String,System.Object},System.Collections.Generic.IList{Auth0.Core.Http.FileUploadParameter},System.Collections.Generic.IDictionary{System.String,System.String},System.Collections.Generic.IDictionary{System.String,System.Object},System.Collections.Generic.IDictionary{System.String,System.String})">
+            <summary>
+                Performs an HTTP POST.
+            </summary>
+            <typeparam name="T"></typeparam>
+            <param name="resource">The resource.</param>
+            <param name="body">The body.</param>
+            <param name="parameters">The parameters.</param>
+            <param name="fileParameters">The file parameters.</param>
+            <param name="urlSegments">The URL segments.</param>
+            <param name="headers">The headers.</param>
+            <param name="queryStrings">The query strings.</param>
+            <returns>Task&lt;T&gt;.</returns>
+        </member>
+        <member name="M:Auth0.Core.Http.IApiConnection.PutAsync``1(System.String,System.Object,System.Collections.Generic.IDictionary{System.String,System.Object},System.Collections.Generic.IList{Auth0.Core.Http.FileUploadParameter},System.Collections.Generic.IDictionary{System.String,System.String},System.Collections.Generic.IDictionary{System.String,System.Object},System.Collections.Generic.IDictionary{System.String,System.String})">
+            <summary>
+                Performs an HTTP PUT.
+            </summary>
+            <typeparam name="T"></typeparam>
+            <param name="resource">The resource.</param>
+            <param name="body">The body.</param>
+            <param name="parameters">The parameters.</param>
+            <param name="fileParameters">The file parameters.</param>
+            <param name="urlSegments">The URL segments.</param>
+            <param name="headers">The headers.</param>
+            <param name="queryStrings">The query strings.</param>
+            <returns>Task&lt;T&gt;.</returns>
+        </member>
+        <member name="T:Auth0.Core.Http.RateLimit">
+            <summary>
+            Represents information about the rate limit for API calls.
+            </summary>
+        </member>
+        <member name="P:Auth0.Core.Http.RateLimit.Limit">
+            <summary>
+            The maximum number of requests the consumer is allowed to make.
+            </summary>
+        </member>
+        <member name="P:Auth0.Core.Http.RateLimit.Remaining">
+            <summary>
+            The number of requests remaining in the current rate limit window.
+            </summary>
+        </member>
+        <member name="P:Auth0.Core.Http.RateLimit.Reset">
+            <summary>
+            The date and time offset at which the current rate limit window is reset.
+            </summary>
+        </member>
+        <member name="M:Auth0.Core.Http.Utils.CombineUriParts(System.String[])">
+            <summary>
+            Combines URI parts, taking care of trailing and starting slashes.
+            See http://stackoverflow.com/a/6704287
+            </summary>
+            <param name="uriParts">The URI parts to combine.</param>
+        </member>
+        <member name="T:Auth0.Core.Serialization.FlexibleDateTimeConverter">
+            <summary>
+            A JSON date converter that reads both ISO 8601 and epoch dates.
+            </summary>
+        </member>
+        <member name="M:Auth0.Core.Serialization.FlexibleDateTimeConverter.Add(System.DateTime,System.TimeSpan)">
+            <summary>
+            Add a DateTime and a TimeSpan.
+            The maximum time is DateTime.MaxTime.  It is not an error if time + timespan > MaxTime.
+            Just return MaxTime.
+            </summary>
+            <param name="time">Initial <see cref="T:System.DateTime"/> value.</param>
+            <param name="timespan"><see cref="T:System.TimeSpan"/> to add.</param>
+            <returns><see cref="T:System.DateTime"/> as the sum of time and timespan.</returns>
+        </member>
+        <member name="M:Auth0.Core.Serialization.FlexibleDateTimeConverter.GetMaxValue(System.DateTimeKind)">
+            <summary>
+            Gets the Maximum value for a DateTime specifying kind.
+            </summary>
+            <param name="kind">DateTimeKind to use.</param>
+            <returns>DateTime of specified kind.</returns>
+        </member>
+        <member name="M:Auth0.Core.Serialization.FlexibleDateTimeConverter.GetMinValue(System.DateTimeKind)">
+            <summary>
+            Gets the Minimum value for a DateTime specifying kind.
+            </summary>
+            <param name="kind">DateTimeKind to use.</param>
+            <returns>DateTime of specified kind.</returns>
+        </member>
+    </members>
+</doc>
