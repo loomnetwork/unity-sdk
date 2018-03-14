@@ -1,4 +1,4 @@
-package io.loomx.unity3d_plugin;
+package io.loomx.loom_unity3d_sdk;
 
 import android.content.Context;
 import android.support.test.InstrumentationRegistry;
@@ -21,6 +21,6 @@ public class ExampleInstrumentedTest {
         // Context of the app under test.
         Context appContext = InstrumentationRegistry.getTargetContext();
 
-        assertEquals("io.loomx.unity3d_plugin.test", appContext.getPackageName());
+        assertEquals("io.loomx.loom_unity3d_sdk.test", appContext.getPackageName());
     }
 }

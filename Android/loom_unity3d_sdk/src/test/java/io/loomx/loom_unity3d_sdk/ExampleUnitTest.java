@@ -1,4 +1,4 @@
-package io.loomx.unity3d_plugin;
+package io.loomx.loom_unity3d_sdk;
 
 import org.junit.Test;
 
