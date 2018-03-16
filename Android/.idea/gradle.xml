@@ -8,7 +8,7 @@
         <option name="modules">
           <set>
             <option value="$PROJECT_DIR$" />
-            <option value="$PROJECT_DIR$/loom_unity3d_sdk" />
+            <option value="$PROJECT_DIR$/unity3d" />
           </set>
         </option>
         <option name="resolveModulePerSourceSet" value="false" />

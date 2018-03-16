@@ -1,6 +1,4 @@
-﻿using Chaos.NaCl;
-using System.Security.Cryptography;
-using System.Threading.Tasks;
+﻿using System.Threading.Tasks;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -23,7 +21,12 @@ public class authSample : MonoBehaviour {
 
     public async void SignIn()
     {
+#if UNITY_EDITOR
         this.identity = await SignInFromNativeApp();
+#endif
+#if UNITY_ANDROID
+        this.identity = await SignInFromAndroidApp();
+#endif
         this.statusTextRef.text = "Signed in as " + this.identity.Username;
     }
 
@@ -31,6 +34,13 @@ public class authSample : MonoBehaviour {
     {
         var authClient = new LoomAuthClient("unity3d-sdk");
         var accessToken = await authClient.GetAccessTokenForNativeApp();
+        return await authClient.GetLoomIdentity(accessToken);
+    }
+
+    public async Task<LoomIdentity> SignInFromAndroidApp()
+    {
+        var authClient = new LoomAuthClient("unity3d-sdk");
+        var accessToken = await authClient.GetAccessTokenForAndroidApp();
         return await authClient.GetLoomIdentity(accessToken);
     }
 
