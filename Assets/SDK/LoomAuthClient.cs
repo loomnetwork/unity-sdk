@@ -148,38 +148,6 @@ public class LoomAuthClient
 #if UNITY_ANDROID
     public async Task<string> GetAccessTokenForAndroidApp()
     {
-        /*
-        var taskCompletionSource = new TaskCompletionSource<string>();
-        await Task.Factory.StartNew(() =>
-        {
-            var loginCallback = new LoginCallback()
-            {
-                OnSuccess = (string accessToken) => taskCompletionSource.SetResult(accessToken),
-                OnFailure = (string exception) => taskCompletionSource.SetException(new Exception(exception))
-            };
-            using (var authFragment = new AndroidJavaClass("io.loomx.loom_unity3d_sdk.AuthFragment"))
-            {
-                authFragment.CallStatic("start"); // attach to current Unity activity
-                authFragment.CallStatic("login", loginCallback);
-            }
-        });
-        return await Task.FromResult(taskCompletionSource.Task.Result);
-        */
-        /*
-        var loginCallback = new LoginCallback()
-        {
-            OnSuccess = (string accessToken) => Debug.Log("Access Token: " + accessToken),
-            OnFailure = (string exception) => Debug.Log("Login Error: " + exception)
-        };
-        
-        using (var authFragment = new AndroidJavaClass("io.loomx.unity3d.AuthFragment"))
-        {
-            authFragment.CallStatic("start"); // attach to current Unity activity
-            authFragment.CallStatic("login", loginCallback);
-        }
-        return null;
-        */
-
         var taskCompletionSource = new TaskCompletionSource<string>();
         var loginCallback = new LoginCallback()
         {
@@ -231,7 +199,18 @@ public class LoomAuthClient
     public async Task<LoomIdentity> CreateIdentity(string accessToken, VaultStore vaultStore)
     {
         Debug.Log("Creating new account");
-        var profile = await this.auth0Client.GetUserInfoAsync(accessToken);
+        var oldValidationCallback = ServicePointManager.ServerCertificateValidationCallback;
+        ServicePointManager.ServerCertificateValidationCallback = CertificateValidationCallback;
+        UserInfo profile;
+        try
+        {
+            profile = await this.auth0Client.GetUserInfoAsync(accessToken);
+        }
+        finally
+        {
+            ServicePointManager.ServerCertificateValidationCallback = oldValidationCallback;
+        }
+        Debug.Log("Retrieved user profile");
         var identity = new LoomIdentity
         {
             Username = profile.Email.Split('@')[0],
