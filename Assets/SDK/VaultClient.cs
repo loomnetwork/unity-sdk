@@ -104,7 +104,7 @@ public class VaultClient {
 
     public async Task<VaultListSecretsResponse> ListAsync(string path)
     {
-        using (var r = new UnityWebRequest(this.url + path, "LIST"))
+        using (var r = new UnityWebRequest(this.url + path + "?list=true", "GET"))
         {
             r.downloadHandler = (DownloadHandler)new DownloadHandlerBuffer();
             SetRequestHeaders(r);
