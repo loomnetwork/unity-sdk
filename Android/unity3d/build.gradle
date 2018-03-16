@@ -1,3 +1,6 @@
+import org.gradle.internal.os.OperatingSystem
+import java.nio.file.Paths
+
 apply plugin: 'com.android.library'
 
 android {
@@ -22,14 +25,33 @@ android {
     }
 }
 
+// TODO: Linux & IL2CPP
+def getUnityClassesJar(boolean debugBuild) {
+    String installDir = System.getenv('UNITY3D_INSTALL_DIR');
+    if (installDir == null) {
+        throw new GradleException('UNITY3D_INSTALL_DIR env var must be set to location of Unity installation dir.')
+    }
+    if (OperatingSystem.current().isWindows()) {
+        return Paths.get(installDir,
+                "Editor\\Data\\PlaybackEngines\\AndroidPlayer\\Variations\\mono",
+                debugBuild ? "Development" : "Release",
+                "Classes\\classes.jar")
+    } else if (OperatingSystem.current().isMacOsX()) {
+        return Paths.get(installDir,
+                "PlaybackEngines/AndroidPlayer/Variations/mono",
+                debugBuild ? "Development" : "Release",
+                "Classes/classes.jar")
+    }
+    throw new GradleException("Building the SDK on this platform is not supported yet.")
+}
+
 dependencies {
     implementation 'com.android.support:support-v4:26.1.0'
     implementation 'com.auth0.android:auth0:1.12.1'
     // UnityAndroidPlayer classes that are needed to compile the plugin, but won't be packaged with
     // since they will be provided by Unity itself.
-    //compileOnly files('./libs/unity_2017.3.1f1_classes.jar')
-    compileOnly files('C:\\Program Files\\Unity\\Editor\\Data\\PlaybackEngines\\AndroidPlayer\\Variations\\mono\\Development\\Classes\\classes.jar')
-    //implementation fileTree(include: ['*.jar'], dir: 'libs')
+    debugCompileOnly files(getUnityClassesJar(true))
+    releaseCompileOnly files(getUnityClassesJar(false))
     implementation 'com.android.support:appcompat-v7:26.1.0'
     implementation 'com.android.support:customtabs:26.1.0'
 
