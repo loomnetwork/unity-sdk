@@ -37,12 +37,14 @@ public class authSample : MonoBehaviour {
         return await authClient.GetLoomIdentity(accessToken);
     }
 
+#if UNITY_ANDROID
     public async Task<LoomIdentity> SignInFromAndroidApp()
     {
         var authClient = new LoomAuthClient("unity3d-sdk");
         var accessToken = await authClient.GetAccessTokenForAndroidApp();
         return await authClient.GetLoomIdentity(accessToken);
     }
+#endif
 
     public async void SendTx()
     {
