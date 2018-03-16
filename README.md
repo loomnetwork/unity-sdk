@@ -4,7 +4,7 @@ This repo contains the SDK code and a **Unity 2017.3** project that provides exa
 
 The SDK currently supports the following Unity targets:
 - Desktop Win/MacOS/Linux
-
+- Android
 
 ## Requirements
 
@@ -31,6 +31,12 @@ open a new browser window and load the Auth0 sign-in page (using the default sys
 At this point the user should be directed to switch to the browser to sign-in, when they do so
 successfully Auth0 will redirect to the aforementioned URL, and `LoomAuthClient` will fetch or
 create a `LoomIdentity`.
+
+### Android
+
+`LoomAuthClient` will open the default system browser to the Auth0 hosted login page, once the user
+signs in the browser will redirect the user back to the Unity app. `LoomAuthClient` will then fetch
+or create a `LoomIdentity`.
 
 ## Adding new transaction types
 
