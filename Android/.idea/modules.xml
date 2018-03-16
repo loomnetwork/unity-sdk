@@ -3,7 +3,7 @@
   <component name="ProjectModuleManager">
     <modules>
       <module fileurl="file://$PROJECT_DIR$/Android.iml" filepath="$PROJECT_DIR$/Android.iml" />
-      <module fileurl="file://$PROJECT_DIR$/loom_unity3d_sdk/unity3d_plugin.iml" filepath="$PROJECT_DIR$/loom_unity3d_sdk/unity3d_plugin.iml" />
+      <module fileurl="file://$PROJECT_DIR$/unity3d/unity3d.iml" filepath="$PROJECT_DIR$/unity3d/unity3d.iml" />
     </modules>
   </component>
 </project>

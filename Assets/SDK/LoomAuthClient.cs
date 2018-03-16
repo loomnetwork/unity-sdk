@@ -8,6 +8,7 @@ using System.Security.Cryptography.X509Certificates;
 using System.Text;
 using System.Threading.Tasks;
 using UnityEngine;
+using LoomNetwork.Unity3dSDK.Android;
 
 // TODO: Add auth flow for Android & OSX
 // TODO: Add auth for Unity Web Player
@@ -143,6 +144,56 @@ public class LoomAuthClient
             ServicePointManager.ServerCertificateValidationCallback = oldValidationCallback;
         }
     }
+
+#if UNITY_ANDROID
+    public async Task<string> GetAccessTokenForAndroidApp()
+    {
+        /*
+        var taskCompletionSource = new TaskCompletionSource<string>();
+        await Task.Factory.StartNew(() =>
+        {
+            var loginCallback = new LoginCallback()
+            {
+                OnSuccess = (string accessToken) => taskCompletionSource.SetResult(accessToken),
+                OnFailure = (string exception) => taskCompletionSource.SetException(new Exception(exception))
+            };
+            using (var authFragment = new AndroidJavaClass("io.loomx.loom_unity3d_sdk.AuthFragment"))
+            {
+                authFragment.CallStatic("start"); // attach to current Unity activity
+                authFragment.CallStatic("login", loginCallback);
+            }
+        });
+        return await Task.FromResult(taskCompletionSource.Task.Result);
+        */
+        /*
+        var loginCallback = new LoginCallback()
+        {
+            OnSuccess = (string accessToken) => Debug.Log("Access Token: " + accessToken),
+            OnFailure = (string exception) => Debug.Log("Login Error: " + exception)
+        };
+        
+        using (var authFragment = new AndroidJavaClass("io.loomx.unity3d.AuthFragment"))
+        {
+            authFragment.CallStatic("start"); // attach to current Unity activity
+            authFragment.CallStatic("login", loginCallback);
+        }
+        return null;
+        */
+
+        var taskCompletionSource = new TaskCompletionSource<string>();
+        var loginCallback = new LoginCallback()
+        {
+            OnSuccess = (string accessToken) => taskCompletionSource.SetResult(accessToken),
+            OnFailure = (string exception) => taskCompletionSource.SetException(new Exception(exception))
+        };
+        using (var authFragment = new AndroidJavaClass("io.loomx.unity3d.AuthFragment"))
+        {
+            authFragment.CallStatic("start"); // attach to current Unity activity
+            authFragment.CallStatic("login", loginCallback);
+        }
+        return await taskCompletionSource.Task;
+    }
+#endif
 
     public async Task<LoomIdentity> GetLoomIdentity(string accessToken)
     {
