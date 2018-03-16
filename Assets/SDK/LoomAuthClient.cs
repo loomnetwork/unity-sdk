@@ -8,7 +8,10 @@ using System.Security.Cryptography.X509Certificates;
 using System.Text;
 using System.Threading.Tasks;
 using UnityEngine;
+
+#if UNITY_ANDROID
 using LoomNetwork.Unity3dSDK.Android;
+#endif
 
 // TODO: Add auth flow for Android & OSX
 // TODO: Add auth for Unity Web Player
