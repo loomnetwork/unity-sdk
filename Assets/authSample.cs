@@ -1,11 +1,12 @@
 ﻿using System.Threading.Tasks;
 using UnityEngine;
 using UnityEngine.UI;
+using Loom.Unity3d;
 
 public class authSample : MonoBehaviour {
     public Text statusTextRef;
 
-    private LoomIdentity identity;
+    private Identity identity;
 
     // Use this for initialization
     void Start () {
@@ -21,30 +22,15 @@ public class authSample : MonoBehaviour {
 
     public async void SignIn()
     {
-#if UNITY_EDITOR
-        this.identity = await SignInFromNativeApp();
-#endif
-#if UNITY_ANDROID
-        this.identity = await SignInFromAndroidApp();
-#endif
+        var authClient = AuthClientFactory.Configure()
+            .WithVaultPrefix("unity3d-sdk")
+            .WithRedirectUrl("http://127.0.0.1:9999/auth/auth0/")
+            .Create();
+        var accessToken = await authClient.GetAccessTokenAsync();
+        this.identity = await authClient.GetIdentityAsync(accessToken);
+
         this.statusTextRef.text = "Signed in as " + this.identity.Username;
     }
-
-    public async Task<LoomIdentity> SignInFromNativeApp()
-    {
-        var authClient = new LoomAuthClient("unity3d-sdk");
-        var accessToken = await authClient.GetAccessTokenForNativeApp();
-        return await authClient.GetLoomIdentity(accessToken);
-    }
-
-#if UNITY_ANDROID
-    public async Task<LoomIdentity> SignInFromAndroidApp()
-    {
-        var authClient = new LoomAuthClient("unity3d-sdk");
-        var accessToken = await authClient.GetAccessTokenForAndroidApp();
-        return await authClient.GetLoomIdentity(accessToken);
-    }
-#endif
 
     public async void SendTx()
     {

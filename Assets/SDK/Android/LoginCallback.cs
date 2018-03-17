@@ -1,9 +1,7 @@
 ﻿using System;
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
-namespace LoomNetwork.Unity3dSDK.Android
+namespace Loom.Unity3d.Android
 {
     class LoginCallback : AndroidJavaProxy
     {
