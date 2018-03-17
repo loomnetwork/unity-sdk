@@ -38,6 +38,28 @@ create a `LoomIdentity`.
 signs in the browser will redirect the user back to the Unity app. `LoomAuthClient` will then fetch
 or create a `LoomIdentity`.
 
+You must add an Auth0 redirect activity to the Android manifest, and set the `host`, `pathPrefix`,
+and `scheme` to match the Auth0 redirect URL specified when creating a new instance of `AuthClient`.
+For example:
+
+```xml
+<activity android:name="com.auth0.android.provider.RedirectActivity" tools:node="replace">
+  <intent-filter>
+    <action android:name="android.intent.action.VIEW" />
+    <category android:name="android.intent.category.DEFAULT" />
+    <category android:name="android.intent.category.BROWSABLE" />
+    <data
+        android:host="loomx.auth0.com"
+        android:pathPrefix="/android/io.loomx.unity_sample/callback"
+        android:scheme="io.loomx.unity3d" />
+  </intent-filter>
+</activity>
+```
+
+If you don't have a custom manifest you can use `Assets/Plugins/Android/AndroidManifest.xml` in
+this repo as a starting point, at the very least you will need to update the `package`, and the
+`data` parameters.
+
 ## Adding new transaction types
 
 Create a new `.proto` file in the `Assets\Protobuf` directory, refer to [Google Protocol Buffers](https://developers.google.com/protocol-buffers/docs/csharptutorial) for syntax details etc.
