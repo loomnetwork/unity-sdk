@@ -15,28 +15,28 @@ The SDK currently supports the following Unity targets:
 
 ## Overview
 
-`LoomAuthClient` should be used to obtain a `LoomIdentity`, once you have a `LoomIdentity` you
+`AuthClient` should be used to obtain a `Identity`, once you have a `Identity` you
 can use the associated private key to sign and then commit transactions using `LoomChainClient`.
 
 ## Authorization Flows
 
-To obtain a `LoomIdentity` you must first obtain an access token from Auth0, the exact process
+To obtain a `Identity` you must first obtain an access token from Auth0, the exact process
 depends on the platform. Currently the process has only be implemented on desktop platforms,
 mobile platforms are TBD.
 
 ### Desktop Windows / Mac / Linux
 
-`LoomAuthClient` will wait for an HTTP request on `http://127.0.0.1:9999/auth/auth0/`, then it will
+`AuthClient` will wait for an HTTP request on `http://127.0.0.1:9999/auth/auth0/`, then it will
 open a new browser window and load the Auth0 sign-in page (using the default system web browser).
 At this point the user should be directed to switch to the browser to sign-in, when they do so
-successfully Auth0 will redirect to the aforementioned URL, and `LoomAuthClient` will fetch or
-create a `LoomIdentity`.
+successfully Auth0 will redirect to the aforementioned URL, and `AuthClient` will fetch or
+create a `Identity`.
 
 ### Android
 
-`LoomAuthClient` will open the default system browser to the Auth0 hosted login page, once the user
-signs in the browser will redirect the user back to the Unity app. `LoomAuthClient` will then fetch
-or create a `LoomIdentity`.
+`AuthClient` will open the default system browser to the Auth0 hosted login page, once the user
+signs in the browser will redirect the user back to the Unity app. `AuthClient` will then fetch
+or create a `Identity`.
 
 You must add an Auth0 redirect activity to the Android manifest, and set the `host`, `pathPrefix`,
 and `scheme` to match the Auth0 redirect URL specified when creating a new instance of `AuthClient`.
