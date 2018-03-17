@@ -1,5 +1,6 @@
 ﻿using Auth0.AuthenticationApi;
 using Auth0.AuthenticationApi.Models;
+using Newtonsoft.Json;
 using System;
 using System.Net;
 using System.Net.Security;
@@ -9,10 +10,25 @@ using UnityEngine;
 
 namespace Loom.Unity3d.Android
 {
+    internal class AuthConfig
+    {
+        public string ClientId;
+        public string Domain;
+        public string Scheme;
+        public string Audience;
+        public string Scope;
+    }
+
     internal class AuthClient : IAuthClient
     {
         private AuthenticationApiClient auth0Client;
         private string vaultPrefix;
+
+        public string ClientId { get; set; }
+        public string Domain { get; set; }
+        public string Scheme { get; set; }
+        public string Audience { get; set; }
+        public string Scope { get; set; }
 
         public string VaultPrefix
         {
@@ -42,7 +58,15 @@ namespace Loom.Unity3d.Android
             using (var authFragment = new AndroidJavaClass("io.loomx.unity3d.AuthFragment"))
             {
                 authFragment.CallStatic("start"); // attach to current Unity activity
-                authFragment.CallStatic("login", loginCallback);
+                var config = JsonConvert.SerializeObject(new AuthConfig
+                {
+                    ClientId = this.ClientId,
+                    Domain = this.Domain,
+                    Scheme = this.Scheme,
+                    Audience = this.Audience,
+                    Scope = this.Scope
+                });
+                authFragment.CallStatic("login", config, loginCallback);
             }
             return await taskCompletionSource.Task;
         }

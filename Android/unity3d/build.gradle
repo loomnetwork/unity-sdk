@@ -48,6 +48,7 @@ def getUnityClassesJar(boolean debugBuild) {
 dependencies {
     implementation 'com.android.support:support-v4:26.1.0'
     implementation 'com.auth0.android:auth0:1.12.1'
+    implementation 'com.google.code.gson:gson:2.8.2'
     // UnityAndroidPlayer classes that are needed to compile the plugin, but won't be packaged with
     // since they will be provided by Unity itself.
     debugCompileOnly files(getUnityClassesJar(true))

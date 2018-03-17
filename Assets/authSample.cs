@@ -23,6 +23,11 @@ public class authSample : MonoBehaviour {
     public async void SignIn()
     {
         var authClient = AuthClientFactory.Configure()
+            .WithClientId("25pDQvX4O5j7wgwT052Sh3UzXVR9X6Ud")
+            .WithDomain("loomx.auth0.com")
+            .WithScheme("io.loomx.unity3d")
+            .WithAudience("https://keystore.loomx.io/")
+            .WithScope("openid profile email picture")
             .WithVaultPrefix("unity3d-sdk")
             .WithRedirectUrl("http://127.0.0.1:9999/auth/auth0/")
             .Create();
