@@ -14,8 +14,17 @@ namespace Loom.Unity3d.Desktop
     internal class AuthClient : IAuthClient
     {
         private AuthenticationApiClient auth0Client;
-        private string redirectUrl;
         private string vaultPrefix;
+
+        public string ClientId { get; set; }
+        public string Domain { get; set; }
+        public string Scheme { get; set; }
+        public string Audience { get; set; }
+        public string Scope { get; set; }
+        /// <summary>
+        /// Url Auth0 should redirect to after a user signs in.
+        /// </summary>
+        public string RedirectUrl { get; set; }
 
         public string VaultPrefix
         {
@@ -26,21 +35,6 @@ namespace Loom.Unity3d.Desktop
             internal set
             {
                 this.vaultPrefix = value.EndsWith("/") ? value : (value + "/");
-            }
-        }
-
-        /// <summary>
-        /// Url Auth0 should redirect to after a user signs in.
-        /// </summary>
-        public string RedirectUrl
-        {
-            get
-            {
-                return this.redirectUrl;
-            }
-            internal set
-            {
-                this.redirectUrl = value;
             }
         }
 
@@ -69,11 +63,9 @@ namespace Loom.Unity3d.Desktop
 
             // create an HttpListener to listen for requests on that redirect URI.
             var http = new HttpListener();
-            http.Prefixes.Add(redirectUrl);
+            http.Prefixes.Add(this.RedirectUrl);
             http.Start();
 
-            var clientId = "25pDQvX4O5j7wgwT052Sh3UzXVR9X6Ud"; // unity3d sdk
-            var audience = "https://keystore.loomx.io/";
             string authCode;
 
             try
@@ -81,10 +73,10 @@ namespace Loom.Unity3d.Desktop
                 // open external browser window with request to auth0 auth endpoint
                 var authUrl = this.auth0Client.BuildAuthorizationUrl()
                         .WithResponseType(AuthorizationResponseType.Code)
-                        .WithClient(clientId)
-                        .WithRedirectUrl(redirectUrl)
-                        .WithScope("openid profile email picture")
-                        .WithAudience(audience)
+                        .WithClient(this.ClientId)
+                        .WithRedirectUrl(this.RedirectUrl)
+                        .WithScope(this.Scope)
+                        .WithAudience(this.Audience)
                         .WithValue("code_challenge", codeChallenge)
                         .WithValue("code_challenge_method", "S256")
                         .Build();
@@ -145,10 +137,10 @@ namespace Loom.Unity3d.Desktop
             {
                 var response = await this.auth0Client.GetTokenAsync(new AuthorizationCodePkceTokenRequest
                 {
-                    ClientId = clientId,
+                    ClientId = this.ClientId,
                     Code = authCode,
                     CodeVerifier = codeVerifier,
-                    RedirectUri = redirectUrl
+                    RedirectUri = this.RedirectUrl
                 });
                 Debug.Log("Access Token: " + response.AccessToken);
                 return response.AccessToken;

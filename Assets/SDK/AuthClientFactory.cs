@@ -72,6 +72,11 @@
 #else
             return new Desktop.AuthClient
             {
+                ClientId = this.clientId,
+                Domain = this.domain,
+                Scheme = this.scheme,
+                Audience = this.audience,
+                Scope = this.scope,
                 VaultPrefix = this.vaultPrefix,
                 RedirectUrl = this.redirectUrl
             };

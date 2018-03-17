@@ -23,7 +23,7 @@ public class authSample : MonoBehaviour {
     public async void SignIn()
     {
         var authClient = AuthClientFactory.Configure()
-            .WithClientId("25pDQvX4O5j7wgwT052Sh3UzXVR9X6Ud")
+            .WithClientId("25pDQvX4O5j7wgwT052Sh3UzXVR9X6Ud") // unity3d sdk
             .WithDomain("loomx.auth0.com")
             .WithScheme("io.loomx.unity3d")
             .WithAudience("https://keystore.loomx.io/")
