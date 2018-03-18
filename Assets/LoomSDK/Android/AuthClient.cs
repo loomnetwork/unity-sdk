@@ -2,9 +2,6 @@
 using Auth0.AuthenticationApi.Models;
 using Newtonsoft.Json;
 using System;
-using System.Net;
-using System.Net.Security;
-using System.Security.Cryptography.X509Certificates;
 using System.Threading.Tasks;
 using UnityEngine;
 
@@ -85,17 +82,7 @@ namespace Loom.Unity3d.Android
         public async Task<Identity> CreateIdentityAsync(string accessToken, IKeyStore keyStore)
         {
             Debug.Log("Creating new account");
-            var oldValidationCallback = ServicePointManager.ServerCertificateValidationCallback;
-            ServicePointManager.ServerCertificateValidationCallback = CertificateValidationCallback;
-            UserInfo profile;
-            try
-            {
-                profile = await this.auth0Client.GetUserInfoAsync(accessToken);
-            }
-            finally
-            {
-                ServicePointManager.ServerCertificateValidationCallback = oldValidationCallback;
-            }
+            UserInfo profile = await this.auth0Client.GetUserInfoAsync(accessToken);
             Debug.Log("Retrieved user profile");
             var identity = new Identity
             {
@@ -105,31 +92,6 @@ namespace Loom.Unity3d.Android
             // TODO: connect to blockchain & post a create an account Tx
             await keyStore.SetAsync(identity.Username, identity.PrivateKey);
             return identity;
-        }
-
-        static bool CertificateValidationCallback(System.Object sender, X509Certificate certificate, X509Chain chain, SslPolicyErrors sslPolicyErrors)
-        {
-            bool isOk = true;
-            // If there are errors in the certificate chain, look at each error to determine the cause.
-            if (sslPolicyErrors != SslPolicyErrors.None)
-            {
-                for (int i = 0; i < chain.ChainStatus.Length; i++)
-                {
-                    if (chain.ChainStatus[i].Status != X509ChainStatusFlags.RevocationStatusUnknown)
-                    {
-                        chain.ChainPolicy.RevocationFlag = X509RevocationFlag.EntireChain;
-                        chain.ChainPolicy.RevocationMode = X509RevocationMode.Online;
-                        chain.ChainPolicy.UrlRetrievalTimeout = new TimeSpan(0, 1, 0);
-                        chain.ChainPolicy.VerificationFlags = X509VerificationFlags.AllFlags;
-                        bool chainIsValid = chain.Build((X509Certificate2)certificate);
-                        if (!chainIsValid)
-                        {
-                            isOk = false;
-                        }
-                    }
-                }
-            }
-            return isOk;
         }
     }
 }

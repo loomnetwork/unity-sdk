@@ -2,9 +2,7 @@
 using Auth0.AuthenticationApi.Models;
 using System;
 using System.Net;
-using System.Net.Security;
 using System.Security.Cryptography;
-using System.Security.Cryptography.X509Certificates;
 using System.Text;
 using System.Threading.Tasks;
 using UnityEngine;
@@ -107,35 +105,16 @@ namespace Loom.Unity3d.Desktop
                 Debug.Log("Stopped listening");
             }
 
-            // HACK: Get around Unity TLS exceptions that occur when sending a request to the
-            //       Auth0 HTTPS token endpoint - bypassing cert validation...
-            //       Unclear why the TLS exceptions occur, no root CAs in Mono? Mono unable to validate sha256 certs?
-            //       fuck knows... fix it later!
-            // https://answers.unity.com/questions/1381396/unity-ssl-tlsexception.html
-            // https://answers.unity.com/questions/50013/httpwebrequestgetrequeststream-https-certificate-e.html
-            // https://answers.unity.com/questions/792342/how-to-validate-ssl-certificates-when-using-httpwe.html
-            // https://answers.unity.com/questions/1184815/how-to-stop-mono-from-preventing-authentication.html#answer-1186348
-            // https://answers.unity.com/questions/1186445/what-is-the-best-way-to-add-root-certificates-to-a.html
-            var oldValidationCallback = ServicePointManager.ServerCertificateValidationCallback;
-            ServicePointManager.ServerCertificateValidationCallback = CertificateValidationCallback;
-
             // exchange auth code for an access token
-            try
+            var response = await this.auth0Client.GetTokenAsync(new AuthorizationCodePkceTokenRequest
             {
-                var response = await this.auth0Client.GetTokenAsync(new AuthorizationCodePkceTokenRequest
-                {
-                    ClientId = this.ClientId,
-                    Code = authCode,
-                    CodeVerifier = codeVerifier,
-                    RedirectUri = this.RedirectUrl
-                });
-                Debug.Log("Access Token: " + response.AccessToken);
-                return response.AccessToken;
-            }
-            finally
-            {
-                ServicePointManager.ServerCertificateValidationCallback = oldValidationCallback;
-            }
+                ClientId = this.ClientId,
+                Code = authCode,
+                CodeVerifier = codeVerifier,
+                RedirectUri = this.RedirectUrl
+            });
+            Debug.Log("Access Token: " + response.AccessToken);
+            return response.AccessToken;
         }
 
         public async Task<Identity> GetIdentityAsync(string accessToken, IKeyStore keyStore)
@@ -165,17 +144,7 @@ namespace Loom.Unity3d.Desktop
         public async Task<Identity> CreateIdentityAsync(string accessToken, IKeyStore keyStore)
         {
             Debug.Log("Creating new account");
-            var oldValidationCallback = ServicePointManager.ServerCertificateValidationCallback;
-            ServicePointManager.ServerCertificateValidationCallback = CertificateValidationCallback;
-            UserInfo profile;
-            try
-            {
-                profile = await this.auth0Client.GetUserInfoAsync(accessToken);
-            }
-            finally
-            {
-                ServicePointManager.ServerCertificateValidationCallback = oldValidationCallback;
-            }
+            UserInfo profile = await this.auth0Client.GetUserInfoAsync(accessToken);
             Debug.Log("Retrieved user profile");
             var identity = new Identity
             {
@@ -184,31 +153,6 @@ namespace Loom.Unity3d.Desktop
             };
             await keyStore.SetAsync(identity.Username, identity.PrivateKey);
             return identity;
-        }
-
-        static bool CertificateValidationCallback(System.Object sender, X509Certificate certificate, X509Chain chain, SslPolicyErrors sslPolicyErrors)
-        {
-            bool isOk = true;
-            // If there are errors in the certificate chain, look at each error to determine the cause.
-            if (sslPolicyErrors != SslPolicyErrors.None)
-            {
-                for (int i = 0; i < chain.ChainStatus.Length; i++)
-                {
-                    if (chain.ChainStatus[i].Status != X509ChainStatusFlags.RevocationStatusUnknown)
-                    {
-                        chain.ChainPolicy.RevocationFlag = X509RevocationFlag.EntireChain;
-                        chain.ChainPolicy.RevocationMode = X509RevocationMode.Online;
-                        chain.ChainPolicy.UrlRetrievalTimeout = new TimeSpan(0, 1, 0);
-                        chain.ChainPolicy.VerificationFlags = X509VerificationFlags.AllFlags;
-                        bool chainIsValid = chain.Build((X509Certificate2)certificate);
-                        if (!chainIsValid)
-                        {
-                            isOk = false;
-                        }
-                    }
-                }
-            }
-            return isOk;
         }
 
         // From https://github.com/IdentityModel/IdentityModel2 (src/IdentityModel/Base64Url.cs)

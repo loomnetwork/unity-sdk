@@ -1,5 +1,4 @@
-﻿using System.Threading.Tasks;
-using UnityEngine;
+﻿using UnityEngine;
 using UnityEngine.UI;
 using Loom.Unity3d;
 
@@ -22,23 +21,30 @@ public class authSample : MonoBehaviour {
 
     public async void SignIn()
     {
-        var authClient = AuthClientFactory.Configure()
-            .WithClientId("25pDQvX4O5j7wgwT052Sh3UzXVR9X6Ud") // unity3d sdk
-            .WithDomain("loomx.auth0.com")
-            .WithScheme("io.loomx.unity3d")
-            .WithAudience("https://keystore.loomx.io/")
-            .WithScope("openid profile email picture")
-            .WithRedirectUrl("http://127.0.0.1:9999/auth/auth0/")
-            .Create();
-        var accessToken = await authClient.GetAccessTokenAsync();
-        var keyStore = await KeyStoreFactory.CreateVaultStore(new VaultStoreConfig
+        try
         {
-            Url = "https://stage-vault.delegatecall.com/v1/",
-            VaultPrefix = "unity3d-sdk",
-            AccessToken = accessToken
-        });
-        this.identity = await authClient.GetIdentityAsync(accessToken, keyStore);
-
+            CertValidationBypass.Enable();
+            var authClient = AuthClientFactory.Configure()
+                .WithClientId("25pDQvX4O5j7wgwT052Sh3UzXVR9X6Ud") // unity3d sdk
+                .WithDomain("loomx.auth0.com")
+                .WithScheme("io.loomx.unity3d")
+                .WithAudience("https://keystore.loomx.io/")
+                .WithScope("openid profile email picture")
+                .WithRedirectUrl("http://127.0.0.1:9999/auth/auth0/")
+                .Create();
+            var accessToken = await authClient.GetAccessTokenAsync();
+            var keyStore = await KeyStoreFactory.CreateVaultStore(new VaultStoreConfig
+            {
+                Url = "https://stage-vault.delegatecall.com/v1/",
+                VaultPrefix = "unity3d-sdk",
+                AccessToken = accessToken
+            });
+            this.identity = await authClient.GetIdentityAsync(accessToken, keyStore);
+        }
+        finally
+        {
+            CertValidationBypass.Disable();
+        }
         this.statusTextRef.text = "Signed in as " + this.identity.Username;
     }
 
