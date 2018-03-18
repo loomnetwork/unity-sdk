@@ -125,8 +125,7 @@ namespace Loom.Unity3d
 
         public async Task<BroadcastTxResult> CommitTx(string signedTx)
         {
-            // TODO: generate a GUID for the request ID
-            var req = new TxJsonRpcRequest("broadcast_tx_commit", new string[] { signedTx }, "whatever");
+            var req = new TxJsonRpcRequest("broadcast_tx_commit", new string[] { signedTx }, Guid.NewGuid().ToString());
             var resp = await this.PostTx(req);
             if (resp.Error != null)
             {
