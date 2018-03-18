@@ -40,7 +40,7 @@ namespace Loom.Unity3d.Desktop
         /// <returns></returns>
         public async Task<string> GetAccessTokenAsync()
         {
-            var codeVerifier = Convert.ToBase64String(LoomCrypto.GeneratePrivateKey());
+            var codeVerifier = Convert.ToBase64String(CryptoUtils.GeneratePrivateKey());
             string codeChallenge;
             using (var sha256 = SHA256.Create())
             {
@@ -180,7 +180,7 @@ namespace Loom.Unity3d.Desktop
             var identity = new Identity
             {
                 Username = profile.Email.Split('@')[0],
-                PrivateKey = LoomCrypto.GeneratePrivateKey()
+                PrivateKey = CryptoUtils.GeneratePrivateKey()
             };
             await keyStore.SetAsync(identity.Username, identity.PrivateKey);
             return identity;

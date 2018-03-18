@@ -100,7 +100,7 @@ namespace Loom.Unity3d.Android
             var identity = new Identity
             {
                 Username = profile.Email.Split('@')[0],
-                PrivateKey = LoomCrypto.GeneratePrivateKey()
+                PrivateKey = CryptoUtils.GeneratePrivateKey()
             };
             // TODO: connect to blockchain & post a create an account Tx
             await keyStore.SetAsync(identity.Username, identity.PrivateKey);

@@ -48,7 +48,7 @@ public class authSample : MonoBehaviour {
         {
             throw new System.Exception("Not signed in!");
         }
-        var chainClient = new LoomChainClient("http://stage-rancher.loomapps.io:46657");
+        var chainClient = new DAppChainClient("http://stage-rancher.loomapps.io:46657");
         var tx = new DummyTx
         {
             Val = "Hello World " + (Random.value * 100000)
