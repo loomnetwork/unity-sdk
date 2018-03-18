@@ -1,51 +1,53 @@
 ﻿using System;
-using System.Collections;
-using System.Collections.Generic;
 using System.Threading.Tasks;
 
-public class VaultStore
+namespace Loom.Unity3d
 {
-    private VaultClient client;
-    private string prefix;
-
-    public VaultStore(VaultClient client, string prefix = "")
+    public class VaultStore : IKeyStore
     {
-        this.client = client;
-        this.prefix = "entcubbyhole/" + prefix;
-    }
+        private VaultClient client;
+        private string prefix;
 
-    public async Task SetAsync(string key, byte[] privateKey)
-    {
-        var data = new VaultStorePrivateKeyRequest
+        public VaultStore(VaultClient client, string prefix = "")
         {
-            PrivateKey = Convert.ToBase64String(privateKey)
-        };
-        await this.client.PutAsync(this.prefix + key, data);
-    }
+            this.client = client;
+            this.prefix = "entcubbyhole/" + prefix;
+        }
 
-    public async Task<byte[]> GetPrivateKeyAsync(string key)
-    {
-        var resp = await this.client.GetAsync<VaultGetPrivateKeyResponse>(this.prefix + key);
-        return Convert.FromBase64String(resp.Data.PrivateKey);
-    }
-
-    public async Task<string[]> GetKeysAsync()
-    {
-        try
+        public async Task SetAsync(string key, byte[] privateKey)
         {
-            var resp = await this.client.ListAsync(this.prefix);
-            if (resp != null)
+            var data = new VaultStorePrivateKeyRequest
             {
-                return resp.Data.Keys;
-            }
+                PrivateKey = Convert.ToBase64String(privateKey)
+            };
+            await this.client.PutAsync(this.prefix + key, data);
         }
-        catch (VaultError e)
+
+        public async Task<byte[]> GetPrivateKeyAsync(string key)
         {
-            // allow 404 on path to pass
-            if (e.Errors != null && e.Errors.Length > 0) {
-                throw e;
-            }
+            var resp = await this.client.GetAsync<VaultGetPrivateKeyResponse>(this.prefix + key);
+            return Convert.FromBase64String(resp.Data.PrivateKey);
         }
-        return new string[] { };
+
+        public async Task<string[]> GetKeysAsync()
+        {
+            try
+            {
+                var resp = await this.client.ListAsync(this.prefix);
+                if (resp != null)
+                {
+                    return resp.Data.Keys;
+                }
+            }
+            catch (VaultError e)
+            {
+                // allow 404 on path to pass
+                if (e.Errors != null && e.Errors.Length > 0)
+                {
+                    throw e;
+                }
+            }
+            return new string[] { };
+        }
     }
 }

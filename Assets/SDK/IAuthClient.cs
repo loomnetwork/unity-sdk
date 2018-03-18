@@ -14,6 +14,6 @@ namespace Loom.Unity3d
     public interface IAuthClient
     {
         Task<string> GetAccessTokenAsync();
-        Task<Identity> GetIdentityAsync(string accessToken);
+        Task<Identity> GetIdentityAsync(string accessToken, IKeyStore keyStore);
     }
 }

@@ -28,11 +28,16 @@ public class authSample : MonoBehaviour {
             .WithScheme("io.loomx.unity3d")
             .WithAudience("https://keystore.loomx.io/")
             .WithScope("openid profile email picture")
-            .WithVaultPrefix("unity3d-sdk")
             .WithRedirectUrl("http://127.0.0.1:9999/auth/auth0/")
             .Create();
         var accessToken = await authClient.GetAccessTokenAsync();
-        this.identity = await authClient.GetIdentityAsync(accessToken);
+        var keyStore = await KeyStoreFactory.CreateVaultStore(new VaultStoreConfig
+        {
+            Url = "https://stage-vault.delegatecall.com/v1/",
+            VaultPrefix = "unity3d-sdk",
+            AccessToken = accessToken
+        });
+        this.identity = await authClient.GetIdentityAsync(accessToken, keyStore);
 
         this.statusTextRef.text = "Signed in as " + this.identity.Username;
     }

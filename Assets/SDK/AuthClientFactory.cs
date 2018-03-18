@@ -7,7 +7,6 @@
         private string scheme;
         private string audience;
         private string scope;
-        private string vaultPrefix;
         private string redirectUrl;
 
         public static AuthClientFactory Configure()
@@ -45,12 +44,6 @@
             return this;
         }
 
-        public AuthClientFactory WithVaultPrefix(string prefix)
-        {
-            this.vaultPrefix = prefix;
-            return this;
-        }
-
         public AuthClientFactory WithRedirectUrl(string url)
         {
             this.redirectUrl = url;
@@ -66,8 +59,7 @@
                 Domain = this.domain,
                 Scheme = this.scheme,
                 Audience = this.audience,
-                Scope = this.scope,
-                VaultPrefix = this.vaultPrefix
+                Scope = this.scope
             };
 #else
             return new Desktop.AuthClient
@@ -77,7 +69,6 @@
                 Scheme = this.scheme,
                 Audience = this.audience,
                 Scope = this.scope,
-                VaultPrefix = this.vaultPrefix,
                 RedirectUrl = this.redirectUrl
             };
 #endif

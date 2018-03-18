@@ -22,25 +22,12 @@ namespace Loom.Unity3d.Android
     internal class AuthClient : IAuthClient
     {
         private AuthenticationApiClient auth0Client;
-        private string vaultPrefix;
 
         public string ClientId { get; set; }
         public string Domain { get; set; }
         public string Scheme { get; set; }
         public string Audience { get; set; }
         public string Scope { get; set; }
-
-        public string VaultPrefix
-        {
-            get
-            {
-                return this.vaultPrefix;
-            }
-            internal set
-            {
-                this.vaultPrefix = value.EndsWith("/") ? value : (value + "/");
-            }
-        }
 
         public AuthClient()
         {
@@ -71,23 +58,14 @@ namespace Loom.Unity3d.Android
             return await taskCompletionSource.Task;
         }
 
-        public async Task<Identity> GetIdentityAsync(string accessToken)
+        public async Task<Identity> GetIdentityAsync(string accessToken, IKeyStore keyStore)
         {
-            // TODO: this is closely modelled after the JS implementation in DelegateCall, so it's kinda awkward
-            // exchange the Auth0 access token for a Vault client token
-            var vaultClient = new VaultClient("https://stage-vault.delegatecall.com/v1/");
-            var resp = await vaultClient.PutAsync<VaultCreateTokenResponse, VaultCreateTokenRequest>("auth/auth0/create_token", new VaultCreateTokenRequest
-            {
-                AccessToken = accessToken
-            });
-            vaultClient.Token = resp.Auth.ClientToken;
-            var vaultStore = new VaultStore(vaultClient, this.vaultPrefix);
-            var keys = await vaultStore.GetKeysAsync();
+            var keys = await keyStore.GetKeysAsync();
             if (keys.Length > 0)
             {
                 // existing account
                 var parts = keys[0].Split('/'); // TODO: This doesn't really do much atm
-                var privateKey = await vaultStore.GetPrivateKeyAsync(keys[0]);
+                var privateKey = await keyStore.GetPrivateKeyAsync(keys[0]);
                 return new Identity
                 {
                     Username = parts[parts.Length - 1],
@@ -96,7 +74,7 @@ namespace Loom.Unity3d.Android
             }
             else
             {
-                return await CreateIdentityAsync(accessToken, vaultStore);
+                return await CreateIdentityAsync(accessToken, keyStore);
             }
         }
 
@@ -104,7 +82,7 @@ namespace Loom.Unity3d.Android
         /// Creates a new identity that can be used to sign transactions on the Loom DAppChain.
         /// </summary>
         /// <returns>A new <see cref="Identity"/>.</returns>
-        public async Task<Identity> CreateIdentityAsync(string accessToken, VaultStore vaultStore)
+        public async Task<Identity> CreateIdentityAsync(string accessToken, IKeyStore keyStore)
         {
             Debug.Log("Creating new account");
             var oldValidationCallback = ServicePointManager.ServerCertificateValidationCallback;
@@ -125,7 +103,7 @@ namespace Loom.Unity3d.Android
                 PrivateKey = LoomCrypto.GeneratePrivateKey()
             };
             // TODO: connect to blockchain & post a create an account Tx
-            await vaultStore.SetAsync(identity.Username, identity.PrivateKey);
+            await keyStore.SetAsync(identity.Username, identity.PrivateKey);
             return identity;
         }
 
