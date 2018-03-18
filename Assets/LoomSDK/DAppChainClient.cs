@@ -97,9 +97,15 @@ namespace Loom.Unity3d
     {
         private string url;
 
+        /// <summary>
+        /// Logger to be used for logging, defaults to <see cref="NullLogger"/>.
+        /// </summary>
+        public ILogger Logger { get; set; }
+
         public DAppChainClient(string url)
         {
             this.url = url;
+            this.Logger = NullLogger.Instance;
         }
 
         public string SignTx(DummyTx tx, byte[] privateKey)
@@ -119,7 +125,7 @@ namespace Loom.Unity3d
             };
 
             var payload = CryptoBytes.ToBase64String(signedTx.ToByteArray());
-            Debug.Log("Signed Tx: " + payload);
+            Logger.Log("Signed Tx: " + payload);
             return payload;
         }
 
@@ -138,7 +144,7 @@ namespace Loom.Unity3d
         private async Task<BroadcastTxResponse> PostTx(TxJsonRpcRequest tx)
         {
             string body = JsonConvert.SerializeObject(tx);
-            Debug.Log("PostTx Body: " + body);
+            Logger.Log("PostTx Body: " + body);
             byte[] bodyRaw = new UTF8Encoding().GetBytes(body);
             using (var r = new UnityWebRequest(this.url, "POST"))
             {
@@ -149,7 +155,7 @@ namespace Loom.Unity3d
                 HandleError(r);
                 if (r.downloadHandler != null && !String.IsNullOrEmpty(r.downloadHandler.text))
                 {
-                    Debug.Log("Response: " + r.downloadHandler.text);
+                    Logger.Log("Response: " + r.downloadHandler.text);
                     return JsonConvert.DeserializeObject<BroadcastTxResponse>(r.downloadHandler.text);
                 }
             }

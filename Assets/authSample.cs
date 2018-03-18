@@ -2,22 +2,25 @@
 using UnityEngine.UI;
 using Loom.Unity3d;
 
-public class authSample : MonoBehaviour {
+public class authSample : MonoBehaviour
+{
     public Text statusTextRef;
 
     private Identity identity;
 
     // Use this for initialization
-    void Start () {
+    void Start()
+    {
         // By default the editor won't respond to network IO or anything if it doesn't have input focus,
         // which is super annoying when input focus is given to the web browser for the Auth0 sign-in.
         Application.runInBackground = true;
     }
 
     // Update is called once per frame
-    void Update () {
-		
-	}
+    void Update()
+    {
+
+    }
 
     public async void SignIn()
     {
@@ -25,6 +28,7 @@ public class authSample : MonoBehaviour {
         {
             CertValidationBypass.Enable();
             var authClient = AuthClientFactory.Configure()
+                .WithLogger(Debug.unityLogger)
                 .WithClientId("25pDQvX4O5j7wgwT052Sh3UzXVR9X6Ud") // unity3d sdk
                 .WithDomain("loomx.auth0.com")
                 .WithScheme("io.loomx.unity3d")
@@ -54,7 +58,10 @@ public class authSample : MonoBehaviour {
         {
             throw new System.Exception("Not signed in!");
         }
-        var chainClient = new DAppChainClient("http://stage-rancher.loomapps.io:46657");
+        var chainClient = new DAppChainClient("http://stage-rancher.loomapps.io:46657")
+        {
+            Logger = Debug.unityLogger
+        };
         var tx = new DummyTx
         {
             Val = "Hello World " + (Random.value * 100000)

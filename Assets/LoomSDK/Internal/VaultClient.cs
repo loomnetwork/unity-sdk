@@ -95,11 +95,18 @@ namespace Loom.Unity3d
     {
 
         private string url;
+
+        /// <summary>
+        /// Logger to be used for logging, defaults to <see cref="NullLogger"/>.
+        /// </summary>
+        public ILogger Logger { get; set; }
+
         public string Token { get; set; }
 
         public VaultClient(string url, string token = null)
         {
             this.url = url;
+            this.Logger = NullLogger.Instance;
             this.Token = token;
         }
 
@@ -113,7 +120,7 @@ namespace Loom.Unity3d
                 HandleError(r);
                 if (r.downloadHandler != null && !String.IsNullOrEmpty(r.downloadHandler.text))
                 {
-                    Debug.Log("HTTP response body: " + r.downloadHandler.text);
+                    Logger.Log("HTTP response body: " + r.downloadHandler.text);
                     return JsonConvert.DeserializeObject<VaultListSecretsResponse>(r.downloadHandler.text);
                 }
                 return null;
@@ -127,7 +134,7 @@ namespace Loom.Unity3d
                 SetRequestHeaders(r);
                 await r.SendWebRequest();
                 HandleError(r);
-                Debug.Log("HTTP response body: " + r.downloadHandler.text);
+                Logger.Log("HTTP response body: " + r.downloadHandler.text);
                 return JsonConvert.DeserializeObject<T>(r.downloadHandler.text);
             }
         }
@@ -135,7 +142,7 @@ namespace Loom.Unity3d
         public async Task<T> PutAsync<T, U>(string path, U data)
         {
             string body = JsonConvert.SerializeObject(data);
-            Debug.Log("PutAsync JSON body: " + body);
+            Logger.Log("PutAsync JSON body: " + body);
             byte[] bodyRaw = new UTF8Encoding().GetBytes(body);
             using (var r = new UnityWebRequest(this.url + path, "POST"))
             {
@@ -144,7 +151,7 @@ namespace Loom.Unity3d
                 SetRequestHeaders(r);
                 await r.SendWebRequest();
                 HandleError(r);
-                Debug.Log("Response: " + r.downloadHandler.text);
+                Logger.Log("Response: " + r.downloadHandler.text);
                 return JsonConvert.DeserializeObject<T>(r.downloadHandler.text);
             }
         }
@@ -152,7 +159,7 @@ namespace Loom.Unity3d
         public async Task PutAsync<T>(string path, T data)
         {
             string body = JsonConvert.SerializeObject(data);
-            Debug.Log("PutAsync JSON body: " + body);
+            Logger.Log("PutAsync JSON body: " + body);
             byte[] bodyRaw = new UTF8Encoding().GetBytes(body);
             using (var r = new UnityWebRequest(this.url + path, "POST"))
             {
@@ -161,7 +168,7 @@ namespace Loom.Unity3d
                 SetRequestHeaders(r);
                 await r.SendWebRequest();
                 HandleError(r);
-                Debug.Log("Response: " + r.downloadHandler.text);
+                Logger.Log("Response: " + r.downloadHandler.text);
             }
         }
 

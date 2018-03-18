@@ -1,4 +1,5 @@
 ﻿using System.Threading.Tasks;
+using UnityEngine;
 
 namespace Loom.Unity3d
 {
@@ -13,6 +14,8 @@ namespace Loom.Unity3d
 
     public interface IAuthClient
     {
+        ILogger Logger { get; set; }
+
         Task<string> GetAccessTokenAsync();
         Task<Identity> GetIdentityAsync(string accessToken, IKeyStore keyStore);
     }

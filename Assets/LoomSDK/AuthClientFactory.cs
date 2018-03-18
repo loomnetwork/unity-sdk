@@ -1,7 +1,10 @@
-﻿namespace Loom.Unity3d
+﻿using UnityEngine;
+
+namespace Loom.Unity3d
 {
     public class AuthClientFactory
     {
+        private ILogger logger;
         private string clientId;
         private string domain;
         private string scheme;
@@ -12,6 +15,12 @@
         public static AuthClientFactory Configure()
         {
             return new AuthClientFactory();
+        }
+
+        public AuthClientFactory WithLogger(ILogger logger)
+        {
+            this.logger = logger;
+            return this;
         }
 
         public AuthClientFactory WithClientId(string clientId)
@@ -55,6 +64,7 @@
 #if UNITY_ANDROID
             return new Android.AuthClient
             {
+                Logger = this.logger ?? NullLogger.Instance,
                 ClientId = this.clientId,
                 Domain = this.domain,
                 Scheme = this.scheme,
@@ -64,6 +74,7 @@
 #else
             return new Desktop.AuthClient
             {
+                Logger = this.logger ?? NullLogger.Instance,
                 ClientId = this.clientId,
                 Domain = this.domain,
                 Scheme = this.scheme,

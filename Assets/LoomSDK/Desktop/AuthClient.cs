@@ -13,6 +13,11 @@ namespace Loom.Unity3d.Desktop
     {
         private AuthenticationApiClient auth0Client;
 
+        /// <summary>
+        /// Logger to be used for logging, defaults to <see cref="NullLogger"/>.
+        /// </summary>
+        public ILogger Logger { get; set; }
+
         public string ClientId { get; set; }
         public string Domain { get; set; }
         public string Scheme { get; set; }
@@ -25,6 +30,7 @@ namespace Loom.Unity3d.Desktop
 
         public AuthClient()
         {
+            this.Logger = NullLogger.Instance;
             this.auth0Client = new AuthenticationApiClient(new Uri("https://loomx.auth0.com"));
         }
 
@@ -66,8 +72,6 @@ namespace Loom.Unity3d.Desktop
                         .WithValue("code_challenge_method", "S256")
                         .Build();
 
-                Debug.Log(authUrl.AbsoluteUri);
-
                 switch (Application.platform)
                 {
                     case RuntimePlatform.WindowsPlayer:
@@ -102,7 +106,7 @@ namespace Loom.Unity3d.Desktop
             finally
             {
                 http.Stop();
-                Debug.Log("Stopped listening");
+                Logger.Log("Stopped listening");
             }
 
             // exchange auth code for an access token
@@ -113,7 +117,7 @@ namespace Loom.Unity3d.Desktop
                 CodeVerifier = codeVerifier,
                 RedirectUri = this.RedirectUrl
             });
-            Debug.Log("Access Token: " + response.AccessToken);
+            Logger.Log("Access Token: " + response.AccessToken);
             return response.AccessToken;
         }
 
@@ -143,9 +147,9 @@ namespace Loom.Unity3d.Desktop
         /// <returns>A new <see cref="Identity"/>.</returns>
         public async Task<Identity> CreateIdentityAsync(string accessToken, IKeyStore keyStore)
         {
-            Debug.Log("Creating new account");
+            Logger.Log("Creating new account");
             UserInfo profile = await this.auth0Client.GetUserInfoAsync(accessToken);
-            Debug.Log("Retrieved user profile");
+            Logger.Log("Retrieved user profile");
             var identity = new Identity
             {
                 Username = profile.Email.Split('@')[0],
