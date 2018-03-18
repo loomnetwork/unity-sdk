@@ -11,6 +11,8 @@ namespace Loom.Unity3d.Desktop
 {
     internal class AuthClient : IAuthClient
     {
+        private static readonly string LogTag = "Loom.Desktop.AuthClient";
+
         private AuthenticationApiClient auth0Client;
 
         /// <summary>
@@ -106,7 +108,7 @@ namespace Loom.Unity3d.Desktop
             finally
             {
                 http.Stop();
-                Logger.Log("Stopped listening");
+                Logger.Log(LogTag, "Stopped listening");
             }
 
             // exchange auth code for an access token
@@ -117,7 +119,7 @@ namespace Loom.Unity3d.Desktop
                 CodeVerifier = codeVerifier,
                 RedirectUri = this.RedirectUrl
             });
-            Logger.Log("Access Token: " + response.AccessToken);
+            Logger.Log(LogTag, "Access Token: " + response.AccessToken);
             return response.AccessToken;
         }
 
@@ -147,9 +149,9 @@ namespace Loom.Unity3d.Desktop
         /// <returns>A new <see cref="Identity"/>.</returns>
         public async Task<Identity> CreateIdentityAsync(string accessToken, IKeyStore keyStore)
         {
-            Logger.Log("Creating new account");
+            Logger.Log(LogTag, "Creating new account");
             UserInfo profile = await this.auth0Client.GetUserInfoAsync(accessToken);
-            Logger.Log("Retrieved user profile");
+            Logger.Log(LogTag, "Retrieved user profile");
             var identity = new Identity
             {
                 Username = profile.Email.Split('@')[0],

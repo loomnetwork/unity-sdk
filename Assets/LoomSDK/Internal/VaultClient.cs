@@ -93,6 +93,7 @@ namespace Loom.Unity3d
 
     public class VaultClient
     {
+        private static readonly string LogTag = "Loom.VaultClient";
 
         private string url;
 
@@ -120,7 +121,7 @@ namespace Loom.Unity3d
                 HandleError(r);
                 if (r.downloadHandler != null && !String.IsNullOrEmpty(r.downloadHandler.text))
                 {
-                    Logger.Log("HTTP response body: " + r.downloadHandler.text);
+                    Logger.Log(LogTag, "HTTP response body: " + r.downloadHandler.text);
                     return JsonConvert.DeserializeObject<VaultListSecretsResponse>(r.downloadHandler.text);
                 }
                 return null;
@@ -134,7 +135,7 @@ namespace Loom.Unity3d
                 SetRequestHeaders(r);
                 await r.SendWebRequest();
                 HandleError(r);
-                Logger.Log("HTTP response body: " + r.downloadHandler.text);
+                Logger.Log(LogTag, "HTTP response body: " + r.downloadHandler.text);
                 return JsonConvert.DeserializeObject<T>(r.downloadHandler.text);
             }
         }
@@ -151,7 +152,7 @@ namespace Loom.Unity3d
                 SetRequestHeaders(r);
                 await r.SendWebRequest();
                 HandleError(r);
-                Logger.Log("Response: " + r.downloadHandler.text);
+                Logger.Log(LogTag, "Response: " + r.downloadHandler.text);
                 return JsonConvert.DeserializeObject<T>(r.downloadHandler.text);
             }
         }
@@ -159,7 +160,7 @@ namespace Loom.Unity3d
         public async Task PutAsync<T>(string path, T data)
         {
             string body = JsonConvert.SerializeObject(data);
-            Logger.Log("PutAsync JSON body: " + body);
+            Logger.Log(LogTag, "PutAsync JSON body: " + body);
             byte[] bodyRaw = new UTF8Encoding().GetBytes(body);
             using (var r = new UnityWebRequest(this.url + path, "POST"))
             {
@@ -168,7 +169,7 @@ namespace Loom.Unity3d
                 SetRequestHeaders(r);
                 await r.SendWebRequest();
                 HandleError(r);
-                Logger.Log("Response: " + r.downloadHandler.text);
+                Logger.Log(LogTag, "Response: " + r.downloadHandler.text);
             }
         }
 
