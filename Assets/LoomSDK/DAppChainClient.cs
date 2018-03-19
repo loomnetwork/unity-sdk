@@ -93,6 +93,9 @@ namespace Loom.Unity3d
 
     #endregion
 
+    /// <summary>
+    /// Writes to & reads from a Loom DAppChain.
+    /// </summary>
     public class DAppChainClient
     {
         private static readonly string LogTag = "Loom.DAppChainClient";
@@ -110,7 +113,13 @@ namespace Loom.Unity3d
             this.Logger = NullLogger.Instance;
         }
 
-        public string SignTx(DummyTx tx, byte[] privateKey)
+        /// <summary>
+        /// Signs a transaction.
+        /// </summary>
+        /// <param name="tx">Transaction to be signed.</param>
+        /// <param name="privateKey">The private key that should be used to sign.</param>
+        /// <returns>A signed transaction, the original transaction is not modified.</returns>
+        public SignedTx SignTx(IMessage tx, byte[] privateKey)
         {
             var sig = CryptoUtils.Sign(tx.ToByteArray(), privateKey);
 
@@ -120,24 +129,27 @@ namespace Loom.Unity3d
                 PublicKey = ByteString.CopyFrom(sig.PublicKey)
             };
 
-            var signedTx = new SignedTx
+            return new SignedTx
             {
                 Inner = tx.ToByteString(),
                 Signers = { signer }
             };
-
-            var payload = CryptoBytes.ToBase64String(signedTx.ToByteArray());
-            Logger.Log(LogTag, "Signed Tx: " + payload);
-            return payload;
         }
 
-        public async Task<BroadcastTxResult> CommitTx(string signedTx)
+        /// <summary>
+        /// Commits a transactions to the DAppChain.
+        /// </summary>
+        /// <param name="signedTx">Transaction to commit.</param>
+        /// <returns>Commit metadata.</returns>
+        public async Task<BroadcastTxResult> CommitTx(SignedTx signedTx)
         {
-            var req = new TxJsonRpcRequest("broadcast_tx_commit", new string[] { signedTx }, Guid.NewGuid().ToString());
+            var payload = CryptoBytes.ToBase64String(signedTx.ToByteArray());
+            Logger.Log(LogTag, "Signed Tx: " + payload);
+            var req = new TxJsonRpcRequest("broadcast_tx_commit", new string[] { payload }, Guid.NewGuid().ToString());
             var resp = await this.PostTx(req);
             if (resp.Error != null)
             {
-                throw new System.Exception(String.Format("Failed to commit Tx: {0} / {1} / {2}",
+                throw new Exception(String.Format("Failed to commit Tx: {0} / {1} / {2}",
                     resp.Error.Code, resp.Error.Message, resp.Error.Data));
             }
             return resp.Result;
@@ -168,7 +180,7 @@ namespace Loom.Unity3d
         {
             if (r.isNetworkError)
             {
-                throw new System.Exception(String.Format("HTTP '{0}' request to '{1}' failed", r.method, r.url));
+                throw new Exception(String.Format("HTTP '{0}' request to '{1}' failed", r.method, r.url));
             }
             else if (r.isHttpError)
             {
@@ -176,7 +188,7 @@ namespace Loom.Unity3d
                 {
                     // TOOD: extract error message if any
                 }
-                throw new System.Exception(String.Format("HTTP Error {0}", r.responseCode));
+                throw new Exception(String.Format("HTTP Error {0}", r.responseCode));
             }
         }
     }

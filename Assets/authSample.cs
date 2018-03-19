@@ -67,8 +67,8 @@ public class authSample : MonoBehaviour
             Val = "Hello World " + (Random.value * 100000)
         };
         Debug.Log("Tx Val: " + tx.Val);
-        var payload = chainClient.SignTx(tx, this.identity.PrivateKey);
-        var result = await chainClient.CommitTx(payload);
+        var signedTx = chainClient.SignTx(tx, this.identity.PrivateKey);
+        var result = await chainClient.CommitTx(signedTx);
         this.statusTextRef.text = "Committed Tx to Block " + result.Height;
     }
 }
