@@ -24,14 +24,14 @@ public static partial class LoomReflection {
         string.Concat(
           "Cgpsb29tLnByb3RvIi8KBlNpZ25lchIRCglzaWduYXR1cmUYASABKAwSEgoK",
           "cHVibGljX2tleRgCIAEoDCIzCghTaWduZWRUeBINCgVpbm5lchgBIAEoDBIY",
-          "CgdzaWduZXJzGAIgAygLMgcuU2lnbmVyIhYKB0R1bW15VHgSCwoDdmFsGAEg",
-          "ASgJYgZwcm90bzM="));
+          "CgdzaWduZXJzGAIgAygLMgcuU2lnbmVyIiMKB0R1bW15VHgSCwoDdmFsGAEg",
+          "ASgJEgsKA2tleRgCIAEoCWIGcHJvdG8z"));
     descriptor = pbr::FileDescriptor.FromGeneratedCode(descriptorData,
         new pbr::FileDescriptor[] { },
         new pbr::GeneratedClrTypeInfo(null, new pbr::GeneratedClrTypeInfo[] {
           new pbr::GeneratedClrTypeInfo(typeof(global::Signer), global::Signer.Parser, new[]{ "Signature", "PublicKey" }, null, null, null),
           new pbr::GeneratedClrTypeInfo(typeof(global::SignedTx), global::SignedTx.Parser, new[]{ "Inner", "Signers" }, null, null, null),
-          new pbr::GeneratedClrTypeInfo(typeof(global::DummyTx), global::DummyTx.Parser, new[]{ "Val" }, null, null, null)
+          new pbr::GeneratedClrTypeInfo(typeof(global::DummyTx), global::DummyTx.Parser, new[]{ "Val", "Key" }, null, null, null)
         }));
   }
   #endregion
@@ -370,6 +370,7 @@ public sealed partial class DummyTx : pb::IMessage<DummyTx> {
   [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
   public DummyTx(DummyTx other) : this() {
     val_ = other.val_;
+    key_ = other.key_;
     _unknownFields = pb::UnknownFieldSet.Clone(other._unknownFields);
   }
 
@@ -389,6 +390,17 @@ public sealed partial class DummyTx : pb::IMessage<DummyTx> {
     }
   }
 
+  /// <summary>Field number for the "key" field.</summary>
+  public const int KeyFieldNumber = 2;
+  private string key_ = "";
+  [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+  public string Key {
+    get { return key_; }
+    set {
+      key_ = pb::ProtoPreconditions.CheckNotNull(value, "value");
+    }
+  }
+
   [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
   public override bool Equals(object other) {
     return Equals(other as DummyTx);
@@ -403,6 +415,7 @@ public sealed partial class DummyTx : pb::IMessage<DummyTx> {
       return true;
     }
     if (Val != other.Val) return false;
+    if (Key != other.Key) return false;
     return Equals(_unknownFields, other._unknownFields);
   }
 
@@ -410,6 +423,7 @@ public sealed partial class DummyTx : pb::IMessage<DummyTx> {
   public override int GetHashCode() {
     int hash = 1;
     if (Val.Length != 0) hash ^= Val.GetHashCode();
+    if (Key.Length != 0) hash ^= Key.GetHashCode();
     if (_unknownFields != null) {
       hash ^= _unknownFields.GetHashCode();
     }
@@ -427,6 +441,10 @@ public sealed partial class DummyTx : pb::IMessage<DummyTx> {
       output.WriteRawTag(10);
       output.WriteString(Val);
     }
+    if (Key.Length != 0) {
+      output.WriteRawTag(18);
+      output.WriteString(Key);
+    }
     if (_unknownFields != null) {
       _unknownFields.WriteTo(output);
     }
@@ -437,6 +455,9 @@ public sealed partial class DummyTx : pb::IMessage<DummyTx> {
     int size = 0;
     if (Val.Length != 0) {
       size += 1 + pb::CodedOutputStream.ComputeStringSize(Val);
+    }
+    if (Key.Length != 0) {
+      size += 1 + pb::CodedOutputStream.ComputeStringSize(Key);
     }
     if (_unknownFields != null) {
       size += _unknownFields.CalculateSize();
@@ -452,6 +473,9 @@ public sealed partial class DummyTx : pb::IMessage<DummyTx> {
     if (other.Val.Length != 0) {
       Val = other.Val;
     }
+    if (other.Key.Length != 0) {
+      Key = other.Key;
+    }
     _unknownFields = pb::UnknownFieldSet.MergeFrom(_unknownFields, other._unknownFields);
   }
 
@@ -465,6 +489,10 @@ public sealed partial class DummyTx : pb::IMessage<DummyTx> {
           break;
         case 10: {
           Val = input.ReadString();
+          break;
+        }
+        case 18: {
+          Key = input.ReadString();
           break;
         }
       }

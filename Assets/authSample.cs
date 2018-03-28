@@ -7,6 +7,7 @@ public class authSample : MonoBehaviour
     public Text statusTextRef;
 
     private Identity identity;
+    private DAppChainClient chainClient;
 
     // Use this for initialization
     void Start()
@@ -50,6 +51,12 @@ public class authSample : MonoBehaviour
             CertValidationBypass.Disable();
         }
         this.statusTextRef.text = "Signed in as " + this.identity.Username;
+
+        // This DAppChain client will connect to the example REST server in the Loom Go SDK. 
+        this.chainClient = new DAppChainClient("http://localhost:8998")
+        {
+            Logger = Debug.unityLogger
+        };
     }
 
     public async void SendTx()
@@ -58,17 +65,24 @@ public class authSample : MonoBehaviour
         {
             throw new System.Exception("Not signed in!");
         }
-        var chainClient = new DAppChainClient("http://stage-rancher.loomapps.io:46657")
-        {
-            Logger = Debug.unityLogger
-        };
+
+        float r = (Random.value * 100000);
         var tx = new DummyTx
         {
-            Val = "Hello World " + (Random.value * 100000)
+            Key = r.ToString(),
+            Val = "Hello World " + r
         };
         Debug.Log("Tx Val: " + tx.Val);
-        var signedTx = chainClient.SignTx(tx, this.identity.PrivateKey);
-        var result = await chainClient.CommitTx(signedTx);
+        var signedTx = this.chainClient.SignTx(tx, this.identity.PrivateKey);
+        var result = await this.chainClient.CommitTx(signedTx);
         this.statusTextRef.text = "Committed Tx to Block " + result.Height;
+    }
+
+    public async void Query()
+    {
+        // NOTE: Query results can be of any type that can be deserialized via Newtonsoft.Json.
+        var lastKey = await this.chainClient.QueryAsync<string>("app/last-key");
+        var data = await this.chainClient.QueryAsync<DummyTx>("app/dummy/" + lastKey);
+        this.statusTextRef.text = string.Format("Last Key: {0} & Value: {1}", data.Key, data.Val);
     }
 }

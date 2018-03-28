@@ -155,6 +155,33 @@ namespace Loom.Unity3d
             return resp.Result;
         }
 
+        /// <summary>
+        /// Queries the DAppChain state.
+        /// </summary>
+        /// <typeparam name="T">The expected response type, must be deserializable with Newtonsoft.Json.</typeparam>
+        /// <param name="path">DApp-specific path to query.</param>
+        /// <param name="queryStr">DApp-specific query parameters.</param>
+        /// <returns>Deserialized response.</returns>
+        public async Task<T> QueryAsync<T>(string path, string queryStr = null)
+        {
+            // TODO: Provide a nicer interface for building the query string.
+            var uriBuilder = new UriBuilder(this.url) { Path = path };
+            if (!String.IsNullOrEmpty(queryStr))
+            {
+                uriBuilder.Query = queryStr;
+            }
+            using (var r = new UnityWebRequest(uriBuilder.Uri.AbsoluteUri, "GET"))
+            {
+                r.downloadHandler = (DownloadHandler)new DownloadHandlerBuffer();
+                r.SetRequestHeader("Content-Type", "application/json");
+                await r.SendWebRequest();
+                HandleError(r);
+                Logger.Log(LogTag, "HTTP response body: " + r.downloadHandler.text);
+                return JsonConvert.DeserializeObject<T>(r.downloadHandler.text);
+            }
+            
+        }
+
         private async Task<BroadcastTxResponse> PostTx(TxJsonRpcRequest tx)
         {
             string body = JsonConvert.SerializeObject(tx);

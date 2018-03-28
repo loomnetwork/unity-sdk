@@ -68,20 +68,26 @@ generate C# classes from the `.proto` files.
 
 The relevant command will look something like this:
 ```cmd
-protoc -I=<install path>/protoc-3.5.1/include -I=<project path>\Assets\Protobuf --csharp_out=<project path>/Assets/Protobuf <project path>/Assets/Protobuf/MyTransactions.proto
+protoc -I<install path>/protoc-3.5.1/include -I<project path>/Assets/Protobuf --csharp_out=<project path>/Assets/Protobuf <project path>/Assets/Protobuf/MyTransactions.proto
 ```
 
 ## Samples
 
-Currently there is only once appropriately named scene that renders a couple of buttons that
-are hooked up to call the corresponding methods in `Assets/authSample.cs`, these
-must be pressed in the correct order. First press the `Sign In` button, this should open a new
-browser window, once you've signed up/in you should see the text above the button change to
-`Signed in as ...`. Once the textbox indicates you're signed in you can press the `Send Tx`
-button to generate, sign, and commit a new dummy transaction to the Loom DAppChain running at
-`http://stage-rancher.loomapps.io:46657`, if the transaction is accepted by the DAppChain the
-textbox should change to `Committed Tx to Block ...` - indicating the block the transaction was
-committed to, then you can press the `Send Tx` button again to create another transaction.
+The sample `authSample` scene expects the example REST server from the Loom Go SDK running locally
+at `http://localhost:8998`, if you want to run the server on a different host/port change the URL
+in `authSample.cs`.
+
+When you run the sample scene you will see three buttons that are hooked up to call the
+corresponding methods in `Assets/authSample.cs`, these must be pressed in the correct order:
+1. Press the `Sign In` button, this should open a new browser window, once you've signed up/in
+   you should see the text above the button change to `Signed in as ...`.
+2. Once the textbox indicates you're signed in you can press the `Send Tx` button to generate, sign,
+   and commit a new dummy transaction to the Loom DAppChain. If the transaction is accepted by the
+   DAppChain the textbox should change to `Committed Tx to Block ...` - indicating the block the
+   transaction was committed to a block in the DAppChain. You can press the `Send Tx` button again
+   to create another transaction.
+3. Once a transaction has been successfully committed you can press the `Query` button to retrieve
+   the data that was stored in the DAppChain for the most recently committed transaction. 
 
 ## Dependencies
 
