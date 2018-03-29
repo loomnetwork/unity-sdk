@@ -55,6 +55,9 @@ public class authSample : MonoBehaviour
         // This DAppChain client will connect to the example REST server in the Loom Go SDK. 
         this.chainClient = new DAppChainClient("http://localhost:8998")
         {
+            TxMiddleware = new TxMiddleware(new ITxMiddlewareHandler[]{
+                new SignedTxMiddleware(this.identity.PrivateKey)
+            }),
             Logger = Debug.unityLogger
         };
     }
@@ -73,8 +76,7 @@ public class authSample : MonoBehaviour
             Val = "Hello World " + r
         };
         Debug.Log("Tx Val: " + tx.Val);
-        var signedTx = this.chainClient.SignTx(tx, this.identity.PrivateKey);
-        var result = await this.chainClient.CommitTx(signedTx);
+        var result = await this.chainClient.CommitTx(tx);
         this.statusTextRef.text = "Committed Tx to Block " + result.Height;
     }
 

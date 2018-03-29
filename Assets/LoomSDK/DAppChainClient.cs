@@ -103,6 +103,11 @@ namespace Loom.Unity3d
         private string url;
 
         /// <summary>
+        /// Middleware to apply when committing transactions.
+        /// </summary>
+        public TxMiddleware TxMiddleware { get; set; }
+
+        /// <summary>
         /// Logger to be used for logging, defaults to <see cref="NullLogger"/>.
         /// </summary>
         public ILogger Logger { get; set; }
@@ -114,37 +119,19 @@ namespace Loom.Unity3d
         }
 
         /// <summary>
-        /// Signs a transaction.
-        /// </summary>
-        /// <param name="tx">Transaction to be signed.</param>
-        /// <param name="privateKey">The private key that should be used to sign.</param>
-        /// <returns>A signed transaction, the original transaction is not modified.</returns>
-        public SignedTx SignTx(IMessage tx, byte[] privateKey)
-        {
-            var sig = CryptoUtils.Sign(tx.ToByteArray(), privateKey);
-
-            var signer = new Signer
-            {
-                Signature = ByteString.CopyFrom(sig.Signature),
-                PublicKey = ByteString.CopyFrom(sig.PublicKey)
-            };
-
-            return new SignedTx
-            {
-                Inner = tx.ToByteString(),
-                Signers = { signer }
-            };
-        }
-
-        /// <summary>
         /// Commits a transactions to the DAppChain.
         /// </summary>
-        /// <param name="signedTx">Transaction to commit.</param>
+        /// <param name="tx">Transaction to commit.</param>
         /// <returns>Commit metadata.</returns>
-        public async Task<BroadcastTxResult> CommitTx(SignedTx signedTx)
+        public async Task<BroadcastTxResult> CommitTx(IMessage tx)
         {
-            var payload = CryptoBytes.ToBase64String(signedTx.ToByteArray());
-            Logger.Log(LogTag, "Signed Tx: " + payload);
+            byte[] txBytes = tx.ToByteArray();
+            if (this.TxMiddleware != null)
+            {
+                txBytes = await this.TxMiddleware.Handle(txBytes);
+            }
+            string payload = CryptoBytes.ToBase64String(txBytes);
+            Logger.Log(LogTag, "Tx: " + payload);
             var req = new TxJsonRpcRequest("broadcast_tx_commit", new string[] { payload }, Guid.NewGuid().ToString());
             var resp = await this.PostTx(req);
             if (resp.Error != null)
