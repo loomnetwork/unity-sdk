@@ -24,13 +24,15 @@ public static partial class LoomReflection {
         string.Concat(
           "Cgpsb29tLnByb3RvIi8KBlNpZ25lchIRCglzaWduYXR1cmUYASABKAwSEgoK",
           "cHVibGljX2tleRgCIAEoDCIzCghTaWduZWRUeBINCgVpbm5lchgBIAEoDBIY",
-          "CgdzaWduZXJzGAIgAygLMgcuU2lnbmVyIiMKB0R1bW15VHgSCwoDdmFsGAEg",
-          "ASgJEgsKA2tleRgCIAEoCWIGcHJvdG8z"));
+          "CgdzaWduZXJzGAIgAygLMgcuU2lnbmVyIj4KB05vbmNlVHgSDQoFaW5uZXIY",
+          "ASABKAwSEAoIc2VxdWVuY2UYAiABKAMSEgoKcHVibGljX2tleRgDIAEoDCIj",
+          "CgdEdW1teVR4EgsKA3ZhbBgBIAEoCRILCgNrZXkYAiABKAliBnByb3RvMw=="));
     descriptor = pbr::FileDescriptor.FromGeneratedCode(descriptorData,
         new pbr::FileDescriptor[] { },
         new pbr::GeneratedClrTypeInfo(null, new pbr::GeneratedClrTypeInfo[] {
           new pbr::GeneratedClrTypeInfo(typeof(global::Signer), global::Signer.Parser, new[]{ "Signature", "PublicKey" }, null, null, null),
           new pbr::GeneratedClrTypeInfo(typeof(global::SignedTx), global::SignedTx.Parser, new[]{ "Inner", "Signers" }, null, null, null),
+          new pbr::GeneratedClrTypeInfo(typeof(global::NonceTx), global::NonceTx.Parser, new[]{ "Inner", "Sequence", "PublicKey" }, null, null, null),
           new pbr::GeneratedClrTypeInfo(typeof(global::DummyTx), global::DummyTx.Parser, new[]{ "Val", "Key" }, null, null, null)
         }));
   }
@@ -344,6 +346,191 @@ public sealed partial class SignedTx : pb::IMessage<SignedTx> {
 
 }
 
+public sealed partial class NonceTx : pb::IMessage<NonceTx> {
+  private static readonly pb::MessageParser<NonceTx> _parser = new pb::MessageParser<NonceTx>(() => new NonceTx());
+  private pb::UnknownFieldSet _unknownFields;
+  [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+  public static pb::MessageParser<NonceTx> Parser { get { return _parser; } }
+
+  [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+  public static pbr::MessageDescriptor Descriptor {
+    get { return global::LoomReflection.Descriptor.MessageTypes[2]; }
+  }
+
+  [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+  pbr::MessageDescriptor pb::IMessage.Descriptor {
+    get { return Descriptor; }
+  }
+
+  [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+  public NonceTx() {
+    OnConstruction();
+  }
+
+  partial void OnConstruction();
+
+  [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+  public NonceTx(NonceTx other) : this() {
+    inner_ = other.inner_;
+    sequence_ = other.sequence_;
+    publicKey_ = other.publicKey_;
+    _unknownFields = pb::UnknownFieldSet.Clone(other._unknownFields);
+  }
+
+  [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+  public NonceTx Clone() {
+    return new NonceTx(this);
+  }
+
+  /// <summary>Field number for the "inner" field.</summary>
+  public const int InnerFieldNumber = 1;
+  private pb::ByteString inner_ = pb::ByteString.Empty;
+  [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+  public pb::ByteString Inner {
+    get { return inner_; }
+    set {
+      inner_ = pb::ProtoPreconditions.CheckNotNull(value, "value");
+    }
+  }
+
+  /// <summary>Field number for the "sequence" field.</summary>
+  public const int SequenceFieldNumber = 2;
+  private long sequence_;
+  [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+  public long Sequence {
+    get { return sequence_; }
+    set {
+      sequence_ = value;
+    }
+  }
+
+  /// <summary>Field number for the "public_key" field.</summary>
+  public const int PublicKeyFieldNumber = 3;
+  private pb::ByteString publicKey_ = pb::ByteString.Empty;
+  [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+  public pb::ByteString PublicKey {
+    get { return publicKey_; }
+    set {
+      publicKey_ = pb::ProtoPreconditions.CheckNotNull(value, "value");
+    }
+  }
+
+  [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+  public override bool Equals(object other) {
+    return Equals(other as NonceTx);
+  }
+
+  [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+  public bool Equals(NonceTx other) {
+    if (ReferenceEquals(other, null)) {
+      return false;
+    }
+    if (ReferenceEquals(other, this)) {
+      return true;
+    }
+    if (Inner != other.Inner) return false;
+    if (Sequence != other.Sequence) return false;
+    if (PublicKey != other.PublicKey) return false;
+    return Equals(_unknownFields, other._unknownFields);
+  }
+
+  [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+  public override int GetHashCode() {
+    int hash = 1;
+    if (Inner.Length != 0) hash ^= Inner.GetHashCode();
+    if (Sequence != 0L) hash ^= Sequence.GetHashCode();
+    if (PublicKey.Length != 0) hash ^= PublicKey.GetHashCode();
+    if (_unknownFields != null) {
+      hash ^= _unknownFields.GetHashCode();
+    }
+    return hash;
+  }
+
+  [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+  public override string ToString() {
+    return pb::JsonFormatter.ToDiagnosticString(this);
+  }
+
+  [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+  public void WriteTo(pb::CodedOutputStream output) {
+    if (Inner.Length != 0) {
+      output.WriteRawTag(10);
+      output.WriteBytes(Inner);
+    }
+    if (Sequence != 0L) {
+      output.WriteRawTag(16);
+      output.WriteInt64(Sequence);
+    }
+    if (PublicKey.Length != 0) {
+      output.WriteRawTag(26);
+      output.WriteBytes(PublicKey);
+    }
+    if (_unknownFields != null) {
+      _unknownFields.WriteTo(output);
+    }
+  }
+
+  [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+  public int CalculateSize() {
+    int size = 0;
+    if (Inner.Length != 0) {
+      size += 1 + pb::CodedOutputStream.ComputeBytesSize(Inner);
+    }
+    if (Sequence != 0L) {
+      size += 1 + pb::CodedOutputStream.ComputeInt64Size(Sequence);
+    }
+    if (PublicKey.Length != 0) {
+      size += 1 + pb::CodedOutputStream.ComputeBytesSize(PublicKey);
+    }
+    if (_unknownFields != null) {
+      size += _unknownFields.CalculateSize();
+    }
+    return size;
+  }
+
+  [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+  public void MergeFrom(NonceTx other) {
+    if (other == null) {
+      return;
+    }
+    if (other.Inner.Length != 0) {
+      Inner = other.Inner;
+    }
+    if (other.Sequence != 0L) {
+      Sequence = other.Sequence;
+    }
+    if (other.PublicKey.Length != 0) {
+      PublicKey = other.PublicKey;
+    }
+    _unknownFields = pb::UnknownFieldSet.MergeFrom(_unknownFields, other._unknownFields);
+  }
+
+  [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+  public void MergeFrom(pb::CodedInputStream input) {
+    uint tag;
+    while ((tag = input.ReadTag()) != 0) {
+      switch(tag) {
+        default:
+          _unknownFields = pb::UnknownFieldSet.MergeFieldFrom(_unknownFields, input);
+          break;
+        case 10: {
+          Inner = input.ReadBytes();
+          break;
+        }
+        case 16: {
+          Sequence = input.ReadInt64();
+          break;
+        }
+        case 26: {
+          PublicKey = input.ReadBytes();
+          break;
+        }
+      }
+    }
+  }
+
+}
+
 public sealed partial class DummyTx : pb::IMessage<DummyTx> {
   private static readonly pb::MessageParser<DummyTx> _parser = new pb::MessageParser<DummyTx>(() => new DummyTx());
   private pb::UnknownFieldSet _unknownFields;
@@ -352,7 +539,7 @@ public sealed partial class DummyTx : pb::IMessage<DummyTx> {
 
   [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
   public static pbr::MessageDescriptor Descriptor {
-    get { return global::LoomReflection.Descriptor.MessageTypes[2]; }
+    get { return global::LoomReflection.Descriptor.MessageTypes[3]; }
   }
 
   [global::System.Diagnostics.DebuggerNonUserCodeAttribute]

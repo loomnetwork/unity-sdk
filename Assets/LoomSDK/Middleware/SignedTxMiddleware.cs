@@ -1,6 +1,4 @@
-﻿using Chaos.NaCl;
-using Google.Protobuf;
-using System;
+﻿using Google.Protobuf;
 using System.Threading.Tasks;
 
 namespace Loom.Unity3d

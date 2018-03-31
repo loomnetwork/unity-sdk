@@ -10,6 +10,12 @@ message SignedTx {
     repeated Signer signers = 2;
 }
 
+message NonceTx {
+    bytes inner = 1;
+    int64 sequence = 2;
+    bytes public_key = 3;
+}
+
 message DummyTx {
     string val = 1;
     string key = 2;

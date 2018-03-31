@@ -1,5 +1,6 @@
 ﻿using Chaos.NaCl;
 using System.Security.Cryptography;
+using System.Text;
 
 namespace Loom.Unity3d
 {
@@ -53,6 +54,21 @@ namespace Loom.Unity3d
                 PublicKey = publicKey32
             };
         }
+
+        public static string BytesToHexString(byte[] bytes)
+        {
+            var hex = new StringBuilder(bytes.Length * 2);
+            string alphabet = "0123456789ABCDEF";
+
+            foreach (byte b in bytes)
+            {
+                hex.Append(alphabet[(int)(b >> 4)]);
+                hex.Append(alphabet[(int)(b & 0xF)]);
+            }
+
+            return hex.ToString();
+        }
+
     }
 
 }
