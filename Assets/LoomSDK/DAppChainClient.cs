@@ -95,16 +95,19 @@ namespace Loom.Unity3d
     {
         [JsonProperty("jsonrpc")]
         public string Version { get; set; }
-
+        [JsonProperty("method")]
         public string Method { get; set; }
 
         public class QueryParams
         {
+            [JsonProperty("contract")]
             public string Contract { get; set; }
+            [JsonProperty("query")]
             public object Query { get; set; }
         }
-
+        [JsonProperty("params")]
         public QueryParams Params { get; set; }
+        [JsonProperty("id")]
         public string Id { get; set; }
 
         public QueryJsonRpcRequest(string method, string contract, object query, string id = "")
@@ -118,6 +121,17 @@ namespace Loom.Unity3d
             };
             Id = id;
         }
+    }
+
+    internal class NonceResponse
+    {
+        public class NonceResult
+        {
+            [JsonProperty("nonce")]
+            public ulong Nonce { get; set; }
+        }
+        [JsonProperty("result")]
+        public NonceResult Result { get; set; }
     }
 
     #endregion
@@ -156,11 +170,41 @@ namespace Loom.Unity3d
         }
 
         /// <summary>
+        /// Calls a contract with the given arguments.
+        /// Each call generates a new transaction that's committed to the Loom DAppChain.
+        /// </summary>
+        /// <param name="contract">Address of a contract on the Loom DAppChain.</param>
+        /// <param name="args">Arguments to pass to the contract.</param>
+        /// <returns>Commit metadata.</returns>
+        public async Task<BroadcastTxResult> CallAsync(Address contract, IMessage args)
+        {
+            var callTxBytes = new CallTx
+            {
+                VmType = VMType.Plugin,
+                Input = args.ToByteString()
+            }.ToByteString();
+
+            var msgTxBytes = new MessageTx
+            {
+                From = null, // TODO: fill this in
+                To = contract,
+                Data = callTxBytes
+            }.ToByteString();
+
+            var tx = new Transaction
+            {
+                Id = 2,
+                Data = msgTxBytes
+            };
+            return await this.CommitTxAsync(tx);
+        }
+
+        /// <summary>
         /// Commits a transaction to the DAppChain.
         /// </summary>
         /// <param name="tx">Transaction to commit.</param>
         /// <returns>Commit metadata.</returns>
-        public async Task<BroadcastTxResult> CommitTx(IMessage tx)
+        public async Task<BroadcastTxResult> CommitTxAsync(IMessage tx)
         {
             byte[] txBytes = tx.ToByteArray();
             if (this.TxMiddleware != null)
@@ -170,7 +214,7 @@ namespace Loom.Unity3d
             string payload = CryptoBytes.ToBase64String(txBytes);
             Logger.Log(LogTag, "Tx: " + payload);
             var req = new TxJsonRpcRequest("broadcast_tx_commit", new string[] { payload }, Guid.NewGuid().ToString());
-            var resp = await this.PostTx(req);
+            var resp = await this.PostTxAsync(req);
             if (resp.Error != null)
             {
                 throw new Exception(String.Format("Failed to commit Tx: {0} / {1} / {2}",
@@ -183,12 +227,13 @@ namespace Loom.Unity3d
         /// Queries the current state of a contract.
         /// </summary>
         /// <typeparam name="T">The expected response type, must be deserializable with Newtonsoft.Json.</typeparam>
-        /// <param name="contract">Hex-encoded address of the contract to query.</param>
+        /// <param name="contract">Address of the contract to query.</param>
         /// <param name="query">Query parameters object, must be serializable with Newtonsoft.Json.</param>
         /// <returns>Deserialized response.</returns>
-        public async Task<T> QueryAsync<T>(string contract, object query = null)
+        public async Task<T> QueryAsync<T>(Address contract, object query = null)
         {
-            var req = new QueryJsonRpcRequest("query", contract, JsonConvert.SerializeObject(query), Guid.NewGuid().ToString());
+            // TODO: serialize contract address to a hex string
+            var req = new QueryJsonRpcRequest("query", "", query, Guid.NewGuid().ToString());
             string body = JsonConvert.SerializeObject(req);
             Logger.Log(LogTag, "Query body: " + body);
             byte[] bodyRaw = new UTF8Encoding().GetBytes(body);
@@ -208,7 +253,31 @@ namespace Loom.Unity3d
             return default(T);
         }
 
-        private async Task<BroadcastTxResponse> PostTx(TxJsonRpcRequest tx)
+        /// <summary>
+        /// Gets a nonce for the given public key.
+        /// </summary>
+        /// <param name="key">A hex encoded public key.</param>
+        /// <returns>The nonce.</returns>
+        public async Task<ulong> GetNonceAsync(string key)
+        {
+            var uriBuilder = new UriBuilder(this.readUrl)
+            {
+                Path = "nonce",
+                Query = key
+            };
+            using (var r = new UnityWebRequest(uriBuilder.Uri.AbsoluteUri, "GET"))
+            {
+                r.downloadHandler = (DownloadHandler)new DownloadHandlerBuffer();
+                r.SetRequestHeader("Content-Type", "application/json");
+                await r.SendWebRequest();
+                HandleError(r);
+                Logger.Log(LogTag, "HTTP response body: " + r.downloadHandler.text);
+                var resp = JsonConvert.DeserializeObject<NonceResponse>(r.downloadHandler.text);
+                return resp.Result.Nonce;
+            }
+        }
+
+        private async Task<BroadcastTxResponse> PostTxAsync(TxJsonRpcRequest tx)
         {
             string body = JsonConvert.SerializeObject(tx);
             Logger.Log(LogTag, "PostTx Body: " + body);

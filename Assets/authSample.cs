@@ -1,6 +1,7 @@
 ﻿using UnityEngine;
 using UnityEngine.UI;
 using Loom.Unity3d;
+using Newtonsoft.Json;
 
 public class authSample : MonoBehaviour
 {
@@ -53,7 +54,7 @@ public class authSample : MonoBehaviour
         this.statusTextRef.text = "Signed in as " + this.identity.Username;
 
         // This DAppChain client will connect to the example REST server in the Loom Go SDK. 
-        this.chainClient = new DAppChainClient("http://localhost", 8998, 9999)
+        this.chainClient = new DAppChainClient("http://localhost", 46657, 47000)
         {
             TxMiddleware = new TxMiddleware(new ITxMiddlewareHandler[]{
                 new SignedTxMiddleware(this.identity.PrivateKey)
@@ -73,10 +74,14 @@ public class authSample : MonoBehaviour
         var tx = new DummyTx
         {
             Key = r.ToString(),
-            Val = "Hello World " + r
+            Val = "Hello World"
         };
-        Debug.Log("Tx Val: " + tx.Val);
-        var result = await this.chainClient.CommitTx(tx);
+        var contract = new Address
+        {
+            ChainId = "helloworld",
+            Local = null
+        };
+        var result = await this.chainClient.CallAsync(contract, tx);
         this.statusTextRef.text = "Committed Tx to Block " + result.Height;
     }
 
@@ -84,6 +89,7 @@ public class authSample : MonoBehaviour
     // the only constraint is that it must be serializable to JSON.
     private class QueryParams
     {
+        [JsonProperty("body")]
         public string Body { get; set; }
     }
 
@@ -91,12 +97,14 @@ public class authSample : MonoBehaviour
     // the only constraint is that it must be deserializable from JSON.
     private class QueryResult
     {
+        [JsonProperty("body")]
         public string Body { get; set; }
     }
 
     public async void Query()
     {
-        var contract = "0x0";
+        // TODO: Get the contract address from somewhere.
+        var contract = new Address();
         // NOTE: Query results can be of any type that can be deserialized via Newtonsoft.Json.
         var result = await this.chainClient.QueryAsync<QueryResult>(contract, new QueryParams{ Body = "hello" });
         this.statusTextRef.text = "Query Response: " + result.Body;
