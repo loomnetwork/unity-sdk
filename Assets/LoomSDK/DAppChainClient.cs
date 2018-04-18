@@ -125,13 +125,8 @@ namespace Loom.Unity3d
 
     internal class NonceResponse
     {
-        public class NonceResult
-        {
-            [JsonProperty("nonce")]
-            public ulong Nonce { get; set; }
-        }
         [JsonProperty("result")]
-        public NonceResult Result { get; set; }
+        public ulong Result { get; set; }
     }
 
     #endregion
@@ -186,7 +181,7 @@ namespace Loom.Unity3d
 
             var msgTxBytes = new MessageTx
             {
-                From = null, // TODO: fill this in
+                From = new Address(), // TODO: fill this in
                 To = contract,
                 Data = callTxBytes
             }.ToByteString();
@@ -273,7 +268,7 @@ namespace Loom.Unity3d
                 HandleError(r);
                 Logger.Log(LogTag, "HTTP response body: " + r.downloadHandler.text);
                 var resp = JsonConvert.DeserializeObject<NonceResponse>(r.downloadHandler.text);
-                return resp.Result.Nonce;
+                return resp.Result;
             }
         }
 

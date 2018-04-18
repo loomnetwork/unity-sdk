@@ -11,12 +11,12 @@ namespace Loom.Unity3d
         /// <summary>
         /// Public key for which the nonce should be set. 
         /// </summary>
-        byte[] PublicKey { get; set; }
+        public byte[] PublicKey { get; set; }
 
         /// <summary>
         /// Client that should be used to retrieve the nonce.
         /// </summary>
-        DAppChainClient Client { get; set; }
+        public DAppChainClient Client { get; set; }
 
         public async Task<byte[]> Handle(byte[] txData)
         {
