@@ -257,7 +257,7 @@ namespace Loom.Unity3d
         /// <summary>
         /// Gets a nonce for the given public key.
         /// </summary>
-        /// <param name="key">A hex encoded public key.</param>
+        /// <param name="key">A hex encoded public key, e.g. 441B9DCC47A734695A508EDF174F7AAF76DD7209DEA2D51D3582DA77CE2756BE</param>
         /// <returns>The nonce.</returns>
         public async Task<ulong> GetNonceAsync(string key)
         {
