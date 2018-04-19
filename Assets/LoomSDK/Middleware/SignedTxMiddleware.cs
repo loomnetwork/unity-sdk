@@ -26,16 +26,11 @@ namespace Loom.Unity3d
         {
             var sig = CryptoUtils.Sign(txData, this.PrivateKey);
 
-            var signer = new Signer
-            {
-                Signature = ByteString.CopyFrom(sig.Signature),
-                PublicKey = ByteString.CopyFrom(sig.PublicKey)
-            };
-
             var signedTx = new SignedTx
             {
                 Inner = ByteString.CopyFrom(txData),
-                Signers = { signer }
+                Signature = ByteString.CopyFrom(sig.Signature),
+                PublicKey = ByteString.CopyFrom(sig.PublicKey)
             };
 
             return Task.FromResult(signedTx.ToByteArray());

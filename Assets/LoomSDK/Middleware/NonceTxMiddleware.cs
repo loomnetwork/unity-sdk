@@ -3,11 +3,6 @@ using System.Threading.Tasks;
 
 namespace Loom.Unity3d
 {
-    class NonceResponse
-    {
-        public long Data { get; internal set; }
-    }
-
     /// <summary>
     /// Adds a nonce to txs.
     /// </summary>
@@ -16,22 +11,21 @@ namespace Loom.Unity3d
         /// <summary>
         /// Public key for which the nonce should be set. 
         /// </summary>
-        byte[] PublicKey { get; set; }
+        public byte[] PublicKey { get; set; }
 
         /// <summary>
         /// Client that should be used to retrieve the nonce.
         /// </summary>
-        DAppChainClient Client { get; set; }
+        public DAppChainClient Client { get; set; }
 
         public async Task<byte[]> Handle(byte[] txData)
         {
             var key = CryptoUtils.BytesToHexString(this.PublicKey);
-            var resp = await this.Client.QueryAsync<NonceResponse>("query/nonce/" + key);
+            var nonce = await this.Client.GetNonceAsync(key);
             var tx = new NonceTx
             {
                 Inner = ByteString.CopyFrom(txData),
-                Sequence = resp.Data,
-                PublicKey = ByteString.CopyFrom(this.PublicKey)
+                Sequence = nonce + 1
             };
             return tx.ToByteArray();
         }

@@ -91,6 +91,44 @@ namespace Loom.Unity3d
         public BroadcastTxResult Result { get; set; }
     }
 
+    internal class QueryJsonRpcRequest
+    {
+        [JsonProperty("jsonrpc")]
+        public string Version { get; set; }
+        [JsonProperty("method")]
+        public string Method { get; set; }
+
+        public class QueryParams
+        {
+            [JsonProperty("contract")]
+            public string Contract { get; set; }
+            [JsonProperty("query")]
+            public object Query { get; set; }
+        }
+        [JsonProperty("params")]
+        public QueryParams Params { get; set; }
+        [JsonProperty("id")]
+        public string Id { get; set; }
+
+        public QueryJsonRpcRequest(string method, string contract, object query, string id = "")
+        {
+            Version = "2.0";
+            Method = method;
+            Params = new QueryParams
+            {
+                Contract = contract,
+                Query = query
+            };
+            Id = id;
+        }
+    }
+
+    internal class NonceResponse
+    {
+        [JsonProperty("result")]
+        public ulong Result { get; set; }
+    }
+
     #endregion
 
     /// <summary>
@@ -100,7 +138,8 @@ namespace Loom.Unity3d
     {
         private static readonly string LogTag = "Loom.DAppChainClient";
 
-        private string url;
+        private string writeUrl;
+        private string readUrl;
 
         /// <summary>
         /// Middleware to apply when committing transactions.
@@ -112,18 +151,61 @@ namespace Loom.Unity3d
         /// </summary>
         public ILogger Logger { get; set; }
 
-        public DAppChainClient(string url)
+        /// <summary>
+        /// Constructs a client to read & write data from/to a Loom DAppChain.
+        /// </summary>
+        /// <param name="url">Loom DAppChain URL e.g. "http://localhost"</param>
+        /// <param name="writePort">Port number for the write interface.</param>
+        /// <param name="readPort">Port number for the read interface.</param>
+        public DAppChainClient(string url, int writePort, int readPort)
         {
-            this.url = url;
+            this.writeUrl = string.Format("{0}:{1}", url, writePort);
+            this.readUrl = string.Format("{0}:{1}", url, readPort);
             this.Logger = NullLogger.Instance;
         }
 
         /// <summary>
-        /// Commits a transactions to the DAppChain.
+        /// Calls a contract with the given arguments.
+        /// Each call generates a new transaction that's committed to the Loom DAppChain.
+        /// </summary>
+        /// <param name="contract">Address of a contract on the Loom DAppChain.</param>
+        /// <param name="args">Arguments to pass to the contract.</param>
+        /// <returns>Commit metadata.</returns>
+        public async Task<BroadcastTxResult> CallAsync(Address contract, IMessage args)
+        {
+            var requestBytes = new Request
+            {
+                ContentType = EncodingType.Protobuf3,
+                Body = args.ToByteString()
+            }.ToByteString();
+
+            var callTxBytes = new CallTx
+            {
+                VmType = VMType.Plugin,
+                Input = requestBytes
+            }.ToByteString();
+
+            var msgTxBytes = new MessageTx
+            {
+                From = new Address(), // TODO: fill this in
+                To = contract,
+                Data = callTxBytes
+            }.ToByteString();
+
+            var tx = new Transaction
+            {
+                Id = 2,
+                Data = msgTxBytes
+            };
+            return await this.CommitTxAsync(tx);
+        }
+
+        /// <summary>
+        /// Commits a transaction to the DAppChain.
         /// </summary>
         /// <param name="tx">Transaction to commit.</param>
         /// <returns>Commit metadata.</returns>
-        public async Task<BroadcastTxResult> CommitTx(IMessage tx)
+        private async Task<BroadcastTxResult> CommitTxAsync(IMessage tx)
         {
             byte[] txBytes = tx.ToByteArray();
             if (this.TxMiddleware != null)
@@ -133,7 +215,7 @@ namespace Loom.Unity3d
             string payload = CryptoBytes.ToBase64String(txBytes);
             Logger.Log(LogTag, "Tx: " + payload);
             var req = new TxJsonRpcRequest("broadcast_tx_commit", new string[] { payload }, Guid.NewGuid().ToString());
-            var resp = await this.PostTx(req);
+            var resp = await this.PostTxAsync(req);
             if (resp.Error != null)
             {
                 throw new Exception(String.Format("Failed to commit Tx: {0} / {1} / {2}",
@@ -143,44 +225,75 @@ namespace Loom.Unity3d
         }
 
         /// <summary>
-        /// Queries the DAppChain state.
+        /// Queries the current state of a contract.
         /// </summary>
         /// <typeparam name="T">The expected response type, must be deserializable with Newtonsoft.Json.</typeparam>
-        /// <param name="path">DApp-specific path to query.</param>
-        /// <param name="queryStr">DApp-specific query parameters.</param>
+        /// <param name="contract">Address of the contract to query.</param>
+        /// <param name="query">Query parameters object, must be serializable with Newtonsoft.Json.</param>
         /// <returns>Deserialized response.</returns>
-        public async Task<T> QueryAsync<T>(string path, string queryStr = null)
+        public async Task<T> QueryAsync<T>(Address contract, object query = null)
         {
-            // TODO: Provide a nicer interface for building the query string.
-            var uriBuilder = new UriBuilder(this.url) { Path = path };
-            if (!String.IsNullOrEmpty(queryStr))
-            {
-                uriBuilder.Query = queryStr;
-            }
-            using (var r = new UnityWebRequest(uriBuilder.Uri.AbsoluteUri, "GET"))
-            {
-                r.downloadHandler = (DownloadHandler)new DownloadHandlerBuffer();
-                r.SetRequestHeader("Content-Type", "application/json");
-                await r.SendWebRequest();
-                HandleError(r);
-                Logger.Log(LogTag, "HTTP response body: " + r.downloadHandler.text);
-                return JsonConvert.DeserializeObject<T>(r.downloadHandler.text);
-            }
-            
-        }
-
-        private async Task<BroadcastTxResponse> PostTx(TxJsonRpcRequest tx)
-        {
-            string body = JsonConvert.SerializeObject(tx);
-            Logger.Log(LogTag, "PostTx Body: " + body);
+            // TODO: serialize contract address to a hex string
+            var req = new QueryJsonRpcRequest("query", "", query, Guid.NewGuid().ToString());
+            string body = JsonConvert.SerializeObject(req);
+            Logger.Log(LogTag, "Query body: " + body);
             byte[] bodyRaw = new UTF8Encoding().GetBytes(body);
-            using (var r = new UnityWebRequest(this.url, "POST"))
+            using (var r = new UnityWebRequest(this.readUrl, "POST"))
             {
                 r.uploadHandler = (UploadHandler)new UploadHandlerRaw(bodyRaw);
                 r.downloadHandler = (DownloadHandler)new DownloadHandlerBuffer();
                 r.SetRequestHeader("Content-Type", "application/json");
                 await r.SendWebRequest();
-                HandleError(r);
+                this.HandleError(r);
+                if (r.downloadHandler != null && !String.IsNullOrEmpty(r.downloadHandler.text))
+                {
+                    Logger.Log(LogTag, "Response: " + r.downloadHandler.text);
+                    return JsonConvert.DeserializeObject<T>(r.downloadHandler.text);
+                }
+            }
+            return default(T);
+        }
+
+        /// <summary>
+        /// Gets a nonce for the given public key.
+        /// </summary>
+        /// <param name="key">A hex encoded public key, e.g. 441B9DCC47A734695A508EDF174F7AAF76DD7209DEA2D51D3582DA77CE2756BE</param>
+        /// <returns>The nonce.</returns>
+        public async Task<ulong> GetNonceAsync(string key)
+        {
+            var uriBuilder = new UriBuilder(this.readUrl)
+            {
+                Path = "nonce",
+                Query = string.Format("key=\"{0}\"", key)
+            };
+            using (var r = new UnityWebRequest(uriBuilder.Uri.AbsoluteUri, "GET"))
+            {
+                r.downloadHandler = (DownloadHandler)new DownloadHandlerBuffer();
+                r.SetRequestHeader("Content-Type", "application/json");
+                await r.SendWebRequest();
+                this.HandleError(r);
+                if (r.downloadHandler != null && !String.IsNullOrEmpty(r.downloadHandler.text))
+                {
+                    Logger.Log(LogTag, "HTTP response body: " + r.downloadHandler.text);
+                    var resp = JsonConvert.DeserializeObject<NonceResponse>(r.downloadHandler.text);
+                    return resp.Result;
+                }
+            }
+            return 0;
+        }
+
+        private async Task<BroadcastTxResponse> PostTxAsync(TxJsonRpcRequest tx)
+        {
+            string body = JsonConvert.SerializeObject(tx);
+            Logger.Log(LogTag, "PostTx Body: " + body);
+            byte[] bodyRaw = new UTF8Encoding().GetBytes(body);
+            using (var r = new UnityWebRequest(this.writeUrl, "POST"))
+            {
+                r.uploadHandler = (UploadHandler)new UploadHandlerRaw(bodyRaw);
+                r.downloadHandler = (DownloadHandler)new DownloadHandlerBuffer();
+                r.SetRequestHeader("Content-Type", "application/json");
+                await r.SendWebRequest();
+                this.HandleError(r);
                 if (r.downloadHandler != null && !String.IsNullOrEmpty(r.downloadHandler.text))
                 {
                     Logger.Log(LogTag, "Response: " + r.downloadHandler.text);
@@ -190,7 +303,7 @@ namespace Loom.Unity3d
             return null;
         }
 
-        private static void HandleError(UnityWebRequest r)
+        private void HandleError(UnityWebRequest r)
         {
             if (r.isNetworkError)
             {
@@ -203,6 +316,22 @@ namespace Loom.Unity3d
                     // TOOD: extract error message if any
                 }
                 throw new Exception(String.Format("HTTP Error {0}", r.responseCode));
+            }
+            else
+            {
+                TxJsonRpcResponse resp = null;
+                try
+                {
+                    resp = JsonConvert.DeserializeObject<TxJsonRpcResponse>(r.downloadHandler.text);
+                }
+                catch (Exception e)
+                {
+                    Logger.LogError(LogTag, e.Message);
+                }
+                if (resp.Error != null)
+                {
+                    throw new Exception(String.Format("JSON-RPC Error {0} ({1}): {2}", resp.Error.Code, resp.Error.Message, resp.Error.Data));
+                }
             }
         }
     }
