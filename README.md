@@ -73,9 +73,9 @@ protoc -I<install path>/protoc-3.5.1/include -I<project path>/Assets/Protobuf --
 
 ## Samples
 
-The sample `authSample` scene expects the example REST server from the Loom Go SDK running locally
-at `http://localhost:8998`, if you want to run the server on a different host/port change the URL
-in `authSample.cs`.
+The sample `authSample` scene expects a local Loom DAppChain node to be running on `localhost`, if
+you decide to change the default host/ports the node runs on you'll need to update the host/ports in
+`authSample.cs` to match.
 
 When you run the sample scene you will see three buttons that are hooked up to call the
 corresponding methods in `Assets/authSample.cs`, these must be pressed in the correct order:
@@ -86,8 +86,8 @@ corresponding methods in `Assets/authSample.cs`, these must be pressed in the co
    DAppChain the textbox should change to `Committed Tx to Block ...` - indicating the block the
    transaction was committed to a block in the DAppChain. You can press the `Send Tx` button again
    to create another transaction.
-3. Once a transaction has been successfully committed you can press the `Query` button to retrieve
-   the data that was stored in the DAppChain for the most recently committed transaction. 
+3. You can press the `Query` button after signing in to send a simple query to the sample contract
+   running on the Loom DAppChain. 
 
 ## Dependencies
 
