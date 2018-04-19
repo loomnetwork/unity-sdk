@@ -154,7 +154,7 @@ namespace Loom.Unity3d
         /// <summary>
         /// Constructs a client to read & write data from/to a Loom DAppChain.
         /// </summary>
-        /// <param name="url">e.g. "http://localhost"</param>
+        /// <param name="url">Loom DAppChain URL e.g. "http://localhost"</param>
         /// <param name="writePort">Port number for the write interface.</param>
         /// <param name="readPort">Port number for the read interface.</param>
         public DAppChainClient(string url, int writePort, int readPort)
@@ -244,7 +244,7 @@ namespace Loom.Unity3d
                 r.downloadHandler = (DownloadHandler)new DownloadHandlerBuffer();
                 r.SetRequestHeader("Content-Type", "application/json");
                 await r.SendWebRequest();
-                HandleError(r);
+                this.HandleError(r);
                 if (r.downloadHandler != null && !String.IsNullOrEmpty(r.downloadHandler.text))
                 {
                     Logger.Log(LogTag, "Response: " + r.downloadHandler.text);
@@ -264,18 +264,22 @@ namespace Loom.Unity3d
             var uriBuilder = new UriBuilder(this.readUrl)
             {
                 Path = "nonce",
-                Query = key
+                Query = string.Format("key=\"{0}\"", key)
             };
             using (var r = new UnityWebRequest(uriBuilder.Uri.AbsoluteUri, "GET"))
             {
                 r.downloadHandler = (DownloadHandler)new DownloadHandlerBuffer();
                 r.SetRequestHeader("Content-Type", "application/json");
                 await r.SendWebRequest();
-                HandleError(r);
-                Logger.Log(LogTag, "HTTP response body: " + r.downloadHandler.text);
-                var resp = JsonConvert.DeserializeObject<NonceResponse>(r.downloadHandler.text);
-                return resp.Result;
+                this.HandleError(r);
+                if (r.downloadHandler != null && !String.IsNullOrEmpty(r.downloadHandler.text))
+                {
+                    Logger.Log(LogTag, "HTTP response body: " + r.downloadHandler.text);
+                    var resp = JsonConvert.DeserializeObject<NonceResponse>(r.downloadHandler.text);
+                    return resp.Result;
+                }
             }
+            return 0;
         }
 
         private async Task<BroadcastTxResponse> PostTxAsync(TxJsonRpcRequest tx)
@@ -289,7 +293,7 @@ namespace Loom.Unity3d
                 r.downloadHandler = (DownloadHandler)new DownloadHandlerBuffer();
                 r.SetRequestHeader("Content-Type", "application/json");
                 await r.SendWebRequest();
-                HandleError(r);
+                this.HandleError(r);
                 if (r.downloadHandler != null && !String.IsNullOrEmpty(r.downloadHandler.text))
                 {
                     Logger.Log(LogTag, "Response: " + r.downloadHandler.text);
@@ -299,7 +303,7 @@ namespace Loom.Unity3d
             return null;
         }
 
-        private static void HandleError(UnityWebRequest r)
+        private void HandleError(UnityWebRequest r)
         {
             if (r.isNetworkError)
             {
@@ -312,6 +316,22 @@ namespace Loom.Unity3d
                     // TOOD: extract error message if any
                 }
                 throw new Exception(String.Format("HTTP Error {0}", r.responseCode));
+            }
+            else
+            {
+                TxJsonRpcResponse resp = null;
+                try
+                {
+                    resp = JsonConvert.DeserializeObject<TxJsonRpcResponse>(r.downloadHandler.text);
+                }
+                catch (Exception e)
+                {
+                    Logger.LogError(LogTag, e.Message);
+                }
+                if (resp.Error != null)
+                {
+                    throw new Exception(String.Format("JSON-RPC Error {0} ({1}): {2}", resp.Error.Code, resp.Error.Message, resp.Error.Data));
+                }
             }
         }
     }
