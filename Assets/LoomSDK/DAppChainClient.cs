@@ -205,7 +205,7 @@ namespace Loom.Unity3d
         /// </summary>
         /// <param name="tx">Transaction to commit.</param>
         /// <returns>Commit metadata.</returns>
-        public async Task<BroadcastTxResult> CommitTxAsync(IMessage tx)
+        private async Task<BroadcastTxResult> CommitTxAsync(IMessage tx)
         {
             byte[] txBytes = tx.ToByteArray();
             if (this.TxMiddleware != null)

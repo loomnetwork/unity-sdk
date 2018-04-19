@@ -53,22 +53,18 @@ public class authSample : MonoBehaviour
         }
         this.statusTextRef.text = "Signed in as " + this.identity.Username;
 
-        // TODO: cleanup this mess, nonce middleware needs the client but the client is only
-        // created after the middleware is setup
-        var nonceTxMiddleware = new NonceTxMiddleware
-        {
-            PublicKey = this.identity.PublicKey,
-        };
         // This DAppChain client will connect to the example REST server in the Loom Go SDK. 
         this.chainClient = new DAppChainClient("http://localhost", 46657, 47000)
         {
-            TxMiddleware = new TxMiddleware(new ITxMiddlewareHandler[]{
-                nonceTxMiddleware,
-                new SignedTxMiddleware(this.identity.PrivateKey)
-            }),
             Logger = Debug.unityLogger
         };
-        nonceTxMiddleware.Client = this.chainClient;
+        this.chainClient.TxMiddleware = new TxMiddleware(new ITxMiddlewareHandler[]{
+            new NonceTxMiddleware{
+                PublicKey = this.identity.PublicKey,
+                Client = this.chainClient
+            },
+            new SignedTxMiddleware(this.identity.PrivateKey)
+        });
     }
 
     public async void SendTx()
