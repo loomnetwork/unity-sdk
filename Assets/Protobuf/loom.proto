@@ -42,6 +42,27 @@ message CallTx {
     bytes input = 2;
 }
 
+enum EncodingType {
+    JSON = 0;
+    PROTOBUF3 = 1;
+}
+
+message PluginCode {
+    string name = 1;
+    bytes input = 2;
+}
+
+message Request {
+    EncodingType content_type = 1;
+    EncodingType accept = 2;
+    bytes body = 3;
+}
+
+message Response {
+    EncodingType content_type = 1;
+    bytes body = 2;
+}
+
 message DummyTx {
     string val = 1;
     string key = 2;

@@ -30,12 +30,17 @@ public static partial class LoomReflection {
           "bxgBIAEoCzIILkFkZHJlc3MSFgoEZnJvbRgCIAEoCzIILkFkZHJlc3MSDAoE",
           "ZGF0YRgDIAEoDCIyCghEZXBsb3lUeBIYCgd2bV90eXBlGAEgASgOMgcuVk1U",
           "eXBlEgwKBGNvZGUYAiABKAwiMQoGQ2FsbFR4EhgKB3ZtX3R5cGUYASABKA4y",
-          "By5WTVR5cGUSDQoFaW5wdXQYAiABKAwiIwoHRHVtbXlUeBILCgN2YWwYASAB",
-          "KAkSCwoDa2V5GAIgASgJKh0KBlZNVHlwZRIKCgZQTFVHSU4QABIHCgNFVk0Q",
-          "AWIGcHJvdG8z"));
+          "By5WTVR5cGUSDQoFaW5wdXQYAiABKAwiKQoKUGx1Z2luQ29kZRIMCgRuYW1l",
+          "GAEgASgJEg0KBWlucHV0GAIgASgMIlsKB1JlcXVlc3QSIwoMY29udGVudF90",
+          "eXBlGAEgASgOMg0uRW5jb2RpbmdUeXBlEh0KBmFjY2VwdBgCIAEoDjINLkVu",
+          "Y29kaW5nVHlwZRIMCgRib2R5GAMgASgMIj0KCFJlc3BvbnNlEiMKDGNvbnRl",
+          "bnRfdHlwZRgBIAEoDjINLkVuY29kaW5nVHlwZRIMCgRib2R5GAIgASgMIiMK",
+          "B0R1bW15VHgSCwoDdmFsGAEgASgJEgsKA2tleRgCIAEoCSodCgZWTVR5cGUS",
+          "CgoGUExVR0lOEAASBwoDRVZNEAEqJwoMRW5jb2RpbmdUeXBlEggKBEpTT04Q",
+          "ABINCglQUk9UT0JVRjMQAWIGcHJvdG8z"));
     descriptor = pbr::FileDescriptor.FromGeneratedCode(descriptorData,
         new pbr::FileDescriptor[] { },
-        new pbr::GeneratedClrTypeInfo(new[] {typeof(global::VMType), }, new pbr::GeneratedClrTypeInfo[] {
+        new pbr::GeneratedClrTypeInfo(new[] {typeof(global::VMType), typeof(global::EncodingType), }, new pbr::GeneratedClrTypeInfo[] {
           new pbr::GeneratedClrTypeInfo(typeof(global::SignedTx), global::SignedTx.Parser, new[]{ "Inner", "Signature", "PublicKey" }, null, null, null),
           new pbr::GeneratedClrTypeInfo(typeof(global::NonceTx), global::NonceTx.Parser, new[]{ "Inner", "Sequence" }, null, null, null),
           new pbr::GeneratedClrTypeInfo(typeof(global::Address), global::Address.Parser, new[]{ "ChainId", "Local" }, null, null, null),
@@ -43,6 +48,9 @@ public static partial class LoomReflection {
           new pbr::GeneratedClrTypeInfo(typeof(global::MessageTx), global::MessageTx.Parser, new[]{ "To", "From", "Data" }, null, null, null),
           new pbr::GeneratedClrTypeInfo(typeof(global::DeployTx), global::DeployTx.Parser, new[]{ "VmType", "Code" }, null, null, null),
           new pbr::GeneratedClrTypeInfo(typeof(global::CallTx), global::CallTx.Parser, new[]{ "VmType", "Input" }, null, null, null),
+          new pbr::GeneratedClrTypeInfo(typeof(global::PluginCode), global::PluginCode.Parser, new[]{ "Name", "Input" }, null, null, null),
+          new pbr::GeneratedClrTypeInfo(typeof(global::Request), global::Request.Parser, new[]{ "ContentType", "Accept", "Body" }, null, null, null),
+          new pbr::GeneratedClrTypeInfo(typeof(global::Response), global::Response.Parser, new[]{ "ContentType", "Body" }, null, null, null),
           new pbr::GeneratedClrTypeInfo(typeof(global::DummyTx), global::DummyTx.Parser, new[]{ "Val", "Key" }, null, null, null)
         }));
   }
@@ -53,6 +61,11 @@ public static partial class LoomReflection {
 public enum VMType {
   [pbr::OriginalName("PLUGIN")] Plugin = 0,
   [pbr::OriginalName("EVM")] Evm = 1,
+}
+
+public enum EncodingType {
+  [pbr::OriginalName("JSON")] Json = 0,
+  [pbr::OriginalName("PROTOBUF3")] Protobuf3 = 1,
 }
 
 #endregion
@@ -1225,6 +1238,505 @@ public sealed partial class CallTx : pb::IMessage<CallTx> {
 
 }
 
+public sealed partial class PluginCode : pb::IMessage<PluginCode> {
+  private static readonly pb::MessageParser<PluginCode> _parser = new pb::MessageParser<PluginCode>(() => new PluginCode());
+  private pb::UnknownFieldSet _unknownFields;
+  [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+  public static pb::MessageParser<PluginCode> Parser { get { return _parser; } }
+
+  [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+  public static pbr::MessageDescriptor Descriptor {
+    get { return global::LoomReflection.Descriptor.MessageTypes[7]; }
+  }
+
+  [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+  pbr::MessageDescriptor pb::IMessage.Descriptor {
+    get { return Descriptor; }
+  }
+
+  [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+  public PluginCode() {
+    OnConstruction();
+  }
+
+  partial void OnConstruction();
+
+  [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+  public PluginCode(PluginCode other) : this() {
+    name_ = other.name_;
+    input_ = other.input_;
+    _unknownFields = pb::UnknownFieldSet.Clone(other._unknownFields);
+  }
+
+  [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+  public PluginCode Clone() {
+    return new PluginCode(this);
+  }
+
+  /// <summary>Field number for the "name" field.</summary>
+  public const int NameFieldNumber = 1;
+  private string name_ = "";
+  [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+  public string Name {
+    get { return name_; }
+    set {
+      name_ = pb::ProtoPreconditions.CheckNotNull(value, "value");
+    }
+  }
+
+  /// <summary>Field number for the "input" field.</summary>
+  public const int InputFieldNumber = 2;
+  private pb::ByteString input_ = pb::ByteString.Empty;
+  [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+  public pb::ByteString Input {
+    get { return input_; }
+    set {
+      input_ = pb::ProtoPreconditions.CheckNotNull(value, "value");
+    }
+  }
+
+  [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+  public override bool Equals(object other) {
+    return Equals(other as PluginCode);
+  }
+
+  [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+  public bool Equals(PluginCode other) {
+    if (ReferenceEquals(other, null)) {
+      return false;
+    }
+    if (ReferenceEquals(other, this)) {
+      return true;
+    }
+    if (Name != other.Name) return false;
+    if (Input != other.Input) return false;
+    return Equals(_unknownFields, other._unknownFields);
+  }
+
+  [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+  public override int GetHashCode() {
+    int hash = 1;
+    if (Name.Length != 0) hash ^= Name.GetHashCode();
+    if (Input.Length != 0) hash ^= Input.GetHashCode();
+    if (_unknownFields != null) {
+      hash ^= _unknownFields.GetHashCode();
+    }
+    return hash;
+  }
+
+  [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+  public override string ToString() {
+    return pb::JsonFormatter.ToDiagnosticString(this);
+  }
+
+  [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+  public void WriteTo(pb::CodedOutputStream output) {
+    if (Name.Length != 0) {
+      output.WriteRawTag(10);
+      output.WriteString(Name);
+    }
+    if (Input.Length != 0) {
+      output.WriteRawTag(18);
+      output.WriteBytes(Input);
+    }
+    if (_unknownFields != null) {
+      _unknownFields.WriteTo(output);
+    }
+  }
+
+  [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+  public int CalculateSize() {
+    int size = 0;
+    if (Name.Length != 0) {
+      size += 1 + pb::CodedOutputStream.ComputeStringSize(Name);
+    }
+    if (Input.Length != 0) {
+      size += 1 + pb::CodedOutputStream.ComputeBytesSize(Input);
+    }
+    if (_unknownFields != null) {
+      size += _unknownFields.CalculateSize();
+    }
+    return size;
+  }
+
+  [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+  public void MergeFrom(PluginCode other) {
+    if (other == null) {
+      return;
+    }
+    if (other.Name.Length != 0) {
+      Name = other.Name;
+    }
+    if (other.Input.Length != 0) {
+      Input = other.Input;
+    }
+    _unknownFields = pb::UnknownFieldSet.MergeFrom(_unknownFields, other._unknownFields);
+  }
+
+  [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+  public void MergeFrom(pb::CodedInputStream input) {
+    uint tag;
+    while ((tag = input.ReadTag()) != 0) {
+      switch(tag) {
+        default:
+          _unknownFields = pb::UnknownFieldSet.MergeFieldFrom(_unknownFields, input);
+          break;
+        case 10: {
+          Name = input.ReadString();
+          break;
+        }
+        case 18: {
+          Input = input.ReadBytes();
+          break;
+        }
+      }
+    }
+  }
+
+}
+
+public sealed partial class Request : pb::IMessage<Request> {
+  private static readonly pb::MessageParser<Request> _parser = new pb::MessageParser<Request>(() => new Request());
+  private pb::UnknownFieldSet _unknownFields;
+  [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+  public static pb::MessageParser<Request> Parser { get { return _parser; } }
+
+  [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+  public static pbr::MessageDescriptor Descriptor {
+    get { return global::LoomReflection.Descriptor.MessageTypes[8]; }
+  }
+
+  [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+  pbr::MessageDescriptor pb::IMessage.Descriptor {
+    get { return Descriptor; }
+  }
+
+  [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+  public Request() {
+    OnConstruction();
+  }
+
+  partial void OnConstruction();
+
+  [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+  public Request(Request other) : this() {
+    contentType_ = other.contentType_;
+    accept_ = other.accept_;
+    body_ = other.body_;
+    _unknownFields = pb::UnknownFieldSet.Clone(other._unknownFields);
+  }
+
+  [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+  public Request Clone() {
+    return new Request(this);
+  }
+
+  /// <summary>Field number for the "content_type" field.</summary>
+  public const int ContentTypeFieldNumber = 1;
+  private global::EncodingType contentType_ = 0;
+  [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+  public global::EncodingType ContentType {
+    get { return contentType_; }
+    set {
+      contentType_ = value;
+    }
+  }
+
+  /// <summary>Field number for the "accept" field.</summary>
+  public const int AcceptFieldNumber = 2;
+  private global::EncodingType accept_ = 0;
+  [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+  public global::EncodingType Accept {
+    get { return accept_; }
+    set {
+      accept_ = value;
+    }
+  }
+
+  /// <summary>Field number for the "body" field.</summary>
+  public const int BodyFieldNumber = 3;
+  private pb::ByteString body_ = pb::ByteString.Empty;
+  [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+  public pb::ByteString Body {
+    get { return body_; }
+    set {
+      body_ = pb::ProtoPreconditions.CheckNotNull(value, "value");
+    }
+  }
+
+  [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+  public override bool Equals(object other) {
+    return Equals(other as Request);
+  }
+
+  [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+  public bool Equals(Request other) {
+    if (ReferenceEquals(other, null)) {
+      return false;
+    }
+    if (ReferenceEquals(other, this)) {
+      return true;
+    }
+    if (ContentType != other.ContentType) return false;
+    if (Accept != other.Accept) return false;
+    if (Body != other.Body) return false;
+    return Equals(_unknownFields, other._unknownFields);
+  }
+
+  [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+  public override int GetHashCode() {
+    int hash = 1;
+    if (ContentType != 0) hash ^= ContentType.GetHashCode();
+    if (Accept != 0) hash ^= Accept.GetHashCode();
+    if (Body.Length != 0) hash ^= Body.GetHashCode();
+    if (_unknownFields != null) {
+      hash ^= _unknownFields.GetHashCode();
+    }
+    return hash;
+  }
+
+  [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+  public override string ToString() {
+    return pb::JsonFormatter.ToDiagnosticString(this);
+  }
+
+  [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+  public void WriteTo(pb::CodedOutputStream output) {
+    if (ContentType != 0) {
+      output.WriteRawTag(8);
+      output.WriteEnum((int) ContentType);
+    }
+    if (Accept != 0) {
+      output.WriteRawTag(16);
+      output.WriteEnum((int) Accept);
+    }
+    if (Body.Length != 0) {
+      output.WriteRawTag(26);
+      output.WriteBytes(Body);
+    }
+    if (_unknownFields != null) {
+      _unknownFields.WriteTo(output);
+    }
+  }
+
+  [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+  public int CalculateSize() {
+    int size = 0;
+    if (ContentType != 0) {
+      size += 1 + pb::CodedOutputStream.ComputeEnumSize((int) ContentType);
+    }
+    if (Accept != 0) {
+      size += 1 + pb::CodedOutputStream.ComputeEnumSize((int) Accept);
+    }
+    if (Body.Length != 0) {
+      size += 1 + pb::CodedOutputStream.ComputeBytesSize(Body);
+    }
+    if (_unknownFields != null) {
+      size += _unknownFields.CalculateSize();
+    }
+    return size;
+  }
+
+  [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+  public void MergeFrom(Request other) {
+    if (other == null) {
+      return;
+    }
+    if (other.ContentType != 0) {
+      ContentType = other.ContentType;
+    }
+    if (other.Accept != 0) {
+      Accept = other.Accept;
+    }
+    if (other.Body.Length != 0) {
+      Body = other.Body;
+    }
+    _unknownFields = pb::UnknownFieldSet.MergeFrom(_unknownFields, other._unknownFields);
+  }
+
+  [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+  public void MergeFrom(pb::CodedInputStream input) {
+    uint tag;
+    while ((tag = input.ReadTag()) != 0) {
+      switch(tag) {
+        default:
+          _unknownFields = pb::UnknownFieldSet.MergeFieldFrom(_unknownFields, input);
+          break;
+        case 8: {
+          contentType_ = (global::EncodingType) input.ReadEnum();
+          break;
+        }
+        case 16: {
+          accept_ = (global::EncodingType) input.ReadEnum();
+          break;
+        }
+        case 26: {
+          Body = input.ReadBytes();
+          break;
+        }
+      }
+    }
+  }
+
+}
+
+public sealed partial class Response : pb::IMessage<Response> {
+  private static readonly pb::MessageParser<Response> _parser = new pb::MessageParser<Response>(() => new Response());
+  private pb::UnknownFieldSet _unknownFields;
+  [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+  public static pb::MessageParser<Response> Parser { get { return _parser; } }
+
+  [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+  public static pbr::MessageDescriptor Descriptor {
+    get { return global::LoomReflection.Descriptor.MessageTypes[9]; }
+  }
+
+  [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+  pbr::MessageDescriptor pb::IMessage.Descriptor {
+    get { return Descriptor; }
+  }
+
+  [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+  public Response() {
+    OnConstruction();
+  }
+
+  partial void OnConstruction();
+
+  [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+  public Response(Response other) : this() {
+    contentType_ = other.contentType_;
+    body_ = other.body_;
+    _unknownFields = pb::UnknownFieldSet.Clone(other._unknownFields);
+  }
+
+  [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+  public Response Clone() {
+    return new Response(this);
+  }
+
+  /// <summary>Field number for the "content_type" field.</summary>
+  public const int ContentTypeFieldNumber = 1;
+  private global::EncodingType contentType_ = 0;
+  [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+  public global::EncodingType ContentType {
+    get { return contentType_; }
+    set {
+      contentType_ = value;
+    }
+  }
+
+  /// <summary>Field number for the "body" field.</summary>
+  public const int BodyFieldNumber = 2;
+  private pb::ByteString body_ = pb::ByteString.Empty;
+  [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+  public pb::ByteString Body {
+    get { return body_; }
+    set {
+      body_ = pb::ProtoPreconditions.CheckNotNull(value, "value");
+    }
+  }
+
+  [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+  public override bool Equals(object other) {
+    return Equals(other as Response);
+  }
+
+  [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+  public bool Equals(Response other) {
+    if (ReferenceEquals(other, null)) {
+      return false;
+    }
+    if (ReferenceEquals(other, this)) {
+      return true;
+    }
+    if (ContentType != other.ContentType) return false;
+    if (Body != other.Body) return false;
+    return Equals(_unknownFields, other._unknownFields);
+  }
+
+  [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+  public override int GetHashCode() {
+    int hash = 1;
+    if (ContentType != 0) hash ^= ContentType.GetHashCode();
+    if (Body.Length != 0) hash ^= Body.GetHashCode();
+    if (_unknownFields != null) {
+      hash ^= _unknownFields.GetHashCode();
+    }
+    return hash;
+  }
+
+  [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+  public override string ToString() {
+    return pb::JsonFormatter.ToDiagnosticString(this);
+  }
+
+  [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+  public void WriteTo(pb::CodedOutputStream output) {
+    if (ContentType != 0) {
+      output.WriteRawTag(8);
+      output.WriteEnum((int) ContentType);
+    }
+    if (Body.Length != 0) {
+      output.WriteRawTag(18);
+      output.WriteBytes(Body);
+    }
+    if (_unknownFields != null) {
+      _unknownFields.WriteTo(output);
+    }
+  }
+
+  [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+  public int CalculateSize() {
+    int size = 0;
+    if (ContentType != 0) {
+      size += 1 + pb::CodedOutputStream.ComputeEnumSize((int) ContentType);
+    }
+    if (Body.Length != 0) {
+      size += 1 + pb::CodedOutputStream.ComputeBytesSize(Body);
+    }
+    if (_unknownFields != null) {
+      size += _unknownFields.CalculateSize();
+    }
+    return size;
+  }
+
+  [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+  public void MergeFrom(Response other) {
+    if (other == null) {
+      return;
+    }
+    if (other.ContentType != 0) {
+      ContentType = other.ContentType;
+    }
+    if (other.Body.Length != 0) {
+      Body = other.Body;
+    }
+    _unknownFields = pb::UnknownFieldSet.MergeFrom(_unknownFields, other._unknownFields);
+  }
+
+  [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+  public void MergeFrom(pb::CodedInputStream input) {
+    uint tag;
+    while ((tag = input.ReadTag()) != 0) {
+      switch(tag) {
+        default:
+          _unknownFields = pb::UnknownFieldSet.MergeFieldFrom(_unknownFields, input);
+          break;
+        case 8: {
+          contentType_ = (global::EncodingType) input.ReadEnum();
+          break;
+        }
+        case 18: {
+          Body = input.ReadBytes();
+          break;
+        }
+      }
+    }
+  }
+
+}
+
 public sealed partial class DummyTx : pb::IMessage<DummyTx> {
   private static readonly pb::MessageParser<DummyTx> _parser = new pb::MessageParser<DummyTx>(() => new DummyTx());
   private pb::UnknownFieldSet _unknownFields;
@@ -1233,7 +1745,7 @@ public sealed partial class DummyTx : pb::IMessage<DummyTx> {
 
   [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
   public static pbr::MessageDescriptor Descriptor {
-    get { return global::LoomReflection.Descriptor.MessageTypes[7]; }
+    get { return global::LoomReflection.Descriptor.MessageTypes[10]; }
   }
 
   [global::System.Diagnostics.DebuggerNonUserCodeAttribute]

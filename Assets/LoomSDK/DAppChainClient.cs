@@ -173,10 +173,16 @@ namespace Loom.Unity3d
         /// <returns>Commit metadata.</returns>
         public async Task<BroadcastTxResult> CallAsync(Address contract, IMessage args)
         {
+            var requestBytes = new Request
+            {
+                ContentType = EncodingType.Protobuf3,
+                Body = args.ToByteString()
+            }.ToByteString();
+
             var callTxBytes = new CallTx
             {
                 VmType = VMType.Plugin,
-                Input = args.ToByteString()
+                Input = requestBytes
             }.ToByteString();
 
             var msgTxBytes = new MessageTx
