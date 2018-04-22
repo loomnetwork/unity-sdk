@@ -8,6 +8,7 @@ public class authSample : MonoBehaviour
     public Text statusTextRef;
 
     private Identity identity;
+    private Address callerAddr;
     private DAppChainClient chainClient;
 
     // Use this for initialization
@@ -65,6 +66,7 @@ public class authSample : MonoBehaviour
             },
             new SignedTxMiddleware(this.identity.PrivateKey)
         });
+        this.callerAddr = this.identity.ToAddress("default");
     }
 
     public async void SendTx()
@@ -85,7 +87,7 @@ public class authSample : MonoBehaviour
             ChainId = "helloworld",
             Local = Google.Protobuf.ByteString.CopyFrom(new byte[20])
         };
-        var result = await this.chainClient.CallAsync(contract, tx);
+        var result = await this.chainClient.CallAsync(this.callerAddr, contract, tx);
         this.statusTextRef.text = "Committed Tx to Block " + result.Height;
     }
 

@@ -131,6 +131,26 @@ namespace Loom.Unity3d
 
     #endregion
 
+    public static class IdentityExtensions
+    {
+        /// <summary>
+        /// Generate a DAppChain address for the given identity.
+        /// Address generation is based on the identity public key and the chain ID,
+        /// the algorithm is deterministic.
+        /// </summary>
+        /// <param name="identity">Identity with a valid public key.</param>
+        /// <param name="chainId">Identifier of a DAppChain.</param>
+        /// <returns>An address</returns>
+        public static Address ToAddress(this Identity identity, string chainId)
+        {
+            return new Address
+            {
+                ChainId = chainId,
+                Local = ByteString.CopyFrom(CryptoUtils.LocalAddressFromPublicKey(identity.PublicKey))
+            };
+        }
+    }
+
     /// <summary>
     /// Writes to & reads from a Loom DAppChain.
     /// </summary>
@@ -168,10 +188,11 @@ namespace Loom.Unity3d
         /// Calls a contract with the given arguments.
         /// Each call generates a new transaction that's committed to the Loom DAppChain.
         /// </summary>
+        /// <param name="caller">Address of the caller.</param>
         /// <param name="contract">Address of a contract on the Loom DAppChain.</param>
         /// <param name="args">Arguments to pass to the contract.</param>
         /// <returns>Commit metadata.</returns>
-        public async Task<BroadcastTxResult> CallAsync(Address contract, IMessage args)
+        public async Task<BroadcastTxResult> CallAsync(Address caller, Address contract, IMessage args)
         {
             var requestBytes = new Request
             {
@@ -187,7 +208,7 @@ namespace Loom.Unity3d
 
             var msgTxBytes = new MessageTx
             {
-                From = new Address(), // TODO: fill this in
+                From = caller,
                 To = contract,
                 Data = callTxBytes
             }.ToByteString();

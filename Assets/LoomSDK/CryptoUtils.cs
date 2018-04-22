@@ -20,6 +20,7 @@ namespace Loom.Unity3d
     public class CryptoUtils
     {
         private static RNGCryptoServiceProvider rngCsp = new RNGCryptoServiceProvider();
+        private static RIPEMD160 ripemd160 = RIPEMD160.Create();
 
         /// <summary>
         /// Generates a 32-byte private key.
@@ -81,6 +82,16 @@ namespace Loom.Unity3d
                 return CryptoBytes.FromHexString(hexStr.Substring(2));
             }
             return CryptoBytes.FromHexString(hexStr);
+        }
+
+        /// <summary>
+        /// Converts a public key to a local address (which is used as unique identifier within a DAppChain).
+        /// </summary>
+        /// <param name="publicKey">32-byte public key</param>
+        /// <returns>Array of bytes representing a local address.</returns>
+        public static byte[] LocalAddressFromPublicKey(byte[] publicKey)
+        {
+            return ripemd160.ComputeHash(publicKey);
         }
     }
 

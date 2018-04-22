@@ -29,8 +29,10 @@ namespace Loom.Unity3d
 
         /// <summary>
         /// 32-byte public key.
+        /// Note that public key is generated from the private key, so the PrivateKey property must
+        /// be set before this property will contain a valid public key.
         /// </summary>
-        public byte[] PublicKey { get; internal set; }
+        public byte[] PublicKey { get; private set; }
 
         private byte[] privateKey32;
     }
