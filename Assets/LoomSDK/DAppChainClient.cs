@@ -11,6 +11,30 @@ namespace Loom.Unity3d
 {
     #region JSON RPC Interfaces
 
+    internal class JsonRpcErrorResponse
+    {
+        public class ErrorData
+        {
+            [JsonProperty("code")]
+            public long Code { get; set; }
+
+            [JsonProperty("message")]
+            public string Message { get; set; }
+
+            [JsonProperty("data")]
+            public string Data { get; set; }
+        }
+
+        [JsonProperty("error")]
+        public ErrorData Error;
+    }
+
+    internal class JsonRpcResponse<T>
+    {
+        [JsonProperty("result")]
+        public T Result { get; set; }
+    }
+
     internal class TxJsonRpcRequest
     {
         [JsonProperty("jsonrpc")]
@@ -44,21 +68,6 @@ namespace Loom.Unity3d
         /// </summary>
         [JsonProperty("id")]
         public string Id { get; set; }
-
-        public class ErrorData
-        {
-            [JsonProperty("code")]
-            public long Code { get; set; }
-
-            [JsonProperty("message")]
-            public string Message { get; set; }
-
-            [JsonProperty("data")]
-            public string Data { get; set; }
-        }
-
-        [JsonProperty("error")]
-        public ErrorData Error;
     }
 
     public class BroadcastTxResult
@@ -83,6 +92,19 @@ namespace Loom.Unity3d
         /// </summary>
         [JsonProperty("height")]
         public long Height { get; set; }
+
+        public class TxResult
+        {
+            [JsonProperty("code")]
+            public int Code { get; set; }
+            [JsonProperty("log")]
+            public string Error { get; set; }
+        }
+
+        [JsonProperty("check_tx")]
+        public TxResult CheckTx { get; set; }
+        [JsonProperty("deliver_tx")]
+        public TxResult DeliverTx { get; set; }
     }
 
     public class BroadcastTxResponse : TxJsonRpcResponse
@@ -190,14 +212,21 @@ namespace Loom.Unity3d
         /// </summary>
         /// <param name="caller">Address of the caller.</param>
         /// <param name="contract">Address of a contract on the Loom DAppChain.</param>
+        /// <param name="method">Qualified name of the contract method to call in the format "contractName.methodName".</param>
         /// <param name="args">Arguments to pass to the contract.</param>
         /// <returns>Commit metadata.</returns>
-        public async Task<BroadcastTxResult> CallAsync(Address caller, Address contract, IMessage args)
+        public async Task<BroadcastTxResult> CallAsync(Address caller, Address contract, string method, IMessage args)
         {
+            var methodTx = new SimpleContractMethod
+            {
+                Version = 0,
+                Method = method,
+                Data = Google.Protobuf.WellKnownTypes.Any.Pack(args)
+            };
             var requestBytes = new Request
             {
                 ContentType = EncodingType.Protobuf3,
-                Body = args.ToByteString()
+                Body = methodTx.ToByteString()
             }.ToByteString();
 
             var callTxBytes = new CallTx
@@ -237,12 +266,27 @@ namespace Loom.Unity3d
             Logger.Log(LogTag, "Tx: " + payload);
             var req = new TxJsonRpcRequest("broadcast_tx_commit", new string[] { payload }, Guid.NewGuid().ToString());
             var resp = await this.PostTxAsync(req);
-            if (resp.Error != null)
+            var result = resp.Result;
+            if (result != null)
             {
-                throw new Exception(String.Format("Failed to commit Tx: {0} / {1} / {2}",
-                    resp.Error.Code, resp.Error.Message, resp.Error.Data));
+                if (result.CheckTx.Code != 0)
+                {
+                    if (string.IsNullOrEmpty(result.CheckTx.Error))
+                    {
+                        throw new Exception(String.Format("Failed to commit Tx: {0}", result.CheckTx.Code));
+                    }
+                    throw new Exception(String.Format("Failed to commit Tx: {0}", result.CheckTx.Error));
+                }
+                if (result.DeliverTx.Code != 0)
+                {
+                    if (string.IsNullOrEmpty(result.DeliverTx.Error))
+                    {
+                        throw new Exception(String.Format("Failed to commit Tx: {0}", result.DeliverTx.Code));
+                    }
+                    throw new Exception(String.Format("Failed to commit Tx: {0}", result.DeliverTx.Error));
+                }
             }
-            return resp.Result;
+            return result;
         }
 
         /// <summary>
@@ -250,12 +294,19 @@ namespace Loom.Unity3d
         /// </summary>
         /// <typeparam name="T">The expected response type, must be deserializable with Newtonsoft.Json.</typeparam>
         /// <param name="contract">Address of the contract to query.</param>
-        /// <param name="query">Query parameters object, must be serializable with Newtonsoft.Json.</param>
+        /// <param name="method">Qualified name of the contract method to call in the format "contractName.methodName".</param>
+        /// <param name="queryParams">Query parameters object, must be serializable with Newtonsoft.Json.</param>
         /// <returns>Deserialized response.</returns>
-        public async Task<T> QueryAsync<T>(Address contract, object query = null)
+        public async Task<T> QueryAsync<T>(Address contract, string method, object queryParams = null)
         {
-            // TODO: serialize contract address to a hex string
-            var req = new QueryJsonRpcRequest("query", "", query, Guid.NewGuid().ToString());
+            var query = new SimpleContractMethodJSON
+            {
+                Version = 0,
+                Method = method,
+                Data = ByteString.CopyFromUtf8(JsonConvert.SerializeObject(queryParams))
+            };
+            var contractAddr = "0x" + CryptoUtils.BytesToHexString(contract.Local.ToByteArray());
+            var req = new QueryJsonRpcRequest("query", contractAddr, query, Guid.NewGuid().ToString());
             string body = JsonConvert.SerializeObject(req);
             Logger.Log(LogTag, "Query body: " + body);
             byte[] bodyRaw = new UTF8Encoding().GetBytes(body);
@@ -269,7 +320,8 @@ namespace Loom.Unity3d
                 if (r.downloadHandler != null && !String.IsNullOrEmpty(r.downloadHandler.text))
                 {
                     Logger.Log(LogTag, "Response: " + r.downloadHandler.text);
-                    return JsonConvert.DeserializeObject<T>(r.downloadHandler.text);
+                    var resp = JsonConvert.DeserializeObject<JsonRpcResponse<T>>(r.downloadHandler.text);
+                    return resp.Result;
                 }
             }
             return default(T);
@@ -338,12 +390,12 @@ namespace Loom.Unity3d
                 }
                 throw new Exception(String.Format("HTTP Error {0}", r.responseCode));
             }
-            else
+            else if (r.downloadHandler != null && !String.IsNullOrEmpty(r.downloadHandler.text))
             {
-                TxJsonRpcResponse resp = null;
+                JsonRpcErrorResponse resp = null;
                 try
                 {
-                    resp = JsonConvert.DeserializeObject<TxJsonRpcResponse>(r.downloadHandler.text);
+                    resp = JsonConvert.DeserializeObject<JsonRpcErrorResponse>(r.downloadHandler.text);
                 }
                 catch (Exception e)
                 {

@@ -87,7 +87,7 @@ public class authSample : MonoBehaviour
             ChainId = "helloworld",
             Local = Google.Protobuf.ByteString.CopyFrom(new byte[20])
         };
-        var result = await this.chainClient.CallAsync(this.callerAddr, contract, tx);
+        var result = await this.chainClient.CallAsync(this.callerAddr, contract, "whatever", tx);
         this.statusTextRef.text = "Committed Tx to Block " + result.Height;
     }
 
@@ -111,8 +111,10 @@ public class authSample : MonoBehaviour
     {
         // TODO: Get the contract address from somewhere.
         var contract = new Address();
+        // TODO: Specify a valid method.
+        var method = "whatever";
         // NOTE: Query results can be of any type that can be deserialized via Newtonsoft.Json.
-        var result = await this.chainClient.QueryAsync<QueryResult>(contract, new QueryParams{ Body = "hello" });
+        var result = await this.chainClient.QueryAsync<QueryResult>(contract, method, new QueryParams{ Body = "hello" });
         this.statusTextRef.text = "Query Response: " + result.Body;
     }
 }
