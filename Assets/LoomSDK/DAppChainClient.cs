@@ -217,9 +217,8 @@ namespace Loom.Unity3d
         /// <returns>Commit metadata.</returns>
         public async Task<BroadcastTxResult> CallAsync(Address caller, Address contract, string method, IMessage args)
         {
-            var methodTx = new SimpleContractMethod
+            var methodTx = new ContractMethodCall
             {
-                Version = 0,
                 Method = method,
                 Data = Google.Protobuf.WellKnownTypes.Any.Pack(args)
             };
@@ -299,9 +298,8 @@ namespace Loom.Unity3d
         /// <returns>Deserialized response.</returns>
         public async Task<T> QueryAsync<T>(Address contract, string method, object queryParams = null)
         {
-            var query = new SimpleContractMethodJSON
+            var query = new ContractMethodCallJSON
             {
-                Version = 0,
                 Method = method,
                 Data = ByteString.CopyFromUtf8(JsonConvert.SerializeObject(queryParams))
             };

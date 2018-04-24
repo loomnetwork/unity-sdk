@@ -64,18 +64,14 @@ message Response {
     bytes body = 2;
 }
 
-message SimpleContractMethod {
-	// version to help upgrades to code
-	int32 version = 1;
-	string method = 2;
-	google.protobuf.Any data = 3;
+message ContractMethodCall {
+    string method = 1;
+    google.protobuf.Any data = 2;
 }
 
-message SimpleContractMethodJSON {
-	// version to help upgrades to code
-	int32 version = 1;
-	string method = 2;
-	bytes data = 3;
+message ContractMethodCallJSON {
+    string method = 1;
+    bytes data = 2; // JSON
 }
 
 message DummyTx {

@@ -35,13 +35,13 @@ public static partial class LoomReflection {
           "ASgMIlsKB1JlcXVlc3QSIwoMY29udGVudF90eXBlGAEgASgOMg0uRW5jb2Rp",
           "bmdUeXBlEh0KBmFjY2VwdBgCIAEoDjINLkVuY29kaW5nVHlwZRIMCgRib2R5",
           "GAMgASgMIj0KCFJlc3BvbnNlEiMKDGNvbnRlbnRfdHlwZRgBIAEoDjINLkVu",
-          "Y29kaW5nVHlwZRIMCgRib2R5GAIgASgMIlsKFFNpbXBsZUNvbnRyYWN0TWV0",
-          "aG9kEg8KB3ZlcnNpb24YASABKAUSDgoGbWV0aG9kGAIgASgJEiIKBGRhdGEY",
-          "AyABKAsyFC5nb29nbGUucHJvdG9idWYuQW55IkkKGFNpbXBsZUNvbnRyYWN0",
-          "TWV0aG9kSlNPThIPCgd2ZXJzaW9uGAEgASgFEg4KBm1ldGhvZBgCIAEoCRIM",
-          "CgRkYXRhGAMgASgMIiMKB0R1bW15VHgSCwoDdmFsGAEgASgJEgsKA2tleRgC",
-          "IAEoCSodCgZWTVR5cGUSCgoGUExVR0lOEAASBwoDRVZNEAEqJwoMRW5jb2Rp",
-          "bmdUeXBlEggKBEpTT04QABINCglQUk9UT0JVRjMQAWIGcHJvdG8z"));
+          "Y29kaW5nVHlwZRIMCgRib2R5GAIgASgMIkgKEkNvbnRyYWN0TWV0aG9kQ2Fs",
+          "bBIOCgZtZXRob2QYASABKAkSIgoEZGF0YRgCIAEoCzIULmdvb2dsZS5wcm90",
+          "b2J1Zi5BbnkiNgoWQ29udHJhY3RNZXRob2RDYWxsSlNPThIOCgZtZXRob2QY",
+          "ASABKAkSDAoEZGF0YRgCIAEoDCIjCgdEdW1teVR4EgsKA3ZhbBgBIAEoCRIL",
+          "CgNrZXkYAiABKAkqHQoGVk1UeXBlEgoKBlBMVUdJThAAEgcKA0VWTRABKicK",
+          "DEVuY29kaW5nVHlwZRIICgRKU09OEAASDQoJUFJPVE9CVUYzEAFiBnByb3Rv",
+          "Mw=="));
     descriptor = pbr::FileDescriptor.FromGeneratedCode(descriptorData,
         new pbr::FileDescriptor[] { global::Google.Protobuf.WellKnownTypes.AnyReflection.Descriptor, },
         new pbr::GeneratedClrTypeInfo(new[] {typeof(global::VMType), typeof(global::EncodingType), }, new pbr::GeneratedClrTypeInfo[] {
@@ -55,8 +55,8 @@ public static partial class LoomReflection {
           new pbr::GeneratedClrTypeInfo(typeof(global::PluginCode), global::PluginCode.Parser, new[]{ "Name", "Input" }, null, null, null),
           new pbr::GeneratedClrTypeInfo(typeof(global::Request), global::Request.Parser, new[]{ "ContentType", "Accept", "Body" }, null, null, null),
           new pbr::GeneratedClrTypeInfo(typeof(global::Response), global::Response.Parser, new[]{ "ContentType", "Body" }, null, null, null),
-          new pbr::GeneratedClrTypeInfo(typeof(global::SimpleContractMethod), global::SimpleContractMethod.Parser, new[]{ "Version", "Method", "Data" }, null, null, null),
-          new pbr::GeneratedClrTypeInfo(typeof(global::SimpleContractMethodJSON), global::SimpleContractMethodJSON.Parser, new[]{ "Version", "Method", "Data" }, null, null, null),
+          new pbr::GeneratedClrTypeInfo(typeof(global::ContractMethodCall), global::ContractMethodCall.Parser, new[]{ "Method", "Data" }, null, null, null),
+          new pbr::GeneratedClrTypeInfo(typeof(global::ContractMethodCallJSON), global::ContractMethodCallJSON.Parser, new[]{ "Method", "Data" }, null, null, null),
           new pbr::GeneratedClrTypeInfo(typeof(global::DummyTx), global::DummyTx.Parser, new[]{ "Val", "Key" }, null, null, null)
         }));
   }
@@ -1743,11 +1743,11 @@ public sealed partial class Response : pb::IMessage<Response> {
 
 }
 
-public sealed partial class SimpleContractMethod : pb::IMessage<SimpleContractMethod> {
-  private static readonly pb::MessageParser<SimpleContractMethod> _parser = new pb::MessageParser<SimpleContractMethod>(() => new SimpleContractMethod());
+public sealed partial class ContractMethodCall : pb::IMessage<ContractMethodCall> {
+  private static readonly pb::MessageParser<ContractMethodCall> _parser = new pb::MessageParser<ContractMethodCall>(() => new ContractMethodCall());
   private pb::UnknownFieldSet _unknownFields;
   [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
-  public static pb::MessageParser<SimpleContractMethod> Parser { get { return _parser; } }
+  public static pb::MessageParser<ContractMethodCall> Parser { get { return _parser; } }
 
   [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
   public static pbr::MessageDescriptor Descriptor {
@@ -1760,41 +1760,26 @@ public sealed partial class SimpleContractMethod : pb::IMessage<SimpleContractMe
   }
 
   [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
-  public SimpleContractMethod() {
+  public ContractMethodCall() {
     OnConstruction();
   }
 
   partial void OnConstruction();
 
   [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
-  public SimpleContractMethod(SimpleContractMethod other) : this() {
-    version_ = other.version_;
+  public ContractMethodCall(ContractMethodCall other) : this() {
     method_ = other.method_;
     Data = other.data_ != null ? other.Data.Clone() : null;
     _unknownFields = pb::UnknownFieldSet.Clone(other._unknownFields);
   }
 
   [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
-  public SimpleContractMethod Clone() {
-    return new SimpleContractMethod(this);
-  }
-
-  /// <summary>Field number for the "version" field.</summary>
-  public const int VersionFieldNumber = 1;
-  private int version_;
-  /// <summary>
-  /// version to help upgrades to code
-  /// </summary>
-  [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
-  public int Version {
-    get { return version_; }
-    set {
-      version_ = value;
-    }
+  public ContractMethodCall Clone() {
+    return new ContractMethodCall(this);
   }
 
   /// <summary>Field number for the "method" field.</summary>
-  public const int MethodFieldNumber = 2;
+  public const int MethodFieldNumber = 1;
   private string method_ = "";
   [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
   public string Method {
@@ -1805,7 +1790,7 @@ public sealed partial class SimpleContractMethod : pb::IMessage<SimpleContractMe
   }
 
   /// <summary>Field number for the "data" field.</summary>
-  public const int DataFieldNumber = 3;
+  public const int DataFieldNumber = 2;
   private global::Google.Protobuf.WellKnownTypes.Any data_;
   [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
   public global::Google.Protobuf.WellKnownTypes.Any Data {
@@ -1817,18 +1802,17 @@ public sealed partial class SimpleContractMethod : pb::IMessage<SimpleContractMe
 
   [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
   public override bool Equals(object other) {
-    return Equals(other as SimpleContractMethod);
+    return Equals(other as ContractMethodCall);
   }
 
   [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
-  public bool Equals(SimpleContractMethod other) {
+  public bool Equals(ContractMethodCall other) {
     if (ReferenceEquals(other, null)) {
       return false;
     }
     if (ReferenceEquals(other, this)) {
       return true;
     }
-    if (Version != other.Version) return false;
     if (Method != other.Method) return false;
     if (!object.Equals(Data, other.Data)) return false;
     return Equals(_unknownFields, other._unknownFields);
@@ -1837,7 +1821,6 @@ public sealed partial class SimpleContractMethod : pb::IMessage<SimpleContractMe
   [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
   public override int GetHashCode() {
     int hash = 1;
-    if (Version != 0) hash ^= Version.GetHashCode();
     if (Method.Length != 0) hash ^= Method.GetHashCode();
     if (data_ != null) hash ^= Data.GetHashCode();
     if (_unknownFields != null) {
@@ -1853,16 +1836,12 @@ public sealed partial class SimpleContractMethod : pb::IMessage<SimpleContractMe
 
   [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
   public void WriteTo(pb::CodedOutputStream output) {
-    if (Version != 0) {
-      output.WriteRawTag(8);
-      output.WriteInt32(Version);
-    }
     if (Method.Length != 0) {
-      output.WriteRawTag(18);
+      output.WriteRawTag(10);
       output.WriteString(Method);
     }
     if (data_ != null) {
-      output.WriteRawTag(26);
+      output.WriteRawTag(18);
       output.WriteMessage(Data);
     }
     if (_unknownFields != null) {
@@ -1873,9 +1852,6 @@ public sealed partial class SimpleContractMethod : pb::IMessage<SimpleContractMe
   [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
   public int CalculateSize() {
     int size = 0;
-    if (Version != 0) {
-      size += 1 + pb::CodedOutputStream.ComputeInt32Size(Version);
-    }
     if (Method.Length != 0) {
       size += 1 + pb::CodedOutputStream.ComputeStringSize(Method);
     }
@@ -1889,12 +1865,9 @@ public sealed partial class SimpleContractMethod : pb::IMessage<SimpleContractMe
   }
 
   [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
-  public void MergeFrom(SimpleContractMethod other) {
+  public void MergeFrom(ContractMethodCall other) {
     if (other == null) {
       return;
-    }
-    if (other.Version != 0) {
-      Version = other.Version;
     }
     if (other.Method.Length != 0) {
       Method = other.Method;
@@ -1916,15 +1889,11 @@ public sealed partial class SimpleContractMethod : pb::IMessage<SimpleContractMe
         default:
           _unknownFields = pb::UnknownFieldSet.MergeFieldFrom(_unknownFields, input);
           break;
-        case 8: {
-          Version = input.ReadInt32();
-          break;
-        }
-        case 18: {
+        case 10: {
           Method = input.ReadString();
           break;
         }
-        case 26: {
+        case 18: {
           if (data_ == null) {
             data_ = new global::Google.Protobuf.WellKnownTypes.Any();
           }
@@ -1937,11 +1906,11 @@ public sealed partial class SimpleContractMethod : pb::IMessage<SimpleContractMe
 
 }
 
-public sealed partial class SimpleContractMethodJSON : pb::IMessage<SimpleContractMethodJSON> {
-  private static readonly pb::MessageParser<SimpleContractMethodJSON> _parser = new pb::MessageParser<SimpleContractMethodJSON>(() => new SimpleContractMethodJSON());
+public sealed partial class ContractMethodCallJSON : pb::IMessage<ContractMethodCallJSON> {
+  private static readonly pb::MessageParser<ContractMethodCallJSON> _parser = new pb::MessageParser<ContractMethodCallJSON>(() => new ContractMethodCallJSON());
   private pb::UnknownFieldSet _unknownFields;
   [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
-  public static pb::MessageParser<SimpleContractMethodJSON> Parser { get { return _parser; } }
+  public static pb::MessageParser<ContractMethodCallJSON> Parser { get { return _parser; } }
 
   [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
   public static pbr::MessageDescriptor Descriptor {
@@ -1954,41 +1923,26 @@ public sealed partial class SimpleContractMethodJSON : pb::IMessage<SimpleContra
   }
 
   [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
-  public SimpleContractMethodJSON() {
+  public ContractMethodCallJSON() {
     OnConstruction();
   }
 
   partial void OnConstruction();
 
   [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
-  public SimpleContractMethodJSON(SimpleContractMethodJSON other) : this() {
-    version_ = other.version_;
+  public ContractMethodCallJSON(ContractMethodCallJSON other) : this() {
     method_ = other.method_;
     data_ = other.data_;
     _unknownFields = pb::UnknownFieldSet.Clone(other._unknownFields);
   }
 
   [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
-  public SimpleContractMethodJSON Clone() {
-    return new SimpleContractMethodJSON(this);
-  }
-
-  /// <summary>Field number for the "version" field.</summary>
-  public const int VersionFieldNumber = 1;
-  private int version_;
-  /// <summary>
-  /// version to help upgrades to code
-  /// </summary>
-  [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
-  public int Version {
-    get { return version_; }
-    set {
-      version_ = value;
-    }
+  public ContractMethodCallJSON Clone() {
+    return new ContractMethodCallJSON(this);
   }
 
   /// <summary>Field number for the "method" field.</summary>
-  public const int MethodFieldNumber = 2;
+  public const int MethodFieldNumber = 1;
   private string method_ = "";
   [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
   public string Method {
@@ -1999,8 +1953,11 @@ public sealed partial class SimpleContractMethodJSON : pb::IMessage<SimpleContra
   }
 
   /// <summary>Field number for the "data" field.</summary>
-  public const int DataFieldNumber = 3;
+  public const int DataFieldNumber = 2;
   private pb::ByteString data_ = pb::ByteString.Empty;
+  /// <summary>
+  /// JSON
+  /// </summary>
   [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
   public pb::ByteString Data {
     get { return data_; }
@@ -2011,18 +1968,17 @@ public sealed partial class SimpleContractMethodJSON : pb::IMessage<SimpleContra
 
   [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
   public override bool Equals(object other) {
-    return Equals(other as SimpleContractMethodJSON);
+    return Equals(other as ContractMethodCallJSON);
   }
 
   [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
-  public bool Equals(SimpleContractMethodJSON other) {
+  public bool Equals(ContractMethodCallJSON other) {
     if (ReferenceEquals(other, null)) {
       return false;
     }
     if (ReferenceEquals(other, this)) {
       return true;
     }
-    if (Version != other.Version) return false;
     if (Method != other.Method) return false;
     if (Data != other.Data) return false;
     return Equals(_unknownFields, other._unknownFields);
@@ -2031,7 +1987,6 @@ public sealed partial class SimpleContractMethodJSON : pb::IMessage<SimpleContra
   [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
   public override int GetHashCode() {
     int hash = 1;
-    if (Version != 0) hash ^= Version.GetHashCode();
     if (Method.Length != 0) hash ^= Method.GetHashCode();
     if (Data.Length != 0) hash ^= Data.GetHashCode();
     if (_unknownFields != null) {
@@ -2047,16 +2002,12 @@ public sealed partial class SimpleContractMethodJSON : pb::IMessage<SimpleContra
 
   [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
   public void WriteTo(pb::CodedOutputStream output) {
-    if (Version != 0) {
-      output.WriteRawTag(8);
-      output.WriteInt32(Version);
-    }
     if (Method.Length != 0) {
-      output.WriteRawTag(18);
+      output.WriteRawTag(10);
       output.WriteString(Method);
     }
     if (Data.Length != 0) {
-      output.WriteRawTag(26);
+      output.WriteRawTag(18);
       output.WriteBytes(Data);
     }
     if (_unknownFields != null) {
@@ -2067,9 +2018,6 @@ public sealed partial class SimpleContractMethodJSON : pb::IMessage<SimpleContra
   [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
   public int CalculateSize() {
     int size = 0;
-    if (Version != 0) {
-      size += 1 + pb::CodedOutputStream.ComputeInt32Size(Version);
-    }
     if (Method.Length != 0) {
       size += 1 + pb::CodedOutputStream.ComputeStringSize(Method);
     }
@@ -2083,12 +2031,9 @@ public sealed partial class SimpleContractMethodJSON : pb::IMessage<SimpleContra
   }
 
   [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
-  public void MergeFrom(SimpleContractMethodJSON other) {
+  public void MergeFrom(ContractMethodCallJSON other) {
     if (other == null) {
       return;
-    }
-    if (other.Version != 0) {
-      Version = other.Version;
     }
     if (other.Method.Length != 0) {
       Method = other.Method;
@@ -2107,15 +2052,11 @@ public sealed partial class SimpleContractMethodJSON : pb::IMessage<SimpleContra
         default:
           _unknownFields = pb::UnknownFieldSet.MergeFieldFrom(_unknownFields, input);
           break;
-        case 8: {
-          Version = input.ReadInt32();
-          break;
-        }
-        case 18: {
+        case 10: {
           Method = input.ReadString();
           break;
         }
-        case 26: {
+        case 18: {
           Data = input.ReadBytes();
           break;
         }
