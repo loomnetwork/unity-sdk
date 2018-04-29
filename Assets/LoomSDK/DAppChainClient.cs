@@ -124,15 +124,16 @@ namespace Loom.Unity3d
         {
             [JsonProperty("contract")]
             public string Contract { get; set; }
+            // base64 encoded query
             [JsonProperty("query")]
-            public object Query { get; set; }
+            public string Query { get; set; }
         }
         [JsonProperty("params")]
         public QueryParams Params { get; set; }
         [JsonProperty("id")]
         public string Id { get; set; }
 
-        public QueryJsonRpcRequest(string method, string contract, object query, string id = "")
+        public QueryJsonRpcRequest(string method, string contract, string query, string id = "")
         {
             Version = "2.0";
             Method = method;
@@ -220,7 +221,7 @@ namespace Loom.Unity3d
             var methodTx = new ContractMethodCall
             {
                 Method = method,
-                Data = Google.Protobuf.WellKnownTypes.Any.Pack(args)
+                Args = args.ToByteString()
             };
             var requestBytes = new Request
             {
@@ -294,17 +295,18 @@ namespace Loom.Unity3d
         /// <typeparam name="T">The expected response type, must be deserializable with Newtonsoft.Json.</typeparam>
         /// <param name="contract">Address of the contract to query.</param>
         /// <param name="method">Qualified name of the contract method to call in the format "contractName.methodName".</param>
-        /// <param name="queryParams">Query parameters object, must be serializable with Newtonsoft.Json.</param>
+        /// <param name="queryParams">Query parameters object.</param>
         /// <returns>Deserialized response.</returns>
-        public async Task<T> QueryAsync<T>(Address contract, string method, object queryParams = null)
+        public async Task<T> QueryAsync<T>(Address contract, string method, IMessage queryParams = null) where T : IMessage, new()
         {
-            var query = new ContractMethodCallJSON
+            var query = new ContractMethodCall
             {
                 Method = method,
-                Data = ByteString.CopyFromUtf8(JsonConvert.SerializeObject(queryParams))
+                Args = queryParams.ToByteString()
             };
             var contractAddr = "0x" + CryptoUtils.BytesToHexString(contract.Local.ToByteArray());
-            var req = new QueryJsonRpcRequest("query", contractAddr, query, Guid.NewGuid().ToString());
+            var queryBytes = CryptoBytes.ToBase64String(query.ToByteArray());
+            var req = new QueryJsonRpcRequest("query", contractAddr, queryBytes, Guid.NewGuid().ToString());
             string body = JsonConvert.SerializeObject(req);
             Logger.Log(LogTag, "Query body: " + body);
             byte[] bodyRaw = new UTF8Encoding().GetBytes(body);
@@ -318,8 +320,10 @@ namespace Loom.Unity3d
                 if (r.downloadHandler != null && !String.IsNullOrEmpty(r.downloadHandler.text))
                 {
                     Logger.Log(LogTag, "Response: " + r.downloadHandler.text);
-                    var resp = JsonConvert.DeserializeObject<JsonRpcResponse<T>>(r.downloadHandler.text);
-                    return resp.Result;
+                    var resp = JsonConvert.DeserializeObject<JsonRpcResponse<byte[]>>(r.downloadHandler.text);
+                    T msg = new T();
+                    msg.MergeFrom(resp.Result);
+                    return msg;
                 }
             }
             return default(T);
@@ -340,7 +344,6 @@ namespace Loom.Unity3d
             using (var r = new UnityWebRequest(uriBuilder.Uri.AbsoluteUri, "GET"))
             {
                 r.downloadHandler = (DownloadHandler)new DownloadHandlerBuffer();
-                r.SetRequestHeader("Content-Type", "application/json");
                 await r.SendWebRequest();
                 this.HandleError(r);
                 if (r.downloadHandler != null && !String.IsNullOrEmpty(r.downloadHandler.text))

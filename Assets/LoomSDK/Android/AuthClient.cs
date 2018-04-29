@@ -1,4 +1,6 @@
-﻿using Auth0.AuthenticationApi;
+﻿#if UNITY_ANDROID
+
+using Auth0.AuthenticationApi;
 using Auth0.AuthenticationApi.Models;
 using Newtonsoft.Json;
 using System;
@@ -103,3 +105,5 @@ namespace Loom.Unity3d.Android
         }
     }
 }
+
+#endif

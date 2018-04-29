@@ -59,6 +59,16 @@ namespace Loom.Unity3d
             return this;
         }
 
+#if UNITY_WEBGL
+        private string privKeyLocalStoragePath;
+
+        public AuthClientFactory WithPrivateKeyLocalStoragePath(string path)
+        {
+            this.privKeyLocalStoragePath = path;
+            return this;
+        }
+#endif
+
         public IAuthClient Create()
         {
 #if UNITY_ANDROID
@@ -71,7 +81,7 @@ namespace Loom.Unity3d
                 Audience = this.audience,
                 Scope = this.scope
             };
-#else
+#elif UNITY_EDITOR || UNITY_STANDALONE
             return new Desktop.AuthClient
             {
                 Logger = this.logger ?? NullLogger.Instance,
@@ -82,6 +92,14 @@ namespace Loom.Unity3d
                 Scope = this.scope,
                 RedirectUrl = this.redirectUrl
             };
+#elif UNITY_WEBGL
+            return new WebGL.AuthClient
+            {
+                Logger = this.logger ?? NullLogger.Instance,
+                PrivateKeyPath = this.privKeyLocalStoragePath
+            };
+#else
+            throw new System.NotImplementedException();
 #endif
         }
     }

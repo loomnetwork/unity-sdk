@@ -1,4 +1,6 @@
-﻿using Auth0.AuthenticationApi;
+﻿#if UNITY_EDITOR || UNITY_STANDALONE
+
+using Auth0.AuthenticationApi;
 using Auth0.AuthenticationApi.Models;
 using System;
 using System.Net;
@@ -172,3 +174,5 @@ namespace Loom.Unity3d.Desktop
         }
     }
 }
+
+#endif

@@ -1,4 +1,6 @@
-﻿using System.Threading.Tasks;
+﻿#if !UNITY_WEBGL
+
+using System.Threading.Tasks;
 
 namespace Loom.Unity3d
 {
@@ -49,3 +51,5 @@ namespace Loom.Unity3d
         }
     }
 }
+
+#endif

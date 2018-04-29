@@ -1,4 +1,6 @@
-﻿using System;
+﻿#if UNITY_ANDROID
+
+using System;
 using UnityEngine;
 
 namespace Loom.Unity3d.Android
@@ -23,3 +25,5 @@ namespace Loom.Unity3d.Android
         }
     }
 }
+
+#endif

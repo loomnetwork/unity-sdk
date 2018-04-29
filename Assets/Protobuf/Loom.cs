@@ -22,28 +22,25 @@ public static partial class LoomReflection {
   static LoomReflection() {
     byte[] descriptorData = global::System.Convert.FromBase64String(
         string.Concat(
-          "Cgpsb29tLnByb3RvGhlnb29nbGUvcHJvdG9idWYvYW55LnByb3RvIkAKCFNp",
-          "Z25lZFR4Eg0KBWlubmVyGAEgASgMEhEKCXNpZ25hdHVyZRgCIAEoDBISCgpw",
-          "dWJsaWNfa2V5GAMgASgMIioKB05vbmNlVHgSDQoFaW5uZXIYASABKAwSEAoI",
-          "c2VxdWVuY2UYAiABKAQiKgoHQWRkcmVzcxIQCghjaGFpbl9pZBgBIAEoCRIN",
-          "CgVsb2NhbBgCIAEoDCInCgtUcmFuc2FjdGlvbhIKCgJpZBgBIAEoDRIMCgRk",
-          "YXRhGAIgASgMIkcKCU1lc3NhZ2VUeBIUCgJ0bxgBIAEoCzIILkFkZHJlc3MS",
-          "FgoEZnJvbRgCIAEoCzIILkFkZHJlc3MSDAoEZGF0YRgDIAEoDCIyCghEZXBs",
-          "b3lUeBIYCgd2bV90eXBlGAEgASgOMgcuVk1UeXBlEgwKBGNvZGUYAiABKAwi",
-          "MQoGQ2FsbFR4EhgKB3ZtX3R5cGUYASABKA4yBy5WTVR5cGUSDQoFaW5wdXQY",
-          "AiABKAwiKQoKUGx1Z2luQ29kZRIMCgRuYW1lGAEgASgJEg0KBWlucHV0GAIg",
-          "ASgMIlsKB1JlcXVlc3QSIwoMY29udGVudF90eXBlGAEgASgOMg0uRW5jb2Rp",
-          "bmdUeXBlEh0KBmFjY2VwdBgCIAEoDjINLkVuY29kaW5nVHlwZRIMCgRib2R5",
-          "GAMgASgMIj0KCFJlc3BvbnNlEiMKDGNvbnRlbnRfdHlwZRgBIAEoDjINLkVu",
-          "Y29kaW5nVHlwZRIMCgRib2R5GAIgASgMIkgKEkNvbnRyYWN0TWV0aG9kQ2Fs",
-          "bBIOCgZtZXRob2QYASABKAkSIgoEZGF0YRgCIAEoCzIULmdvb2dsZS5wcm90",
-          "b2J1Zi5BbnkiNgoWQ29udHJhY3RNZXRob2RDYWxsSlNPThIOCgZtZXRob2QY",
-          "ASABKAkSDAoEZGF0YRgCIAEoDCIjCgdEdW1teVR4EgsKA3ZhbBgBIAEoCRIL",
-          "CgNrZXkYAiABKAkqHQoGVk1UeXBlEgoKBlBMVUdJThAAEgcKA0VWTRABKicK",
-          "DEVuY29kaW5nVHlwZRIICgRKU09OEAASDQoJUFJPVE9CVUYzEAFiBnByb3Rv",
-          "Mw=="));
+          "Cgpsb29tLnByb3RvIkAKCFNpZ25lZFR4Eg0KBWlubmVyGAEgASgMEhEKCXNp",
+          "Z25hdHVyZRgCIAEoDBISCgpwdWJsaWNfa2V5GAMgASgMIioKB05vbmNlVHgS",
+          "DQoFaW5uZXIYASABKAwSEAoIc2VxdWVuY2UYAiABKAQiKgoHQWRkcmVzcxIQ",
+          "CghjaGFpbl9pZBgBIAEoCRINCgVsb2NhbBgCIAEoDCInCgtUcmFuc2FjdGlv",
+          "bhIKCgJpZBgBIAEoDRIMCgRkYXRhGAIgASgMIkcKCU1lc3NhZ2VUeBIUCgJ0",
+          "bxgBIAEoCzIILkFkZHJlc3MSFgoEZnJvbRgCIAEoCzIILkFkZHJlc3MSDAoE",
+          "ZGF0YRgDIAEoDCIyCghEZXBsb3lUeBIYCgd2bV90eXBlGAEgASgOMgcuVk1U",
+          "eXBlEgwKBGNvZGUYAiABKAwiMQoGQ2FsbFR4EhgKB3ZtX3R5cGUYASABKA4y",
+          "By5WTVR5cGUSDQoFaW5wdXQYAiABKAwiKQoKUGx1Z2luQ29kZRIMCgRuYW1l",
+          "GAEgASgJEg0KBWlucHV0GAIgASgMIlsKB1JlcXVlc3QSIwoMY29udGVudF90",
+          "eXBlGAEgASgOMg0uRW5jb2RpbmdUeXBlEh0KBmFjY2VwdBgCIAEoDjINLkVu",
+          "Y29kaW5nVHlwZRIMCgRib2R5GAMgASgMIj0KCFJlc3BvbnNlEiMKDGNvbnRl",
+          "bnRfdHlwZRgBIAEoDjINLkVuY29kaW5nVHlwZRIMCgRib2R5GAIgASgMIjIK",
+          "EkNvbnRyYWN0TWV0aG9kQ2FsbBIOCgZtZXRob2QYASABKAkSDAoEYXJncxgC",
+          "IAEoDCIjCgdEdW1teVR4EgsKA3ZhbBgBIAEoCRILCgNrZXkYAiABKAkqHQoG",
+          "Vk1UeXBlEgoKBlBMVUdJThAAEgcKA0VWTRABKicKDEVuY29kaW5nVHlwZRII",
+          "CgRKU09OEAASDQoJUFJPVE9CVUYzEAFiBnByb3RvMw=="));
     descriptor = pbr::FileDescriptor.FromGeneratedCode(descriptorData,
-        new pbr::FileDescriptor[] { global::Google.Protobuf.WellKnownTypes.AnyReflection.Descriptor, },
+        new pbr::FileDescriptor[] { },
         new pbr::GeneratedClrTypeInfo(new[] {typeof(global::VMType), typeof(global::EncodingType), }, new pbr::GeneratedClrTypeInfo[] {
           new pbr::GeneratedClrTypeInfo(typeof(global::SignedTx), global::SignedTx.Parser, new[]{ "Inner", "Signature", "PublicKey" }, null, null, null),
           new pbr::GeneratedClrTypeInfo(typeof(global::NonceTx), global::NonceTx.Parser, new[]{ "Inner", "Sequence" }, null, null, null),
@@ -55,8 +52,7 @@ public static partial class LoomReflection {
           new pbr::GeneratedClrTypeInfo(typeof(global::PluginCode), global::PluginCode.Parser, new[]{ "Name", "Input" }, null, null, null),
           new pbr::GeneratedClrTypeInfo(typeof(global::Request), global::Request.Parser, new[]{ "ContentType", "Accept", "Body" }, null, null, null),
           new pbr::GeneratedClrTypeInfo(typeof(global::Response), global::Response.Parser, new[]{ "ContentType", "Body" }, null, null, null),
-          new pbr::GeneratedClrTypeInfo(typeof(global::ContractMethodCall), global::ContractMethodCall.Parser, new[]{ "Method", "Data" }, null, null, null),
-          new pbr::GeneratedClrTypeInfo(typeof(global::ContractMethodCallJSON), global::ContractMethodCallJSON.Parser, new[]{ "Method", "Data" }, null, null, null),
+          new pbr::GeneratedClrTypeInfo(typeof(global::ContractMethodCall), global::ContractMethodCall.Parser, new[]{ "Method", "Args" }, null, null, null),
           new pbr::GeneratedClrTypeInfo(typeof(global::DummyTx), global::DummyTx.Parser, new[]{ "Val", "Key" }, null, null, null)
         }));
   }
@@ -1769,7 +1765,7 @@ public sealed partial class ContractMethodCall : pb::IMessage<ContractMethodCall
   [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
   public ContractMethodCall(ContractMethodCall other) : this() {
     method_ = other.method_;
-    Data = other.data_ != null ? other.Data.Clone() : null;
+    args_ = other.args_;
     _unknownFields = pb::UnknownFieldSet.Clone(other._unknownFields);
   }
 
@@ -1789,14 +1785,14 @@ public sealed partial class ContractMethodCall : pb::IMessage<ContractMethodCall
     }
   }
 
-  /// <summary>Field number for the "data" field.</summary>
-  public const int DataFieldNumber = 2;
-  private global::Google.Protobuf.WellKnownTypes.Any data_;
+  /// <summary>Field number for the "args" field.</summary>
+  public const int ArgsFieldNumber = 2;
+  private pb::ByteString args_ = pb::ByteString.Empty;
   [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
-  public global::Google.Protobuf.WellKnownTypes.Any Data {
-    get { return data_; }
+  public pb::ByteString Args {
+    get { return args_; }
     set {
-      data_ = value;
+      args_ = pb::ProtoPreconditions.CheckNotNull(value, "value");
     }
   }
 
@@ -1814,7 +1810,7 @@ public sealed partial class ContractMethodCall : pb::IMessage<ContractMethodCall
       return true;
     }
     if (Method != other.Method) return false;
-    if (!object.Equals(Data, other.Data)) return false;
+    if (Args != other.Args) return false;
     return Equals(_unknownFields, other._unknownFields);
   }
 
@@ -1822,7 +1818,7 @@ public sealed partial class ContractMethodCall : pb::IMessage<ContractMethodCall
   public override int GetHashCode() {
     int hash = 1;
     if (Method.Length != 0) hash ^= Method.GetHashCode();
-    if (data_ != null) hash ^= Data.GetHashCode();
+    if (Args.Length != 0) hash ^= Args.GetHashCode();
     if (_unknownFields != null) {
       hash ^= _unknownFields.GetHashCode();
     }
@@ -1840,9 +1836,9 @@ public sealed partial class ContractMethodCall : pb::IMessage<ContractMethodCall
       output.WriteRawTag(10);
       output.WriteString(Method);
     }
-    if (data_ != null) {
+    if (Args.Length != 0) {
       output.WriteRawTag(18);
-      output.WriteMessage(Data);
+      output.WriteBytes(Args);
     }
     if (_unknownFields != null) {
       _unknownFields.WriteTo(output);
@@ -1855,8 +1851,8 @@ public sealed partial class ContractMethodCall : pb::IMessage<ContractMethodCall
     if (Method.Length != 0) {
       size += 1 + pb::CodedOutputStream.ComputeStringSize(Method);
     }
-    if (data_ != null) {
-      size += 1 + pb::CodedOutputStream.ComputeMessageSize(Data);
+    if (Args.Length != 0) {
+      size += 1 + pb::CodedOutputStream.ComputeBytesSize(Args);
     }
     if (_unknownFields != null) {
       size += _unknownFields.CalculateSize();
@@ -1872,11 +1868,8 @@ public sealed partial class ContractMethodCall : pb::IMessage<ContractMethodCall
     if (other.Method.Length != 0) {
       Method = other.Method;
     }
-    if (other.data_ != null) {
-      if (data_ == null) {
-        data_ = new global::Google.Protobuf.WellKnownTypes.Any();
-      }
-      Data.MergeFrom(other.Data);
+    if (other.Args.Length != 0) {
+      Args = other.Args;
     }
     _unknownFields = pb::UnknownFieldSet.MergeFrom(_unknownFields, other._unknownFields);
   }
@@ -1894,170 +1887,7 @@ public sealed partial class ContractMethodCall : pb::IMessage<ContractMethodCall
           break;
         }
         case 18: {
-          if (data_ == null) {
-            data_ = new global::Google.Protobuf.WellKnownTypes.Any();
-          }
-          input.ReadMessage(data_);
-          break;
-        }
-      }
-    }
-  }
-
-}
-
-public sealed partial class ContractMethodCallJSON : pb::IMessage<ContractMethodCallJSON> {
-  private static readonly pb::MessageParser<ContractMethodCallJSON> _parser = new pb::MessageParser<ContractMethodCallJSON>(() => new ContractMethodCallJSON());
-  private pb::UnknownFieldSet _unknownFields;
-  [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
-  public static pb::MessageParser<ContractMethodCallJSON> Parser { get { return _parser; } }
-
-  [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
-  public static pbr::MessageDescriptor Descriptor {
-    get { return global::LoomReflection.Descriptor.MessageTypes[11]; }
-  }
-
-  [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
-  pbr::MessageDescriptor pb::IMessage.Descriptor {
-    get { return Descriptor; }
-  }
-
-  [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
-  public ContractMethodCallJSON() {
-    OnConstruction();
-  }
-
-  partial void OnConstruction();
-
-  [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
-  public ContractMethodCallJSON(ContractMethodCallJSON other) : this() {
-    method_ = other.method_;
-    data_ = other.data_;
-    _unknownFields = pb::UnknownFieldSet.Clone(other._unknownFields);
-  }
-
-  [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
-  public ContractMethodCallJSON Clone() {
-    return new ContractMethodCallJSON(this);
-  }
-
-  /// <summary>Field number for the "method" field.</summary>
-  public const int MethodFieldNumber = 1;
-  private string method_ = "";
-  [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
-  public string Method {
-    get { return method_; }
-    set {
-      method_ = pb::ProtoPreconditions.CheckNotNull(value, "value");
-    }
-  }
-
-  /// <summary>Field number for the "data" field.</summary>
-  public const int DataFieldNumber = 2;
-  private pb::ByteString data_ = pb::ByteString.Empty;
-  /// <summary>
-  /// JSON
-  /// </summary>
-  [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
-  public pb::ByteString Data {
-    get { return data_; }
-    set {
-      data_ = pb::ProtoPreconditions.CheckNotNull(value, "value");
-    }
-  }
-
-  [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
-  public override bool Equals(object other) {
-    return Equals(other as ContractMethodCallJSON);
-  }
-
-  [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
-  public bool Equals(ContractMethodCallJSON other) {
-    if (ReferenceEquals(other, null)) {
-      return false;
-    }
-    if (ReferenceEquals(other, this)) {
-      return true;
-    }
-    if (Method != other.Method) return false;
-    if (Data != other.Data) return false;
-    return Equals(_unknownFields, other._unknownFields);
-  }
-
-  [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
-  public override int GetHashCode() {
-    int hash = 1;
-    if (Method.Length != 0) hash ^= Method.GetHashCode();
-    if (Data.Length != 0) hash ^= Data.GetHashCode();
-    if (_unknownFields != null) {
-      hash ^= _unknownFields.GetHashCode();
-    }
-    return hash;
-  }
-
-  [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
-  public override string ToString() {
-    return pb::JsonFormatter.ToDiagnosticString(this);
-  }
-
-  [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
-  public void WriteTo(pb::CodedOutputStream output) {
-    if (Method.Length != 0) {
-      output.WriteRawTag(10);
-      output.WriteString(Method);
-    }
-    if (Data.Length != 0) {
-      output.WriteRawTag(18);
-      output.WriteBytes(Data);
-    }
-    if (_unknownFields != null) {
-      _unknownFields.WriteTo(output);
-    }
-  }
-
-  [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
-  public int CalculateSize() {
-    int size = 0;
-    if (Method.Length != 0) {
-      size += 1 + pb::CodedOutputStream.ComputeStringSize(Method);
-    }
-    if (Data.Length != 0) {
-      size += 1 + pb::CodedOutputStream.ComputeBytesSize(Data);
-    }
-    if (_unknownFields != null) {
-      size += _unknownFields.CalculateSize();
-    }
-    return size;
-  }
-
-  [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
-  public void MergeFrom(ContractMethodCallJSON other) {
-    if (other == null) {
-      return;
-    }
-    if (other.Method.Length != 0) {
-      Method = other.Method;
-    }
-    if (other.Data.Length != 0) {
-      Data = other.Data;
-    }
-    _unknownFields = pb::UnknownFieldSet.MergeFrom(_unknownFields, other._unknownFields);
-  }
-
-  [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
-  public void MergeFrom(pb::CodedInputStream input) {
-    uint tag;
-    while ((tag = input.ReadTag()) != 0) {
-      switch(tag) {
-        default:
-          _unknownFields = pb::UnknownFieldSet.MergeFieldFrom(_unknownFields, input);
-          break;
-        case 10: {
-          Method = input.ReadString();
-          break;
-        }
-        case 18: {
-          Data = input.ReadBytes();
+          Args = input.ReadBytes();
           break;
         }
       }
@@ -2074,7 +1904,7 @@ public sealed partial class DummyTx : pb::IMessage<DummyTx> {
 
   [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
   public static pbr::MessageDescriptor Descriptor {
-    get { return global::LoomReflection.Descriptor.MessageTypes[12]; }
+    get { return global::LoomReflection.Descriptor.MessageTypes[11]; }
   }
 
   [global::System.Diagnostics.DebuggerNonUserCodeAttribute]

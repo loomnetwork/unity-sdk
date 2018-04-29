@@ -27,6 +27,7 @@ public class authSample : MonoBehaviour
 
     public async void SignIn()
     {
+#if !UNITY_WEBGL
         try
         {
             CertValidationBypass.Enable();
@@ -52,6 +53,14 @@ public class authSample : MonoBehaviour
         {
             CertValidationBypass.Disable();
         }
+#else
+        var authClient = AuthClientFactory.Configure()
+            .WithLogger(Debug.unityLogger)
+            .WithPrivateKeyLocalStoragePath("loomUserInfo")
+            .Create();
+        this.identity = await authClient.GetIdentityAsync("", null);
+
+#endif
         this.statusTextRef.text = "Signed in as " + this.identity.Username;
 
         // This DAppChain client will connect to the example REST server in the Loom Go SDK. 
@@ -91,30 +100,13 @@ public class authSample : MonoBehaviour
         this.statusTextRef.text = "Committed Tx to Block " + result.Height;
     }
 
-    // NOTE: The structure of the query params is defined by the contract author,
-    // the only constraint is that it must be serializable to JSON.
-    private class QueryParams
-    {
-        [JsonProperty("body")]
-        public string Body { get; set; }
-    }
-
-    // NOTE: The structure of the query result is defined by the contract author,
-    // the only constraint is that it must be deserializable from JSON.
-    private class QueryResult
-    {
-        [JsonProperty("body")]
-        public string Body { get; set; }
-    }
-
     public async void Query()
     {
         // TODO: Get the contract address from somewhere.
         var contract = new Address();
         // TODO: Specify a valid method.
-        var method = "whatever";
-        // NOTE: Query results can be of any type that can be deserialized via Newtonsoft.Json.
-        var result = await this.chainClient.QueryAsync<QueryResult>(contract, method, new QueryParams{ Body = "hello" });
+        var method = "mycontract.DoSomething";
+        var result = await this.chainClient.QueryAsync<SampleQueryResult>(contract, method, new SampleQueryParams{ Body = "hello" });
         this.statusTextRef.text = "Query Response: " + result.Body;
     }
 }

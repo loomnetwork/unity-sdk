@@ -1,5 +1,4 @@
 syntax = "proto3";
-import "google/protobuf/any.proto";
 
 message SignedTx {
     bytes inner = 1;
@@ -66,12 +65,7 @@ message Response {
 
 message ContractMethodCall {
     string method = 1;
-    google.protobuf.Any data = 2;
-}
-
-message ContractMethodCallJSON {
-    string method = 1;
-    bytes data = 2; // JSON
+    bytes args = 2;
 }
 
 message DummyTx {
