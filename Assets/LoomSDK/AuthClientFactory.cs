@@ -96,7 +96,7 @@ namespace Loom.Unity3d
             return new WebGL.AuthClient
             {
                 Logger = this.logger ?? NullLogger.Instance,
-                PrivateKeyPath = this.privKeyLocalStoragePath
+                LocalStorageKey = this.privKeyLocalStoragePath
             };
 #else
             throw new System.NotImplementedException();

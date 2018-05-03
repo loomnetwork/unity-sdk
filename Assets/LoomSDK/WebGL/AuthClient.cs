@@ -57,7 +57,7 @@ namespace Loom.Unity3d.WebGL
             var privateKey = CryptoUtils.HexStringToBytes(userInfo.PrivateKey);
             return await Task.FromResult(new Identity
             {
-                Username = accessToken,
+                Username = userInfo.Username,
                 PrivateKey = privateKey
             });
         }
