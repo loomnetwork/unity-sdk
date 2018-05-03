@@ -48,7 +48,7 @@ namespace Loom.Unity3d.Desktop
         /// <returns></returns>
         public async Task<string> GetAccessTokenAsync()
         {
-            var codeVerifier = Convert.ToBase64String(CryptoUtils.GeneratePrivateKey());
+            var codeVerifier = Convert.ToBase64String(CryptoUtils.RandomBytes(32));
             string codeChallenge;
             using (var sha256 = SHA256.Create())
             {

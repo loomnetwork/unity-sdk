@@ -9,21 +9,18 @@ namespace Loom.Unity3d
         public string Username { get; internal set; }
 
         /// <summary>
-        /// 32-byte private key.
+        /// 64-byte private key.
         /// </summary>
         public byte[] PrivateKey {
             get
             {
-                return this.privateKey32;    
+                return this.privateKey;
             }
 
             internal set
             {
-                this.privateKey32 = value;
-                byte[] publicKey32;
-                byte[] privateKey64;
-                Ed25519.KeyPairFromSeed(out publicKey32, out privateKey64, this.privateKey32);
-                this.PublicKey = publicKey32;
+                this.privateKey = value;
+                this.PublicKey = CryptoUtils.PublicKeyFromPrivateKey(this.privateKey);
             }
         }
 
@@ -34,7 +31,7 @@ namespace Loom.Unity3d
         /// </summary>
         public byte[] PublicKey { get; private set; }
 
-        private byte[] privateKey32;
+        private byte[] privateKey;
     }
 
     public interface IAuthClient
