@@ -64,7 +64,7 @@ public class authSample : MonoBehaviour
         this.statusTextRef.text = "Signed in as " + this.identity.Username;
 
         // This DAppChain client will connect to the example REST server in the Loom Go SDK. 
-        this.chainClient = new DAppChainClient("http://localhost", 46657, 47000)
+        this.chainClient = new DAppChainClient("http://localhost:46657", "http://localhost:47000")
         {
             Logger = Debug.unityLogger
         };

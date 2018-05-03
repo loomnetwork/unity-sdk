@@ -198,12 +198,12 @@ namespace Loom.Unity3d
         /// Constructs a client to read & write data from/to a Loom DAppChain.
         /// </summary>
         /// <param name="url">Loom DAppChain URL e.g. "http://localhost"</param>
-        /// <param name="writePort">Port number for the write interface.</param>
-        /// <param name="readPort">Port number for the read interface.</param>
-        public DAppChainClient(string url, int writePort, int readPort)
+        /// <param name="writePort">Optional port number for the write interface.</param>
+        /// <param name="readPort">Optional port number for the read interface.</param>
+        public DAppChainClient(string writeUrl, string readUrl)
         {
-            this.writeUrl = string.Format("{0}:{1}", url, writePort);
-            this.readUrl = string.Format("{0}:{1}", url, readPort);
+            this.writeUrl = writeUrl;
+            this.readUrl = readUrl;
             this.Logger = NullLogger.Instance;
         }
 
