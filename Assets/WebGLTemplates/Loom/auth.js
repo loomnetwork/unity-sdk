@@ -39,7 +39,9 @@ function waitForLogin(onUserLoggedIn) {
             username: identity.username,
             key: loom.CryptoUtils.bytesToHex(identity.privateKey)
           });
-          window.localStorage.setItem("etherboyUserInfo", userInfo);
+          // NOTE: local storage key should match one given to
+          // AuthClientFactory.Configure().WithPrivateKeyLocalStoragePath()
+          window.localStorage.setItem("loomUserInfo", userInfo);
           onUserLoggedIn();
         });
       });
