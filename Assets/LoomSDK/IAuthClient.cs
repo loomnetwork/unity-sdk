@@ -40,5 +40,6 @@ namespace Loom.Unity3d
 
         Task<string> GetAccessTokenAsync();
         Task<Identity> GetIdentityAsync(string accessToken, IKeyStore keyStore);
+        Task<Identity> CreateIdentityAsync(string accessToken, IKeyStore keyStore);
     }
 }

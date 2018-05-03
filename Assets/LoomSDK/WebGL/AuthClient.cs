@@ -61,6 +61,11 @@ namespace Loom.Unity3d.WebGL
                 PrivateKey = privateKey
             });
         }
+
+        public async Task<Identity> CreateIdentityAsync(string accessToken, IKeyStore keyStore)
+        {
+            throw new System.NotImplementedException("Identity must be created by the host page.");
+        }
     }
 }
 
