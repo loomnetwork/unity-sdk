@@ -163,6 +163,12 @@ namespace Loom.Unity3d.Desktop
             return identity;
         }
 
+        public Task ClearIdentityAsync()
+        {
+            // TODO
+            throw new NotImplementedException();
+        }
+
         // From https://github.com/IdentityModel/IdentityModel2 (src/IdentityModel/Base64Url.cs)
         static string Base64UrlEncode(byte[] buffer)
         {

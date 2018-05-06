@@ -1,5 +1,17 @@
 const AUTH_DOMAIN = 'loomx.auth0.com';
 const AUTH_CLIENT_ID = '25pDQvX4O5j7wgwT052Sh3UzXVR9X6Ud';
+const USER_INFO_STORAGE_KEY = 'loomUserInfo';
+
+function createWebAuth() {
+  return new auth0.WebAuth({
+    domain: AUTH_DOMAIN,
+    clientID: AUTH_CLIENT_ID,
+    responseType: 'token',
+    audience: 'https://keystore.loomx.io/',
+    scope: 'openid profile email picture',
+    redirectUri: window.location.origin
+  });
+}
 
 function waitForLogin(webAuth, resumeAuth, silentAuth) {
   return new Promise(function (resolve, reject) {
@@ -29,7 +41,7 @@ function waitForLogin(webAuth, resumeAuth, silentAuth) {
             });
             // NOTE: local storage key should match one given to
             // AuthClientFactory.Configure().WithPrivateKeyLocalStoragePath()
-            window.localStorage.setItem("loomUserInfo", userInfo);
+            window.localStorage.setItem(USER_INFO_STORAGE_KEY, userInfo);
             resolve();
           });
         });
@@ -79,15 +91,7 @@ function waitForLogin(webAuth, resumeAuth, silentAuth) {
  * @returns A promise that will be resolved when the user signs in.
  */
 function authenticate(resumeAuth, silentAuth) {
-  const webAuth = new auth0.WebAuth({
-    domain: AUTH_DOMAIN,
-    clientID: AUTH_CLIENT_ID,
-    responseType: 'token',
-    audience: 'https://keystore.loomx.io/',
-    scope: 'openid profile email picture',
-    redirectUri: window.location.href
-  });
-
+  const webAuth = createWebAuth()
   return waitForLogin(webAuth, resumeAuth, silentAuth);
 }
 
@@ -117,5 +121,25 @@ function authenticateFromPage(loginBtn) {
     if (loginBtn) {
       loginBtn.style.display = 'none';
     }
+  });
+}
+
+/**
+ * @returns Previously stored string (if any) containing JSON-econded user info.
+ */
+function getUserInfo() {
+  // look up serialized JSON value
+  return window.localStorage.getItem(USER_INFO_STORAGE_KEY);
+}
+
+/**
+ * @returns Signs out the current user and clears out any stored user info.
+ */
+function clearUserInfo() {
+  window.localStorage.removeItem(USER_INFO_STORAGE_KEY);
+  const webAuth = createWebAuth();
+  webAuth.logout({
+    clientID: AUTH_CLIENT_ID,
+    returnTo: window.location.origin
   });
 }

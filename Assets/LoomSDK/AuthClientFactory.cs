@@ -60,22 +60,14 @@ namespace Loom.Unity3d
         }
 
 #if UNITY_WEBGL
-        private string authHandlerName;
+        private WebGL.HostPageHandlers hostPageHandlers;
 
         /// <summary>
-        /// Sets the name of the auth handler function that should be used by the WebGL AuthClient.
+        /// Sets the names of the auth related functions in the host page that should be used by the WebGL AuthClient.
         /// </summary>
-        public AuthClientFactory WithAuthHandlerName(string name)
+        public AuthClientFactory WithHostPageHandlers(WebGL.HostPageHandlers handlers)
         {
-            this.authHandlerName = name;
-            return this;
-        }
-
-        private string privKeyLocalStoragePath;
-
-        public AuthClientFactory WithPrivateKeyLocalStoragePath(string path)
-        {
-            this.privKeyLocalStoragePath = path;
+            this.hostPageHandlers = handlers;
             return this;
         }
 #endif
@@ -107,8 +99,7 @@ namespace Loom.Unity3d
             return new WebGL.AuthClient
             {
                 Logger = this.logger ?? NullLogger.Instance,
-                AuthHandlerName = this.authHandlerName,
-                LocalStorageKey = this.privKeyLocalStoragePath
+                HostPageHandlers = this.hostPageHandlers
             };
 #else
             throw new System.NotImplementedException();

@@ -8,6 +8,22 @@ using UnityEngine;
 
 namespace Loom.Unity3d.WebGL
 {
+    public class HostPageHandlers
+    {
+        /// <summary>
+        /// Name of handler that starts the auth-flow.
+        /// </summary>
+        public string SignIn;
+        /// <summary>
+        /// Name of handler that looks up user info stored in the host page.
+        /// </summary>
+        public string GetUserInfo;
+        /// <summary>
+        /// Name of handler that clears out any user info stored in the host page.
+        /// </summary>
+        public string SignOut;
+    }
+
     internal class AuthClient : IAuthClient
     {
         private class UserInfo
@@ -20,9 +36,11 @@ namespace Loom.Unity3d.WebGL
 
         // These functions are implemented and documented in Assets/LoomSDK/WebGL/LoomPlugin.jslib
         [DllImport("__Internal")]
-        private static extern void StartLoomAuthFlow(string authHandlerName);
+        private static extern void StartLoomAuthFlow(string handlerName);
         [DllImport("__Internal")]
-        private static extern string GetLoomUserInfo(string localStorageKey);
+        private static extern string GetLoomUserInfo(string handlerName);
+        [DllImport("__Internal")]
+        private static extern void ClearLoomUserInfo(string handlerName);
 
         private static readonly string LogTag = "Loom.WebGL.AuthClient";
 
@@ -30,17 +48,12 @@ namespace Loom.Unity3d.WebGL
         /// Logger to be used for logging, defaults to <see cref="NullLogger"/>.
         /// </summary>
         public ILogger Logger { get; set; }
-
+                
         /// <summary>
-        /// Local Storage key that should be used to lookup the user info.
+        /// Mapping of auth related function names that are implemented in the host page.
+        /// These functions are expected to be attached to the `window` global in the host page.
         /// </summary>
-        public string LocalStorageKey { get; set; }
-
-        /// <summary>
-        /// The name of the auth handler function that should be used by the WebGL AuthClient.
-        /// It is expected to be attached to the `window` global.
-        /// </summary>
-        public string AuthHandlerName { get; set; }
+        public HostPageHandlers HostPageHandlers;
 
         public AuthClient()
         {
@@ -58,17 +71,25 @@ namespace Loom.Unity3d.WebGL
 
         public async Task<Identity> GetIdentityAsync(string accessToken, IKeyStore keyStore)
         {
-            var userInfo = JsonConvert.DeserializeObject<UserInfo>(GetLoomUserInfo(this.LocalStorageKey));
+            if (this.HostPageHandlers == null || string.IsNullOrEmpty(this.HostPageHandlers.GetUserInfo))
+            {
+                throw new Exception("GetUserInfo handler not set.");
+            }
+            var userInfo = JsonConvert.DeserializeObject<UserInfo>(GetLoomUserInfo(this.HostPageHandlers.GetUserInfo));
             if (string.IsNullOrEmpty(userInfo.Username) || string.IsNullOrEmpty(userInfo.PrivateKey))
             {
-                StartLoomAuthFlow(this.AuthHandlerName);
+                if (this.HostPageHandlers == null || string.IsNullOrEmpty(this.HostPageHandlers.SignIn))
+                {
+                    throw new Exception("SignIn handler not set.");
+                }
+                StartLoomAuthFlow(this.HostPageHandlers.SignIn);
                 var startTime = Time.time;
                 var isTimedOut = false;
                 // poll local storage until the user info shows up
                 while (!isTimedOut)
                 {
                     await new WaitForSecondsRealtime(0.5f);
-                    userInfo = JsonConvert.DeserializeObject<UserInfo>(GetLoomUserInfo(this.LocalStorageKey));
+                    userInfo = JsonConvert.DeserializeObject<UserInfo>(GetLoomUserInfo(this.HostPageHandlers.GetUserInfo));
                     if (!string.IsNullOrEmpty(userInfo.Username) && !string.IsNullOrEmpty(userInfo.PrivateKey))
                     {
                         break;
@@ -92,6 +113,16 @@ namespace Loom.Unity3d.WebGL
         public async Task<Identity> CreateIdentityAsync(string accessToken, IKeyStore keyStore)
         {
             throw new NotImplementedException("Identity must be created by the host page.");
+        }
+
+        public Task ClearIdentityAsync()
+        {
+            if (this.HostPageHandlers == null || string.IsNullOrEmpty(this.HostPageHandlers.SignOut))
+            {
+                throw new Exception("SignOut handler not set.");
+            }
+            ClearLoomUserInfo(this.HostPageHandlers.SignOut);
+            return Task.CompletedTask;
         }
     }
 }

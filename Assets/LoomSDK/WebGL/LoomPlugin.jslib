@@ -8,12 +8,20 @@ mergeInto(LibraryManager.library, {
   },
 
   // Get user info from Local Storage.
-  // @param localStorageKey Key that should be used to look up user info in Local Storage.
+  // @param handlerName Name of a function attached to `window` that should be invoked to
+  //                    retrieve user info stored in the host page.
   // @returns User info previously stored by the host page.
-  GetLoomUserInfo: function (localStorageKey) {
-    const key = Pointer_stringify(localStorageKey);
-    // look up serialized JSON value
-    const userInfo = window.localStorage.getItem(key) || "{}";
+  GetLoomUserInfo: function (handlerName) {
+    const handler = Pointer_stringify(handlerName);
+    const userInfo = window[handler]() || "{}";
     return allocateStringBuffer(userInfo);
   },
+
+  // Clears out any user data stored by the host page.
+  // @param handlerName Name of a function attached to `window` that should be invoked to
+  //                    clear user data stored in the host page.
+  ClearLoomUserInfo: function (handlerName) {
+    const handler = Pointer_stringify(handlerName);
+    window[handler]();
+  }
 });

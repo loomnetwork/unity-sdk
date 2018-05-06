@@ -103,6 +103,12 @@ namespace Loom.Unity3d.Android
             await keyStore.SetAsync(identity.Username, identity.PrivateKey);
             return identity;
         }
+
+        public Task ClearIdentityAsync()
+        {
+            // TODO
+            throw new NotImplementedException();
+        }
     }
 }
 

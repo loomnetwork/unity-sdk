@@ -52,8 +52,12 @@ public class authSample : MonoBehaviour
 #else
         return AuthClientFactory.Configure()
             .WithLogger(Debug.unityLogger)
-            .WithAuthHandlerName("authenticateFromGame")
-            .WithPrivateKeyLocalStoragePath("loomUserInfo")
+            .WithHostPageHandlers(new Loom.Unity3d.WebGL.HostPageHandlers
+            {
+                SignIn = "authenticateFromGame",
+                GetUserInfo = "getUserInfo",
+                SignOut = "clearUserInfo"
+            })
             .Create();
 #endif
     }
@@ -110,6 +114,12 @@ public class authSample : MonoBehaviour
             Local = ByteString.CopyFrom(CryptoUtils.HexStringToBytes("0x005B17864f3adbF53b1384F2E6f2120c6652F779"))
         };
         this.callerAddr = this.identity.ToAddress("default");
+    }
+
+    public async void SignOut()
+    {
+        var authClient = this.CreateAuthClient();
+        await authClient.ClearIdentityAsync();
     }
 
     public async void ResetPrivateKey()
