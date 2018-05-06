@@ -62,8 +62,10 @@ namespace Loom.Unity3d.WebGL
             if (string.IsNullOrEmpty(userInfo.Username) || string.IsNullOrEmpty(userInfo.PrivateKey))
             {
                 StartLoomAuthFlow(this.AuthHandlerName);
+                var startTime = Time.time;
+                var isTimedOut = false;
                 // poll local storage until the user info shows up
-                while (true)
+                while (!isTimedOut)
                 {
                     await new WaitForSecondsRealtime(0.5f);
                     userInfo = JsonConvert.DeserializeObject<UserInfo>(GetLoomUserInfo(this.LocalStorageKey));
@@ -71,6 +73,12 @@ namespace Loom.Unity3d.WebGL
                     {
                         break;
                     }
+                    // keep trying for about 60 secs (though probably should make this configurable)
+                    isTimedOut = (Time.time - startTime) > 60.0f;
+                }
+                if (isTimedOut)
+                {
+                    throw new Exception("User is not signed in.");
                 }
             }
             var privateKey = CryptoUtils.HexStringToBytes(userInfo.PrivateKey);
