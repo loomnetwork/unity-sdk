@@ -17,14 +17,33 @@
   <body>
     <script>
       var gameInstance;
-      // launch the game once the user logs in
       window.addEventListener('load', function() {
-        authenticate().then(function () {
+        // There are a couple of ways to deal with the auth flow...
+        /*
+          1. Start the auth-flow from the host page when the user presses a button, and launch
+             the game once the user signs in. When the host page initiates the auth flow the
+             user will be redirected to the Auth0 login page, then once they sign in they'll
+             be redirected back to the host page - at which point the game will load.
+        */
+        /*
+        const loginBtn = document.getElementById('btn-login');
+        authenticateFromPage(loginBtn).then(function () {
           gameInstance = UnityLoader.instantiate("gameContainer", "%UNITY_WEBGL_BUILD_URL%");
         });
+        */
+
+        /*
+          2. Start the auth-flow from in-game. When the game initiates the auth flow the user
+             will be redirected to the Auth0 login page, then once they sign in they'll be
+             redirected back to the host page - at which point the game will load once again.
+        */
+        authenticateFromPage();
+        gameInstance = UnityLoader.instantiate("gameContainer", "%UNITY_WEBGL_BUILD_URL%");
       });
     </script>
+    <!-- Button to pass into authenticateFromPage()
     <button id="btn-login">Log In</button>
+    -->
     <div class="webgl-content">
       <div id="gameContainer" style="width: %UNITY_WIDTH%px; height: %UNITY_HEIGHT%px"></div>
       <div class="footer">

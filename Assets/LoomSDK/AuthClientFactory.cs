@@ -60,6 +60,17 @@ namespace Loom.Unity3d
         }
 
 #if UNITY_WEBGL
+        private string authHandlerName;
+
+        /// <summary>
+        /// Sets the name of the auth handler function that should be used by the WebGL AuthClient.
+        /// </summary>
+        public AuthClientFactory WithAuthHandlerName(string name)
+        {
+            this.authHandlerName = name;
+            return this;
+        }
+
         private string privKeyLocalStoragePath;
 
         public AuthClientFactory WithPrivateKeyLocalStoragePath(string path)
@@ -96,6 +107,7 @@ namespace Loom.Unity3d
             return new WebGL.AuthClient
             {
                 Logger = this.logger ?? NullLogger.Instance,
+                AuthHandlerName = this.authHandlerName,
                 LocalStorageKey = this.privKeyLocalStoragePath
             };
 #else

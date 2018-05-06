@@ -52,6 +52,7 @@ public class authSample : MonoBehaviour
 #else
         return AuthClientFactory.Configure()
             .WithLogger(Debug.unityLogger)
+            .WithAuthHandlerName("authenticateFromGame")
             .WithPrivateKeyLocalStoragePath("loomUserInfo")
             .Create();
 #endif

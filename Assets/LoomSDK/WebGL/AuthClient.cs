@@ -3,6 +3,7 @@
 using Newtonsoft.Json;
 using System.Runtime.InteropServices;
 using System.Threading.Tasks;
+using System;
 using UnityEngine;
 
 namespace Loom.Unity3d.WebGL
@@ -17,7 +18,9 @@ namespace Loom.Unity3d.WebGL
             public string PrivateKey { get; set; }
         }
 
-        // This function is implemented in LoomPlugin.jslib
+        // These functions are implemented and documented in Assets/LoomSDK/WebGL/LoomPlugin.jslib
+        [DllImport("__Internal")]
+        private static extern void StartLoomAuthFlow(string authHandlerName);
         [DllImport("__Internal")]
         private static extern string GetLoomUserInfo(string localStorageKey);
 
@@ -33,6 +36,12 @@ namespace Loom.Unity3d.WebGL
         /// </summary>
         public string LocalStorageKey { get; set; }
 
+        /// <summary>
+        /// The name of the auth handler function that should be used by the WebGL AuthClient.
+        /// It is expected to be attached to the `window` global.
+        /// </summary>
+        public string AuthHandlerName { get; set; }
+
         public AuthClient()
         {
             this.Logger = NullLogger.Instance;
@@ -44,7 +53,7 @@ namespace Loom.Unity3d.WebGL
         /// </summary>
         public Task<string> GetAccessTokenAsync()
         {
-            throw new System.NotImplementedException("Access token retrieval must be handled by the host page.");
+            throw new NotImplementedException("Access token retrieval must be handled by the host page.");
         }
 
         public async Task<Identity> GetIdentityAsync(string accessToken, IKeyStore keyStore)
@@ -52,7 +61,17 @@ namespace Loom.Unity3d.WebGL
             var userInfo = JsonConvert.DeserializeObject<UserInfo>(GetLoomUserInfo(this.LocalStorageKey));
             if (string.IsNullOrEmpty(userInfo.Username) || string.IsNullOrEmpty(userInfo.PrivateKey))
             {
-                throw new System.Exception("User is not signed in.");
+                StartLoomAuthFlow(this.AuthHandlerName);
+                // poll local storage until the user info shows up
+                while (true)
+                {
+                    await new WaitForSecondsRealtime(0.5f);
+                    userInfo = JsonConvert.DeserializeObject<UserInfo>(GetLoomUserInfo(this.LocalStorageKey));
+                    if (!string.IsNullOrEmpty(userInfo.Username) && !string.IsNullOrEmpty(userInfo.PrivateKey))
+                    {
+                        break;
+                    }
+                }
             }
             var privateKey = CryptoUtils.HexStringToBytes(userInfo.PrivateKey);
             return await Task.FromResult(new Identity
@@ -64,7 +83,7 @@ namespace Loom.Unity3d.WebGL
 
         public async Task<Identity> CreateIdentityAsync(string accessToken, IKeyStore keyStore)
         {
-            throw new System.NotImplementedException("Identity must be created by the host page.");
+            throw new NotImplementedException("Identity must be created by the host page.");
         }
     }
 }
