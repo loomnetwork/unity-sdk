@@ -197,9 +197,8 @@ namespace Loom.Unity3d
         /// <summary>
         /// Constructs a client to read & write data from/to a Loom DAppChain.
         /// </summary>
-        /// <param name="url">Loom DAppChain URL e.g. "http://localhost"</param>
-        /// <param name="writePort">Optional port number for the write interface.</param>
-        /// <param name="readPort">Optional port number for the read interface.</param>
+        /// <param name="writeUrl">Loom DAppChain URL for the write interface, e.g. "http://localhost:46657"</param>
+        /// <param name="readUrl">Loom DAppChain URL for the read interface, e.g. "http://localhost:47000" </param>
         public DAppChainClient(string writeUrl, string readUrl)
         {
             this.writeUrl = writeUrl;
@@ -321,9 +320,12 @@ namespace Loom.Unity3d
                 {
                     Logger.Log(LogTag, "Response: " + r.downloadHandler.text);
                     var resp = JsonConvert.DeserializeObject<JsonRpcResponse<byte[]>>(r.downloadHandler.text);
-                    T msg = new T();
-                    msg.MergeFrom(resp.Result);
-                    return msg;
+                    if (resp.Result != null)
+                    {
+                        T msg = new T();
+                        msg.MergeFrom(resp.Result);
+                        return msg;
+                    }
                 }
             }
             return default(T);
