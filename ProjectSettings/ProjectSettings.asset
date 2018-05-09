@@ -159,6 +159,7 @@ PlayerSettings:
   androidMaxAspectRatio: 2.1
   applicationIdentifier:
     Android: io.loomx.unity_sample
+    iOS: io.loomx.unity3d
   buildNumber: {}
   AndroidBundleVersionCode: 1
   AndroidMinSdkVersion: 16
@@ -177,8 +178,8 @@ PlayerSettings:
   VertexChannelCompressionMask:
     serializedVersion: 2
     m_Bits: 238
-  iPhoneSdkVersion: 988
-  iOSTargetOSVersionString: 7.0
+  iPhoneSdkVersion: 989
+  iOSTargetOSVersionString: 9.3
   tvOSSdkVersion: 0
   tvOSRequireExtendedGameController: 0
   tvOSTargetOSVersionString: 9.0
@@ -539,12 +540,12 @@ PlayerSettings:
   spritePackerPolicy: 
   webGLMemorySize: 256
   webGLExceptionSupport: 1
-  webGLNameFilesAsHashes: 1
-  webGLDataCaching: 1
+  webGLNameFilesAsHashes: 0
+  webGLDataCaching: 0
   webGLDebugSymbols: 0
   webGLEmscriptenArgs: 
   webGLModulesDirectory: 
-  webGLTemplate: PROJECT:Loom
+  webGLTemplate: APPLICATION:Default
   webGLAnalyzeBuildSize: 0
   webGLUseEmbeddedResources: 0
   webGLUseWasm: 0
@@ -627,6 +628,7 @@ PlayerSettings:
   XboxOneSplashScreen: {fileID: 0}
   XboxOneAllowedProductIds: []
   XboxOnePersistentLocalStorageSize: 0
+  XboxOneXTitleMemory: 8
   xboxOneScriptCompiler: 0
   vrEditorSettings:
     daydream:
