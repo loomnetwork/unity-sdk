@@ -24,14 +24,10 @@ namespace Loom.Unity3d.IOS
     internal class AuthClient : IAuthClient
     {
 
-//
- 
-    [DllImport("__Internal")]
-	private static extern void _ex_callGetAccessToken(string message,Action<string> OnSuccess,Action<string> OnError);
-    
-        //
+ 		[DllImport("__Internal")]
+		private static extern void _ex_callGetAccessToken(string message, Action<string> onSuccess, Action<string> onError);
 
-        private AuthenticationApiClient auth0Client;
+		private AuthenticationApiClient auth0Client;
         public ILogger Logger { get; set; }
 
         public string ClientId { get; set; }
@@ -39,30 +35,38 @@ namespace Loom.Unity3d.IOS
         public string Audience { get; set; }
         public string Scope { get; set; }
 		public static TaskCompletionSource<string> taskCompletionSource;
+
         public AuthClient()
         {
             this.Logger = NullLogger.Instance;
             this.auth0Client = new AuthenticationApiClient(new Uri("https://loomx.auth0.com"));
 			taskCompletionSource = new TaskCompletionSource<string>();
-
         }
-	   public delegate void CallbackDelegate(string str);
 
-	[MonoPInvokeCallback(typeof(CallbackDelegate))]
-		public static void OnSuccess(string accessToken)
+		public delegate void CallbackDelegate(string returnStr);
+
+		MonoPInvokeCallback(typeof(CallbackDelegate))]
+		public static void onSuccess(string accessToken)
 		{
-	taskCompletionSource.SetResult(accessToken);
+			taskCompletionSource.SetResult(accessToken);
 		}
-	[MonoPInvokeCallback(typeof(CallbackDelegate))]
-	public static void OnFail(string str)
-	{
-	taskCompletionSource.SetException(new Exception(str));
-	}
+
+		[MonoPInvokeCallback(typeof(CallbackDelegate))]
+		public static void onFail(string errorStr)
+		{
+			taskCompletionSource.SetException(new Exception(errorStr));
+		}
+
         public async Task<string> GetAccessTokenAsync()
         {
-	var config= "{\"ClientId\" : \""+this.ClientId+"\",\"Domain\" : \""+this.Domain+"\",\"Audience\" : \""+this.Audience+"\",\"Scope\" : \""+this.Scope+"\"}";
- 
-	_ex_callGetAccessToken(config,OnSuccess,OnFail);
+			var config = JsonConvert.SerializeObject(new AuthConfig
+				{
+					ClientId = this.ClientId,
+					Domain = this.Domain,
+					Audience = this.Audience,
+					Scope = this.Scope
+				});
+			_ex_callGetAccessToken(config,onSuccess,onFail);
             return await taskCompletionSource.Task;
         }
 
@@ -102,6 +106,12 @@ namespace Loom.Unity3d.IOS
             await keyStore.SetAsync(identity.Username, identity.PrivateKey);
             return identity;
         }
+
+		public Task ClearIdentityAsync()
+		{
+			// TODO
+			throw new NotImplementedException();
+		}
     }
 	#endif
 }
