@@ -45,7 +45,7 @@ namespace Loom.Unity3d.IOS
 
 		public delegate void CallbackDelegate(string returnStr);
 
-		MonoPInvokeCallback(typeof(CallbackDelegate))]
+		[MonoPInvokeCallback(typeof(CallbackDelegate))]
 		public static void onSuccess(string accessToken)
 		{
 			taskCompletionSource.SetResult(accessToken);
