@@ -25,6 +25,8 @@ PluginImporter:
         Exclude Win: 1
         Exclude Win64: 1
         Exclude WindowsStoreApps: 1
+        Exclude iOS: 0
+        Exclude tvOS: 1
   - first:
       Android: Android
     second:
@@ -107,6 +109,20 @@ PluginImporter:
         PlaceholderPath: 
         SDK: AnySDK
         ScriptingBackend: AnyScriptingBackend
+  - first:
+      iPhone: iOS
+    second:
+      enabled: 1
+      settings:
+        CompileFlags: 
+        FrameworkDependencies: 
+  - first:
+      tvOS: tvOS
+    second:
+      enabled: 0
+      settings:
+        CompileFlags: 
+        FrameworkDependencies: 
   userData: 
   assetBundleName: 
   assetBundleVariant: 
