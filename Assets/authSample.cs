@@ -1,7 +1,6 @@
 ﻿using UnityEngine;
 using UnityEngine.UI;
 using Loom.Unity3d;
-using Newtonsoft.Json;
 using Google.Protobuf;
 using System;
 using System.Threading.Tasks;
@@ -10,10 +9,8 @@ public class authSample : MonoBehaviour
 {
     public Text statusTextRef;
 
-    private Address contractAddr;
     private Identity identity;
-    private Address callerAddr;
-    private DAppChainClient chainClient;
+    private Contract contract;
 
     // Use this for initialization
     void Start()
@@ -95,25 +92,26 @@ public class authSample : MonoBehaviour
 #endif
         this.statusTextRef.text = "Signed in as " + this.identity.Username;
         // This DAppChain client will connect to the example REST server in the Loom Go SDK. 
-        this.chainClient = new DAppChainClient("http://localhost:46657", "http://localhost:47000")
+        var client = new DAppChainClient("http://localhost:46657", "http://localhost:47000")
         {
             Logger = Debug.unityLogger
         };
-        this.chainClient.TxMiddleware = new TxMiddleware(new ITxMiddlewareHandler[]{
+        client.TxMiddleware = new TxMiddleware(new ITxMiddlewareHandler[]{
             new NonceTxMiddleware{
                 PublicKey = this.identity.PublicKey,
-                Client = this.chainClient
+                Client = client
             },
             new SignedTxMiddleware(this.identity.PrivateKey)
         });
 
         // There is only one contract address at the moment...
-        this.contractAddr = new Address
+        var contractAddr = new Address
         {
             ChainId = "default",
             Local = ByteString.CopyFrom(CryptoUtils.HexStringToBytes("0x005B17864f3adbF53b1384F2E6f2120c6652F779"))
         };
-        this.callerAddr = this.identity.ToAddress("default");
+        var callerAddr = this.identity.ToAddress("default");
+        this.contract = new Contract(client, contractAddr, "helloworld", callerAddr);
     }
 
     public async void SignOut()
@@ -142,33 +140,59 @@ public class authSample : MonoBehaviour
         throw new NotImplementedException();
 #endif
     }
-    public async void SendTx()
+
+    public async void CallContract()
     {
         if (this.identity == null)
         {
-            throw new System.Exception("Not signed in!");
+            throw new Exception("Not signed in!");
         }
 
-        float r = (UnityEngine.Random.value * 100000);
-        var tx = new DummyTx
+        this.statusTextRef.text = "Calling smart contract...";
+
+        await this.contract.CallAsync("SetMsg", new MapEntry
         {
-            Key = r.ToString(),
-            Val = "Hello World"
-        };
-        var contract = new Address
-        {
-            ChainId = "helloworld",
-            Local = ByteString.CopyFrom(new byte[20])
-        };
-        var result = await this.chainClient.CallAsync(this.callerAddr, contract, "whatever", tx);
-        this.statusTextRef.text = "Committed Tx to Block " + result.Height;
+            Key = "123",
+            Value = "hello!"
+        });
+
+        this.statusTextRef.text = "Smart contract method finished executing.";
     }
 
-    public async void Query()
+    public async void CallContractWithResult()
     {
-        // TODO: Specify a valid method.
-        var method = "mycontract.DoSomething";
-        var result = await this.chainClient.QueryAsync<SampleQueryResult>(this.contractAddr, method, new SampleQueryParams{ Body = "hello" });
-        this.statusTextRef.text = "Query Response: " + result.Body;
+        if (this.identity == null)
+        {
+            throw new Exception("Not signed in!");
+        }
+
+        this.statusTextRef.text = "Calling smart contract...";
+
+        var result = await this.contract.CallAsync<MapEntry>("SetMsgEcho", new MapEntry
+        {
+            Key = "321",
+            Value = "456"
+        });
+
+        if (result != null)
+        {
+            this.statusTextRef.text = "Smart contract returned: " + result.ToString();
+        }
+        else
+        {
+            this.statusTextRef.text = "Smart contract didn't return anything!";
+        }
+    }
+
+    public async void StaticCallContract()
+    {
+        this.statusTextRef.text = "Calling smart contract...";
+
+        var result = await this.contract.StaticCallAsync<MapEntry>("GetMsg", new MapEntry
+        {
+            Key = "123"
+        });
+
+        this.statusTextRef.text = "Smart contract returned: " + result.ToString();
     }
 }

@@ -67,8 +67,3 @@ message ContractMethodCall {
     string method = 1;
     bytes args = 2;
 }
-
-message DummyTx {
-    string val = 1;
-    string key = 2;
-}

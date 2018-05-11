@@ -67,8 +67,8 @@ You'll need to download the [`protoc` compiler](https://github.com/google/protob
 generate C# classes from the `.proto` files.
 
 The relevant command will look something like this:
-```cmd
-protoc -I<install path>/protoc-3.5.1/include -I<project path>/Assets/Protobuf --csharp_out=<project path>/Assets/Protobuf <project path>/Assets/Protobuf/MyTransactions.proto
+```shell
+protoc -I<install path>/protoc-3.5.1/include -I<project path>/Assets/Protobuf --csharp_out=<project path>/Assets/Protobuf <project path>/Assets/Protobuf/sample.proto
 ```
 
 ## Samples
@@ -81,13 +81,16 @@ When you run the sample scene you will see three buttons that are hooked up to c
 corresponding methods in `Assets/authSample.cs`, these must be pressed in the correct order:
 1. Press the `Sign In` button, this should open a new browser window, once you've signed up/in
    you should see the text above the button change to `Signed in as ...`.
-2. Once the textbox indicates you're signed in you can press the `Send Tx` button to generate, sign,
-   and commit a new dummy transaction to the Loom DAppChain. If the transaction is accepted by the
-   DAppChain the textbox should change to `Committed Tx to Block ...` - indicating the block the
-   transaction was committed to a block in the DAppChain. You can press the `Send Tx` button again
-   to create another transaction.
-3. You can press the `Query` button after signing in to send a simple query to the sample contract
-   running on the Loom DAppChain. 
+2. Once the textbox indicates you're signed in you can press the `Call SetMsg` button to call the
+   `SetMsg` method in the `helloworld` smart contract, this method will store a key/value in the
+   smart contract state. If the method executes without error the textbox should change to
+   `Smart contract method finished executing.`. You can press the `Call SetMsg` button again to make
+   another call. Each call to the smart contract actually requires a new transaction to be
+   generated, signed, and then validated by the DAppChain.
+3. Press the `Call SetMsgEcho` button to call the `SetMsgEcho` method in the `helloworld` smart
+   contract, similarly to `SetMsg` this method will store a key/value in the smart contract, and
+   return the key/value it stored.
+4. You can press the `Call GetMsg` button to send a simple query to the `helloworld` contract.
 
 ## Dependencies
 

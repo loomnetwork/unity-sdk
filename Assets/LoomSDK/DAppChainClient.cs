@@ -75,9 +75,6 @@ namespace Loom.Unity3d
         [JsonProperty("code")]
         public string Code { get; set; }
 
-        [JsonProperty("data")]
-        public string Data { get; set; }
-
         /// <summary>
         /// Error message.
         /// </summary>
@@ -99,6 +96,8 @@ namespace Loom.Unity3d
             public int Code { get; set; }
             [JsonProperty("log")]
             public string Error { get; set; }
+            [JsonProperty("data")]
+            public byte[] Data { get; set; }
         }
 
         [JsonProperty("check_tx")]
@@ -205,56 +204,13 @@ namespace Loom.Unity3d
             this.readUrl = readUrl;
             this.Logger = NullLogger.Instance;
         }
-
-        /// <summary>
-        /// Calls a contract with the given arguments.
-        /// Each call generates a new transaction that's committed to the Loom DAppChain.
-        /// </summary>
-        /// <param name="caller">Address of the caller.</param>
-        /// <param name="contract">Address of a contract on the Loom DAppChain.</param>
-        /// <param name="method">Qualified name of the contract method to call in the format "contractName.methodName".</param>
-        /// <param name="args">Arguments to pass to the contract.</param>
-        /// <returns>Commit metadata.</returns>
-        public async Task<BroadcastTxResult> CallAsync(Address caller, Address contract, string method, IMessage args)
-        {
-            var methodTx = new ContractMethodCall
-            {
-                Method = method,
-                Args = args.ToByteString()
-            };
-            var requestBytes = new Request
-            {
-                ContentType = EncodingType.Protobuf3,
-                Body = methodTx.ToByteString()
-            }.ToByteString();
-
-            var callTxBytes = new CallTx
-            {
-                VmType = VMType.Plugin,
-                Input = requestBytes
-            }.ToByteString();
-
-            var msgTxBytes = new MessageTx
-            {
-                From = caller,
-                To = contract,
-                Data = callTxBytes
-            }.ToByteString();
-
-            var tx = new Transaction
-            {
-                Id = 2,
-                Data = msgTxBytes
-            };
-            return await this.CommitTxAsync(tx);
-        }
-
+                
         /// <summary>
         /// Commits a transaction to the DAppChain.
         /// </summary>
         /// <param name="tx">Transaction to commit.</param>
         /// <returns>Commit metadata.</returns>
-        private async Task<BroadcastTxResult> CommitTxAsync(IMessage tx)
+        public async Task<BroadcastTxResult> CommitTxAsync(IMessage tx)
         {
             byte[] txBytes = tx.ToByteArray();
             if (this.TxMiddleware != null)
@@ -293,16 +249,10 @@ namespace Loom.Unity3d
         /// </summary>
         /// <typeparam name="T">The expected response type, must be deserializable with Newtonsoft.Json.</typeparam>
         /// <param name="contract">Address of the contract to query.</param>
-        /// <param name="method">Qualified name of the contract method to call in the format "contractName.methodName".</param>
         /// <param name="queryParams">Query parameters object.</param>
         /// <returns>Deserialized response.</returns>
-        public async Task<T> QueryAsync<T>(Address contract, string method, IMessage queryParams = null) where T : IMessage, new()
+        public async Task<T> QueryAsync<T>(Address contract, IMessage query = null)
         {
-            var query = new ContractMethodCall
-            {
-                Method = method,
-                Args = queryParams.ToByteString()
-            };
             var contractAddr = "0x" + CryptoUtils.BytesToHexString(contract.Local.ToByteArray());
             var queryBytes = CryptoBytes.ToBase64String(query.ToByteArray());
             var req = new QueryJsonRpcRequest("query", contractAddr, queryBytes, Guid.NewGuid().ToString());
@@ -319,13 +269,8 @@ namespace Loom.Unity3d
                 if (r.downloadHandler != null && !String.IsNullOrEmpty(r.downloadHandler.text))
                 {
                     Logger.Log(LogTag, "Response: " + r.downloadHandler.text);
-                    var resp = JsonConvert.DeserializeObject<JsonRpcResponse<byte[]>>(r.downloadHandler.text);
-                    if (resp.Result != null)
-                    {
-                        T msg = new T();
-                        msg.MergeFrom(resp.Result);
-                        return msg;
-                    }
+                    var resp = JsonConvert.DeserializeObject<JsonRpcResponse<T>>(r.downloadHandler.text);
+                    return resp.Result;
                 }
             }
             return default(T);

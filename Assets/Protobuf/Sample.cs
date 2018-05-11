@@ -22,25 +22,26 @@ public static partial class SampleReflection {
   static SampleReflection() {
     byte[] descriptorData = global::System.Convert.FromBase64String(
         string.Concat(
-          "CgxzYW1wbGUucHJvdG8iIQoRU2FtcGxlUXVlcnlQYXJhbXMSDAoEYm9keRgB",
-          "IAEoCSIhChFTYW1wbGVRdWVyeVJlc3VsdBIMCgRib2R5GAEgASgJYgZwcm90",
-          "bzM="));
+          "CgxzYW1wbGUucHJvdG8iJgoITWFwRW50cnkSCwoDa2V5GAEgASgJEg0KBXZh",
+          "bHVlGAIgASgJIhoKDEhlbGxvUmVxdWVzdBIKCgJpbhgBIAEoCSIcCg1IZWxs",
+          "b1Jlc3BvbnNlEgsKA291dBgBIAEoCWIGcHJvdG8z"));
     descriptor = pbr::FileDescriptor.FromGeneratedCode(descriptorData,
         new pbr::FileDescriptor[] { },
         new pbr::GeneratedClrTypeInfo(null, new pbr::GeneratedClrTypeInfo[] {
-          new pbr::GeneratedClrTypeInfo(typeof(global::SampleQueryParams), global::SampleQueryParams.Parser, new[]{ "Body" }, null, null, null),
-          new pbr::GeneratedClrTypeInfo(typeof(global::SampleQueryResult), global::SampleQueryResult.Parser, new[]{ "Body" }, null, null, null)
+          new pbr::GeneratedClrTypeInfo(typeof(global::MapEntry), global::MapEntry.Parser, new[]{ "Key", "Value" }, null, null, null),
+          new pbr::GeneratedClrTypeInfo(typeof(global::HelloRequest), global::HelloRequest.Parser, new[]{ "In" }, null, null, null),
+          new pbr::GeneratedClrTypeInfo(typeof(global::HelloResponse), global::HelloResponse.Parser, new[]{ "Out" }, null, null, null)
         }));
   }
   #endregion
 
 }
 #region Messages
-public sealed partial class SampleQueryParams : pb::IMessage<SampleQueryParams> {
-  private static readonly pb::MessageParser<SampleQueryParams> _parser = new pb::MessageParser<SampleQueryParams>(() => new SampleQueryParams());
+public sealed partial class MapEntry : pb::IMessage<MapEntry> {
+  private static readonly pb::MessageParser<MapEntry> _parser = new pb::MessageParser<MapEntry>(() => new MapEntry());
   private pb::UnknownFieldSet _unknownFields;
   [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
-  public static pb::MessageParser<SampleQueryParams> Parser { get { return _parser; } }
+  public static pb::MessageParser<MapEntry> Parser { get { return _parser; } }
 
   [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
   public static pbr::MessageDescriptor Descriptor {
@@ -53,55 +54,69 @@ public sealed partial class SampleQueryParams : pb::IMessage<SampleQueryParams> 
   }
 
   [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
-  public SampleQueryParams() {
+  public MapEntry() {
     OnConstruction();
   }
 
   partial void OnConstruction();
 
   [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
-  public SampleQueryParams(SampleQueryParams other) : this() {
-    body_ = other.body_;
+  public MapEntry(MapEntry other) : this() {
+    key_ = other.key_;
+    value_ = other.value_;
     _unknownFields = pb::UnknownFieldSet.Clone(other._unknownFields);
   }
 
   [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
-  public SampleQueryParams Clone() {
-    return new SampleQueryParams(this);
+  public MapEntry Clone() {
+    return new MapEntry(this);
   }
 
-  /// <summary>Field number for the "body" field.</summary>
-  public const int BodyFieldNumber = 1;
-  private string body_ = "";
+  /// <summary>Field number for the "key" field.</summary>
+  public const int KeyFieldNumber = 1;
+  private string key_ = "";
   [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
-  public string Body {
-    get { return body_; }
+  public string Key {
+    get { return key_; }
     set {
-      body_ = pb::ProtoPreconditions.CheckNotNull(value, "value");
+      key_ = pb::ProtoPreconditions.CheckNotNull(value, "value");
+    }
+  }
+
+  /// <summary>Field number for the "value" field.</summary>
+  public const int ValueFieldNumber = 2;
+  private string value_ = "";
+  [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+  public string Value {
+    get { return value_; }
+    set {
+      value_ = pb::ProtoPreconditions.CheckNotNull(value, "value");
     }
   }
 
   [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
   public override bool Equals(object other) {
-    return Equals(other as SampleQueryParams);
+    return Equals(other as MapEntry);
   }
 
   [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
-  public bool Equals(SampleQueryParams other) {
+  public bool Equals(MapEntry other) {
     if (ReferenceEquals(other, null)) {
       return false;
     }
     if (ReferenceEquals(other, this)) {
       return true;
     }
-    if (Body != other.Body) return false;
+    if (Key != other.Key) return false;
+    if (Value != other.Value) return false;
     return Equals(_unknownFields, other._unknownFields);
   }
 
   [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
   public override int GetHashCode() {
     int hash = 1;
-    if (Body.Length != 0) hash ^= Body.GetHashCode();
+    if (Key.Length != 0) hash ^= Key.GetHashCode();
+    if (Value.Length != 0) hash ^= Value.GetHashCode();
     if (_unknownFields != null) {
       hash ^= _unknownFields.GetHashCode();
     }
@@ -115,9 +130,13 @@ public sealed partial class SampleQueryParams : pb::IMessage<SampleQueryParams> 
 
   [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
   public void WriteTo(pb::CodedOutputStream output) {
-    if (Body.Length != 0) {
+    if (Key.Length != 0) {
       output.WriteRawTag(10);
-      output.WriteString(Body);
+      output.WriteString(Key);
+    }
+    if (Value.Length != 0) {
+      output.WriteRawTag(18);
+      output.WriteString(Value);
     }
     if (_unknownFields != null) {
       _unknownFields.WriteTo(output);
@@ -127,8 +146,11 @@ public sealed partial class SampleQueryParams : pb::IMessage<SampleQueryParams> 
   [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
   public int CalculateSize() {
     int size = 0;
-    if (Body.Length != 0) {
-      size += 1 + pb::CodedOutputStream.ComputeStringSize(Body);
+    if (Key.Length != 0) {
+      size += 1 + pb::CodedOutputStream.ComputeStringSize(Key);
+    }
+    if (Value.Length != 0) {
+      size += 1 + pb::CodedOutputStream.ComputeStringSize(Value);
     }
     if (_unknownFields != null) {
       size += _unknownFields.CalculateSize();
@@ -137,12 +159,15 @@ public sealed partial class SampleQueryParams : pb::IMessage<SampleQueryParams> 
   }
 
   [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
-  public void MergeFrom(SampleQueryParams other) {
+  public void MergeFrom(MapEntry other) {
     if (other == null) {
       return;
     }
-    if (other.Body.Length != 0) {
-      Body = other.Body;
+    if (other.Key.Length != 0) {
+      Key = other.Key;
+    }
+    if (other.Value.Length != 0) {
+      Value = other.Value;
     }
     _unknownFields = pb::UnknownFieldSet.MergeFrom(_unknownFields, other._unknownFields);
   }
@@ -156,7 +181,11 @@ public sealed partial class SampleQueryParams : pb::IMessage<SampleQueryParams> 
           _unknownFields = pb::UnknownFieldSet.MergeFieldFrom(_unknownFields, input);
           break;
         case 10: {
-          Body = input.ReadString();
+          Key = input.ReadString();
+          break;
+        }
+        case 18: {
+          Value = input.ReadString();
           break;
         }
       }
@@ -165,11 +194,11 @@ public sealed partial class SampleQueryParams : pb::IMessage<SampleQueryParams> 
 
 }
 
-public sealed partial class SampleQueryResult : pb::IMessage<SampleQueryResult> {
-  private static readonly pb::MessageParser<SampleQueryResult> _parser = new pb::MessageParser<SampleQueryResult>(() => new SampleQueryResult());
+public sealed partial class HelloRequest : pb::IMessage<HelloRequest> {
+  private static readonly pb::MessageParser<HelloRequest> _parser = new pb::MessageParser<HelloRequest>(() => new HelloRequest());
   private pb::UnknownFieldSet _unknownFields;
   [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
-  public static pb::MessageParser<SampleQueryResult> Parser { get { return _parser; } }
+  public static pb::MessageParser<HelloRequest> Parser { get { return _parser; } }
 
   [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
   public static pbr::MessageDescriptor Descriptor {
@@ -182,55 +211,55 @@ public sealed partial class SampleQueryResult : pb::IMessage<SampleQueryResult> 
   }
 
   [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
-  public SampleQueryResult() {
+  public HelloRequest() {
     OnConstruction();
   }
 
   partial void OnConstruction();
 
   [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
-  public SampleQueryResult(SampleQueryResult other) : this() {
-    body_ = other.body_;
+  public HelloRequest(HelloRequest other) : this() {
+    in_ = other.in_;
     _unknownFields = pb::UnknownFieldSet.Clone(other._unknownFields);
   }
 
   [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
-  public SampleQueryResult Clone() {
-    return new SampleQueryResult(this);
+  public HelloRequest Clone() {
+    return new HelloRequest(this);
   }
 
-  /// <summary>Field number for the "body" field.</summary>
-  public const int BodyFieldNumber = 1;
-  private string body_ = "";
+  /// <summary>Field number for the "in" field.</summary>
+  public const int InFieldNumber = 1;
+  private string in_ = "";
   [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
-  public string Body {
-    get { return body_; }
+  public string In {
+    get { return in_; }
     set {
-      body_ = pb::ProtoPreconditions.CheckNotNull(value, "value");
+      in_ = pb::ProtoPreconditions.CheckNotNull(value, "value");
     }
   }
 
   [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
   public override bool Equals(object other) {
-    return Equals(other as SampleQueryResult);
+    return Equals(other as HelloRequest);
   }
 
   [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
-  public bool Equals(SampleQueryResult other) {
+  public bool Equals(HelloRequest other) {
     if (ReferenceEquals(other, null)) {
       return false;
     }
     if (ReferenceEquals(other, this)) {
       return true;
     }
-    if (Body != other.Body) return false;
+    if (In != other.In) return false;
     return Equals(_unknownFields, other._unknownFields);
   }
 
   [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
   public override int GetHashCode() {
     int hash = 1;
-    if (Body.Length != 0) hash ^= Body.GetHashCode();
+    if (In.Length != 0) hash ^= In.GetHashCode();
     if (_unknownFields != null) {
       hash ^= _unknownFields.GetHashCode();
     }
@@ -244,9 +273,9 @@ public sealed partial class SampleQueryResult : pb::IMessage<SampleQueryResult> 
 
   [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
   public void WriteTo(pb::CodedOutputStream output) {
-    if (Body.Length != 0) {
+    if (In.Length != 0) {
       output.WriteRawTag(10);
-      output.WriteString(Body);
+      output.WriteString(In);
     }
     if (_unknownFields != null) {
       _unknownFields.WriteTo(output);
@@ -256,8 +285,8 @@ public sealed partial class SampleQueryResult : pb::IMessage<SampleQueryResult> 
   [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
   public int CalculateSize() {
     int size = 0;
-    if (Body.Length != 0) {
-      size += 1 + pb::CodedOutputStream.ComputeStringSize(Body);
+    if (In.Length != 0) {
+      size += 1 + pb::CodedOutputStream.ComputeStringSize(In);
     }
     if (_unknownFields != null) {
       size += _unknownFields.CalculateSize();
@@ -266,12 +295,12 @@ public sealed partial class SampleQueryResult : pb::IMessage<SampleQueryResult> 
   }
 
   [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
-  public void MergeFrom(SampleQueryResult other) {
+  public void MergeFrom(HelloRequest other) {
     if (other == null) {
       return;
     }
-    if (other.Body.Length != 0) {
-      Body = other.Body;
+    if (other.In.Length != 0) {
+      In = other.In;
     }
     _unknownFields = pb::UnknownFieldSet.MergeFrom(_unknownFields, other._unknownFields);
   }
@@ -285,7 +314,136 @@ public sealed partial class SampleQueryResult : pb::IMessage<SampleQueryResult> 
           _unknownFields = pb::UnknownFieldSet.MergeFieldFrom(_unknownFields, input);
           break;
         case 10: {
-          Body = input.ReadString();
+          In = input.ReadString();
+          break;
+        }
+      }
+    }
+  }
+
+}
+
+public sealed partial class HelloResponse : pb::IMessage<HelloResponse> {
+  private static readonly pb::MessageParser<HelloResponse> _parser = new pb::MessageParser<HelloResponse>(() => new HelloResponse());
+  private pb::UnknownFieldSet _unknownFields;
+  [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+  public static pb::MessageParser<HelloResponse> Parser { get { return _parser; } }
+
+  [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+  public static pbr::MessageDescriptor Descriptor {
+    get { return global::SampleReflection.Descriptor.MessageTypes[2]; }
+  }
+
+  [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+  pbr::MessageDescriptor pb::IMessage.Descriptor {
+    get { return Descriptor; }
+  }
+
+  [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+  public HelloResponse() {
+    OnConstruction();
+  }
+
+  partial void OnConstruction();
+
+  [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+  public HelloResponse(HelloResponse other) : this() {
+    out_ = other.out_;
+    _unknownFields = pb::UnknownFieldSet.Clone(other._unknownFields);
+  }
+
+  [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+  public HelloResponse Clone() {
+    return new HelloResponse(this);
+  }
+
+  /// <summary>Field number for the "out" field.</summary>
+  public const int OutFieldNumber = 1;
+  private string out_ = "";
+  [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+  public string Out {
+    get { return out_; }
+    set {
+      out_ = pb::ProtoPreconditions.CheckNotNull(value, "value");
+    }
+  }
+
+  [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+  public override bool Equals(object other) {
+    return Equals(other as HelloResponse);
+  }
+
+  [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+  public bool Equals(HelloResponse other) {
+    if (ReferenceEquals(other, null)) {
+      return false;
+    }
+    if (ReferenceEquals(other, this)) {
+      return true;
+    }
+    if (Out != other.Out) return false;
+    return Equals(_unknownFields, other._unknownFields);
+  }
+
+  [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+  public override int GetHashCode() {
+    int hash = 1;
+    if (Out.Length != 0) hash ^= Out.GetHashCode();
+    if (_unknownFields != null) {
+      hash ^= _unknownFields.GetHashCode();
+    }
+    return hash;
+  }
+
+  [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+  public override string ToString() {
+    return pb::JsonFormatter.ToDiagnosticString(this);
+  }
+
+  [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+  public void WriteTo(pb::CodedOutputStream output) {
+    if (Out.Length != 0) {
+      output.WriteRawTag(10);
+      output.WriteString(Out);
+    }
+    if (_unknownFields != null) {
+      _unknownFields.WriteTo(output);
+    }
+  }
+
+  [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+  public int CalculateSize() {
+    int size = 0;
+    if (Out.Length != 0) {
+      size += 1 + pb::CodedOutputStream.ComputeStringSize(Out);
+    }
+    if (_unknownFields != null) {
+      size += _unknownFields.CalculateSize();
+    }
+    return size;
+  }
+
+  [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+  public void MergeFrom(HelloResponse other) {
+    if (other == null) {
+      return;
+    }
+    if (other.Out.Length != 0) {
+      Out = other.Out;
+    }
+    _unknownFields = pb::UnknownFieldSet.MergeFrom(_unknownFields, other._unknownFields);
+  }
+
+  [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+  public void MergeFrom(pb::CodedInputStream input) {
+    uint tag;
+    while ((tag = input.ReadTag()) != 0) {
+      switch(tag) {
+        default:
+          _unknownFields = pb::UnknownFieldSet.MergeFieldFrom(_unknownFields, input);
+          break;
+        case 10: {
+          Out = input.ReadString();
           break;
         }
       }
