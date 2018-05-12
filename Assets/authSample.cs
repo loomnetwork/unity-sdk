@@ -1,7 +1,7 @@
 ﻿using UnityEngine;
 using UnityEngine.UI;
 using Loom.Unity3d;
-using Google.Protobuf;
+using Loom.Unity3d.Samples;
 using System;
 using System.Threading.Tasks;
 
@@ -105,11 +105,7 @@ public class authSample : MonoBehaviour
         });
 
         // There is only one contract address at the moment...
-        var contractAddr = new Address
-        {
-            ChainId = "default",
-            Local = ByteString.CopyFrom(CryptoUtils.HexStringToBytes("0x005B17864f3adbF53b1384F2E6f2120c6652F779"))
-        };
+        var contractAddr = Address.FromHexString("0x005B17864f3adbF53b1384F2E6f2120c6652F779");
         var callerAddr = this.identity.ToAddress("default");
         this.contract = new Contract(client, contractAddr, "helloworld", callerAddr);
     }
