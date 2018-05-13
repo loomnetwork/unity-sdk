@@ -91,8 +91,11 @@ public class authSample : MonoBehaviour
         this.identity = await authClient.GetIdentityAsync("", null);
 #endif
         this.statusTextRef.text = "Signed in as " + this.identity.Username;
-        // This DAppChain client will connect to the example REST server in the Loom Go SDK. 
-        var client = new DAppChainClient("http://localhost:46657", "http://localhost:47000")
+        
+        var client = new DAppChainClient(
+            RPCClientFactory.Create("ws://127.0.0.1:46657/websocket", Debug.unityLogger), 
+            RPCClientFactory.Create("ws://127.0.0.1:47000/queryws", Debug.unityLogger)
+        )
         {
             Logger = Debug.unityLogger
         };
