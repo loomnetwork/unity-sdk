@@ -45,15 +45,13 @@ namespace UnitySwift {
 
 				}
                 proj.WriteToFile(projPath);
-				////////////
+
 				//info.plist
 				var plistPath = buildPath+ "/Info.plist";
 				var plist = new PlistDocument();
 				plist.ReadFromFile(plistPath);
-
 				// Update value
 				PlistElementDict rootDict = plist.root;
-
 				//rootDict.SetString("CFBundleIdentifier","$(PRODUCT_BUNDLE_IDENTIFIER)");
 				PlistElementArray urls = rootDict.CreateArray ("CFBundleURLTypes");
 				PlistElementDict dic =  urls.AddDict ();
@@ -62,12 +60,6 @@ namespace UnitySwift {
 				dic.SetString ("CFBundleURLName", "auth0");
 				// Write plist
 				File.WriteAllText(plistPath, plist.WriteToString());
-				//
-				string content=File.ReadAllText(buildPath+ "/Classes/UnityAppController.mm");
-				content=content.Replace ("#include <sys/sysctl.h>", "#include <sys/sysctl.h>\n#import \"LoomSDKSwift.h\"");
-				content=content.Replace ("AppController_SendNotificationWithArg(kUnityOnOpenURL, notifData);", "AppController_SendNotificationWithArg(kUnityOnOpenURL, notifData);\n[LoomSDK resumeAuth:[url absoluteString] ];");
-				File.WriteAllText(buildPath+ "/Classes/UnityAppController.mm", content);
-
             }
         }
     }
