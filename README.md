@@ -117,3 +117,8 @@ Build from source https://github.com/CodesInChaos/Chaos.NaCl - then copy the bui
 
 Install prebuilt [Google.Protobuf 3.5](https://www.nuget.org/packages/Google.Protobuf) from NuGet
 and copy them to `Assets/Plugins`.
+
+### Websocket-Sharp
+
+Clone https://github.com/sta/websocket-sharp and build the `Release` config for `AnyCPU`.
+The version currently was built from Git rev `000c0a76b4fb2045cabc4f0ae6a80bea03e2663e`.
