@@ -9,6 +9,12 @@ using UnityEngine;
 
 namespace Loom.Unity3d
 {
+    /// <summary>
+    /// WebSocket RPC client implemented with System.Net.WebSockets, the Mono implementation
+    /// of System.Net.WebSockets in Unity 2017.3 seems a bit buggy and sometimes errors out
+    /// with "IndexOutOfRangeException: Index was outside the bounds of the array." when calling
+    /// ClientWebSocket.ReceiveAsync().
+    /// </summary>
     internal class WSRPCClient : IRPCClient
     {
         private static readonly string LogTag = "Loom.WSRPCClient";
@@ -27,7 +33,6 @@ namespace Loom.Unity3d
         public WSRPCClient(string url)
         {
             this.client = new ClientWebSocket();
-            this.client.Options.KeepAliveInterval = TimeSpan.FromMilliseconds(5000);
             this.url = new Uri(url);
             this.Logger = NullLogger.Instance;
             this.responseBuffer = new byte[4096];
@@ -57,12 +62,11 @@ namespace Loom.Unity3d
         public async Task<T> SendAsync<T, U>(string method, U args)
         {
             await this.EnsureConnectionAsync();
-            var reqMsg = new JsonRpcRequest<U>(method, args);
+            var reqMsg = new JsonRpcRequest<U>(method, args, Guid.NewGuid().ToString());
             var reqMsgBody = JsonConvert.SerializeObject(reqMsg);
             Logger.Log(LogTag, "RPC Req: " + reqMsgBody);
             var reqBytes = new ArraySegment<byte>(Encoding.UTF8.GetBytes(reqMsgBody));
             await this.client.SendAsync(reqBytes, WebSocketMessageType.Text, true, CancellationToken.None);
-            Logger.Log(LogTag, "RPC Req Sent");
             using (var memStream = new MemoryStream())
             {
                 int msgSize = 0;
@@ -79,8 +83,8 @@ namespace Loom.Unity3d
                     {
                         throw new Exception("Message exceeded max size!");
                     }
-                    Logger.Log(LogTag, string.Format("reqBytes.Offset: {0}, result.Count: {1}", reqBytes.Offset, result.Count));
-                    memStream.Write(reqBytes.Array, reqBytes.Offset, result.Count);
+                    Logger.Log(LogTag, string.Format("respBytes.Offset: {0}, result.Count: {1}, MessageType: {2}", respBytes.Offset, result.Count, result.MessageType));
+                    memStream.Write(respBytes.Array, respBytes.Offset, result.Count);
                     msgSize += result.Count;
                 } while (!result.EndOfMessage);
 
