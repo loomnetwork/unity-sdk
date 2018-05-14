@@ -75,7 +75,7 @@ namespace Loom.Unity3d
 #if !UNITY_WEBGL
             return new WSSharpRPCClient(url) { Logger = logger };
 #else
-            throw new NotImplementedException();
+            return new WebGL.WSRPCClient(url) { Logger = logger };
 #endif
         }
     }
