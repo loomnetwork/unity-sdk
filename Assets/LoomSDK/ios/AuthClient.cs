@@ -1,5 +1,5 @@
-using Auth0.AuthenticationApi;
-using Auth0.AuthenticationApi.Models;
+//using Auth0.AuthenticationApi;
+//using Auth0.AuthenticationApi.Models;
 using Newtonsoft.Json;
 using System;
 using System.Threading.Tasks;
@@ -13,6 +13,25 @@ using AOT;
 namespace Loom.Unity3d.IOS
 {
 	#if UNITY_IOS && !UNITY_EDITOR
+
+	//Wrapper class for Auth0.AuthenticationApi.Models.UserInfo json
+	public class ProfileUserInfo
+	{
+		//
+		// Properties
+		//
+		[JsonProperty ("email")]
+		public string Email;
+
+		//
+		// Constructors
+		//
+		public ProfileUserInfo ()
+		{
+
+		}
+	}
+
     internal class AuthConfig
     {
         public string ClientId;
@@ -27,20 +46,23 @@ namespace Loom.Unity3d.IOS
  		[DllImport("__Internal")]
 		private static extern void _ex_callGetAccessToken(string message, Action<string> onSuccess, Action<string> onError);
 
-		private AuthenticationApiClient auth0Client;
+		[DllImport("__Internal")]
+		private static extern void _ex_callGetUserProfile(string domain, string accessToken, Action<string> onResult);
+
+
         public ILogger Logger { get; set; }
 
         public string ClientId { get; set; }
         public string Domain { get; set; }
         public string Audience { get; set; }
         public string Scope { get; set; }
+
 		public static TaskCompletionSource<string> taskCompletionSource;
+		public static TaskCompletionSource<string> taskAuthSource;
 
         public AuthClient()
         {
             this.Logger = NullLogger.Instance;
-            this.auth0Client = new AuthenticationApiClient(new Uri("https://loomx.auth0.com"));
-			taskCompletionSource = new TaskCompletionSource<string>();
         }
 
 		public delegate void CallbackDelegate(string returnStr);
@@ -57,8 +79,15 @@ namespace Loom.Unity3d.IOS
 			taskCompletionSource.SetException(new Exception(errorStr));
 		}
 
+		[MonoPInvokeCallback(typeof(CallbackDelegate))]
+		public static void onAuthResult(string jsonString)
+		{
+			taskAuthSource.SetResult(jsonString);
+		}
+
         public async Task<string> GetAccessTokenAsync()
         {
+			taskCompletionSource = new TaskCompletionSource<string>();
 			var config = JsonConvert.SerializeObject(new AuthConfig
 				{
 					ClientId = this.ClientId,
@@ -96,16 +125,21 @@ namespace Loom.Unity3d.IOS
         /// <returns>A new <see cref="Identity"/>.</returns>
         public async Task<Identity> CreateIdentityAsync(string accessToken, IKeyStore keyStore)
         {
-            UserInfo profile = await this.auth0Client.GetUserInfoAsync(accessToken);
-            var identity = new Identity
+			taskAuthSource = new TaskCompletionSource<string>();
+			_ex_callGetUserProfile("https://loomx.auth0.com"/*domain?*/, accessToken, onAuthResult);
+			await taskAuthSource.Task;
+			var profile = JsonConvert.DeserializeObject<ProfileUserInfo>(taskAuthSource.Task.Result);
+		    var identity = new Identity
             {
-                Username = profile.Email.Split('@')[0],
+				Username = profile.Email.Split('@')[0],
                 PrivateKey = CryptoUtils.GeneratePrivateKey()
             };
-            // TODO: connect to blockchain & post a create an account Tx
+
+			// TODO: connect to blockchain & post a create an account Tx
             await keyStore.SetAsync(identity.Username, identity.PrivateKey);
             return identity;
-        }
+
+		}
 
 		public Task ClearIdentityAsync()
 		{

@@ -20,17 +20,35 @@ class LoomSDK : NSObject {
             auth.start {
                 switch $0 {
                 case .failure(let error):
-                    callFailCB(error.localizedDescription as! String);
+                    callFailCB(error.localizedDescription);
                 case .success(let credentials):
                     guard let accessToken = credentials.accessToken else { return }
                     callDoneCB(accessToken as String);
-                    
                 }
             }
         } catch let error as NSError {
             print("Failed to load: \(error.localizedDescription)")
         }
     }
+    static  func getUserInfo(_ accessToken: String)
+    {
+        Auth0.authentication(clientId: "", domain: "https://loomx.auth0.com")
+            .userInfo(withAccessToken: accessToken)
+            .start { result in
+                switch(result) {
+                case .success(let profile):
+                    do {
+                        let profileDict =  try JSONSerialization.data(withJSONObject:profile.dictionaryWithValues(forKeys: ["email"]), options: JSONSerialization.WritingOptions.prettyPrinted)
+                        let jsonString = String(data: profileDict, encoding: String.Encoding.utf8)
+                        callAuthCB(jsonString)
+                    } catch _ {
+                        callAuthCB("{}")
+                    }
+                case .failure(_):
+                    callAuthCB("{}")                        }
+        }
+    }
+    
     static func resumeAuth(_ str:NSString)
     {
         let url=URL.init(string:str as String);

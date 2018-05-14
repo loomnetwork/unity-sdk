@@ -9,4 +9,5 @@
 #import "Auth0/auth0.h"
 extern void callFailCB(const char *message);
 extern void callDoneCB(const char *message);
+extern void callAuthCB(const char *message);
 
