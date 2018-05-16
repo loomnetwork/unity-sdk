@@ -28,7 +28,7 @@ namespace Loom.Unity3d.Desktop
         {
         }
 
-        public Task Disconnect()
+        public Task DisconnectAsync()
         {
             return Task.CompletedTask;
         }

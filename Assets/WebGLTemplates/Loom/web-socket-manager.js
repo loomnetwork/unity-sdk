@@ -5,14 +5,14 @@ function WebSocketManager() {
   this.nextSocketId = 1;
 }
   
-WebSocketManager.prototype.createSocket = function (openCallback, msgCallback) {
+WebSocketManager.prototype.createSocket = function (callbacks) {
   const socket = {
     id: this.nextSocketId++,
     url: null,
-    onOpen: openCallback,
-    onMsg: msgCallback,
+    onOpen: callbacks.open,
+    onClose: callbacks.close,
+    onMsg: callbacks.msg,
     ws: null,
-    error: null,
     messages: []
   };
   this.sockets.push(socket);
@@ -32,50 +32,54 @@ WebSocketManager.prototype.connectSocket = function (socketId, url) {
     socket.messages.push(e.data);
     socket.onMsg(socketId);
   };
-  socket.ws.onerror = e => {
-    console.log('Error: ' + e);
-  }
+  // NOTE: socket.ws.onerror doesn't actually get any info about the error when it is fired,
+  // as such it is rather pointless to subscribe to this event.
   socket.ws.onclose = e => {
+    let err = null;
     if (e.code != 1000)
     {
       if (e.reason != null && e.reason.length > 0) {
-        socket.error = e.reason;
+        err = e.reason;
       } else {
-        switch (e.code)
-        {
+        switch (e.code) {
           case 1001: 
-            socket.error = "Endpoint going away.";
+            err = "Endpoint going away.";
             break;
           case 1002: 
-            socket.error = "Protocol error.";
+            err = "Protocol error.";
             break;
           case 1003: 
-            socket.error = "Unsupported message.";
+            err = "Unsupported message.";
             break;
           case 1005: 
-            socket.error = "No status.";
+            err = "No status.";
             break;
           case 1006: 
-            socket.error = "Abnormal disconnection.";
+            err = "Abnormal disconnection.";
             break;
           case 1009: 
-            socket.error = "Data frame too large.";
+            err = "Data frame too large.";
             break;
           default:
-            socket.error = "Error " + e.code;
+            err = "Error " + e.code;
         }
       }
     }
+    socket.onClose(socket.id, err);
   }
 }
 
 WebSocketManager.prototype.destroySocket = function (socketId) {
   const socket = this.getSocket(socketId);
-  socket.ws.close();
-  socket.ws = null;
-  const idx = this.sockets.indexOf(socket);
-  if (idx != -1) {
-    this.sockets.splice(idx, 1);
+  if (socket) {
+    if (socket.ws) {
+      socket.ws.close();
+      socket.ws = null;
+    }
+    const idx = this.sockets.indexOf(socket);
+    if (idx != -1) {
+      this.sockets.splice(idx, 1);
+    }
   }
 }
 
@@ -85,43 +89,20 @@ WebSocketManager.prototype.getSocket = function (socketId) {
       return this.sockets[i];
     }
   }
+  return null;
 }
 
 WebSocketManager.prototype.getSocketState = function (socketId) {
   const socket = this.getSocket(socketId);
-  return socket.ws ? socket.ws.readyState : 3 /* Closed */;
-}
-
-WebSocketManager.prototype.getSocketError = function (socketId) {
-  this.getSocket(socketId).error;
+  if (socket && socket.ws) {
+    return socket.ws.readyState;
+  }
+  return 3 /* Closed */;
 }
 
 WebSocketManager.prototype.send = function (socketId, msg) {
   this.getSocket(socketId).ws.send(msg);
 }
-
-/*
-WebSocketManager.prototype.peekMessage = function (socketId) {
-  const socket = this.getSocket(socketId);
-  if (socket.messages.length === 0) {
-    return null;
-  }
-  return socket.messages[0];
-}
-
-WebSocketManager.prototype.popMessage = function (socketId, maxSize) {
-  const socket = this.getSocket(socketId);
-  if (socket.messages.length === 0) {
-      return null;
-  }
-  const msg = socket.messages[0];
-  if (msg.length > bufferSize) {
-    return null;
-  }
-  socket.messages = socket.messages.slice(1);
-  return msg;
-}
-*/
 
 WebSocketManager.prototype.getMessage = function (socketId) {
   const socket = this.getSocket(socketId);

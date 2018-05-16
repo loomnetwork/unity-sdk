@@ -65,7 +65,7 @@ namespace Loom.Unity3d
     public interface IRPCClient : IDisposable
     {
         Task<T> SendAsync<T, U>(string method, U args);
-        Task Disconnect();
+        Task DisconnectAsync();
     }
 
     public class RPCClientFactory

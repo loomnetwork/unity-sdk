@@ -1,50 +1,61 @@
+// Bridges Loom.Unity3d.WebGL.WSRPCClient and the WebSocketManager in web-socket-manager.js
 var WebSocketManagerLib = {
-  // NOTE: webSocketManager will be undefined if the Use pre-built Engine option is enabled!
-  $webSocketManager: function() {
-    return window['LoomWebSocketManager']
+  // NOTE: WSML will be undefined if the Use pre-built Engine option is enabled!
+  $WSML: {
+    onOpen: null,
+    onClose: null,
+    onMsg: null,
+    
+    getManager: function () {
+      return window['LoomWebSocketManager'];
+    }
   },
 
-  WebSocketCreate: function (openCallback, msgCallback)
+  InitWebSocketManagerLib: function (openCallback, closeCallback, msgCallback) {
+    WSML.onOpen = function (socketId) {
+      Runtime.dynCall('vi', openCallback, [socketId]);
+    };
+    WSML.onClose = function (socketId, errStr) {
+      const errPtr = errStr ? allocateStringBuffer(errStr) : null;
+      Runtime.dynCall('vii', closeCallback, [socketId, errPtr]);
+    };
+    WSML.onMsg = function (socketId) {
+      Runtime.dynCall('vi', msgCallback, [socketId]);
+    };
+  },
+
+  WebSocketCreate: function ()
   {
-    return webSocketManager().createSocket(
-      function (socketId) {
-        Runtime.dynCall('vi', openCallback, [socketId]);
-      },
-      function (socketId) {
-        Runtime.dynCall('vi', msgCallback, [socketId]);
-      }
-    );
+    return WSML.getManager().createSocket({
+      open: WSML.onOpen,
+      close: WSML.onClose,
+      msg: WSML.onMsg
+    });
   },
 
   WebSocketConnect: function (socketId, urlStrPtr) {
     const urlStr = Pointer_stringify(urlStrPtr);
-    webSocketManager().connectSocket(socketId, urlStr);
+    WSML.getManager().connectSocket(socketId, urlStr);
   },
   
   GetWebSocketState: function (socketId) {
-    return webSocketManager().getSocketState(socketId);
-  },
-  
-  WebSocketError: function (socketId) {
-    return allocateStringBuffer(webSocketManager().getSocketError(socketId) || '');
+    return WSML.getManager().getSocketState(socketId);
   },
   
   WebSocketSend: function (socketId, msgStrPtr) {
     const msgStr = Pointer_stringify(msgStrPtr)
-    webSocketManager().send(socketId, msgStr);
+    WSML.getManager().send(socketId, msgStr);
   },
   
   GetWebSocketMessage: function (socketId) {
-    const msgStr = webSocketManager().getMessage(socketId);
-    return allocateStringBuffer((msgStr !== null) ? msgStr : '');
+    const msgStr = WSML.getManager().getMessage(socketId);
+    return (msgStr !== null) ? allocateStringBuffer(msgStr) : null;
   },
   
-  WebSocketClose: function (socketId)
-  {
-    webSocketManager().destroySocket(socketId);
+  WebSocketClose: function (socketId) {
+    WSML.getManager().destroySocket(socketId);
   }
 };
     
-autoAddDeps(WebSocketManagerLib, '$webSocketManager');
+autoAddDeps(WebSocketManagerLib, '$WSML');
 mergeInto(LibraryManager.library, WebSocketManagerLib);
-    

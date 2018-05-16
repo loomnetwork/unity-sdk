@@ -41,7 +41,7 @@ namespace Loom.Unity3d.Desktop
             ((IDisposable)this.client).Dispose();
         }
 
-        public Task Disconnect()
+        public Task DisconnectAsync()
         {
             var tcs = new TaskCompletionSource<CloseEventArgs>();
             EventHandler<CloseEventArgs> handler = null;

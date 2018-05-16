@@ -21,6 +21,7 @@ namespace Loom.Unity3d.WebGL
     internal class WebSocket
     {
         public Action OnOpen;
+        public Action<string> OnClose;
         public Action OnMessage;
     }
 
@@ -30,13 +31,21 @@ namespace Loom.Unity3d.WebGL
     internal class WSRPCClient : IRPCClient
     {
         private static Dictionary<int, WebSocket> sockets = new Dictionary<int, WebSocket>();
+        private static bool isLibInitialized = false;
 
         [DllImport("__Internal")]
-        private static extern int WebSocketCreate(Action<int> openCallback, Action<int> msgCallback);
+        private static extern void InitWebSocketManagerLib(
+            Action<int> openCallback,
+            Action<int,string> closeCallback,
+            Action<int> msgCallback);
+        [DllImport("__Internal")]
+        private static extern int WebSocketCreate();
         [DllImport("__Internal")]
         private static extern WebSocketState GetWebSocketState(int sockedId);
         [DllImport("__Internal")]
         private static extern void WebSocketConnect(int socketId, string url);
+        [DllImport("__Internal")]
+        private static extern void WebSocketClose(int socketId);
         [DllImport("__Internal")]
         private static extern void WebSocketSend(int socketId, string msg);
         [DllImport("__Internal")]
@@ -45,13 +54,32 @@ namespace Loom.Unity3d.WebGL
         [MonoPInvokeCallback(typeof(Action<int>))]
         private static void OnWebSocketOpen(int socketId)
         {
-            sockets[socketId].OnOpen();
+            var socket = sockets[socketId];
+            socket.OnOpen();
+            socket.OnOpen = null;
+        }
+
+        [MonoPInvokeCallback(typeof(Action<int>))]
+        private static void OnWebSocketClose(int socketId, string err)
+        {
+            // If DisconnectAsync() was called from Dispose() the socket is no longer 
+            if (sockets.ContainsKey(socketId))
+            {
+                var socket = sockets[socketId];
+                if (socket.OnClose != null)
+                {
+                    socket.OnClose(err);
+                    socket.OnClose = null;
+                }
+            }
         }
 
         [MonoPInvokeCallback(typeof(Action<int>))]
         private static void OnWebSocketMessage(int socketId)
         {
-            sockets[socketId].OnMessage();
+            var socket = sockets[socketId];
+            socket.OnMessage();
+            socket.OnMessage = null;
         }
 
         private static readonly string LogTag = "Loom.WSRPCClient";
@@ -66,21 +94,60 @@ namespace Loom.Unity3d.WebGL
 
         public WSRPCClient(string url)
         {
+            if (!isLibInitialized)
+            {
+                InitWebSocketManagerLib(OnWebSocketOpen, OnWebSocketClose, OnWebSocketMessage);
+                isLibInitialized = true;
+            }
             this.url = new Uri(url);
             this.Logger = NullLogger.Instance;
-            this.socketId = WebSocketCreate(OnWebSocketOpen, OnWebSocketMessage);
+            this.socketId = WebSocketCreate();
             sockets.Add(this.socketId, new WebSocket());
         }
 
-        void IDisposable.Dispose()
+        public void Dispose()
         {
             this.Disconnect();
+            sockets.Remove(this.socketId);
         }
 
-        public Task Disconnect()
+        private void Disconnect()
         {
-            // TODO
-            return Task.CompletedTask;
+            // NOTE: The current implementation of this function will destroy the
+            // browser-side socket so it can't be re-opened... this could be
+            // fixed in the JS code if needed.
+            WebSocketClose(this.socketId);
+        }
+
+        public Task DisconnectAsync()
+        {
+            var currentState = GetWebSocketState(this.socketId);
+            if ((currentState == WebSocketState.Closed) || (currentState == WebSocketState.Closing))
+            {
+                return Task.CompletedTask;
+            }
+            var webSocket = sockets[this.socketId];
+            var tcs = new TaskCompletionSource<object>();
+            webSocket.OnClose = (err) =>
+            {
+                if (string.IsNullOrEmpty(err))
+                {
+                    tcs.TrySetResult(null);
+                }
+                else
+                {
+                    tcs.TrySetException(new Exception(err));
+                }
+            };
+            try
+            {
+                this.Disconnect();
+            }
+            catch (Exception e)
+            {
+                tcs.TrySetException(e);
+            }
+            return tcs.Task;
         }
 
         private Task EnsureConnectionAsync()

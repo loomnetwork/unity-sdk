@@ -41,10 +41,14 @@ namespace Loom.Unity3d.Desktop
 
         public void Dispose()
         {
-            this.client.Dispose();
+            if (this.client != null)
+            {
+                this.client.Dispose();
+                this.client = null;
+            }
         }
 
-        public async Task Disconnect()
+        public async Task DisconnectAsync()
         {
             await this.client.CloseAsync(WebSocketCloseStatus.NormalClosure, "", CancellationToken.None);
         }

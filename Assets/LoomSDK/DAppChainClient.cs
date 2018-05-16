@@ -70,7 +70,7 @@ namespace Loom.Unity3d
     /// <summary>
     /// Writes to & reads from a Loom DAppChain.
     /// </summary>
-    public class DAppChainClient
+    public class DAppChainClient : IDisposable
     {
         private static readonly string LogTag = "Loom.DAppChainClient";
 
@@ -90,13 +90,27 @@ namespace Loom.Unity3d
         /// <summary>
         /// Constructs a client to read & write data from/to a Loom DAppChain.
         /// </summary>
-        /// <param name="writeUrl">Loom DAppChain URL for the write interface, e.g. "http://localhost:46657"</param>
-        /// <param name="readUrl">Loom DAppChain URL for the read interface, e.g. "http://localhost:47000" </param>
+        /// <param name="writeClient">RPC client to use for submitting txs.</param>
+        /// <param name="readClient">RPC client to use for querying DAppChain state.</param>
         public DAppChainClient(IRPCClient writeClient, IRPCClient readClient)
         {
             this.writeClient = writeClient;
             this.readClient = readClient;
             this.Logger = NullLogger.Instance;
+        }
+
+        public void Dispose()
+        {
+            if (this.writeClient != null)
+            {
+                this.writeClient.Dispose();
+                this.writeClient = null;
+            }
+            if (this.readClient != null)
+            {
+                this.readClient.Dispose();
+                this.readClient = null;
+            }
         }
                 
         /// <summary>
