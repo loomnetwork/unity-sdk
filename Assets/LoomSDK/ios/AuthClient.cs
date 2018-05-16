@@ -8,7 +8,7 @@ using UnityEngine;
 
 namespace Loom.Unity3d.IOS
 {
-	#if UNITY_IOS && !UNITY_EDITO
+	#if UNITY_IOS && !UNITY_EDITOR
 
 	//Wrapper class for Auth0.AuthenticationApi.Models.UserInfo json
 	public class ProfileUserInfo
