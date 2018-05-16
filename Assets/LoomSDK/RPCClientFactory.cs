@@ -72,10 +72,10 @@ namespace Loom.Unity3d
     {
         public static IRPCClient Create(string url, ILogger logger)
         {
-#if !UNITY_WEBGL
-            return new WSSharpRPCClient(url) { Logger = logger };
-#else
+#if UNITY_WEBGL && !UNITY_EDITOR
             return new WebGL.WSRPCClient(url) { Logger = logger };
+#else
+            return new Desktop.WSSharpRPCClient(url) { Logger = logger };
 #endif
         }
     }

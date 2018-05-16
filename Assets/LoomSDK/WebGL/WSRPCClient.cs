@@ -1,8 +1,9 @@
-﻿using AOT;
+﻿#if UNITY_WEBGL
+
+using AOT;
 using Newtonsoft.Json;
 using System;
 using System.Runtime.InteropServices;
-using System.Text;
 using System.Threading.Tasks;
 using System.Collections.Generic;
 using UnityEngine;
@@ -21,7 +22,6 @@ namespace Loom.Unity3d.WebGL
     {
         public Action OnOpen;
         public Action OnMessage;
-        public Action OnClose;
     }
 
     /// <summary>
@@ -32,17 +32,15 @@ namespace Loom.Unity3d.WebGL
         private static Dictionary<int, WebSocket> sockets = new Dictionary<int, WebSocket>();
 
         [DllImport("__Internal")]
-        private static extern int WebSocketCreate();
+        private static extern int WebSocketCreate(Action<int> openCallback, Action<int> msgCallback);
         [DllImport("__Internal")]
         private static extern WebSocketState GetWebSocketState(int sockedId);
         [DllImport("__Internal")]
-        private static extern void WebSocketConnect(int socketId, Action<int> cb);
+        private static extern void WebSocketConnect(int socketId, string url);
         [DllImport("__Internal")]
-        private static extern void WebSocketSend(int socketId, byte[] ptr, int length, Action<int> cb);
+        private static extern void WebSocketSend(int socketId, string msg);
         [DllImport("__Internal")]
-        private static extern int GetWebSocketMessageSize(int socketId);
-        [DllImport("__Internal")]
-        private static extern void GetWebSocketMessage(int socketId, byte[] ptr, int length);
+        private static extern string GetWebSocketMessage(int socketId);
 
         [MonoPInvokeCallback(typeof(Action<int>))]
         private static void OnWebSocketOpen(int socketId)
@@ -70,7 +68,7 @@ namespace Loom.Unity3d.WebGL
         {
             this.url = new Uri(url);
             this.Logger = NullLogger.Instance;
-            this.socketId = WebSocketCreate();
+            this.socketId = WebSocketCreate(OnWebSocketOpen, OnWebSocketMessage);
             sockets.Add(this.socketId, new WebSocket());
         }
 
@@ -100,7 +98,7 @@ namespace Loom.Unity3d.WebGL
             };
             try
             {
-                WebSocketConnect(this.socketId, OnWebSocketOpen);
+                WebSocketConnect(this.socketId, this.url.AbsoluteUri);
             }
             catch (Exception e)
             {
@@ -115,8 +113,7 @@ namespace Loom.Unity3d.WebGL
             var reqMsg = new JsonRpcRequest<T>(method, args, Guid.NewGuid().ToString());
             var reqMsgBody = JsonConvert.SerializeObject(reqMsg);
             Logger.Log(LogTag, "RPC Req: " + reqMsgBody);
-            var bytes = Encoding.UTF8.GetBytes(reqMsgBody);
-            WebSocketSend(this.socketId, bytes, bytes.Length, OnWebSocketMessage);
+            WebSocketSend(this.socketId, reqMsgBody);
         }
 
         public async Task<T> SendAsync<T, U>(string method, U args)
@@ -125,11 +122,7 @@ namespace Loom.Unity3d.WebGL
             var tcs = new TaskCompletionSource<T>();
             webSocket.OnMessage = () =>
             {
-                int msgSize = GetWebSocketMessageSize(this.socketId);
-                // TODO: max size check to prevent memory exhaustion
-                var bytes = new byte[msgSize];
-                GetWebSocketMessage(this.socketId, bytes, msgSize);
-                var msgBody = Encoding.UTF8.GetString(bytes);
+                var msgBody = GetWebSocketMessage(this.socketId);
                 if (!string.IsNullOrEmpty(msgBody))
                 {
                     Logger.Log(LogTag, "RPC Resp Body: " + msgBody);
@@ -146,3 +139,5 @@ namespace Loom.Unity3d.WebGL
         }
     }
 }
+
+#endif

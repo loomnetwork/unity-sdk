@@ -1,10 +1,12 @@
-﻿using System.Threading.Tasks;
+﻿#if UNITY_EDITOR || UNITY_STANDALONE
+
+using System.Threading.Tasks;
 using System;
 using Newtonsoft.Json;
 using UnityEngine;
 using WebSocketSharp;
 
-namespace Loom.Unity3d
+namespace Loom.Unity3d.Desktop
 {
     /// <summary>
     /// WebSocket JSON-RPC client implemented with WebSocketSharp.
@@ -148,3 +150,5 @@ namespace Loom.Unity3d
         }
     }
 }
+
+#endif

@@ -5,7 +5,7 @@ using System.Text;
 using UnityEngine.Networking;
 using UnityEngine;
 
-namespace Loom.Unity3d
+namespace Loom.Unity3d.Desktop
 {
     public class HTTPRPCClient : IRPCClient
     {
