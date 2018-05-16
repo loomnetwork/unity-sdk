@@ -30,9 +30,9 @@ class LoomSDK : NSObject {
             print("Failed to load: \(error.localizedDescription)")
         }
     }
-    static  func getUserInfo(_ accessToken: String)
+    static  func getUserInfo(_ accessToken: String, domain: String )
     {
-        Auth0.authentication(clientId: "", domain: "https://loomx.auth0.com")
+        Auth0.authentication(clientId: "", domain: domain)
             .userInfo(withAccessToken: accessToken)
             .start { result in
                 switch(result) {

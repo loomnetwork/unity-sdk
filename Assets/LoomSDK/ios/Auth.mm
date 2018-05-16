@@ -8,7 +8,7 @@ extern "C" {
 }
 static callbackFunc cb_done=nil;
 static callbackFunc cb_err=nil;
-static callbackFunc cb_auth=nil;
+static callbackFunc cb_user_info=nil;
 
 
 extern "C" {
@@ -19,9 +19,9 @@ extern "C" {
         [LoomSDK login:[NSString stringWithUTF8String:message]];
         
     }
-    void _ex_callGetUserProfile(const char *baseDomain,const char *accessToken,callbackFunc _cb_auth) {
-        cb_auth=_cb_auth;
-        [LoomSDK getUserInfo:[NSString stringWithUTF8String:accessToken]];
+    void _ex_callGetUserProfile(const char *baseDomain,const char *accessToken,callbackFunc _cb_user_info) {
+        cb_user_info=_cb_user_info;
+        [LoomSDK getUserInfo:[NSString stringWithUTF8String:accessToken] domain:[NSString  stringWithUTF8String:baseDomain]];
     }
     void _ex_callResumeAuth(const char *message)
     {
@@ -42,8 +42,8 @@ extern "C" {
     
     void callAuthCB(const char *message)
     {
-        if(cb_auth)
-            cb_auth(message);
+        if(cb_user_info)
+            cb_user_info(message);
     };
 }
 
