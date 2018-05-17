@@ -1,4 +1,4 @@
-﻿#if UNITY_EDITOR || UNITY_STANDALONE
+﻿#if !UNITY_WEBGL || UNITY_EDITOR
 
 using System.Threading.Tasks;
 using System;
@@ -6,7 +6,7 @@ using Newtonsoft.Json;
 using UnityEngine;
 using WebSocketSharp;
 
-namespace Loom.Unity3d.Desktop
+namespace Loom.Unity3d
 {
     /// <summary>
     /// WebSocket JSON-RPC client implemented with WebSocketSharp.

@@ -91,11 +91,22 @@ public class authSample : MonoBehaviour
         this.identity = await authClient.GetIdentityAsync("", null);
 #endif
         this.statusTextRef.text = "Signed in as " + this.identity.Username;
-        
-        var client = new DAppChainClient(
-            RPCClientFactory.Create("ws://127.0.0.1:46657/websocket", Debug.unityLogger), 
-            RPCClientFactory.Create("ws://127.0.0.1:47000/queryws", Debug.unityLogger)
-        )
+
+        var writer = RPCClientFactory.Configure()
+            .WithLogger(Debug.unityLogger)
+            .WithHTTP("http://127.0.0.1:46657")
+            //.WithHTTP("http://127.0.0.1:46658/rpc")
+            //.WithWebSocket("ws://127.0.0.1:46657/websocket")
+            .Create();
+
+        var reader = RPCClientFactory.Configure()
+            .WithLogger(Debug.unityLogger)
+            .WithHTTP("http://127.0.0.1:47000")
+            //.WithHTTP("http://127.0.0.1:46658/query")
+            //.WithWebSocket("ws://127.0.0.1:47000/queryws")
+            .Create();
+
+        var client = new DAppChainClient(writer, reader)
         {
             Logger = Debug.unityLogger
         };

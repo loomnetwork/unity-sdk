@@ -5,9 +5,9 @@ using System.Text;
 using UnityEngine.Networking;
 using UnityEngine;
 
-namespace Loom.Unity3d.Desktop
+namespace Loom.Unity3d
 {
-    public class HTTPRPCClient : IRPCClient
+    internal class HTTPRPCClient : IRPCClient
     {
         private static readonly string LogTag = "Loom.HTTPRPCClient";
 

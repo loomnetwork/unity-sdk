@@ -7,7 +7,7 @@ using System.Text;
 using System.IO;
 using UnityEngine;
 
-namespace Loom.Unity3d.Desktop
+namespace Loom.Unity3d
 {
     /// <summary>
     /// WebSocket RPC client implemented with System.Net.WebSockets, the Mono implementation

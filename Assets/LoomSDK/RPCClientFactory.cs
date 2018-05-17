@@ -1,82 +1,53 @@
-﻿using Newtonsoft.Json;
+﻿using UnityEngine;
 using System;
-using System.Threading.Tasks;
-using UnityEngine;
 
 namespace Loom.Unity3d
 {
-    #region JSON RPC Interfaces
-
-    internal class JsonRpcRequest<T>
-    {
-        [JsonProperty("jsonrpc")]
-        public string Version;
-
-        [JsonProperty("method")]
-        public string Method;
-
-        [JsonProperty("params")]
-        public T Params;
-
-        [JsonProperty("id")]
-        public string Id;
-
-        public JsonRpcRequest(string method, T args, string id = "")
-        {
-            Version = "2.0";
-            Method = method;
-            Params = args;
-            Id = id;
-        }
-    }
-
-    internal class JsonRpcResponse<T>
-    {
-        [JsonProperty("jsonrpc")]
-        public string Version;
-
-        [JsonProperty("result")]
-        public T Result;
-
-        public class ErrorData
-        {
-            [JsonProperty("code")]
-            public long Code;
-
-            [JsonProperty("message")]
-            public string Message;
-
-            [JsonProperty("data")]
-            public string Data;
-        }
-
-        [JsonProperty("error")]
-        public ErrorData Error;
-
-        /// <summary>
-        /// ID of the request associated with this response.
-        /// </summary>
-        [JsonProperty("id")]
-        public string Id;
-    }
-
-    #endregion
-
-    public interface IRPCClient : IDisposable
-    {
-        Task<T> SendAsync<T, U>(string method, U args);
-        Task DisconnectAsync();
-    }
-
     public class RPCClientFactory
     {
-        public static IRPCClient Create(string url, ILogger logger)
+        private ILogger logger;
+        private string websocketUrl;
+        private string httpUrl;
+
+        public static RPCClientFactory Configure()
         {
+            return new RPCClientFactory();
+        }
+
+        public RPCClientFactory WithLogger(ILogger logger)
+        {
+            this.logger = logger;
+            return this;
+        }
+
+        public RPCClientFactory WithWebSocket(string url)
+        {
+            this.websocketUrl = url;
+            return this;
+        }
+
+        public RPCClientFactory WithHTTP(string url)
+        {
+            this.httpUrl = url;
+            return this;
+        }
+        
+        public IRPCClient Create()
+        {
+            var logger = this.logger ?? NullLogger.Instance;
+            if (this.websocketUrl != null)
+            {
 #if UNITY_WEBGL && !UNITY_EDITOR
-            return new WebGL.WSRPCClient(url) { Logger = logger };
+                return new WebGL.WSRPCClient(this.websocketUrl) { Logger = logger };
 #else
-            return new Desktop.WSSharpRPCClient(url) { Logger = logger };
-#endif
+                return new WSSharpRPCClient(this.websocketUrl) { Logger = logger };
+#endif    
+            }
+            else if (this.httpUrl != null)
+            {
+                return new HTTPRPCClient(this.httpUrl) { Logger = logger };
+            }
+            throw new InvalidOperationException("RPCClientFactory configuration invalid.");
         }
     }
 }

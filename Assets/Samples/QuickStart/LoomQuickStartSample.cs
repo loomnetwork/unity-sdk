@@ -8,10 +8,21 @@ public class LoomQuickStartSample : MonoBehaviour {
 
     Contract GetContract(byte[] privateKey, byte[] publicKey)
     {
-        var client = new DAppChainClient(
-            RPCClientFactory.Create("http://localhost:46658", Debug.unityLogger),
-            RPCClientFactory.Create("http://localhost:47000", Debug.unityLogger)
-        )
+        var writer = RPCClientFactory.Configure()
+            .WithLogger(Debug.unityLogger)
+            .WithHTTP("http://127.0.0.1:46657")
+            //.WithHTTP("http://127.0.0.1:46658/rpc")
+            //.WithWebSocket("ws://127.0.0.1:46657/websocket")
+            .Create();
+
+        var reader = RPCClientFactory.Configure()
+            .WithLogger(Debug.unityLogger)
+            .WithHTTP("http://127.0.0.1:47000")
+            //.WithHTTP("http://127.0.0.1:46658/query")
+            //.WithWebSocket("ws://127.0.0.1:47000/queryws")
+            .Create();
+
+        var client = new DAppChainClient(writer, reader)
         {
             Logger = Debug.unityLogger
         };
