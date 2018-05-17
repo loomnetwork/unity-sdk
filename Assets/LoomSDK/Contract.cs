@@ -14,10 +14,6 @@ namespace Loom.Unity3d
         private DAppChainClient client;
 
         /// <summary>
-        /// Smart contract name.
-        /// </summary>
-        public string Name { get; internal set; }
-        /// <summary>
         /// Smart contract address.
         /// </summary>
         public Address Address { get; internal set; }
@@ -31,13 +27,11 @@ namespace Loom.Unity3d
         /// </summary>
         /// <param name="client">Client to use to communicate with the contract.</param>
         /// <param name="contractAddr">Address of a contract on the Loom DAppChain.</param>
-        /// <param name="contractName">Name of the contract.</param>
         /// <param name="callerAddr">Address of the caller, generated from the public key of the tx signer.</param>
-        public Contract(DAppChainClient client, Address contractAddr, string contractName, Address callerAddr)
+        public Contract(DAppChainClient client, Address contractAddr, Address callerAddr)
         {
             this.client = client;
             this.Address = contractAddr;
-            this.Name = contractName;
             this.Caller = callerAddr;
         }
 
@@ -92,7 +86,7 @@ namespace Loom.Unity3d
         {
             var query = new ContractMethodCall
             {
-                Method = string.Format("{0}.{1}", this.Name, method),
+                Method = method,
                 Args = args.ToByteString()
             };
             var result = await this.client.QueryAsync<byte[]>(this.Address, query);
@@ -109,7 +103,7 @@ namespace Loom.Unity3d
         {
             var methodTx = new ContractMethodCall
             {
-                Method = string.Format("{0}.{1}", this.Name, method),
+                Method = method,
                 Args = args.ToByteString()
             };
 

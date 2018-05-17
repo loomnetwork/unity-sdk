@@ -121,7 +121,7 @@ public class authSample : MonoBehaviour
         // There is only one contract address at the moment...
         var contractAddr = Address.FromHexString("0x005B17864f3adbF53b1384F2E6f2120c6652F779");
         var callerAddr = this.identity.ToAddress("default");
-        this.contract = new Contract(client, contractAddr, "helloworld", callerAddr);
+        this.contract = new Contract(client, contractAddr, callerAddr);
     }
 
     public async void SignOut()

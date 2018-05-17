@@ -37,7 +37,7 @@ public class LoomQuickStartSample : MonoBehaviour {
         // address of the `helloworld` smart contract on the Loom DAppChain
         var contractAddr = Address.FromHexString("0x005B17864f3adbF53b1384F2E6f2120c6652F779");
         var callerAddr = Address.FromPublicKey(publicKey);
-        return new Contract(client, contractAddr, "helloworld", callerAddr);
+        return new Contract(client, contractAddr, callerAddr);
     }
 
     async Task CallContract(Contract contract)
