@@ -1,10 +1,21 @@
 ﻿using Google.Protobuf;
+using System;
 
 namespace Loom.Unity3d
 {
     // Extend the generated Address protobuf type with some utility methods.
     public partial class Address
     {
+        public static Address FromAddressString(string addressStr)
+        {
+            var parts = addressStr.Split(':');
+            if (parts.Length != 2)
+            {
+                throw new ArgumentException("Invalid DAppChain address string");
+            }
+            return FromHexString(parts[1], parts[0]);
+        }
+
         /// <summary>
         /// Creates an Address instance from a hex string representing an address.
         /// </summary>
@@ -33,6 +44,16 @@ namespace Loom.Unity3d
                 ChainId = chainId,
                 Local = ByteString.CopyFrom(CryptoUtils.LocalAddressFromPublicKey(publicKey))
             };
+        }
+
+        /// <summary>
+        /// Generates a string representation of the address, in the format "chain:0x...".
+        /// </summary>
+        /// <returns>A string representing the address.</returns>
+        public string ToAddressString()
+        {
+            // TODO: checksum encode the local address bytes like we do in Go
+            return string.Format("{0}:{1}", this.ChainId, "0x" + CryptoUtils.BytesToHexString(this.Local.ToByteArray()));
         }
     }
 }

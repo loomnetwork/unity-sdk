@@ -6,7 +6,7 @@ using Loom.Unity3d.Samples;
 
 public class LoomQuickStartSample : MonoBehaviour {
 
-    Contract GetContract(byte[] privateKey, byte[] publicKey)
+    async Task<Contract> GetContract(byte[] privateKey, byte[] publicKey)
     {
         var writer = RPCClientFactory.Configure()
             .WithLogger(Debug.unityLogger)
@@ -32,8 +32,8 @@ public class LoomQuickStartSample : MonoBehaviour {
             },
             new SignedTxMiddleware(privateKey)
         });
-        // address of the `helloworld` smart contract on the Loom DAppChain
-        var contractAddr = Address.FromHexString("0x005B17864f3adbF53b1384F2E6f2120c6652F779");
+
+        var contractAddr = await client.ResolveContractAddress("BluePrint");
         var callerAddr = Address.FromPublicKey(publicKey);
         return new Contract(client, contractAddr, callerAddr);
     }
@@ -93,7 +93,7 @@ public class LoomQuickStartSample : MonoBehaviour {
         var privateKey = CryptoUtils.GeneratePrivateKey();
         var publicKey = CryptoUtils.PublicKeyFromPrivateKey(privateKey);
 
-        var contract = GetContract(privateKey, publicKey);
+        var contract = await GetContract(privateKey, publicKey);
         await CallContract(contract);
         // This should print: { "key": "123", "value": "hello!" } in the Unity console window
         await StaticCallContract(contract);

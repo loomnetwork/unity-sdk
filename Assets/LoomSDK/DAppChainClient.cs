@@ -112,7 +112,7 @@ namespace Loom.Unity3d
                 this.readClient = null;
             }
         }
-                
+
         /// <summary>
         /// Commits a transaction to the DAppChain.
         /// </summary>
@@ -191,6 +191,29 @@ namespace Loom.Unity3d
             return await this.readClient.SendAsync<ulong, NonceParams>(
                 "nonce", new NonceParams { Key = key }
             );
+        }
+
+        private class ResolveParams
+        {
+            [JsonProperty("name")]
+            public string ContractName;
+        }
+
+        /// <summary>
+        /// Tries to resolve a contract name to an address.
+        /// </summary>
+        /// <param name="contractName">Name of a smart contract on a Loom DAppChain.</param>
+        /// <returns>Contract address, or null if a contract matching the given name wasn't found.</returns>
+        public async Task<Address> ResolveContractAddress(string contractName)
+        {
+            var addrStr = await this.readClient.SendAsync<string, ResolveParams>(
+                "resolve", new ResolveParams { ContractName = contractName }
+            );
+            if (string.IsNullOrEmpty(addrStr))
+            {
+                return null;
+            }
+            return Address.FromAddressString(addrStr);
         }
     }
 }
