@@ -94,15 +94,13 @@ public class authSample : MonoBehaviour
 
         var writer = RPCClientFactory.Configure()
             .WithLogger(Debug.unityLogger)
-            .WithHTTP("http://127.0.0.1:46657")
-            //.WithHTTP("http://127.0.0.1:46658/rpc")
+            .WithHTTP("http://127.0.0.1:46658/rpc")
             //.WithWebSocket("ws://127.0.0.1:46657/websocket")
             .Create();
 
         var reader = RPCClientFactory.Configure()
             .WithLogger(Debug.unityLogger)
-            .WithHTTP("http://127.0.0.1:47000")
-            //.WithHTTP("http://127.0.0.1:46658/query")
+            .WithHTTP("http://127.0.0.1:46658/query")
             //.WithWebSocket("ws://127.0.0.1:47000/queryws")
             .Create();
 
