@@ -1,13 +1,15 @@
 ﻿using UnityEngine;
 using UnityEditor;
 using UnityEditor.Callbacks;
-using UnityEditor.iOS.Xcode;
-using UnityEditor.iOS.Xcode.Extensions;
 using System.Collections;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
+
+#if UNITY_IOS
+using UnityEditor.iOS.Xcode;
+using UnityEditor.iOS.Xcode.Extensions;
 
 namespace UnitySwift {
     public static class PostProcessor {
@@ -64,3 +66,5 @@ namespace UnitySwift {
         }
     }
 }
+
+#endif
