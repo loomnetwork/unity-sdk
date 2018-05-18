@@ -71,9 +71,9 @@ namespace Loom.Unity3d
             return this;
         }
 #endif
-
         public IAuthClient Create()
         {
+
 #if UNITY_ANDROID
             return new Android.AuthClient
             {
@@ -81,6 +81,15 @@ namespace Loom.Unity3d
                 ClientId = this.clientId,
                 Domain = this.domain,
                 Scheme = this.scheme,
+                Audience = this.audience,
+                Scope = this.scope
+            };
+#elif UNITY_IOS&&!UNITY_EDITOR
+            return new IOS.AuthClient
+            {
+                Logger = this.logger ?? NullLogger.Instance,
+                ClientId = this.clientId,
+                Domain = this.domain,
                 Audience = this.audience,
                 Scope = this.scope
             };
