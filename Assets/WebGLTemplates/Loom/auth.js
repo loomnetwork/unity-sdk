@@ -1,15 +1,16 @@
-const AUTH_DOMAIN = 'loomx.auth0.com';
-const AUTH_CLIENT_ID = '25pDQvX4O5j7wgwT052Sh3UzXVR9X6Ud';
-const USER_INFO_STORAGE_KEY = 'loomUserInfo';
+function getLoomSettings() {
+  return window.LOOM_SETTINGS;
+}
 
 function createWebAuth() {
+  const settings = getLoomSettings();
   return new auth0.WebAuth({
-    domain: AUTH_DOMAIN,
-    clientID: AUTH_CLIENT_ID,
+    domain: settings.auth.domain,
+    clientID: settings.auth.clientId,
     responseType: 'token',
-    audience: 'https://keystore.loomx.io/',
+    audience: settings.auth.audience,
     scope: 'openid profile email picture',
-    redirectUri: window.location.origin
+    redirectUri: settings.auth.redirectUrl
   });
 }
 
@@ -20,12 +21,13 @@ function waitForLogin(webAuth, resumeAuth, silentAuth) {
       console.log('Got access token: ' + accessToken);
       // exchange token for key using loom-js
       const cfg = new loom.VaultStoreConfig()
-      cfg.url = "https://stage-vault.delegatecall.com/v1/";
-      cfg.vaultPrefix = "unity3d-sdk";
+      const settings = getLoomSettings();
+      cfg.url = settings.vault.url;
+      cfg.vaultPrefix = settings.vault.prefix;
       cfg.accessToken = accessToken;
       const auth = new auth0.Authentication({
-        domain: AUTH_DOMAIN,
-        clientID: AUTH_CLIENT_ID,
+        domain: settings.auth.domain,
+        clientID: settings.auth.clientId,
       });
       auth.userInfo(accessToken, (error, result) => {
         if (error) {
@@ -41,7 +43,7 @@ function waitForLogin(webAuth, resumeAuth, silentAuth) {
             });
             // NOTE: local storage key should match one given to
             // AuthClientFactory.Configure().WithPrivateKeyLocalStoragePath()
-            window.localStorage.setItem(USER_INFO_STORAGE_KEY, userInfo);
+            window.localStorage.setItem(settings.userInfoStorageKey, userInfo);
             resolve();
           });
         });
@@ -128,18 +130,20 @@ function authenticateFromPage(loginBtn) {
  * @returns Previously stored string (if any) containing JSON-econded user info.
  */
 function getUserInfo() {
+  const settings = getLoomSettings();
   // look up serialized JSON value
-  return window.localStorage.getItem(USER_INFO_STORAGE_KEY);
+  return window.localStorage.getItem(settings.userInfoStorageKey);
 }
 
 /**
  * @returns Signs out the current user and clears out any stored user info.
  */
 function clearUserInfo() {
-  window.localStorage.removeItem(USER_INFO_STORAGE_KEY);
+  const settings = getLoomSettings();
+  window.localStorage.removeItem(settings.userInfoStorageKey);
   const webAuth = createWebAuth();
   webAuth.logout({
-    clientID: AUTH_CLIENT_ID,
-    returnTo: window.location.origin
+    clientID: settings.auth.clientId,
+    returnTo: settings.auth.logoutUrl
   });
 }
