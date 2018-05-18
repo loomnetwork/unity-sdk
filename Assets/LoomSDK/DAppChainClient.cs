@@ -204,7 +204,7 @@ namespace Loom.Unity3d
         /// </summary>
         /// <param name="contractName">Name of a smart contract on a Loom DAppChain.</param>
         /// <returns>Contract address, or null if a contract matching the given name wasn't found.</returns>
-        public async Task<Address> ResolveContractAddress(string contractName)
+        public async Task<Address> ResolveContractAddressAsync(string contractName)
         {
             var addrStr = await this.readClient.SendAsync<string, ResolveParams>(
                 "resolve", new ResolveParams { ContractName = contractName }

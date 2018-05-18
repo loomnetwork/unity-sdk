@@ -33,7 +33,7 @@ public class LoomQuickStartSample : MonoBehaviour {
             new SignedTxMiddleware(privateKey)
         });
 
-        var contractAddr = await client.ResolveContractAddress("BluePrint");
+        var contractAddr = await client.ResolveContractAddressAsync("BluePrint");
         var callerAddr = Address.FromPublicKey(publicKey);
         return new Contract(client, contractAddr, callerAddr);
     }

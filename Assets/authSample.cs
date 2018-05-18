@@ -116,7 +116,7 @@ public class authSample : MonoBehaviour
             new SignedTxMiddleware(this.identity.PrivateKey)
         });
 
-        var contractAddr = await client.ResolveContractAddress("BluePrint");
+        var contractAddr = await client.ResolveContractAddressAsync("BluePrint");
         var callerAddr = this.identity.ToAddress("default");
         this.contract = new Contract(client, contractAddr, callerAddr);
     }
