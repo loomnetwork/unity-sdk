@@ -36,7 +36,7 @@ namespace Loom.Unity3d
         public async Task<T> SendAsync<T, U>(string method, U args)
         {
             string body = JsonConvert.SerializeObject(new JsonRpcRequest<U>(method, args, Guid.NewGuid().ToString()));
-            Logger.Log(LogTag, "Body: " + body);
+            Logger.Log(LogTag, "[Request Body] " + body);
             byte[] bodyRaw = new UTF8Encoding().GetBytes(body);
             using (var r = new UnityWebRequest(this.url.AbsoluteUri, "POST"))
             {
@@ -47,6 +47,7 @@ namespace Loom.Unity3d
                 this.HandleError(r);
                 if (r.downloadHandler != null && !String.IsNullOrEmpty(r.downloadHandler.text))
                 {
+                    Logger.Log(LogTag, "[Response Body] " + r.downloadHandler.text);
                     var respMsg = JsonConvert.DeserializeObject<JsonRpcResponse<T>>(r.downloadHandler.text);
                     if (respMsg.Error != null)
                     {
@@ -57,6 +58,7 @@ namespace Loom.Unity3d
                     }
                     return respMsg.Result;
                 }
+                Logger.Log(LogTag, "[Empty Response Body]");
             }
             return default(T);
         }
