@@ -43,9 +43,23 @@ namespace Loom.Unity3d
         public TxResult CheckTx { get; set; }
         [JsonProperty("deliver_tx")]
         public TxResult DeliverTx { get; set; }
-    }   
+    }
 
     #endregion
+
+    /// <summary>
+    /// Used to signal that a transaction was rejected because it had a bad nonce.
+    /// </summary>
+    public class InvalidTxNonceException : Exception
+    {
+        public InvalidTxNonceException()
+        {
+        }
+
+        public InvalidTxNonceException(string msg) : base(msg)
+        {
+        }
+    }
 
     public static class IdentityExtensions
     {
@@ -88,6 +102,12 @@ namespace Loom.Unity3d
         public ILogger Logger { get; set; }
 
         /// <summary>
+        /// Maximum number of times a tx should be resent after being rejected because of a bad nonce.
+        /// Defaults to 5.
+        /// </summary>
+        public int NonceRetries { get; set; }
+
+        /// <summary>
         /// Constructs a client to read & write data from/to a Loom DAppChain.
         /// </summary>
         /// <param name="writeClient">RPC client to use for submitting txs.</param>
@@ -97,6 +117,7 @@ namespace Loom.Unity3d
             this.writeClient = writeClient;
             this.readClient = readClient;
             this.Logger = NullLogger.Instance;
+            this.NonceRetries = 5;
         }
 
         public void Dispose()
@@ -118,7 +139,38 @@ namespace Loom.Unity3d
         /// </summary>
         /// <param name="tx">Transaction to commit.</param>
         /// <returns>Commit metadata.</returns>
+        /// <exception cref="InvalidTxNonceException">Thrown if the tx is rejected due to a bad nonce after <see cref="NonceRetries"/> attempts.</exception>
         public async Task<BroadcastTxResult> CommitTxAsync(IMessage tx)
+        {
+            BroadcastTxResult result = null;
+            int badNonceCount = 0;
+            do
+            {
+                try
+                {
+                    return await this.TryCommitTxAsync(tx);
+                }
+                catch (InvalidTxNonceException)
+                {
+                    ++badNonceCount;
+                }
+                await new WaitForSecondsRealtime(0.5f);
+            } while ((this.NonceRetries != 0) && (badNonceCount <= this.NonceRetries));
+
+            if (badNonceCount > 0)
+            {
+                throw new InvalidTxNonceException();
+            }
+            return result;
+        }
+
+        /// <summary>
+        /// Tries to commit a transaction to the DAppChain.
+        /// </summary>
+        /// <param name="tx">Transaction to commit.</param>
+        /// <returns>Commit metadata.</returns>
+        /// <exception cref="InvalidTxNonceException">Thrown when the tx is rejected by the DAppChain due to a bad nonce.</exception>
+        private async Task<BroadcastTxResult> TryCommitTxAsync(IMessage tx)
         {
             byte[] txBytes = tx.ToByteArray();
             if (this.TxMiddleware != null)
@@ -134,6 +186,10 @@ namespace Loom.Unity3d
                     if (string.IsNullOrEmpty(result.CheckTx.Error))
                     {
                         throw new Exception(String.Format("Failed to commit Tx: {0}", result.CheckTx.Code));
+                    }
+                    if ((result.CheckTx.Code == 1) && (result.CheckTx.Error == "sequence number does not match"))
+                    {
+                        throw new InvalidTxNonceException();
                     }
                     throw new Exception(String.Format("Failed to commit Tx: {0}", result.CheckTx.Error));
                 }
