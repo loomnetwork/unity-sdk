@@ -8,6 +8,8 @@ using System.Threading.Tasks;
 public class authSample : MonoBehaviour
 {
     public Text statusTextRef;
+    public GameObject cube;
+    public Vector3 spinDirection;
 
     private Identity identity;
     private Contract contract;
@@ -23,7 +25,10 @@ public class authSample : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-
+        if (this.cube)
+        {
+            this.cube.transform.Rotate(this.spinDirection * Time.deltaTime);
+        }
     }
 
     private IAuthClient CreateAuthClient()
