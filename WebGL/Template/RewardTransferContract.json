@@ -1,0 +1,174 @@
+{
+  "contractName": "RewardTransfer",
+  "abi": [
+    {
+      "constant": true,
+      "inputs": [
+        {
+          "name": "",
+          "type": "uint256"
+        }
+      ],
+      "name": "nonces",
+      "outputs": [
+        {
+          "name": "",
+          "type": "uint256"
+        }
+      ],
+      "payable": false,
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "constant": true,
+      "inputs": [],
+      "name": "originalOwner",
+      "outputs": [
+        {
+          "name": "",
+          "type": "address"
+        }
+      ],
+      "payable": false,
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "name": "loomTokenAddr",
+          "type": "address"
+        },
+        {
+          "name": "delegateCallTokenAddr",
+          "type": "address"
+        },
+        {
+          "name": "etherBoyAddr",
+          "type": "address"
+        },
+        {
+          "name": "czBattlegroundAddr",
+          "type": "address"
+        },
+        {
+          "name": "gatewayKeyPubAddr",
+          "type": "address"
+        }
+      ],
+      "payable": false,
+      "stateMutability": "nonpayable",
+      "type": "constructor"
+    },
+    {
+      "anonymous": false,
+      "inputs": [
+        {
+          "indexed": false,
+          "name": "sender",
+          "type": "address"
+        },
+        {
+          "indexed": false,
+          "name": "userId",
+          "type": "uint256"
+        },
+        {
+          "indexed": false,
+          "name": "tier",
+          "type": "uint256"
+        },
+        {
+          "indexed": false,
+          "name": "nonce",
+          "type": "uint256"
+        },
+        {
+          "indexed": false,
+          "name": "hash",
+          "type": "bytes32"
+        },
+        {
+          "indexed": false,
+          "name": "ecrecover",
+          "type": "address"
+        },
+        {
+          "indexed": false,
+          "name": "gatewayAddr",
+          "type": "address"
+        }
+      ],
+      "name": "RequestRewardSent",
+      "type": "event"
+    },
+    {
+      "constant": false,
+      "inputs": [
+        {
+          "name": "userID",
+          "type": "uint256"
+        },
+        {
+          "name": "tier",
+          "type": "uint256"
+        },
+        {
+          "name": "nonce",
+          "type": "uint256"
+        },
+        {
+          "name": "r",
+          "type": "bytes32"
+        },
+        {
+          "name": "s",
+          "type": "bytes32"
+        },
+        {
+          "name": "v",
+          "type": "uint8"
+        },
+        {
+          "name": "hash",
+          "type": "bytes32"
+        }
+      ],
+      "name": "requestRewards",
+      "outputs": [],
+      "payable": false,
+      "stateMutability": "nonpayable",
+      "type": "function"
+    },
+    {
+      "constant": false,
+      "inputs": [],
+      "name": "reclaimERC721TokensOwnership",
+      "outputs": [],
+      "payable": false,
+      "stateMutability": "nonpayable",
+      "type": "function"
+    }
+  ],
+  "compiler": {
+    "name": "solc",
+    "version": "0.4.23+commit.124ca40d.Emscripten.clang"
+  },
+  "networks": {
+    "1": {
+      "events": {},
+      "links": {},
+      "address": "0xec97e7d03a426c3efd7d2fed93ac566f6d7da8e2",
+      "transactionHash": "0xfb40ed10ac2e71d6443e89e3f60a66b4ef3a1f205685475ae84dc2a2ccd18806"
+    },
+    "4": {
+      "events": {},
+      "links": {},
+      "address": "0x6e6fce2f4198ca3b3fb8273e8bcb9a0dbf80561a",
+      "transactionHash": "0x2a058d84c9112346d6901711371fe8e0784264d0da3a08c7dcf3f57cc0e23a1e"
+    }
+  },
+  "schemaVersion": "2.0.0",
+  "updatedAt": "2018-04-27T09:34:54.318Z"
+}

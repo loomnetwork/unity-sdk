@@ -1,4 +1,5 @@
 window.LOOM_SETTINGS = {
+  transferAsset: null,
   userInfoStorageKey: 'loomUserInfo',
   auth: {
     domain: 'loomx.auth0.com',

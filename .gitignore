@@ -37,3 +37,10 @@ sysinfo.txt
 Assets/Plugins/AsyncAwaitUtil/Documentation.meta
 Assets/Plugins/AsyncAwaitUtil/Documentation/*
 /packages/*
+/WebGL/Template/node_modules/
+/WebGL/Template/yarn-error.log
+/Assets/Plugins/Android/*.aar
+/Assets/Plugins/Android/*.jar
+/Assets/Plugins/Android/*.jar.meta
+/Assets/Plugins/Android/*.aar.meta
+/webgl-build/
