@@ -233,4 +233,25 @@ public class authSample : MonoBehaviour
 
         this.statusTextRef.text = "Smart contract returned: " + result.ToString();
     }
+
+    private class SampleAsset
+    {
+        public string to;
+        public string hash;
+    }
+
+    public async void TransferAsset()
+    {
+        this.statusTextRef.text = "Transfering asset...";
+
+        var result = await AssetTransfer.TransferAsset(new SampleAsset
+        {
+            to = "0x1234",
+            hash = "0x4321"
+        });
+
+        Debug.Log("Asset transfer result: " + result.ToString());
+
+        this.statusTextRef.text = "Asset transfer complete.";
+    }
 }
