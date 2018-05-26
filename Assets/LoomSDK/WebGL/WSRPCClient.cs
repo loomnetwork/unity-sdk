@@ -59,7 +59,7 @@ namespace Loom.Unity3d.WebGL
             socket.OnOpen = null;
         }
 
-        [MonoPInvokeCallback(typeof(Action<int>))]
+        [MonoPInvokeCallback(typeof(Action<int, string>))]
         private static void OnWebSocketClose(int socketId, string err)
         {
             // If DisconnectAsync() was called from Dispose() the socket is no longer 
@@ -91,6 +91,16 @@ namespace Loom.Unity3d.WebGL
         /// Logger to be used for logging, defaults to <see cref="NullLogger"/>.
         /// </summary>
         public ILogger Logger { get; set; }
+
+        Task SubscribeAsync(EventHandler<Loom.Unity3d.Event> handler)
+        {
+            throw new NotImplementedException();
+        }
+
+        Task UnsubscribeAsync(EventHandler<Loom.Unity3d.Event> handler);
+        {
+            throw new NotImplementedException();
+        }
 
         public WSRPCClient(string url)
         {

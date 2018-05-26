@@ -4,6 +4,7 @@ using UnityEngine;
 using System.Threading.Tasks;
 using System;
 using Newtonsoft.Json;
+using System.Collections.Generic;
 
 namespace Loom.Unity3d
 {
@@ -86,7 +87,15 @@ namespace Loom.Unity3d
     /// </summary>
     public class DAppChainClient : IDisposable
     {
+        public class ChainEvent
+        {
+            public Address ContractAddress;
+            public byte[] Data;
+        }
+
         private static readonly string LogTag = "Loom.DAppChainClient";
+
+        private Dictionary<EventHandler<ChainEvent>, EventHandler<EventData>> eventSubs;
 
         private IRPCClient writeClient;
         private IRPCClient readClient;
@@ -108,12 +117,28 @@ namespace Loom.Unity3d
         public int NonceRetries { get; set; }
 
         /// <summary>
+        /// Events emitted by the DAppChain.
+        /// </summary>
+        public event EventHandler<ChainEvent> OnChainEvent
+        {
+            add
+            {
+                this.SubReadClient(value);
+            }
+            remove
+            {
+                this.UnsubReadClient(value);
+            }
+        }
+
+        /// <summary>
         /// Constructs a client to read & write data from/to a Loom DAppChain.
         /// </summary>
         /// <param name="writeClient">RPC client to use for submitting txs.</param>
         /// <param name="readClient">RPC client to use for querying DAppChain state.</param>
         public DAppChainClient(IRPCClient writeClient, IRPCClient readClient)
         {
+            this.eventSubs = new Dictionary<EventHandler<ChainEvent>, EventHandler<EventData>>();
             this.writeClient = writeClient;
             this.readClient = readClient;
             this.Logger = NullLogger.Instance;
@@ -131,6 +156,44 @@ namespace Loom.Unity3d
             {
                 this.readClient.Dispose();
                 this.readClient = null;
+            }
+        }
+
+        private async void SubReadClient(EventHandler<ChainEvent> handler)
+        {
+            try
+            {
+                EventHandler<EventData> wrapper = (sender, e) =>
+                {
+                    handler(this, new ChainEvent
+                    {
+                        ContractAddress = new Address
+                        {
+                            ChainId = e.ContractAddress.ChainID,
+                            Local = ByteString.CopyFrom(e.ContractAddress.Local)
+                        },
+                        Data = e.Data
+                    });
+                };
+                this.eventSubs.Add(handler, wrapper);
+                await this.readClient.SubscribeAsync(wrapper);
+            }
+            catch (Exception e)
+            {
+                Logger.Log(LogTag, e.Message);
+            }
+        }
+
+        private async void UnsubReadClient(EventHandler<ChainEvent> handler)
+        {
+            try
+            {
+                EventHandler<EventData> wrapper = this.eventSubs[handler];
+                await this.readClient.UnsubscribeAsync(wrapper);
+            }
+            catch (Exception e)
+            {
+                Logger.Log(LogTag, e.Message);
             }
         }
 

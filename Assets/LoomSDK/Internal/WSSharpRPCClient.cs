@@ -23,6 +23,8 @@ namespace Loom.Unity3d
         /// </summary>
         public ILogger Logger { get; set; }
 
+        private event EventHandler<EventData> OnEventMessage;
+        
         public WSSharpRPCClient(string url)
         {
             this.client = new WebSocket(url);
@@ -43,6 +45,8 @@ namespace Loom.Unity3d
 
         public Task DisconnectAsync()
         {
+            // TODO: should be listening for disconnection all the time
+            // and auto-reconnect if there are event subscriptions
             var tcs = new TaskCompletionSource<CloseEventArgs>();
             EventHandler<CloseEventArgs> handler = null;
             handler = (sender, e) =>
@@ -57,7 +61,8 @@ namespace Loom.Unity3d
             }
             catch (Exception e)
             {
-                tcs.TrySetException(e);
+                this.client.OnClose -= handler;
+                throw e;
             }
             return tcs.Task;
         }
@@ -83,70 +88,145 @@ namespace Loom.Unity3d
             }
             catch (Exception e)
             {
-                tcs.SetException(e);
+                this.client.OnOpen -= handler;
+                throw e;
             }
             return tcs.Task;
         }
 
-        private async Task SendAsync<T>(string method, T args)
+        public Task SubscribeAsync(EventHandler<EventData> handler)
+        {
+            var isFirstSub = this.OnEventMessage == null;
+            this.OnEventMessage += handler;
+            if (isFirstSub)
+            {    
+                this.client.OnMessage += this.WSSharpRPCClient_OnMessage;
+            }
+            // TODO: once re-sub on reconnect is implemented this should only
+            // be done on first sub
+            return this.SendAsync<object, object>("subevents", new object());
+        }
+
+        public Task UnsubscribeAsync(EventHandler<EventData> handler)
+        {
+            this.OnEventMessage -= handler;
+            if (this.OnEventMessage == null)
+            {
+                this.client.OnMessage -= this.WSSharpRPCClient_OnMessage;
+                return this.SendAsync<object, object>("unsubevents", new object());
+            }
+            return Task.CompletedTask;
+        }
+
+        private async Task SendAsync<T>(string method, T args, string msgId)
         {
             var tcs = new TaskCompletionSource<object>();
             await this.EnsureConnectionAsync();
-            var reqMsg = new JsonRpcRequest<T>(method, args, Guid.NewGuid().ToString());
+            var reqMsg = new JsonRpcRequest<T>(method, args, msgId);
             var reqMsgBody = JsonConvert.SerializeObject(reqMsg);
-            Logger.Log(LogTag, "RPC Req: " + reqMsgBody);
-            try
+            Logger.Log(LogTag, "[Request Body] " + reqMsgBody);
+            this.client.SendAsync(reqMsgBody, (bool success) =>
             {
-                this.client.SendAsync(reqMsgBody, (bool success) =>
+                if (success)
                 {
-                    if (success)
-                    {
-                        tcs.TrySetResult(null);
-                    }
-                    else
-                    {
-                        // TODO: sub to this.client.OnError() and store the error when it happens,
-                        // then throw it in here.
-                        tcs.TrySetException(new Exception("Send error"));
-                    }
-                });
-            }
-            catch (Exception e)
-            {
-                tcs.TrySetException(e);
-            }
+                    tcs.TrySetResult(null);
+                }
+                else
+                {
+                    // TODO: sub to this.client.OnError() and store the error when it happens,
+                    // then throw it in here.
+                    tcs.TrySetException(new Exception("Send error"));
+                }
+            });
             await tcs.Task;
         }
 
         public async Task<T> SendAsync<T, U>(string method, U args)
         {
             var tcs = new TaskCompletionSource<T>();
+            var msgId = Guid.NewGuid().ToString();
             EventHandler<MessageEventArgs> handler = null;
-            handler = async (sender, e) =>
+            handler = (sender, e) =>
             {
-                await new WaitForUpdate();
-                this.client.OnMessage -= handler;
-                if (e.IsText)
+                try
                 {
-                    if (!string.IsNullOrEmpty(e.Data))
+                    // TODO: set a timeout and throw exception when it's exceeded
+                    if (e.IsText && !string.IsNullOrEmpty(e.Data))
                     {
-                        Logger.Log(LogTag, "RPC Resp Body: " + e.Data);
-                        var respMsg = JsonConvert.DeserializeObject<JsonRpcResponse<T>>(e.Data);
-                        tcs.TrySetResult(respMsg.Result);
+                        var partialMsg = JsonConvert.DeserializeObject<JsonRpcResponse>(e.Data);
+                        if (partialMsg.Id == msgId)
+                        {
+                            this.client.OnMessage -= handler;
+                            if (partialMsg.Error != null)
+                            {
+                                throw new Exception(String.Format(
+                                    "JSON-RPC Error {0} ({1}): {2}",
+                                    partialMsg.Error.Code, partialMsg.Error.Message, partialMsg.Error.Data
+                                ));
+                            }
+                            else
+                            {
+                                var fullMsg = JsonConvert.DeserializeObject<JsonRpcResponse<T>>(e.Data);
+                                tcs.TrySetResult(fullMsg.Result);
+                            }
+                        }
                     }
                     else
                     {
-                        tcs.TrySetResult(default(T));
+                        Logger.Log(LogTag, "[ignoring msg]");
+                    }
+                }
+                catch (Exception ex)
+                {
+                    tcs.TrySetException(ex);
+                }
+            };
+            this.client.OnMessage += handler;
+            try
+            {
+                await this.SendAsync<U>(method, args, msgId);
+            }
+            catch (Exception e)
+            {
+                this.client.OnMessage -= handler;
+                throw e;
+            }
+            return await tcs.Task;
+        }
+
+        private void WSSharpRPCClient_OnMessage(object sender, MessageEventArgs e)
+        {
+            try
+            {
+                if (e.IsText && !string.IsNullOrEmpty(e.Data))
+                {
+                    Logger.Log(LogTag, "[WSSharpRPCClient_OnMessage msg body] " + e.Data);
+                    var partialMsg = JsonConvert.DeserializeObject<JsonRpcResponse>(e.Data);
+                    if (partialMsg.Id == "0")
+                    {
+                        if (partialMsg.Error != null)
+                        {
+                            throw new Exception(String.Format(
+                                "JSON-RPC Error {0} ({1}): {2}",
+                                partialMsg.Error.Code, partialMsg.Error.Message, partialMsg.Error.Data
+                            ));
+                        }
+                        else
+                        {
+                            var fullMsg = JsonConvert.DeserializeObject<JsonRpcResponse<EventData>>(e.Data);
+                            this.OnEventMessage?.Invoke(this, fullMsg.Result);
+                        }
                     }
                 }
                 else
                 {
-                    throw new Exception("Unexpected message type!");
+                    Logger.Log(LogTag, "[WSSharpRPCClient_OnMessage ignoring msg]");
                 }
-            };
-            this.client.OnMessage += handler;
-            await this.SendAsync<U>(method, args);
-            return await tcs.Task;
+            }
+            catch (Exception ex)
+            {
+                Logger.Log(LogTag, "[WSSharpRPCClient_OnMessage error] " + ex.Message);
+            }
         }
     }
 }

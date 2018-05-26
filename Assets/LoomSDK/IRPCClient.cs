@@ -29,13 +29,10 @@ namespace Loom.Unity3d
         }
     }
 
-    internal class JsonRpcResponse<T>
+    internal class JsonRpcResponse
     {
         [JsonProperty("jsonrpc")]
         public string Version;
-
-        [JsonProperty("result")]
-        public T Result;
 
         public class ErrorData
         {
@@ -59,11 +56,42 @@ namespace Loom.Unity3d
         public string Id;
     }
 
+    internal class JsonRpcResponse<T> : JsonRpcResponse
+    {
+        [JsonProperty("result")]
+        public T Result;
+    }
+
     #endregion
 
+    public class EventData
+    {
+        public class Address
+        {
+            public string ChainID;
+            public byte[] Local;
+        }
+
+        [JsonProperty("caller")]
+        public Address CallerAddress;
+
+        [JsonProperty("address")]
+        public Address ContractAddress;
+
+        // PluginName  string       `json:"plugin"`
+        // BlockHeight int64        `json:"blockHeight"`
+
+        [JsonProperty("encodedData")]
+        public byte[] Data;
+        
+        // RawRequest[]byte       `json:"rawRequest"`
+    }
+    
     public interface IRPCClient : IDisposable
     {
-        Task<T> SendAsync<T, U>(string method, U args);
+        Task<TResult> SendAsync<TResult, TArgs>(string method, TArgs args);
         Task DisconnectAsync();
+        Task SubscribeAsync(EventHandler<EventData> handler);
+        Task UnsubscribeAsync(EventHandler<EventData> handler);
     }
 }

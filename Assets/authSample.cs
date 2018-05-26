@@ -4,6 +4,7 @@ using Loom.Unity3d;
 using Loom.Unity3d.Samples;
 using System;
 using System.Threading.Tasks;
+using Newtonsoft.Json;
 
 public class authSample : MonoBehaviour
 {
@@ -13,6 +14,13 @@ public class authSample : MonoBehaviour
 
     private Identity identity;
     private Contract contract;
+
+    public class SampleEvent
+    {
+        public string Method;
+        public string Key;
+        public string Value;
+    }
 
     // Use this for initialization
     void Start()
@@ -99,14 +107,14 @@ public class authSample : MonoBehaviour
 
         var writer = RPCClientFactory.Configure()
             .WithLogger(Debug.unityLogger)
-            .WithHTTP("http://127.0.0.1:46658/rpc")
-            //.WithWebSocket("ws://127.0.0.1:46657/websocket")
+            //.WithHTTP("http://127.0.0.1:46658/rpc")
+            .WithWebSocket("ws://127.0.0.1:46657/websocket")
             .Create();
 
         var reader = RPCClientFactory.Configure()
             .WithLogger(Debug.unityLogger)
-            .WithHTTP("http://127.0.0.1:46658/query")
-            //.WithWebSocket("ws://127.0.0.1:47000/queryws")
+            //.WithHTTP("http://127.0.0.1:46658/query")
+            .WithWebSocket("ws://127.0.0.1:47000/queryws")
             .Create();
 
         var client = new DAppChainClient(writer, reader)
@@ -124,6 +132,13 @@ public class authSample : MonoBehaviour
         var contractAddr = await client.ResolveContractAddressAsync("BluePrint");
         var callerAddr = this.identity.ToAddress("default");
         this.contract = new Contract(client, contractAddr, callerAddr);
+        
+        client.OnChainEvent += (sender, e) =>
+        {
+            var jsonStr = System.Text.Encoding.UTF8.GetString(e.Data);
+            var data = JsonConvert.DeserializeObject<SampleEvent>(jsonStr);
+            Debug.Log(string.Format("SampleEvent: {0}, {1}, {2}", data.Method, data.Key, data.Value));
+        };
     }
 
     public async void SignOut()
