@@ -1,6 +1,6 @@
-﻿using System.Threading.Tasks;
+﻿using System;
+using System.Threading.Tasks;
 using Google.Protobuf;
-using UnityEngine;
 
 namespace Loom.Unity3d
 {
@@ -12,6 +12,7 @@ namespace Loom.Unity3d
     public class Contract
     {
         private DAppChainClient client;
+        private event EventHandler<DAppChainClient.ChainEventArgs> OnChainEvent;
 
         /// <summary>
         /// Smart contract address.
@@ -21,6 +22,30 @@ namespace Loom.Unity3d
         /// Caller/sender address to use when calling smart contract methods that mutate state.
         /// </summary>
         public Address Caller { get; internal set; }
+
+        /// <summary>
+        /// Event emitted by the corresponding smart contract.
+        /// </summary>
+        public event EventHandler<DAppChainClient.ChainEventArgs> OnEvent
+        {
+            add
+            {
+                var isFirstSub = this.OnChainEvent == null;
+                this.OnChainEvent += value;
+                if (isFirstSub)
+                {
+                    this.client.OnChainEvent += this.NotifyContractEvent;
+                }
+            }
+            remove
+            {
+                this.OnChainEvent -= value;
+                if (this.OnChainEvent == null)
+                {
+                    this.client.OnChainEvent -= this.NotifyContractEvent;
+                }
+            }
+        }
 
         /// <summary>
         /// Constructor.
@@ -132,6 +157,14 @@ namespace Loom.Unity3d
                 Id = 2,
                 Data = msgTxBytes
             };
+        }
+
+        private void NotifyContractEvent(object sender, DAppChainClient.ChainEventArgs e)
+        {
+            if (e.ContractAddress.Equals(this.Address))
+            {
+                this.OnChainEvent?.Invoke(this, e);
+            }
         }
     }
 }

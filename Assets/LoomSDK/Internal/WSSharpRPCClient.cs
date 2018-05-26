@@ -17,13 +17,12 @@ namespace Loom.Unity3d
 
         private WebSocket client;
         private Uri url;
+        private event EventHandler<EventData> OnEventMessage;
 
         /// <summary>
         /// Logger to be used for logging, defaults to <see cref="NullLogger"/>.
         /// </summary>
         public ILogger Logger { get; set; }
-
-        private event EventHandler<EventData> OnEventMessage;
         
         public WSSharpRPCClient(string url)
         {

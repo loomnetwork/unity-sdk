@@ -87,15 +87,17 @@ namespace Loom.Unity3d
     /// </summary>
     public class DAppChainClient : IDisposable
     {
-        public class ChainEvent
+        public class ChainEventArgs
         {
-            public Address ContractAddress;
-            public byte[] Data;
+            public Address ContractAddress { get; internal set; }
+            public Address CallerAddress { get; internal set; }
+            public Int64 BlockHeight { get; internal set; }
+            public byte[] Data { get; internal set; }
         }
 
         private static readonly string LogTag = "Loom.DAppChainClient";
 
-        private Dictionary<EventHandler<ChainEvent>, EventHandler<EventData>> eventSubs;
+        private Dictionary<EventHandler<ChainEventArgs>, EventHandler<EventData>> eventSubs;
 
         private IRPCClient writeClient;
         private IRPCClient readClient;
@@ -119,7 +121,7 @@ namespace Loom.Unity3d
         /// <summary>
         /// Events emitted by the DAppChain.
         /// </summary>
-        public event EventHandler<ChainEvent> OnChainEvent
+        public event EventHandler<ChainEventArgs> OnChainEvent
         {
             add
             {
@@ -138,7 +140,7 @@ namespace Loom.Unity3d
         /// <param name="readClient">RPC client to use for querying DAppChain state.</param>
         public DAppChainClient(IRPCClient writeClient, IRPCClient readClient)
         {
-            this.eventSubs = new Dictionary<EventHandler<ChainEvent>, EventHandler<EventData>>();
+            this.eventSubs = new Dictionary<EventHandler<ChainEventArgs>, EventHandler<EventData>>();
             this.writeClient = writeClient;
             this.readClient = readClient;
             this.Logger = NullLogger.Instance;
@@ -159,19 +161,26 @@ namespace Loom.Unity3d
             }
         }
 
-        private async void SubReadClient(EventHandler<ChainEvent> handler)
+        private async void SubReadClient(EventHandler<ChainEventArgs> handler)
         {
             try
             {
                 EventHandler<EventData> wrapper = (sender, e) =>
                 {
-                    handler(this, new ChainEvent
+                    var contractAddress = new Address
                     {
-                        ContractAddress = new Address
+                        ChainId = e.ContractAddress.ChainID,
+                        Local = ByteString.CopyFrom(e.ContractAddress.Local)
+                    };
+                    handler(this, new ChainEventArgs
+                    {
+                        ContractAddress = contractAddress,
+                        CallerAddress = new Address
                         {
                             ChainId = e.ContractAddress.ChainID,
                             Local = ByteString.CopyFrom(e.ContractAddress.Local)
                         },
+                        BlockHeight = e.BlockHeight,
                         Data = e.Data
                     });
                 };
@@ -184,7 +193,7 @@ namespace Loom.Unity3d
             }
         }
 
-        private async void UnsubReadClient(EventHandler<ChainEvent> handler)
+        private async void UnsubReadClient(EventHandler<ChainEventArgs> handler)
         {
             try
             {

@@ -133,11 +133,22 @@ public class authSample : MonoBehaviour
         var callerAddr = this.identity.ToAddress("default");
         this.contract = new Contract(client, contractAddr, callerAddr);
         
+        // Subscribe to DAppChainClient.OnChainEvent to receive all events
+        /*
         client.OnChainEvent += (sender, e) =>
         {
             var jsonStr = System.Text.Encoding.UTF8.GetString(e.Data);
             var data = JsonConvert.DeserializeObject<SampleEvent>(jsonStr);
-            Debug.Log(string.Format("SampleEvent: {0}, {1}, {2}", data.Method, data.Key, data.Value));
+            Debug.Log(string.Format("Chain Event: {0}, {1}, {2} from block {3}", data.Method, data.Key, data.Value, e.BlockHeight));
+        };
+        */
+
+        // Subscribe to DAppChainClient.OnEvent to receive events from a specific smart contract
+        this.contract.OnEvent += (sender, e) =>
+        {
+            var jsonStr = System.Text.Encoding.UTF8.GetString(e.Data);
+            var data = JsonConvert.DeserializeObject<SampleEvent>(jsonStr);
+            Debug.Log(string.Format("Contract Event: {0}, {1}, {2} from block {3}", data.Method, data.Key, data.Value, e.BlockHeight));
         };
     }
 

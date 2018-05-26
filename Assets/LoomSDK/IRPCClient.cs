@@ -66,6 +66,9 @@ namespace Loom.Unity3d
 
     public class EventData
     {
+        // TODO: Ugh, it wouldn't be necessary to have yet another Address class
+        // if the query server encoded the address in Protobuf JSON format!
+        // And there would be no need to convert EventData -> ChainEventArgs.
         public class Address
         {
             public string ChainID;
@@ -73,20 +76,26 @@ namespace Loom.Unity3d
         }
 
         [JsonProperty("caller")]
-        public Address CallerAddress;
+        public Address CallerAddress { get; internal set; }
 
         [JsonProperty("address")]
-        public Address ContractAddress;
+        public Address ContractAddress { get; internal set; }
 
-        // PluginName  string       `json:"plugin"`
-        // BlockHeight int64        `json:"blockHeight"`
+        [JsonProperty("blockHeight")]
+        public Int64 BlockHeight { get; internal set; }
 
         [JsonProperty("encodedData")]
-        public byte[] Data;
-        
-        // RawRequest[]byte       `json:"rawRequest"`
+        public byte[] Data { get; internal set; }
+
+        // Ignore these fields until there's a concrete use for them.
+        /*
+        [JsonProperty("plugin")]
+        public string PluginName { get; internal set; }
+        [JsonProperty("rawRequest")]
+        public byte[] RawRequest { get; internal set; }
+        */
     }
-    
+
     public interface IRPCClient : IDisposable
     {
         Task<TResult> SendAsync<TResult, TArgs>(string method, TArgs args);
