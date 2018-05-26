@@ -26,7 +26,7 @@ mobile platforms are TBD.
 
 ### Desktop Windows / Mac / Linux
 
-`AuthClient` will wait for an HTTP request on `http://127.0.0.1:9999/auth/auth0/`, then it will
+`AuthClient` will wait for an HTTP request on `http://127.0.0.1:9998/auth/auth0/`, then it will
 open a new browser window and load the Auth0 sign-in page (using the default system web browser).
 At this point the user should be directed to switch to the browser to sign-in, when they do so
 successfully Auth0 will redirect to the aforementioned URL, and `AuthClient` will fetch or
