@@ -92,12 +92,12 @@ namespace Loom.Unity3d.WebGL
         /// </summary>
         public ILogger Logger { get; set; }
 
-        Task SubscribeAsync(EventHandler<Loom.Unity3d.Event> handler)
+        public Task SubscribeAsync(EventHandler<EventData> handler)
         {
             throw new NotImplementedException();
         }
 
-        Task UnsubscribeAsync(EventHandler<Loom.Unity3d.Event> handler);
+        public Task UnsubscribeAsync(EventHandler<EventData> handler)
         {
             throw new NotImplementedException();
         }
