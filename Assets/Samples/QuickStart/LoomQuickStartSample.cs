@@ -17,7 +17,7 @@ public class LoomQuickStartSample : MonoBehaviour {
         var reader = RPCClientFactory.Configure()
             .WithLogger(Debug.unityLogger)
             .WithHTTP("http://127.0.0.1:46658/query")
-            //.WithWebSocket("ws://127.0.0.1:47000/queryws")
+            //.WithWebSocket("ws://127.0.0.1:9999/queryws")
             .Create();
 
         var client = new DAppChainClient(writer, reader)
