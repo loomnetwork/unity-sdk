@@ -77,7 +77,7 @@ public class authSample : MonoBehaviour
     {
         return await KeyStoreFactory.CreateVaultStore(new VaultStoreConfig
         {
-            Url = "https://stage-vault.delegatecall.com/v1/",
+            Url = "https://stage-vault2.delegatecall.com/v1/",
             VaultPrefix = "unity3d-sdk",
             AccessToken = accessToken
         });

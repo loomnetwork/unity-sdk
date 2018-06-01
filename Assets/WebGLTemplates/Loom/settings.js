@@ -11,7 +11,7 @@ window.LOOM_SETTINGS = {
     logoutUrl: window.location.origin
   },
   vault: {
-    url: 'https://stage-vault.delegatecall.com/v1/',
+    url: 'https://stage-vault2.delegatecall.com/v1/',
     prefix: 'unity3d-sdk'
   }
 }
