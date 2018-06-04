@@ -22,7 +22,7 @@ namespace Loom.Unity3d.WebGL
     {
         public Action OnOpen;
         public Action<string> OnClose;
-        public Action OnMessage;
+        public EventHandler<string> OnMessage;
     }
 
     /// <summary>
@@ -37,7 +37,7 @@ namespace Loom.Unity3d.WebGL
         private static extern void InitWebSocketManagerLib(
             Action<int> openCallback,
             Action<int,string> closeCallback,
-            Action<int> msgCallback);
+            Action<int,string> msgCallback);
         [DllImport("__Internal")]
         private static extern int WebSocketCreate();
         [DllImport("__Internal")]
@@ -48,9 +48,7 @@ namespace Loom.Unity3d.WebGL
         private static extern void WebSocketClose(int socketId);
         [DllImport("__Internal")]
         private static extern void WebSocketSend(int socketId, string msg);
-        [DllImport("__Internal")]
-        private static extern string GetWebSocketMessage(int socketId);
-
+        
         [MonoPInvokeCallback(typeof(Action<int>))]
         private static void OnWebSocketOpen(int socketId)
         {
@@ -75,32 +73,22 @@ namespace Loom.Unity3d.WebGL
         }
 
         [MonoPInvokeCallback(typeof(Action<int>))]
-        private static void OnWebSocketMessage(int socketId)
+        private static void OnWebSocketMessage(int socketId, string msg)
         {
             var socket = sockets[socketId];
-            socket.OnMessage();
-            socket.OnMessage = null;
+            socket.OnMessage?.Invoke(socket, msg);
         }
 
         private static readonly string LogTag = "Loom.WSRPCClient";
 
         private Uri url;
+        private event EventHandler<EventData> OnEventMessage;
         private int socketId = 0;
 
         /// <summary>
         /// Logger to be used for logging, defaults to <see cref="NullLogger"/>.
         /// </summary>
         public ILogger Logger { get; set; }
-
-        public Task SubscribeAsync(EventHandler<EventData> handler)
-        {
-            throw new NotImplementedException();
-        }
-
-        public Task UnsubscribeAsync(EventHandler<EventData> handler)
-        {
-            throw new NotImplementedException();
-        }
 
         public WSRPCClient(string url)
         {
@@ -155,7 +143,8 @@ namespace Loom.Unity3d.WebGL
             }
             catch (Exception e)
             {
-                tcs.TrySetException(e);
+                webSocket.OnClose = null;
+                throw e;
             }
             return tcs.Task;
         }
@@ -179,15 +168,42 @@ namespace Loom.Unity3d.WebGL
             }
             catch (Exception e)
             {
-                tcs.TrySetException(e);
+                webSocket.OnOpen = null;
+                throw e;
             }
             return tcs.Task;
         }
 
-        private async Task SendAsync<T>(string method, T args)
+        public Task SubscribeAsync(EventHandler<EventData> handler)
+        {
+            var isFirstSub = this.OnEventMessage == null;
+            this.OnEventMessage += handler;
+            if (isFirstSub)
+            {
+                var webSocket = sockets[this.socketId];
+                webSocket.OnMessage += this.WSRPCClient_OnMessage;
+            }
+            // TODO: once re-sub on reconnect is implemented this should only
+            // be done on first sub
+            return this.SendAsync<object, object>("subevents", new object());
+        }
+
+        public Task UnsubscribeAsync(EventHandler<EventData> handler)
+        {
+            this.OnEventMessage -= handler;
+            if (this.OnEventMessage == null)
+            {
+                var webSocket = sockets[this.socketId];
+                webSocket.OnMessage -= this.WSRPCClient_OnMessage;
+                return this.SendAsync<object, object>("unsubevents", new object());
+            }
+            return Task.CompletedTask;
+        }
+
+        private async Task SendAsync<T>(string method, T args, string msgId)
         {
             await this.EnsureConnectionAsync();
-            var reqMsg = new JsonRpcRequest<T>(method, args, Guid.NewGuid().ToString());
+            var reqMsg = new JsonRpcRequest<T>(method, args, msgId);
             var reqMsgBody = JsonConvert.SerializeObject(reqMsg);
             Logger.Log(LogTag, "RPC Req: " + reqMsgBody);
             WebSocketSend(this.socketId, reqMsgBody);
@@ -197,22 +213,89 @@ namespace Loom.Unity3d.WebGL
         {
             var webSocket = sockets[this.socketId];
             var tcs = new TaskCompletionSource<T>();
-            webSocket.OnMessage = () =>
+            var msgId = Guid.NewGuid().ToString();
+            EventHandler<string> handler = null;
+            handler = (sender, msgBody) =>
             {
-                var msgBody = GetWebSocketMessage(this.socketId);
+                try
+                {
+                    if (!string.IsNullOrEmpty(msgBody))
+                    {
+                        var partialMsg = JsonConvert.DeserializeObject<JsonRpcResponse>(msgBody);
+                        if (partialMsg.Id == msgId)
+                        {
+                            webSocket.OnMessage -= handler;
+                            Logger.Log(LogTag, "RPC Resp Body: " + msgBody);                         
+                            if (partialMsg.Error != null)
+                            {
+                                throw new Exception(String.Format(
+                                    "JSON-RPC Error {0} ({1}): {2}",
+                                    partialMsg.Error.Code, partialMsg.Error.Message, partialMsg.Error.Data
+                                ));
+                            }
+                            else
+                            {
+                                var fullMsg = JsonConvert.DeserializeObject<JsonRpcResponse<T>>(msgBody);
+                                tcs.TrySetResult(fullMsg.Result);
+                            }
+                        }
+                    }
+                    else
+                    {
+                        Logger.Log(LogTag, "[ignoring msg]");
+                    }
+                }
+                catch (Exception ex)
+                {
+                    tcs.TrySetException(ex);
+                }
+            };
+            webSocket.OnMessage += handler;
+            try
+            {
+                await this.SendAsync<U>(method, args, msgId);
+            }
+            catch (Exception e)
+            {
+                webSocket.OnMessage -= handler;
+                throw e;
+            }
+            return await tcs.Task;
+        }
+
+        private void WSRPCClient_OnMessage(object sender, string msgBody)
+        {
+            try
+            {
                 if (!string.IsNullOrEmpty(msgBody))
                 {
-                    Logger.Log(LogTag, "RPC Resp Body: " + msgBody);
-                    var respMsg = JsonConvert.DeserializeObject<JsonRpcResponse<T>>(msgBody);
-                    tcs.TrySetResult(respMsg.Result);
+                    Logger.Log(LogTag, "[WSRPCClient_OnMessage msg body] " + msgBody);
+                    var partialMsg = JsonConvert.DeserializeObject<JsonRpcResponse>(msgBody);
+                    if (partialMsg.Id == "0")
+                    {
+                        if (partialMsg.Error != null)
+                        {
+                            throw new Exception(String.Format(
+                                "JSON-RPC Error {0} ({1}): {2}",
+                                partialMsg.Error.Code, partialMsg.Error.Message, partialMsg.Error.Data
+                            ));
+                        }
+                        else
+                        {
+                            var fullMsg = JsonConvert.DeserializeObject<JsonRpcResponse<EventData>>(msgBody);
+                            this.OnEventMessage?.Invoke(this, fullMsg.Result);
+                        }
+                    }
                 }
                 else
                 {
-                    tcs.TrySetResult(default(T));
+                    Logger.Log(LogTag, "[WSRPCClient_OnMessage ignoring msg]");
                 }
-            };
-            await this.SendAsync<U>(method, args);
-            return await tcs.Task;
+            }
+            catch (Exception ex)
+            {
+                Logger.Log(LogTag, "[WSRPCClient_OnMessage error] " + ex.Message);
+            }
         }
     }
 }

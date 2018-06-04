@@ -12,8 +12,7 @@ WebSocketManager.prototype.createSocket = function (callbacks) {
     onOpen: callbacks.open,
     onClose: callbacks.close,
     onMsg: callbacks.msg,
-    ws: null,
-    messages: []
+    ws: null
   };
   this.sockets.push(socket);
   return socket.id;
@@ -28,10 +27,7 @@ WebSocketManager.prototype.connectSocket = function (socketId, url) {
     socket.onOpen(socketId);
     socket.ws.onopen = undefined;
   }
-  socket.ws.onmessage = e => {
-    socket.messages.push(e.data);
-    socket.onMsg(socketId);
-  };
+  socket.ws.onmessage = e => socket.onMsg(socketId, e.data);
   // NOTE: socket.ws.onerror doesn't actually get any info about the error when it is fired,
   // as such it is rather pointless to subscribe to this event.
   socket.ws.onclose = e => {
@@ -102,16 +98,6 @@ WebSocketManager.prototype.getSocketState = function (socketId) {
 
 WebSocketManager.prototype.send = function (socketId, msg) {
   this.getSocket(socketId).ws.send(msg);
-}
-
-WebSocketManager.prototype.getMessage = function (socketId) {
-  const socket = this.getSocket(socketId);
-  if (socket.messages.length === 0) {
-    return null;
-  }
-  const msg = socket.messages[0];
-  socket.messages = socket.messages.slice(1);
-  return msg;
 }
 
 window.LoomWebSocketManager = new WebSocketManager();

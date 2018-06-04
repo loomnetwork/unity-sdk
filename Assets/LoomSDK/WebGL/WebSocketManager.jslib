@@ -16,11 +16,14 @@ var WebSocketManagerLib = {
       Runtime.dynCall('vi', openCallback, [socketId]);
     };
     WSML.onClose = function (socketId, errStr) {
-      const errPtr = errStr ? allocateStringBuffer(errStr) : null;
+      const errPtr = allocateStringBuffer(errStr != null ? errStr : '');
       Runtime.dynCall('vii', closeCallback, [socketId, errPtr]);
     };
-    WSML.onMsg = function (socketId) {
-      Runtime.dynCall('vi', msgCallback, [socketId]);
+    WSML.onMsg = function (socketId, msgStr) {
+      if (msgStr) {
+        const msgPtr = allocateStringBuffer(msgStr);
+        Runtime.dynCall('vii', msgCallback, [socketId, msgPtr]);
+      }
     };
   },
 
@@ -45,11 +48,6 @@ var WebSocketManagerLib = {
   WebSocketSend: function (socketId, msgStrPtr) {
     const msgStr = Pointer_stringify(msgStrPtr)
     WSML.getManager().send(socketId, msgStr);
-  },
-  
-  GetWebSocketMessage: function (socketId) {
-    const msgStr = WSML.getManager().getMessage(socketId);
-    return (msgStr !== null) ? allocateStringBuffer(msgStr) : null;
   },
   
   WebSocketClose: function (socketId) {
