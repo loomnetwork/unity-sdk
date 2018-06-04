@@ -12,7 +12,6 @@ public class authSample : MonoBehaviour
     public GameObject cube;
     public Vector3 spinDirection;
 
-    private Identity identity;
     private Contract contract;
 
     public class SampleEvent
@@ -39,71 +38,12 @@ public class authSample : MonoBehaviour
         }
     }
 
-    private IAuthClient CreateAuthClient()
-    {
-#if !UNITY_WEBGL
-        try
-        {
-            CertValidationBypass.Enable();
-            return AuthClientFactory.Configure()
-                .WithLogger(Debug.unityLogger)
-                .WithClientId("25pDQvX4O5j7wgwT052Sh3UzXVR9X6Ud") // unity3d sdk
-                .WithDomain("loomx.auth0.com")
-                .WithScheme("io.loomx.unity3d")
-                .WithAudience("https://keystore.loomx.io/")
-                .WithScope("openid profile email picture")
-                .WithRedirectUrl("http://127.0.0.1:9998/auth/auth0/")
-                .Create();
-        }
-        finally
-        {
-            CertValidationBypass.Disable();
-        }
-#else
-        return AuthClientFactory.Configure()
-            .WithLogger(Debug.unityLogger)
-            .WithHostPageHandlers(new Loom.Unity3d.WebGL.HostPageHandlers
-            {
-                SignIn = "authenticateFromGame",
-                GetUserInfo = "getUserInfo",
-                SignOut = "clearUserInfo"
-            })
-            .Create();
-#endif
-    }
-
-#if !UNITY_WEBGL // In WebGL all interactions with the key store should be done in the host page.
-    private async Task<IKeyStore> CreateKeyStore(string accessToken)
-    {
-        return await KeyStoreFactory.CreateVaultStore(new VaultStoreConfig
-        {
-            Url = "https://stage-vault2.delegatecall.com/v1/",
-            VaultPrefix = "unity3d-sdk",
-            AccessToken = accessToken
-        });
-    }
-#endif
-
     public async void SignIn()
     {
-#if !UNITY_WEBGL
-        try
-        {
-            CertValidationBypass.Enable();
-            var authClient = this.CreateAuthClient();
-            var accessToken = await authClient.GetAccessTokenAsync();
-            var keyStore = await this.CreateKeyStore(accessToken);
-            this.identity = await authClient.GetIdentityAsync(accessToken, keyStore);
-        }
-        finally
-        {
-            CertValidationBypass.Disable();
-        }
-#else
-        var authClient = this.CreateAuthClient();
-        this.identity = await authClient.GetIdentityAsync("", null);
-#endif
-        this.statusTextRef.text = "Signed in as " + this.identity.Username;
+        var privateKey = CryptoUtils.GeneratePrivateKey();
+        var publicKey = CryptoUtils.PublicKeyFromPrivateKey(privateKey);
+        var callerAddr = Address.FromPublicKey(publicKey);
+        this.statusTextRef.text = "Signed in as " + callerAddr.ToAddressString();
 
         var writer = RPCClientFactory.Configure()
             .WithLogger(Debug.unityLogger)
@@ -121,16 +61,16 @@ public class authSample : MonoBehaviour
         {
             Logger = Debug.unityLogger
         };
+		
         client.TxMiddleware = new TxMiddleware(new ITxMiddlewareHandler[]{
             new NonceTxMiddleware{
-                PublicKey = this.identity.PublicKey,
+                PublicKey = publicKey,
                 Client = client
             },
-            new SignedTxMiddleware(this.identity.PrivateKey)
+            new SignedTxMiddleware(privateKey)
         });
-
+		
         var contractAddr = await client.ResolveContractAddressAsync("BluePrint");
-        var callerAddr = this.identity.ToAddress("default");
         this.contract = new Contract(client, contractAddr, callerAddr);
         
         // Subscribe to DAppChainClient.OnChainEvent to receive all events
@@ -152,36 +92,9 @@ public class authSample : MonoBehaviour
         };
     }
 
-    public async void SignOut()
-    {
-        var authClient = this.CreateAuthClient();
-        await authClient.ClearIdentityAsync();
-    }
-
-    public async void ResetPrivateKey()
-    {
-#if !UNITY_WEBGL
-        try
-        {
-            CertValidationBypass.Enable();
-            var authClient = this.CreateAuthClient();
-            var accessToken = await authClient.GetAccessTokenAsync();
-            var keyStore = await this.CreateKeyStore(accessToken);
-            this.identity = await authClient.CreateIdentityAsync(accessToken, keyStore);
-        }
-        finally
-        {
-            CertValidationBypass.Disable();
-        }
-#else
-        // TODO
-        throw new NotImplementedException();
-#endif
-    }
-
     public async void CallContract()
     {
-        if (this.identity == null)
+        if (this.contract == null)
         {
             throw new Exception("Not signed in!");
         }
@@ -199,7 +112,7 @@ public class authSample : MonoBehaviour
 
     public async void CallContractWithResult()
     {
-        if (this.identity == null)
+        if (this.contract == null)
         {
             throw new Exception("Not signed in!");
         }
@@ -224,6 +137,11 @@ public class authSample : MonoBehaviour
 
     public async void StaticCallContract()
     {
+        if (this.contract == null)
+        {
+            throw new Exception("Not signed in!");
+        }
+
         this.statusTextRef.text = "Calling smart contract...";
 
         var result = await this.contract.StaticCallAsync<MapEntry>("GetMsg", new MapEntry
