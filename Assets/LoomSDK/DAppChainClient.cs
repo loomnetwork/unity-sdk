@@ -279,6 +279,9 @@ namespace Loom.Unity3d
 
         private class QueryParams
         {
+            [JsonProperty("caller")]
+            public string CallerAddress;
+
             [JsonProperty("contract")]
             public string ContractAddress;
 
@@ -290,14 +293,17 @@ namespace Loom.Unity3d
         /// Queries the current state of a contract.
         /// </summary>
         /// <typeparam name="T">The expected response type, must be deserializable with Newtonsoft.Json.</typeparam>
+        /// <param name="caller">Caller address.</param>
         /// <param name="contract">Address of the contract to query.</param>
         /// <param name="query">Query parameters object.</param>
         /// <returns>Deserialized response.</returns>
-        public async Task<T> QueryAsync<T>(Address contract, IMessage query = null)
+        public async Task<T> QueryAsync<T>(Address caller, Address contract, IMessage query = null)
         {
+            var callerAddr = "0x" + CryptoUtils.BytesToHexString(caller.ToByteArray());
             var contractAddr = "0x" + CryptoUtils.BytesToHexString(contract.Local.ToByteArray());
             return await this.readClient.SendAsync<T, QueryParams>("query", new QueryParams
             {
+                CallerAddress = callerAddr,
                 ContractAddress = contractAddr,
                 Params = query.ToByteArray()
             });
