@@ -9,11 +9,8 @@
     <link rel="stylesheet" href="TemplateData/style.css">
     <script src="TemplateData/UnityProgress.js"></script>
     <script src="%UNITY_WEBGL_LOADER_URL%"></script>
-    <script src="https://cdn.auth0.com/js/auth0/9.5.0/auth0.min.js"></script>
     <script src="settings.js"></script>
-    <script src="auth.js"></script>
     <script src="web-socket-manager.js"></script>
-    <script src="loom.umd.js"></script>
     <script src="bundle.js"></script>
   </head>
   
@@ -21,26 +18,6 @@
     <script>
       var gameInstance;
       window.addEventListener('load', function() {
-        // There are a couple of ways to deal with the auth flow...
-        /*
-          1. Start the auth-flow from the host page when the user presses a button, and launch
-             the game once the user signs in. When the host page initiates the auth flow the
-             user will be redirected to the Auth0 login page, then once they sign in they'll
-             be redirected back to the host page - at which point the game will load.
-        */
-        /*
-        const loginBtn = document.getElementById('btn-login');
-        authenticateFromPage(loginBtn).then(function () {
-          gameInstance = UnityLoader.instantiate("gameContainer", "%UNITY_WEBGL_BUILD_URL%");
-        });
-        */
-
-        /*
-          2. Start the auth-flow from in-game. When the game initiates the auth flow the user
-             will be redirected to the Auth0 login page, then once they sign in they'll be
-             redirected back to the host page - at which point the game will load once again.
-        */
-        authenticateFromPage();
         gameInstance = UnityLoader.instantiate("gameContainer", "%UNITY_WEBGL_BUILD_URL%");
       });
     </script>
