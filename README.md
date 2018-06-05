@@ -122,3 +122,14 @@ and copy them to `Assets/Plugins`.
 
 Clone https://github.com/sta/websocket-sharp and build the `Release` config for `AnyCPU`.
 The version currently was built from Git rev `000c0a76b4fb2045cabc4f0ae6a80bea03e2663e`.
+
+## Unity package build scripts
+
+build.cmd - Windows script that builds unity package with content from Assets directory
+build.sh - OSX/Linux script that builds unity package with content from Assets directory
+
+Both scripts use UNITY_PATH variable as path to Unity. 
+For default installation it should point to :
+'/Applications/Unity/Unity.app/Contents/MacOS/Unity' - OSX
+'C:\Program Files\Unity\Editor\Unity.exe' - Windows
+
