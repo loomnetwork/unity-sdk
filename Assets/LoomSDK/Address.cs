@@ -6,6 +6,17 @@ namespace Loom.Unity3d
     // Extend the generated Address protobuf type with some utility methods.
     public partial class Address
     {
+        /// <summary>
+        /// Hex-string representation of the local part of the address, in the format "0x...".
+        /// </summary>
+        public string LocalAddressHexString
+        {
+            get
+            {
+                return "0x" + CryptoUtils.BytesToHexString(this.Local.ToByteArray());
+            }
+        }
+
         public static Address FromAddressString(string addressStr)
         {
             var parts = addressStr.Split(':');
@@ -53,7 +64,7 @@ namespace Loom.Unity3d
         public string ToAddressString()
         {
             // TODO: checksum encode the local address bytes like we do in Go
-            return string.Format("{0}:{1}", this.ChainId, "0x" + CryptoUtils.BytesToHexString(this.Local.ToByteArray()));
+            return string.Format("{0}:{1}", this.ChainId, this.LocalAddressHexString);
         }
     }
 }

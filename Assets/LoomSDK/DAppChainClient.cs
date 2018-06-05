@@ -279,11 +279,23 @@ namespace Loom.Unity3d
 
         private class QueryParams
         {
+            /// <summary>
+            /// Contract address
+            /// </summary>
             [JsonProperty("contract")]
             public string ContractAddress;
 
+            /// <summary>
+            /// Serialized protobuf of contract-specific query parameters
+            /// </summary>
             [JsonProperty("query")]
             public byte[] Params;
+
+            /// <summary>
+            /// Optional caller address (including chain ID)
+            /// </summary>
+            [JsonProperty("caller")]
+            public string CallerAddress;
         }
 
         /// <summary>
@@ -292,15 +304,20 @@ namespace Loom.Unity3d
         /// <typeparam name="T">The expected response type, must be deserializable with Newtonsoft.Json.</typeparam>
         /// <param name="contract">Address of the contract to query.</param>
         /// <param name="query">Query parameters object.</param>
+        /// <param name="caller">Optional caller address.</param>
         /// <returns>Deserialized response.</returns>
-        public async Task<T> QueryAsync<T>(Address contract, IMessage query = null)
+        public async Task<T> QueryAsync<T>(Address contract, IMessage query, Address caller = null)
         {
-            var contractAddr = "0x" + CryptoUtils.BytesToHexString(contract.Local.ToByteArray());
-            return await this.readClient.SendAsync<T, QueryParams>("query", new QueryParams
+            var queryParams = new QueryParams
             {
-                ContractAddress = contractAddr,
+                ContractAddress = contract.LocalAddressHexString,
                 Params = query.ToByteArray()
-            });
+            };
+            if (caller != null)
+            {
+                queryParams.CallerAddress = caller.ToAddressString();
+            }
+            return await this.readClient.SendAsync<T, QueryParams>("query", queryParams);
         }
 
         private class NonceParams

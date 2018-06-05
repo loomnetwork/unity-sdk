@@ -114,7 +114,7 @@ namespace Loom.Unity3d
                 Method = method,
                 Args = args.ToByteString()
             };
-            var result = await this.client.QueryAsync<byte[]>(this.Address, query);
+            var result = await this.client.QueryAsync<byte[]>(this.Address, query, this.Caller);
             if (result != null)
             {
                 T msg = new T();
