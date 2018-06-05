@@ -647,7 +647,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   statusTextRef: {fileID: 1906453719}
   cube: {fileID: 1159064470}
-  spinDirection: {x: 100, y: 50, z: 0}
+  spinDirection: {x: 25, y: 25, z: 0}
 --- !u!4 &560920891
 Transform:
   m_ObjectHideFlags: 0

@@ -6,7 +6,7 @@ using System;
 using System.Threading.Tasks;
 using Newtonsoft.Json;
 
-public class authSample : MonoBehaviour
+public class LoomDemo : MonoBehaviour
 {
     public Text statusTextRef;
     public GameObject cube;
