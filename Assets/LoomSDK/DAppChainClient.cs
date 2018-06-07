@@ -71,13 +71,13 @@ namespace Loom.Unity3d
         {
             public Address ContractAddress { get; internal set; }
             public Address CallerAddress { get; internal set; }
-            public Int64 BlockHeight { get; internal set; }
+            public UInt64 BlockHeight { get; internal set; }
             public byte[] Data { get; internal set; }
         }
 
         private static readonly string LogTag = "Loom.DAppChainClient";
 
-        private Dictionary<EventHandler<ChainEventArgs>, EventHandler<EventData>> eventSubs;
+        private Dictionary<EventHandler<ChainEventArgs>, EventHandler<JsonRpcEventData>> eventSubs;
 
         private IRPCClient writeClient;
         private IRPCClient readClient;
@@ -120,7 +120,7 @@ namespace Loom.Unity3d
         /// <param name="readClient">RPC client to use for querying DAppChain state.</param>
         public DAppChainClient(IRPCClient writeClient, IRPCClient readClient)
         {
-            this.eventSubs = new Dictionary<EventHandler<ChainEventArgs>, EventHandler<EventData>>();
+            this.eventSubs = new Dictionary<EventHandler<ChainEventArgs>, EventHandler<JsonRpcEventData>>();
             this.writeClient = writeClient;
             this.readClient = readClient;
             this.Logger = NullLogger.Instance;
@@ -145,20 +145,19 @@ namespace Loom.Unity3d
         {
             try
             {
-                EventHandler<EventData> wrapper = (sender, e) =>
+                EventHandler<JsonRpcEventData> wrapper = (sender, e) =>
                 {
-                    var contractAddress = new Address
-                    {
-                        ChainId = e.ContractAddress.ChainID,
-                        Local = ByteString.CopyFrom(e.ContractAddress.Local)
-                    };
                     handler(this, new ChainEventArgs
                     {
-                        ContractAddress = contractAddress,
-                        CallerAddress = new Address
+                        ContractAddress = new Address
                         {
                             ChainId = e.ContractAddress.ChainID,
                             Local = ByteString.CopyFrom(e.ContractAddress.Local)
+                        },
+                        CallerAddress = new Address
+                        {
+                            ChainId = e.CallerAddress.ChainID,
+                            Local = ByteString.CopyFrom(e.CallerAddress.Local)
                         },
                         BlockHeight = e.BlockHeight,
                         Data = e.Data
@@ -177,7 +176,7 @@ namespace Loom.Unity3d
         {
             try
             {
-                EventHandler<EventData> wrapper = this.eventSubs[handler];
+                EventHandler<JsonRpcEventData> wrapper = this.eventSubs[handler];
                 await this.readClient.UnsubscribeAsync(wrapper);
             }
             catch (Exception e)

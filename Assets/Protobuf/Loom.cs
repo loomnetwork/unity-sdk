@@ -38,9 +38,13 @@ namespace Loom.Unity3d {
             "Y29kaW5nVHlwZRIMCgRib2R5GAMgASgMIj0KCFJlc3BvbnNlEiMKDGNvbnRl",
             "bnRfdHlwZRgBIAEoDjINLkVuY29kaW5nVHlwZRIMCgRib2R5GAIgASgMIjIK",
             "EkNvbnRyYWN0TWV0aG9kQ2FsbBIOCgZtZXRob2QYASABKAkSDAoEYXJncxgC",
-            "IAEoDCodCgZWTVR5cGUSCgoGUExVR0lOEAASBwoDRVZNEAEqJwoMRW5jb2Rp",
-            "bmdUeXBlEggKBEpTT04QABINCglQUk9UT0JVRjMQAUIPqgIMTG9vbS5Vbml0",
-            "eTNkYgZwcm90bzM="));
+            "IAEoDCKrAQoJRXZlbnREYXRhEg4KBnRvcGljcxgBIAMoCRIYCgZjYWxsZXIY",
+            "AiABKAsyCC5BZGRyZXNzEhkKB2FkZHJlc3MYAyABKAsyCC5BZGRyZXNzEhMK",
+            "C3BsdWdpbl9uYW1lGAQgASgJEhQKDGJsb2NrX2hlaWdodBgFIAEoBBIUCgxl",
+            "bmNvZGVkX2JvZHkYBiABKAwSGAoQb3JpZ2luYWxfcmVxdWVzdBgHIAEoDCod",
+            "CgZWTVR5cGUSCgoGUExVR0lOEAASBwoDRVZNEAEqJwoMRW5jb2RpbmdUeXBl",
+            "EggKBEpTT04QABINCglQUk9UT0JVRjMQAUIPqgIMTG9vbS5Vbml0eTNkYgZw",
+            "cm90bzM="));
       descriptor = pbr::FileDescriptor.FromGeneratedCode(descriptorData,
           new pbr::FileDescriptor[] { },
           new pbr::GeneratedClrTypeInfo(new[] {typeof(global::Loom.Unity3d.VMType), typeof(global::Loom.Unity3d.EncodingType), }, new pbr::GeneratedClrTypeInfo[] {
@@ -54,7 +58,8 @@ namespace Loom.Unity3d {
             new pbr::GeneratedClrTypeInfo(typeof(global::Loom.Unity3d.PluginCode), global::Loom.Unity3d.PluginCode.Parser, new[]{ "Name", "Input" }, null, null, null),
             new pbr::GeneratedClrTypeInfo(typeof(global::Loom.Unity3d.Request), global::Loom.Unity3d.Request.Parser, new[]{ "ContentType", "Accept", "Body" }, null, null, null),
             new pbr::GeneratedClrTypeInfo(typeof(global::Loom.Unity3d.Response), global::Loom.Unity3d.Response.Parser, new[]{ "ContentType", "Body" }, null, null, null),
-            new pbr::GeneratedClrTypeInfo(typeof(global::Loom.Unity3d.ContractMethodCall), global::Loom.Unity3d.ContractMethodCall.Parser, new[]{ "Method", "Args" }, null, null, null)
+            new pbr::GeneratedClrTypeInfo(typeof(global::Loom.Unity3d.ContractMethodCall), global::Loom.Unity3d.ContractMethodCall.Parser, new[]{ "Method", "Args" }, null, null, null),
+            new pbr::GeneratedClrTypeInfo(typeof(global::Loom.Unity3d.EventData), global::Loom.Unity3d.EventData.Parser, new[]{ "Topics", "Caller", "Address", "PluginName", "BlockHeight", "EncodedBody", "OriginalRequest" }, null, null, null)
           }));
     }
     #endregion
@@ -1889,6 +1894,307 @@ namespace Loom.Unity3d {
           }
           case 18: {
             Args = input.ReadBytes();
+            break;
+          }
+        }
+      }
+    }
+
+  }
+
+  public sealed partial class EventData : pb::IMessage<EventData> {
+    private static readonly pb::MessageParser<EventData> _parser = new pb::MessageParser<EventData>(() => new EventData());
+    private pb::UnknownFieldSet _unknownFields;
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public static pb::MessageParser<EventData> Parser { get { return _parser; } }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public static pbr::MessageDescriptor Descriptor {
+      get { return global::Loom.Unity3d.LoomReflection.Descriptor.MessageTypes[11]; }
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    pbr::MessageDescriptor pb::IMessage.Descriptor {
+      get { return Descriptor; }
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public EventData() {
+      OnConstruction();
+    }
+
+    partial void OnConstruction();
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public EventData(EventData other) : this() {
+      topics_ = other.topics_.Clone();
+      Caller = other.caller_ != null ? other.Caller.Clone() : null;
+      Address = other.address_ != null ? other.Address.Clone() : null;
+      pluginName_ = other.pluginName_;
+      blockHeight_ = other.blockHeight_;
+      encodedBody_ = other.encodedBody_;
+      originalRequest_ = other.originalRequest_;
+      _unknownFields = pb::UnknownFieldSet.Clone(other._unknownFields);
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public EventData Clone() {
+      return new EventData(this);
+    }
+
+    /// <summary>Field number for the "topics" field.</summary>
+    public const int TopicsFieldNumber = 1;
+    private static readonly pb::FieldCodec<string> _repeated_topics_codec
+        = pb::FieldCodec.ForString(10);
+    private readonly pbc::RepeatedField<string> topics_ = new pbc::RepeatedField<string>();
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public pbc::RepeatedField<string> Topics {
+      get { return topics_; }
+    }
+
+    /// <summary>Field number for the "caller" field.</summary>
+    public const int CallerFieldNumber = 2;
+    private global::Loom.Unity3d.Address caller_;
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public global::Loom.Unity3d.Address Caller {
+      get { return caller_; }
+      set {
+        caller_ = value;
+      }
+    }
+
+    /// <summary>Field number for the "address" field.</summary>
+    public const int AddressFieldNumber = 3;
+    private global::Loom.Unity3d.Address address_;
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public global::Loom.Unity3d.Address Address {
+      get { return address_; }
+      set {
+        address_ = value;
+      }
+    }
+
+    /// <summary>Field number for the "plugin_name" field.</summary>
+    public const int PluginNameFieldNumber = 4;
+    private string pluginName_ = "";
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public string PluginName {
+      get { return pluginName_; }
+      set {
+        pluginName_ = pb::ProtoPreconditions.CheckNotNull(value, "value");
+      }
+    }
+
+    /// <summary>Field number for the "block_height" field.</summary>
+    public const int BlockHeightFieldNumber = 5;
+    private ulong blockHeight_;
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public ulong BlockHeight {
+      get { return blockHeight_; }
+      set {
+        blockHeight_ = value;
+      }
+    }
+
+    /// <summary>Field number for the "encoded_body" field.</summary>
+    public const int EncodedBodyFieldNumber = 6;
+    private pb::ByteString encodedBody_ = pb::ByteString.Empty;
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public pb::ByteString EncodedBody {
+      get { return encodedBody_; }
+      set {
+        encodedBody_ = pb::ProtoPreconditions.CheckNotNull(value, "value");
+      }
+    }
+
+    /// <summary>Field number for the "original_request" field.</summary>
+    public const int OriginalRequestFieldNumber = 7;
+    private pb::ByteString originalRequest_ = pb::ByteString.Empty;
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public pb::ByteString OriginalRequest {
+      get { return originalRequest_; }
+      set {
+        originalRequest_ = pb::ProtoPreconditions.CheckNotNull(value, "value");
+      }
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public override bool Equals(object other) {
+      return Equals(other as EventData);
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public bool Equals(EventData other) {
+      if (ReferenceEquals(other, null)) {
+        return false;
+      }
+      if (ReferenceEquals(other, this)) {
+        return true;
+      }
+      if(!topics_.Equals(other.topics_)) return false;
+      if (!object.Equals(Caller, other.Caller)) return false;
+      if (!object.Equals(Address, other.Address)) return false;
+      if (PluginName != other.PluginName) return false;
+      if (BlockHeight != other.BlockHeight) return false;
+      if (EncodedBody != other.EncodedBody) return false;
+      if (OriginalRequest != other.OriginalRequest) return false;
+      return Equals(_unknownFields, other._unknownFields);
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public override int GetHashCode() {
+      int hash = 1;
+      hash ^= topics_.GetHashCode();
+      if (caller_ != null) hash ^= Caller.GetHashCode();
+      if (address_ != null) hash ^= Address.GetHashCode();
+      if (PluginName.Length != 0) hash ^= PluginName.GetHashCode();
+      if (BlockHeight != 0UL) hash ^= BlockHeight.GetHashCode();
+      if (EncodedBody.Length != 0) hash ^= EncodedBody.GetHashCode();
+      if (OriginalRequest.Length != 0) hash ^= OriginalRequest.GetHashCode();
+      if (_unknownFields != null) {
+        hash ^= _unknownFields.GetHashCode();
+      }
+      return hash;
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public override string ToString() {
+      return pb::JsonFormatter.ToDiagnosticString(this);
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public void WriteTo(pb::CodedOutputStream output) {
+      topics_.WriteTo(output, _repeated_topics_codec);
+      if (caller_ != null) {
+        output.WriteRawTag(18);
+        output.WriteMessage(Caller);
+      }
+      if (address_ != null) {
+        output.WriteRawTag(26);
+        output.WriteMessage(Address);
+      }
+      if (PluginName.Length != 0) {
+        output.WriteRawTag(34);
+        output.WriteString(PluginName);
+      }
+      if (BlockHeight != 0UL) {
+        output.WriteRawTag(40);
+        output.WriteUInt64(BlockHeight);
+      }
+      if (EncodedBody.Length != 0) {
+        output.WriteRawTag(50);
+        output.WriteBytes(EncodedBody);
+      }
+      if (OriginalRequest.Length != 0) {
+        output.WriteRawTag(58);
+        output.WriteBytes(OriginalRequest);
+      }
+      if (_unknownFields != null) {
+        _unknownFields.WriteTo(output);
+      }
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public int CalculateSize() {
+      int size = 0;
+      size += topics_.CalculateSize(_repeated_topics_codec);
+      if (caller_ != null) {
+        size += 1 + pb::CodedOutputStream.ComputeMessageSize(Caller);
+      }
+      if (address_ != null) {
+        size += 1 + pb::CodedOutputStream.ComputeMessageSize(Address);
+      }
+      if (PluginName.Length != 0) {
+        size += 1 + pb::CodedOutputStream.ComputeStringSize(PluginName);
+      }
+      if (BlockHeight != 0UL) {
+        size += 1 + pb::CodedOutputStream.ComputeUInt64Size(BlockHeight);
+      }
+      if (EncodedBody.Length != 0) {
+        size += 1 + pb::CodedOutputStream.ComputeBytesSize(EncodedBody);
+      }
+      if (OriginalRequest.Length != 0) {
+        size += 1 + pb::CodedOutputStream.ComputeBytesSize(OriginalRequest);
+      }
+      if (_unknownFields != null) {
+        size += _unknownFields.CalculateSize();
+      }
+      return size;
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public void MergeFrom(EventData other) {
+      if (other == null) {
+        return;
+      }
+      topics_.Add(other.topics_);
+      if (other.caller_ != null) {
+        if (caller_ == null) {
+          caller_ = new global::Loom.Unity3d.Address();
+        }
+        Caller.MergeFrom(other.Caller);
+      }
+      if (other.address_ != null) {
+        if (address_ == null) {
+          address_ = new global::Loom.Unity3d.Address();
+        }
+        Address.MergeFrom(other.Address);
+      }
+      if (other.PluginName.Length != 0) {
+        PluginName = other.PluginName;
+      }
+      if (other.BlockHeight != 0UL) {
+        BlockHeight = other.BlockHeight;
+      }
+      if (other.EncodedBody.Length != 0) {
+        EncodedBody = other.EncodedBody;
+      }
+      if (other.OriginalRequest.Length != 0) {
+        OriginalRequest = other.OriginalRequest;
+      }
+      _unknownFields = pb::UnknownFieldSet.MergeFrom(_unknownFields, other._unknownFields);
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public void MergeFrom(pb::CodedInputStream input) {
+      uint tag;
+      while ((tag = input.ReadTag()) != 0) {
+        switch(tag) {
+          default:
+            _unknownFields = pb::UnknownFieldSet.MergeFieldFrom(_unknownFields, input);
+            break;
+          case 10: {
+            topics_.AddEntriesFrom(input, _repeated_topics_codec);
+            break;
+          }
+          case 18: {
+            if (caller_ == null) {
+              caller_ = new global::Loom.Unity3d.Address();
+            }
+            input.ReadMessage(caller_);
+            break;
+          }
+          case 26: {
+            if (address_ == null) {
+              address_ = new global::Loom.Unity3d.Address();
+            }
+            input.ReadMessage(address_);
+            break;
+          }
+          case 34: {
+            PluginName = input.ReadString();
+            break;
+          }
+          case 40: {
+            BlockHeight = input.ReadUInt64();
+            break;
+          }
+          case 50: {
+            EncodedBody = input.ReadBytes();
+            break;
+          }
+          case 58: {
+            OriginalRequest = input.ReadBytes();
             break;
           }
         }
