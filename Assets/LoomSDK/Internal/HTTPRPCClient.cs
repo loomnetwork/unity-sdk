@@ -18,11 +18,11 @@ namespace Loom.Unity3d
         /// </summary>
         public ILogger Logger { get; set; }
 
-        public Task SubscribeAsync(EventHandler<EventData> handler)
+        public Task SubscribeAsync(EventHandler<JsonRpcEventData> handler)
         {
             throw new NotImplementedException();
         }
-        public Task UnsubscribeAsync(EventHandler<EventData> handler)
+        public Task UnsubscribeAsync(EventHandler<JsonRpcEventData> handler)
         {
             throw new NotImplementedException();
         }
