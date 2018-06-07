@@ -62,16 +62,21 @@ namespace Loom.Unity3d
         public T Result;
     }
 
-    #endregion
-
-    public class EventData
+    internal class JsonRpcEvent : JsonRpcResponse
     {
-        // TODO: Ugh, it wouldn't be necessary to have yet another Address class
-        // if the query server encoded the address in Protobuf JSON format!
-        // And there would be no need to convert EventData -> ChainEventArgs.
+        [JsonProperty("result")]
+        public JsonRpcEventData Result;
+    }
+
+    public class JsonRpcEventData
+    {
+        // TODO: Create custom Newtonsoft JsonConverter to deserialize the protobuf,
+        //       the tricky bit is getting it to work with the AOT version of Newtonsoft.
         public class Address
         {
+            [JsonProperty("chain_id")]
             public string ChainID;
+            [JsonProperty("local")]
             public byte[] Local;
         }
 
@@ -81,26 +86,28 @@ namespace Loom.Unity3d
         [JsonProperty("address")]
         public Address ContractAddress { get; internal set; }
 
-        [JsonProperty("blockHeight")]
-        public Int64 BlockHeight { get; internal set; }
+        [JsonProperty("block_height")]
+        public UInt64 BlockHeight { get; internal set; }
 
-        [JsonProperty("encodedData")]
+        [JsonProperty("encoded_body")]
         public byte[] Data { get; internal set; }
 
-        // Ignore these fields until there's a concrete use for them.
+        // Ignore these fields until there's a concrete use for them.*/
         /*
-        [JsonProperty("plugin")]
+        [JsonProperty("plugin_name")]
         public string PluginName { get; internal set; }
-        [JsonProperty("rawRequest")]
-        public byte[] RawRequest { get; internal set; }
+        [JsonProperty("original_request")]
+        public byte[] OriginalRequest { get; internal set; }
         */
     }
+
+    #endregion
 
     public interface IRPCClient : IDisposable
     {
         Task<TResult> SendAsync<TResult, TArgs>(string method, TArgs args);
         Task DisconnectAsync();
-        Task SubscribeAsync(EventHandler<EventData> handler);
-        Task UnsubscribeAsync(EventHandler<EventData> handler);
+        Task SubscribeAsync(EventHandler<JsonRpcEventData> handler);
+        Task UnsubscribeAsync(EventHandler<JsonRpcEventData> handler);
     }
 }

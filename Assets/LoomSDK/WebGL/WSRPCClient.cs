@@ -82,7 +82,7 @@ namespace Loom.Unity3d.WebGL
         private static readonly string LogTag = "Loom.WSRPCClient";
 
         private Uri url;
-        private event EventHandler<EventData> OnEventMessage;
+        private event EventHandler<JsonRpcEventData> OnEventMessage;
         private int socketId = 0;
 
         /// <summary>
@@ -174,7 +174,7 @@ namespace Loom.Unity3d.WebGL
             return tcs.Task;
         }
 
-        public Task SubscribeAsync(EventHandler<EventData> handler)
+        public Task SubscribeAsync(EventHandler<JsonRpcEventData> handler)
         {
             var isFirstSub = this.OnEventMessage == null;
             this.OnEventMessage += handler;
@@ -188,7 +188,7 @@ namespace Loom.Unity3d.WebGL
             return this.SendAsync<object, object>("subevents", new object());
         }
 
-        public Task UnsubscribeAsync(EventHandler<EventData> handler)
+        public Task UnsubscribeAsync(EventHandler<JsonRpcEventData> handler)
         {
             this.OnEventMessage -= handler;
             if (this.OnEventMessage == null)
@@ -282,7 +282,7 @@ namespace Loom.Unity3d.WebGL
                         }
                         else
                         {
-                            var fullMsg = JsonConvert.DeserializeObject<JsonRpcResponse<EventData>>(msgBody);
+                            var fullMsg = JsonConvert.DeserializeObject<JsonRpcEvent>(msgBody);
                             this.OnEventMessage?.Invoke(this, fullMsg.Result);
                         }
                     }

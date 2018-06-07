@@ -17,7 +17,7 @@ namespace Loom.Unity3d
 
         private WebSocket client;
         private Uri url;
-        private event EventHandler<EventData> OnEventMessage;
+        private event EventHandler<JsonRpcEventData> OnEventMessage;
 
         /// <summary>
         /// Logger to be used for logging, defaults to <see cref="NullLogger"/>.
@@ -93,7 +93,7 @@ namespace Loom.Unity3d
             return tcs.Task;
         }
 
-        public Task SubscribeAsync(EventHandler<EventData> handler)
+        public Task SubscribeAsync(EventHandler<JsonRpcEventData> handler)
         {
             var isFirstSub = this.OnEventMessage == null;
             this.OnEventMessage += handler;
@@ -106,7 +106,7 @@ namespace Loom.Unity3d
             return this.SendAsync<object, object>("subevents", new object());
         }
 
-        public Task UnsubscribeAsync(EventHandler<EventData> handler)
+        public Task UnsubscribeAsync(EventHandler<JsonRpcEventData> handler)
         {
             this.OnEventMessage -= handler;
             if (this.OnEventMessage == null)
@@ -212,7 +212,7 @@ namespace Loom.Unity3d
                         }
                         else
                         {
-                            var fullMsg = JsonConvert.DeserializeObject<JsonRpcResponse<EventData>>(e.Data);
+                            var fullMsg = JsonConvert.DeserializeObject<JsonRpcEvent>(e.Data);
                             this.OnEventMessage?.Invoke(this, fullMsg.Result);
                         }
                     }
