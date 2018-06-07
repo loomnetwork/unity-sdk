@@ -62,26 +62,6 @@ namespace Loom.Unity3d
         }
     }
 
-    public static class IdentityExtensions
-    {
-        /// <summary>
-        /// Generate a DAppChain address for the given identity.
-        /// Address generation is based on the identity public key and the chain ID,
-        /// the algorithm is deterministic.
-        /// </summary>
-        /// <param name="identity">Identity with a valid public key.</param>
-        /// <param name="chainId">Identifier of a DAppChain.</param>
-        /// <returns>An address</returns>
-        public static Address ToAddress(this Identity identity, string chainId = "default")
-        {
-            return new Address
-            {
-                ChainId = chainId,
-                Local = ByteString.CopyFrom(CryptoUtils.LocalAddressFromPublicKey(identity.PublicKey))
-            };
-        }
-    }
-
     /// <summary>
     /// Writes to & reads from a Loom DAppChain.
     /// </summary>
