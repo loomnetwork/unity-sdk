@@ -9,55 +9,14 @@ namespace Loom.Unity3d
     /// Each instance of this class is bound to a specific smart contract, and provides a simple way of calling
     /// into and querying that contract.
     /// </summary>
-    public class Contract
-    {
-        private DAppChainClient client;
-        private event EventHandler<DAppChainClient.ChainEventArgs> OnChainEvent;
-
-        /// <summary>
-        /// Smart contract address.
-        /// </summary>
-        public Address Address { get; internal set; }
-        /// <summary>
-        /// Caller/sender address to use when calling smart contract methods that mutate state.
-        /// </summary>
-        public Address Caller { get; internal set; }
-
-        /// <summary>
-        /// Event emitted by the corresponding smart contract.
-        /// </summary>
-        public event EventHandler<DAppChainClient.ChainEventArgs> OnEvent
-        {
-            add
-            {
-                var isFirstSub = this.OnChainEvent == null;
-                this.OnChainEvent += value;
-                if (isFirstSub)
-                {
-                    this.client.OnChainEvent += this.NotifyContractEvent;
-                }
-            }
-            remove
-            {
-                this.OnChainEvent -= value;
-                if (this.OnChainEvent == null)
-                {
-                    this.client.OnChainEvent -= this.NotifyContractEvent;
-                }
-            }
-        }
-
+    public class Contract : ContractBase {
         /// <summary>
         /// Constructor.
         /// </summary>
         /// <param name="client">Client to use to communicate with the contract.</param>
         /// <param name="contractAddr">Address of a contract on the Loom DAppChain.</param>
         /// <param name="callerAddr">Address of the caller, generated from the public key of the tx signer.</param>
-        public Contract(DAppChainClient client, Address contractAddr, Address callerAddr)
-        {
-            this.client = client;
-            this.Address = contractAddr;
-            this.Caller = callerAddr;
+        public Contract(DAppChainClient client, Address contractAddr, Address callerAddr) : base(client, contractAddr, callerAddr) {
         }
 
         /// <summary>
@@ -70,7 +29,7 @@ namespace Loom.Unity3d
         public async Task CallAsync(string method, IMessage args)
         {
             var tx = this.CreateContractMethodCallTx(method, args);
-            await this.client.CommitTxAsync(tx);
+            await CallAsync(tx);
         }
 
         /// <summary>
@@ -84,19 +43,7 @@ namespace Loom.Unity3d
         public async Task<T> CallAsync<T>(string method, IMessage args) where T : IMessage, new()
         {
             var tx = this.CreateContractMethodCallTx(method, args);
-            var result = await this.client.CommitTxAsync(tx);
-            if (result != null && result.DeliverTx.Data != null && result.DeliverTx.Data.Length != 0)
-            {
-                var resp = new Response();
-                resp.MergeFrom(result.DeliverTx.Data);
-                if (resp.Body != null && resp.Body.Length != 0)
-                {
-                    T msg = new T();
-                    msg.MergeFrom(resp.Body);
-                    return msg;
-                }
-            }
-            return default(T);
+            return await CallAsync<T>(tx);
         }
 
         /// <summary>
@@ -114,12 +61,36 @@ namespace Loom.Unity3d
                 Method = method,
                 Args = args.ToByteString()
             };
-            var result = await this.client.QueryAsync<byte[]>(this.Address, query, this.Caller);
+            var result = await this.client.QueryAsync<byte[]>(this.Address, query, this.Caller, VMType.Plugin);
             if (result != null)
             {
                 T msg = new T();
                 msg.MergeFrom(result);
                 return msg;
+            }
+            return default(T);
+        }
+
+        /// <summary>
+        /// Calls a smart contract method that mutates state.
+        /// The call into the smart contract is accomplished by committing a transaction to the DAppChain.
+        /// </summary>
+        /// <typeparam name="T">Smart contract method return type.</typeparam>
+        /// <param name="tx">Transaction message.</param>
+        /// <returns>The return value of the smart contract method.</returns>
+        private async Task<T> CallAsync<T>(Transaction tx) where T : IMessage, new()
+        {
+            var result = await this.client.CommitTxAsync(tx);
+            if (result != null && result.DeliverTx.Data != null && result.DeliverTx.Data.Length != 0)
+            {
+                var resp = new Response();
+                resp.MergeFrom(result.DeliverTx.Data);
+                if (resp.Body != null && resp.Body.Length != 0)
+                {
+                    T msg = new T();
+                    msg.MergeFrom(resp.Body);
+                    return msg;
+                }
             }
             return default(T);
         }
@@ -139,32 +110,8 @@ namespace Loom.Unity3d
                 Body = methodTx.ToByteString()
             }.ToByteString();
 
-            var callTxBytes = new CallTx
-            {
-                VmType = VMType.Plugin,
-                Input = requestBytes
-            }.ToByteString();
-
-            var msgTxBytes = new MessageTx
-            {
-                From = this.Caller,
-                To = this.Address,
-                Data = callTxBytes
-            }.ToByteString();
-
-            return new Transaction
-            {
-                Id = 2,
-                Data = msgTxBytes
-            };
+            return CreateContractMethodCallTx(requestBytes, VMType.Plugin);
         }
 
-        private void NotifyContractEvent(object sender, DAppChainClient.ChainEventArgs e)
-        {
-            if (e.ContractAddress.Equals(this.Address))
-            {
-                this.OnChainEvent?.Invoke(this, e);
-            }
-        }
     }
 }

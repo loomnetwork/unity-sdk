@@ -275,6 +275,12 @@ namespace Loom.Unity3d
             /// </summary>
             [JsonProperty("caller")]
             public string CallerAddress;
+
+            /// <summary>
+            /// Virtual machine type.
+            /// </summary>
+            [JsonProperty("vmType")]
+            public VMType VmType;
         }
 
         /// <summary>
@@ -285,12 +291,26 @@ namespace Loom.Unity3d
         /// <param name="query">Query parameters object.</param>
         /// <param name="caller">Optional caller address.</param>
         /// <returns>Deserialized response.</returns>
-        public async Task<T> QueryAsync<T>(Address contract, IMessage query, Address caller = null)
+        public async Task<T> QueryAsync<T>(Address contract, IMessage query, Address caller = null, VMType vmType = VMType.Plugin)
+        {
+            return await QueryAsync<T>(contract, query.ToByteArray(), caller, vmType);
+        }
+
+        /// <summary>
+        /// Queries the current state of a contract.
+        /// </summary>
+        /// <typeparam name="T">The expected response type, must be deserializable with Newtonsoft.Json.</typeparam>
+        /// <param name="contract">Address of the contract to query.</param>
+        /// <param name="query">Raw query parameters data.</param>
+        /// <param name="caller">Optional caller address.</param>
+        /// <returns>Deserialized response.</returns>
+        public async Task<T> QueryAsync<T>(Address contract, byte[] query, Address caller = null, VMType vmType = VMType.Plugin)
         {
             var queryParams = new QueryParams
             {
                 ContractAddress = contract.LocalAddressHexString,
-                Params = query.ToByteArray()
+                Params = query,
+                VmType = vmType
             };
             if (caller != null)
             {

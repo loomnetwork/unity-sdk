@@ -30,21 +30,26 @@ namespace Loom.Unity3d {
             "CghjaGFpbl9pZBgBIAEoCRINCgVsb2NhbBgCIAEoDCInCgtUcmFuc2FjdGlv",
             "bhIKCgJpZBgBIAEoDRIMCgRkYXRhGAIgASgMIkcKCU1lc3NhZ2VUeBIUCgJ0",
             "bxgBIAEoCzIILkFkZHJlc3MSFgoEZnJvbRgCIAEoCzIILkFkZHJlc3MSDAoE",
-            "ZGF0YRgDIAEoDCIyCghEZXBsb3lUeBIYCgd2bV90eXBlGAEgASgOMgcuVk1U",
-            "eXBlEgwKBGNvZGUYAiABKAwiMQoGQ2FsbFR4EhgKB3ZtX3R5cGUYASABKA4y",
-            "By5WTVR5cGUSDQoFaW5wdXQYAiABKAwiKQoKUGx1Z2luQ29kZRIMCgRuYW1l",
-            "GAEgASgJEg0KBWlucHV0GAIgASgMIlsKB1JlcXVlc3QSIwoMY29udGVudF90",
-            "eXBlGAEgASgOMg0uRW5jb2RpbmdUeXBlEh0KBmFjY2VwdBgCIAEoDjINLkVu",
-            "Y29kaW5nVHlwZRIMCgRib2R5GAMgASgMIj0KCFJlc3BvbnNlEiMKDGNvbnRl",
-            "bnRfdHlwZRgBIAEoDjINLkVuY29kaW5nVHlwZRIMCgRib2R5GAIgASgMIjIK",
-            "EkNvbnRyYWN0TWV0aG9kQ2FsbBIOCgZtZXRob2QYASABKAkSDAoEYXJncxgC",
-            "IAEoDCKrAQoJRXZlbnREYXRhEg4KBnRvcGljcxgBIAMoCRIYCgZjYWxsZXIY",
-            "AiABKAsyCC5BZGRyZXNzEhkKB2FkZHJlc3MYAyABKAsyCC5BZGRyZXNzEhMK",
-            "C3BsdWdpbl9uYW1lGAQgASgJEhQKDGJsb2NrX2hlaWdodBgFIAEoBBIUCgxl",
-            "bmNvZGVkX2JvZHkYBiABKAwSGAoQb3JpZ2luYWxfcmVxdWVzdBgHIAEoDCod",
-            "CgZWTVR5cGUSCgoGUExVR0lOEAASBwoDRVZNEAEqJwoMRW5jb2RpbmdUeXBl",
-            "EggKBEpTT04QABINCglQUk9UT0JVRjMQAUIPqgIMTG9vbS5Vbml0eTNkYgZw",
-            "cm90bzM="));
+            "ZGF0YRgDIAEoDCJACghEZXBsb3lUeBIYCgd2bV90eXBlGAEgASgOMgcuVk1U",
+            "eXBlEgwKBGNvZGUYAiABKAwSDAoEbmFtZRgDIAEoCSI8Cg5EZXBsb3lSZXNw",
+            "b25zZRIaCghjb250cmFjdBgBIAEoCzIILkFkZHJlc3MSDgoGb3V0cHV0GAIg",
+            "ASgMIjcKEkRlcGxveVJlc3BvbnNlRGF0YRIPCgd0eF9oYXNoGAEgASgMEhAK",
+            "CGJ5dGVjb2RlGAIgASgMIjEKBkNhbGxUeBIYCgd2bV90eXBlGAEgASgOMgcu",
+            "Vk1UeXBlEg0KBWlucHV0GAIgASgMIikKClBsdWdpbkNvZGUSDAoEbmFtZRgB",
+            "IAEoCRINCgVpbnB1dBgCIAEoDCJbCgdSZXF1ZXN0EiMKDGNvbnRlbnRfdHlw",
+            "ZRgBIAEoDjINLkVuY29kaW5nVHlwZRIdCgZhY2NlcHQYAiABKA4yDS5FbmNv",
+            "ZGluZ1R5cGUSDAoEYm9keRgDIAEoDCI9CghSZXNwb25zZRIjCgxjb250ZW50",
+            "X3R5cGUYASABKA4yDS5FbmNvZGluZ1R5cGUSDAoEYm9keRgCIAEoDCIyChJD",
+            "b250cmFjdE1ldGhvZENhbGwSDgoGbWV0aG9kGAEgASgJEgwKBGFyZ3MYAiAB",
+            "KAwiQQoFRXZlbnQSGgoIY29udHJhY3QYASABKAsyCC5BZGRyZXNzEg4KBnRv",
+            "cGljcxgCIAMoDBIMCgRkYXRhGAMgASgMItYBCgxFdm1UeFJlY2VpcHQSGQoR",
+            "dHJhbnNhY3Rpb25faW5kZXgYASABKAUSEgoKYmxvY2tfaGFzaBgCIAEoDBIU",
+            "CgxibG9ja19udW1iZXIYAyABKAMSGwoTY3VtdWxhdGl2ZV9nYXNfdXNlZBgE",
+            "IAEoBRIQCghnYXNfdXNlZBgFIAEoBRIYChBjb250cmFjdF9hZGRyZXNzGAYg",
+            "ASgMEhQKBGxvZ3MYByADKAsyBi5FdmVudBISCgpsb2dzX2Jsb29tGAggASgM",
+            "Eg4KBnN0YXR1cxgJIAEoBSodCgZWTVR5cGUSCgoGUExVR0lOEAASBwoDRVZN",
+            "EAEqJwoMRW5jb2RpbmdUeXBlEggKBEpTT04QABINCglQUk9UT0JVRjMQAUIP",
+            "qgIMTG9vbS5Vbml0eTNkYgZwcm90bzM="));
       descriptor = pbr::FileDescriptor.FromGeneratedCode(descriptorData,
           new pbr::FileDescriptor[] { },
           new pbr::GeneratedClrTypeInfo(new[] {typeof(global::Loom.Unity3d.VMType), typeof(global::Loom.Unity3d.EncodingType), }, new pbr::GeneratedClrTypeInfo[] {
@@ -53,13 +58,16 @@ namespace Loom.Unity3d {
             new pbr::GeneratedClrTypeInfo(typeof(global::Loom.Unity3d.Address), global::Loom.Unity3d.Address.Parser, new[]{ "ChainId", "Local" }, null, null, null),
             new pbr::GeneratedClrTypeInfo(typeof(global::Loom.Unity3d.Transaction), global::Loom.Unity3d.Transaction.Parser, new[]{ "Id", "Data" }, null, null, null),
             new pbr::GeneratedClrTypeInfo(typeof(global::Loom.Unity3d.MessageTx), global::Loom.Unity3d.MessageTx.Parser, new[]{ "To", "From", "Data" }, null, null, null),
-            new pbr::GeneratedClrTypeInfo(typeof(global::Loom.Unity3d.DeployTx), global::Loom.Unity3d.DeployTx.Parser, new[]{ "VmType", "Code" }, null, null, null),
+            new pbr::GeneratedClrTypeInfo(typeof(global::Loom.Unity3d.DeployTx), global::Loom.Unity3d.DeployTx.Parser, new[]{ "VmType", "Code", "Name" }, null, null, null),
+            new pbr::GeneratedClrTypeInfo(typeof(global::Loom.Unity3d.DeployResponse), global::Loom.Unity3d.DeployResponse.Parser, new[]{ "Contract", "Output" }, null, null, null),
+            new pbr::GeneratedClrTypeInfo(typeof(global::Loom.Unity3d.DeployResponseData), global::Loom.Unity3d.DeployResponseData.Parser, new[]{ "TxHash", "Bytecode" }, null, null, null),
             new pbr::GeneratedClrTypeInfo(typeof(global::Loom.Unity3d.CallTx), global::Loom.Unity3d.CallTx.Parser, new[]{ "VmType", "Input" }, null, null, null),
             new pbr::GeneratedClrTypeInfo(typeof(global::Loom.Unity3d.PluginCode), global::Loom.Unity3d.PluginCode.Parser, new[]{ "Name", "Input" }, null, null, null),
             new pbr::GeneratedClrTypeInfo(typeof(global::Loom.Unity3d.Request), global::Loom.Unity3d.Request.Parser, new[]{ "ContentType", "Accept", "Body" }, null, null, null),
             new pbr::GeneratedClrTypeInfo(typeof(global::Loom.Unity3d.Response), global::Loom.Unity3d.Response.Parser, new[]{ "ContentType", "Body" }, null, null, null),
             new pbr::GeneratedClrTypeInfo(typeof(global::Loom.Unity3d.ContractMethodCall), global::Loom.Unity3d.ContractMethodCall.Parser, new[]{ "Method", "Args" }, null, null, null),
-            new pbr::GeneratedClrTypeInfo(typeof(global::Loom.Unity3d.EventData), global::Loom.Unity3d.EventData.Parser, new[]{ "Topics", "Caller", "Address", "PluginName", "BlockHeight", "EncodedBody", "OriginalRequest" }, null, null, null)
+            new pbr::GeneratedClrTypeInfo(typeof(global::Loom.Unity3d.Event), global::Loom.Unity3d.Event.Parser, new[]{ "Contract", "Topics", "Data" }, null, null, null),
+            new pbr::GeneratedClrTypeInfo(typeof(global::Loom.Unity3d.EvmTxReceipt), global::Loom.Unity3d.EvmTxReceipt.Parser, new[]{ "TransactionIndex", "BlockHash", "BlockNumber", "CumulativeGasUsed", "GasUsed", "ContractAddress", "Logs", "LogsBloom", "Status" }, null, null, null)
           }));
     }
     #endregion
@@ -959,6 +967,7 @@ namespace Loom.Unity3d {
     public DeployTx(DeployTx other) : this() {
       vmType_ = other.vmType_;
       code_ = other.code_;
+      name_ = other.name_;
       _unknownFields = pb::UnknownFieldSet.Clone(other._unknownFields);
     }
 
@@ -989,6 +998,17 @@ namespace Loom.Unity3d {
       }
     }
 
+    /// <summary>Field number for the "name" field.</summary>
+    public const int NameFieldNumber = 3;
+    private string name_ = "";
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public string Name {
+      get { return name_; }
+      set {
+        name_ = pb::ProtoPreconditions.CheckNotNull(value, "value");
+      }
+    }
+
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     public override bool Equals(object other) {
       return Equals(other as DeployTx);
@@ -1004,6 +1024,7 @@ namespace Loom.Unity3d {
       }
       if (VmType != other.VmType) return false;
       if (Code != other.Code) return false;
+      if (Name != other.Name) return false;
       return Equals(_unknownFields, other._unknownFields);
     }
 
@@ -1012,6 +1033,7 @@ namespace Loom.Unity3d {
       int hash = 1;
       if (VmType != 0) hash ^= VmType.GetHashCode();
       if (Code.Length != 0) hash ^= Code.GetHashCode();
+      if (Name.Length != 0) hash ^= Name.GetHashCode();
       if (_unknownFields != null) {
         hash ^= _unknownFields.GetHashCode();
       }
@@ -1033,6 +1055,10 @@ namespace Loom.Unity3d {
         output.WriteRawTag(18);
         output.WriteBytes(Code);
       }
+      if (Name.Length != 0) {
+        output.WriteRawTag(26);
+        output.WriteString(Name);
+      }
       if (_unknownFields != null) {
         _unknownFields.WriteTo(output);
       }
@@ -1046,6 +1072,9 @@ namespace Loom.Unity3d {
       }
       if (Code.Length != 0) {
         size += 1 + pb::CodedOutputStream.ComputeBytesSize(Code);
+      }
+      if (Name.Length != 0) {
+        size += 1 + pb::CodedOutputStream.ComputeStringSize(Name);
       }
       if (_unknownFields != null) {
         size += _unknownFields.CalculateSize();
@@ -1063,6 +1092,9 @@ namespace Loom.Unity3d {
       }
       if (other.Code.Length != 0) {
         Code = other.Code;
+      }
+      if (other.Name.Length != 0) {
+        Name = other.Name;
       }
       _unknownFields = pb::UnknownFieldSet.MergeFrom(_unknownFields, other._unknownFields);
     }
@@ -1083,6 +1115,330 @@ namespace Loom.Unity3d {
             Code = input.ReadBytes();
             break;
           }
+          case 26: {
+            Name = input.ReadString();
+            break;
+          }
+        }
+      }
+    }
+
+  }
+
+  public sealed partial class DeployResponse : pb::IMessage<DeployResponse> {
+    private static readonly pb::MessageParser<DeployResponse> _parser = new pb::MessageParser<DeployResponse>(() => new DeployResponse());
+    private pb::UnknownFieldSet _unknownFields;
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public static pb::MessageParser<DeployResponse> Parser { get { return _parser; } }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public static pbr::MessageDescriptor Descriptor {
+      get { return global::Loom.Unity3d.LoomReflection.Descriptor.MessageTypes[6]; }
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    pbr::MessageDescriptor pb::IMessage.Descriptor {
+      get { return Descriptor; }
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public DeployResponse() {
+      OnConstruction();
+    }
+
+    partial void OnConstruction();
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public DeployResponse(DeployResponse other) : this() {
+      Contract = other.contract_ != null ? other.Contract.Clone() : null;
+      output_ = other.output_;
+      _unknownFields = pb::UnknownFieldSet.Clone(other._unknownFields);
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public DeployResponse Clone() {
+      return new DeployResponse(this);
+    }
+
+    /// <summary>Field number for the "contract" field.</summary>
+    public const int ContractFieldNumber = 1;
+    private global::Loom.Unity3d.Address contract_;
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public global::Loom.Unity3d.Address Contract {
+      get { return contract_; }
+      set {
+        contract_ = value;
+      }
+    }
+
+    /// <summary>Field number for the "output" field.</summary>
+    public const int OutputFieldNumber = 2;
+    private pb::ByteString output_ = pb::ByteString.Empty;
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public pb::ByteString Output {
+      get { return output_; }
+      set {
+        output_ = pb::ProtoPreconditions.CheckNotNull(value, "value");
+      }
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public override bool Equals(object other) {
+      return Equals(other as DeployResponse);
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public bool Equals(DeployResponse other) {
+      if (ReferenceEquals(other, null)) {
+        return false;
+      }
+      if (ReferenceEquals(other, this)) {
+        return true;
+      }
+      if (!object.Equals(Contract, other.Contract)) return false;
+      if (Output != other.Output) return false;
+      return Equals(_unknownFields, other._unknownFields);
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public override int GetHashCode() {
+      int hash = 1;
+      if (contract_ != null) hash ^= Contract.GetHashCode();
+      if (Output.Length != 0) hash ^= Output.GetHashCode();
+      if (_unknownFields != null) {
+        hash ^= _unknownFields.GetHashCode();
+      }
+      return hash;
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public override string ToString() {
+      return pb::JsonFormatter.ToDiagnosticString(this);
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public void WriteTo(pb::CodedOutputStream output) {
+      if (contract_ != null) {
+        output.WriteRawTag(10);
+        output.WriteMessage(Contract);
+      }
+      if (Output.Length != 0) {
+        output.WriteRawTag(18);
+        output.WriteBytes(Output);
+      }
+      if (_unknownFields != null) {
+        _unknownFields.WriteTo(output);
+      }
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public int CalculateSize() {
+      int size = 0;
+      if (contract_ != null) {
+        size += 1 + pb::CodedOutputStream.ComputeMessageSize(Contract);
+      }
+      if (Output.Length != 0) {
+        size += 1 + pb::CodedOutputStream.ComputeBytesSize(Output);
+      }
+      if (_unknownFields != null) {
+        size += _unknownFields.CalculateSize();
+      }
+      return size;
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public void MergeFrom(DeployResponse other) {
+      if (other == null) {
+        return;
+      }
+      if (other.contract_ != null) {
+        if (contract_ == null) {
+          contract_ = new global::Loom.Unity3d.Address();
+        }
+        Contract.MergeFrom(other.Contract);
+      }
+      if (other.Output.Length != 0) {
+        Output = other.Output;
+      }
+      _unknownFields = pb::UnknownFieldSet.MergeFrom(_unknownFields, other._unknownFields);
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public void MergeFrom(pb::CodedInputStream input) {
+      uint tag;
+      while ((tag = input.ReadTag()) != 0) {
+        switch(tag) {
+          default:
+            _unknownFields = pb::UnknownFieldSet.MergeFieldFrom(_unknownFields, input);
+            break;
+          case 10: {
+            if (contract_ == null) {
+              contract_ = new global::Loom.Unity3d.Address();
+            }
+            input.ReadMessage(contract_);
+            break;
+          }
+          case 18: {
+            Output = input.ReadBytes();
+            break;
+          }
+        }
+      }
+    }
+
+  }
+
+  public sealed partial class DeployResponseData : pb::IMessage<DeployResponseData> {
+    private static readonly pb::MessageParser<DeployResponseData> _parser = new pb::MessageParser<DeployResponseData>(() => new DeployResponseData());
+    private pb::UnknownFieldSet _unknownFields;
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public static pb::MessageParser<DeployResponseData> Parser { get { return _parser; } }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public static pbr::MessageDescriptor Descriptor {
+      get { return global::Loom.Unity3d.LoomReflection.Descriptor.MessageTypes[7]; }
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    pbr::MessageDescriptor pb::IMessage.Descriptor {
+      get { return Descriptor; }
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public DeployResponseData() {
+      OnConstruction();
+    }
+
+    partial void OnConstruction();
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public DeployResponseData(DeployResponseData other) : this() {
+      txHash_ = other.txHash_;
+      bytecode_ = other.bytecode_;
+      _unknownFields = pb::UnknownFieldSet.Clone(other._unknownFields);
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public DeployResponseData Clone() {
+      return new DeployResponseData(this);
+    }
+
+    /// <summary>Field number for the "tx_hash" field.</summary>
+    public const int TxHashFieldNumber = 1;
+    private pb::ByteString txHash_ = pb::ByteString.Empty;
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public pb::ByteString TxHash {
+      get { return txHash_; }
+      set {
+        txHash_ = pb::ProtoPreconditions.CheckNotNull(value, "value");
+      }
+    }
+
+    /// <summary>Field number for the "bytecode" field.</summary>
+    public const int BytecodeFieldNumber = 2;
+    private pb::ByteString bytecode_ = pb::ByteString.Empty;
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public pb::ByteString Bytecode {
+      get { return bytecode_; }
+      set {
+        bytecode_ = pb::ProtoPreconditions.CheckNotNull(value, "value");
+      }
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public override bool Equals(object other) {
+      return Equals(other as DeployResponseData);
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public bool Equals(DeployResponseData other) {
+      if (ReferenceEquals(other, null)) {
+        return false;
+      }
+      if (ReferenceEquals(other, this)) {
+        return true;
+      }
+      if (TxHash != other.TxHash) return false;
+      if (Bytecode != other.Bytecode) return false;
+      return Equals(_unknownFields, other._unknownFields);
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public override int GetHashCode() {
+      int hash = 1;
+      if (TxHash.Length != 0) hash ^= TxHash.GetHashCode();
+      if (Bytecode.Length != 0) hash ^= Bytecode.GetHashCode();
+      if (_unknownFields != null) {
+        hash ^= _unknownFields.GetHashCode();
+      }
+      return hash;
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public override string ToString() {
+      return pb::JsonFormatter.ToDiagnosticString(this);
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public void WriteTo(pb::CodedOutputStream output) {
+      if (TxHash.Length != 0) {
+        output.WriteRawTag(10);
+        output.WriteBytes(TxHash);
+      }
+      if (Bytecode.Length != 0) {
+        output.WriteRawTag(18);
+        output.WriteBytes(Bytecode);
+      }
+      if (_unknownFields != null) {
+        _unknownFields.WriteTo(output);
+      }
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public int CalculateSize() {
+      int size = 0;
+      if (TxHash.Length != 0) {
+        size += 1 + pb::CodedOutputStream.ComputeBytesSize(TxHash);
+      }
+      if (Bytecode.Length != 0) {
+        size += 1 + pb::CodedOutputStream.ComputeBytesSize(Bytecode);
+      }
+      if (_unknownFields != null) {
+        size += _unknownFields.CalculateSize();
+      }
+      return size;
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public void MergeFrom(DeployResponseData other) {
+      if (other == null) {
+        return;
+      }
+      if (other.TxHash.Length != 0) {
+        TxHash = other.TxHash;
+      }
+      if (other.Bytecode.Length != 0) {
+        Bytecode = other.Bytecode;
+      }
+      _unknownFields = pb::UnknownFieldSet.MergeFrom(_unknownFields, other._unknownFields);
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public void MergeFrom(pb::CodedInputStream input) {
+      uint tag;
+      while ((tag = input.ReadTag()) != 0) {
+        switch(tag) {
+          default:
+            _unknownFields = pb::UnknownFieldSet.MergeFieldFrom(_unknownFields, input);
+            break;
+          case 10: {
+            TxHash = input.ReadBytes();
+            break;
+          }
+          case 18: {
+            Bytecode = input.ReadBytes();
+            break;
+          }
         }
       }
     }
@@ -1097,7 +1453,7 @@ namespace Loom.Unity3d {
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     public static pbr::MessageDescriptor Descriptor {
-      get { return global::Loom.Unity3d.LoomReflection.Descriptor.MessageTypes[6]; }
+      get { return global::Loom.Unity3d.LoomReflection.Descriptor.MessageTypes[8]; }
     }
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
@@ -1254,7 +1610,7 @@ namespace Loom.Unity3d {
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     public static pbr::MessageDescriptor Descriptor {
-      get { return global::Loom.Unity3d.LoomReflection.Descriptor.MessageTypes[7]; }
+      get { return global::Loom.Unity3d.LoomReflection.Descriptor.MessageTypes[9]; }
     }
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
@@ -1411,7 +1767,7 @@ namespace Loom.Unity3d {
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     public static pbr::MessageDescriptor Descriptor {
-      get { return global::Loom.Unity3d.LoomReflection.Descriptor.MessageTypes[8]; }
+      get { return global::Loom.Unity3d.LoomReflection.Descriptor.MessageTypes[10]; }
     }
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
@@ -1596,7 +1952,7 @@ namespace Loom.Unity3d {
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     public static pbr::MessageDescriptor Descriptor {
-      get { return global::Loom.Unity3d.LoomReflection.Descriptor.MessageTypes[9]; }
+      get { return global::Loom.Unity3d.LoomReflection.Descriptor.MessageTypes[11]; }
     }
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
@@ -1753,7 +2109,7 @@ namespace Loom.Unity3d {
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     public static pbr::MessageDescriptor Descriptor {
-      get { return global::Loom.Unity3d.LoomReflection.Descriptor.MessageTypes[10]; }
+      get { return global::Loom.Unity3d.LoomReflection.Descriptor.MessageTypes[12]; }
     }
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
@@ -1902,15 +2258,15 @@ namespace Loom.Unity3d {
 
   }
 
-  public sealed partial class EventData : pb::IMessage<EventData> {
-    private static readonly pb::MessageParser<EventData> _parser = new pb::MessageParser<EventData>(() => new EventData());
+  public sealed partial class Event : pb::IMessage<Event> {
+    private static readonly pb::MessageParser<Event> _parser = new pb::MessageParser<Event>(() => new Event());
     private pb::UnknownFieldSet _unknownFields;
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
-    public static pb::MessageParser<EventData> Parser { get { return _parser; } }
+    public static pb::MessageParser<Event> Parser { get { return _parser; } }
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     public static pbr::MessageDescriptor Descriptor {
-      get { return global::Loom.Unity3d.LoomReflection.Descriptor.MessageTypes[11]; }
+      get { return global::Loom.Unity3d.LoomReflection.Descriptor.MessageTypes[13]; }
     }
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
@@ -1919,138 +2275,82 @@ namespace Loom.Unity3d {
     }
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
-    public EventData() {
+    public Event() {
       OnConstruction();
     }
 
     partial void OnConstruction();
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
-    public EventData(EventData other) : this() {
+    public Event(Event other) : this() {
+      Contract = other.contract_ != null ? other.Contract.Clone() : null;
       topics_ = other.topics_.Clone();
-      Caller = other.caller_ != null ? other.Caller.Clone() : null;
-      Address = other.address_ != null ? other.Address.Clone() : null;
-      pluginName_ = other.pluginName_;
-      blockHeight_ = other.blockHeight_;
-      encodedBody_ = other.encodedBody_;
-      originalRequest_ = other.originalRequest_;
+      data_ = other.data_;
       _unknownFields = pb::UnknownFieldSet.Clone(other._unknownFields);
     }
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
-    public EventData Clone() {
-      return new EventData(this);
+    public Event Clone() {
+      return new Event(this);
+    }
+
+    /// <summary>Field number for the "contract" field.</summary>
+    public const int ContractFieldNumber = 1;
+    private global::Loom.Unity3d.Address contract_;
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public global::Loom.Unity3d.Address Contract {
+      get { return contract_; }
+      set {
+        contract_ = value;
+      }
     }
 
     /// <summary>Field number for the "topics" field.</summary>
-    public const int TopicsFieldNumber = 1;
-    private static readonly pb::FieldCodec<string> _repeated_topics_codec
-        = pb::FieldCodec.ForString(10);
-    private readonly pbc::RepeatedField<string> topics_ = new pbc::RepeatedField<string>();
+    public const int TopicsFieldNumber = 2;
+    private static readonly pb::FieldCodec<pb::ByteString> _repeated_topics_codec
+        = pb::FieldCodec.ForBytes(18);
+    private readonly pbc::RepeatedField<pb::ByteString> topics_ = new pbc::RepeatedField<pb::ByteString>();
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
-    public pbc::RepeatedField<string> Topics {
+    public pbc::RepeatedField<pb::ByteString> Topics {
       get { return topics_; }
     }
 
-    /// <summary>Field number for the "caller" field.</summary>
-    public const int CallerFieldNumber = 2;
-    private global::Loom.Unity3d.Address caller_;
+    /// <summary>Field number for the "data" field.</summary>
+    public const int DataFieldNumber = 3;
+    private pb::ByteString data_ = pb::ByteString.Empty;
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
-    public global::Loom.Unity3d.Address Caller {
-      get { return caller_; }
+    public pb::ByteString Data {
+      get { return data_; }
       set {
-        caller_ = value;
-      }
-    }
-
-    /// <summary>Field number for the "address" field.</summary>
-    public const int AddressFieldNumber = 3;
-    private global::Loom.Unity3d.Address address_;
-    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
-    public global::Loom.Unity3d.Address Address {
-      get { return address_; }
-      set {
-        address_ = value;
-      }
-    }
-
-    /// <summary>Field number for the "plugin_name" field.</summary>
-    public const int PluginNameFieldNumber = 4;
-    private string pluginName_ = "";
-    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
-    public string PluginName {
-      get { return pluginName_; }
-      set {
-        pluginName_ = pb::ProtoPreconditions.CheckNotNull(value, "value");
-      }
-    }
-
-    /// <summary>Field number for the "block_height" field.</summary>
-    public const int BlockHeightFieldNumber = 5;
-    private ulong blockHeight_;
-    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
-    public ulong BlockHeight {
-      get { return blockHeight_; }
-      set {
-        blockHeight_ = value;
-      }
-    }
-
-    /// <summary>Field number for the "encoded_body" field.</summary>
-    public const int EncodedBodyFieldNumber = 6;
-    private pb::ByteString encodedBody_ = pb::ByteString.Empty;
-    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
-    public pb::ByteString EncodedBody {
-      get { return encodedBody_; }
-      set {
-        encodedBody_ = pb::ProtoPreconditions.CheckNotNull(value, "value");
-      }
-    }
-
-    /// <summary>Field number for the "original_request" field.</summary>
-    public const int OriginalRequestFieldNumber = 7;
-    private pb::ByteString originalRequest_ = pb::ByteString.Empty;
-    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
-    public pb::ByteString OriginalRequest {
-      get { return originalRequest_; }
-      set {
-        originalRequest_ = pb::ProtoPreconditions.CheckNotNull(value, "value");
+        data_ = pb::ProtoPreconditions.CheckNotNull(value, "value");
       }
     }
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     public override bool Equals(object other) {
-      return Equals(other as EventData);
+      return Equals(other as Event);
     }
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
-    public bool Equals(EventData other) {
+    public bool Equals(Event other) {
       if (ReferenceEquals(other, null)) {
         return false;
       }
       if (ReferenceEquals(other, this)) {
         return true;
       }
+      if (!object.Equals(Contract, other.Contract)) return false;
       if(!topics_.Equals(other.topics_)) return false;
-      if (!object.Equals(Caller, other.Caller)) return false;
-      if (!object.Equals(Address, other.Address)) return false;
-      if (PluginName != other.PluginName) return false;
-      if (BlockHeight != other.BlockHeight) return false;
-      if (EncodedBody != other.EncodedBody) return false;
-      if (OriginalRequest != other.OriginalRequest) return false;
+      if (Data != other.Data) return false;
       return Equals(_unknownFields, other._unknownFields);
     }
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     public override int GetHashCode() {
       int hash = 1;
+      if (contract_ != null) hash ^= Contract.GetHashCode();
       hash ^= topics_.GetHashCode();
-      if (caller_ != null) hash ^= Caller.GetHashCode();
-      if (address_ != null) hash ^= Address.GetHashCode();
-      if (PluginName.Length != 0) hash ^= PluginName.GetHashCode();
-      if (BlockHeight != 0UL) hash ^= BlockHeight.GetHashCode();
-      if (EncodedBody.Length != 0) hash ^= EncodedBody.GetHashCode();
-      if (OriginalRequest.Length != 0) hash ^= OriginalRequest.GetHashCode();
+      if (Data.Length != 0) hash ^= Data.GetHashCode();
       if (_unknownFields != null) {
         hash ^= _unknownFields.GetHashCode();
       }
@@ -2064,30 +2364,14 @@ namespace Loom.Unity3d {
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     public void WriteTo(pb::CodedOutputStream output) {
+      if (contract_ != null) {
+        output.WriteRawTag(10);
+        output.WriteMessage(Contract);
+      }
       topics_.WriteTo(output, _repeated_topics_codec);
-      if (caller_ != null) {
-        output.WriteRawTag(18);
-        output.WriteMessage(Caller);
-      }
-      if (address_ != null) {
+      if (Data.Length != 0) {
         output.WriteRawTag(26);
-        output.WriteMessage(Address);
-      }
-      if (PluginName.Length != 0) {
-        output.WriteRawTag(34);
-        output.WriteString(PluginName);
-      }
-      if (BlockHeight != 0UL) {
-        output.WriteRawTag(40);
-        output.WriteUInt64(BlockHeight);
-      }
-      if (EncodedBody.Length != 0) {
-        output.WriteRawTag(50);
-        output.WriteBytes(EncodedBody);
-      }
-      if (OriginalRequest.Length != 0) {
-        output.WriteRawTag(58);
-        output.WriteBytes(OriginalRequest);
+        output.WriteBytes(Data);
       }
       if (_unknownFields != null) {
         _unknownFields.WriteTo(output);
@@ -2097,24 +2381,12 @@ namespace Loom.Unity3d {
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     public int CalculateSize() {
       int size = 0;
+      if (contract_ != null) {
+        size += 1 + pb::CodedOutputStream.ComputeMessageSize(Contract);
+      }
       size += topics_.CalculateSize(_repeated_topics_codec);
-      if (caller_ != null) {
-        size += 1 + pb::CodedOutputStream.ComputeMessageSize(Caller);
-      }
-      if (address_ != null) {
-        size += 1 + pb::CodedOutputStream.ComputeMessageSize(Address);
-      }
-      if (PluginName.Length != 0) {
-        size += 1 + pb::CodedOutputStream.ComputeStringSize(PluginName);
-      }
-      if (BlockHeight != 0UL) {
-        size += 1 + pb::CodedOutputStream.ComputeUInt64Size(BlockHeight);
-      }
-      if (EncodedBody.Length != 0) {
-        size += 1 + pb::CodedOutputStream.ComputeBytesSize(EncodedBody);
-      }
-      if (OriginalRequest.Length != 0) {
-        size += 1 + pb::CodedOutputStream.ComputeBytesSize(OriginalRequest);
+      if (Data.Length != 0) {
+        size += 1 + pb::CodedOutputStream.ComputeBytesSize(Data);
       }
       if (_unknownFields != null) {
         size += _unknownFields.CalculateSize();
@@ -2123,34 +2395,19 @@ namespace Loom.Unity3d {
     }
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
-    public void MergeFrom(EventData other) {
+    public void MergeFrom(Event other) {
       if (other == null) {
         return;
       }
+      if (other.contract_ != null) {
+        if (contract_ == null) {
+          contract_ = new global::Loom.Unity3d.Address();
+        }
+        Contract.MergeFrom(other.Contract);
+      }
       topics_.Add(other.topics_);
-      if (other.caller_ != null) {
-        if (caller_ == null) {
-          caller_ = new global::Loom.Unity3d.Address();
-        }
-        Caller.MergeFrom(other.Caller);
-      }
-      if (other.address_ != null) {
-        if (address_ == null) {
-          address_ = new global::Loom.Unity3d.Address();
-        }
-        Address.MergeFrom(other.Address);
-      }
-      if (other.PluginName.Length != 0) {
-        PluginName = other.PluginName;
-      }
-      if (other.BlockHeight != 0UL) {
-        BlockHeight = other.BlockHeight;
-      }
-      if (other.EncodedBody.Length != 0) {
-        EncodedBody = other.EncodedBody;
-      }
-      if (other.OriginalRequest.Length != 0) {
-        OriginalRequest = other.OriginalRequest;
+      if (other.Data.Length != 0) {
+        Data = other.Data;
       }
       _unknownFields = pb::UnknownFieldSet.MergeFrom(_unknownFields, other._unknownFields);
     }
@@ -2164,37 +2421,363 @@ namespace Loom.Unity3d {
             _unknownFields = pb::UnknownFieldSet.MergeFieldFrom(_unknownFields, input);
             break;
           case 10: {
-            topics_.AddEntriesFrom(input, _repeated_topics_codec);
+            if (contract_ == null) {
+              contract_ = new global::Loom.Unity3d.Address();
+            }
+            input.ReadMessage(contract_);
             break;
           }
           case 18: {
-            if (caller_ == null) {
-              caller_ = new global::Loom.Unity3d.Address();
-            }
-            input.ReadMessage(caller_);
+            topics_.AddEntriesFrom(input, _repeated_topics_codec);
             break;
           }
           case 26: {
-            if (address_ == null) {
-              address_ = new global::Loom.Unity3d.Address();
-            }
-            input.ReadMessage(address_);
+            Data = input.ReadBytes();
             break;
           }
-          case 34: {
-            PluginName = input.ReadString();
+        }
+      }
+    }
+
+  }
+
+  public sealed partial class EvmTxReceipt : pb::IMessage<EvmTxReceipt> {
+    private static readonly pb::MessageParser<EvmTxReceipt> _parser = new pb::MessageParser<EvmTxReceipt>(() => new EvmTxReceipt());
+    private pb::UnknownFieldSet _unknownFields;
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public static pb::MessageParser<EvmTxReceipt> Parser { get { return _parser; } }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public static pbr::MessageDescriptor Descriptor {
+      get { return global::Loom.Unity3d.LoomReflection.Descriptor.MessageTypes[14]; }
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    pbr::MessageDescriptor pb::IMessage.Descriptor {
+      get { return Descriptor; }
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public EvmTxReceipt() {
+      OnConstruction();
+    }
+
+    partial void OnConstruction();
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public EvmTxReceipt(EvmTxReceipt other) : this() {
+      transactionIndex_ = other.transactionIndex_;
+      blockHash_ = other.blockHash_;
+      blockNumber_ = other.blockNumber_;
+      cumulativeGasUsed_ = other.cumulativeGasUsed_;
+      gasUsed_ = other.gasUsed_;
+      contractAddress_ = other.contractAddress_;
+      logs_ = other.logs_.Clone();
+      logsBloom_ = other.logsBloom_;
+      status_ = other.status_;
+      _unknownFields = pb::UnknownFieldSet.Clone(other._unknownFields);
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public EvmTxReceipt Clone() {
+      return new EvmTxReceipt(this);
+    }
+
+    /// <summary>Field number for the "transaction_index" field.</summary>
+    public const int TransactionIndexFieldNumber = 1;
+    private int transactionIndex_;
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public int TransactionIndex {
+      get { return transactionIndex_; }
+      set {
+        transactionIndex_ = value;
+      }
+    }
+
+    /// <summary>Field number for the "block_hash" field.</summary>
+    public const int BlockHashFieldNumber = 2;
+    private pb::ByteString blockHash_ = pb::ByteString.Empty;
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public pb::ByteString BlockHash {
+      get { return blockHash_; }
+      set {
+        blockHash_ = pb::ProtoPreconditions.CheckNotNull(value, "value");
+      }
+    }
+
+    /// <summary>Field number for the "block_number" field.</summary>
+    public const int BlockNumberFieldNumber = 3;
+    private long blockNumber_;
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public long BlockNumber {
+      get { return blockNumber_; }
+      set {
+        blockNumber_ = value;
+      }
+    }
+
+    /// <summary>Field number for the "cumulative_gas_used" field.</summary>
+    public const int CumulativeGasUsedFieldNumber = 4;
+    private int cumulativeGasUsed_;
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public int CumulativeGasUsed {
+      get { return cumulativeGasUsed_; }
+      set {
+        cumulativeGasUsed_ = value;
+      }
+    }
+
+    /// <summary>Field number for the "gas_used" field.</summary>
+    public const int GasUsedFieldNumber = 5;
+    private int gasUsed_;
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public int GasUsed {
+      get { return gasUsed_; }
+      set {
+        gasUsed_ = value;
+      }
+    }
+
+    /// <summary>Field number for the "contract_address" field.</summary>
+    public const int ContractAddressFieldNumber = 6;
+    private pb::ByteString contractAddress_ = pb::ByteString.Empty;
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public pb::ByteString ContractAddress {
+      get { return contractAddress_; }
+      set {
+        contractAddress_ = pb::ProtoPreconditions.CheckNotNull(value, "value");
+      }
+    }
+
+    /// <summary>Field number for the "logs" field.</summary>
+    public const int LogsFieldNumber = 7;
+    private static readonly pb::FieldCodec<global::Loom.Unity3d.Event> _repeated_logs_codec
+        = pb::FieldCodec.ForMessage(58, global::Loom.Unity3d.Event.Parser);
+    private readonly pbc::RepeatedField<global::Loom.Unity3d.Event> logs_ = new pbc::RepeatedField<global::Loom.Unity3d.Event>();
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public pbc::RepeatedField<global::Loom.Unity3d.Event> Logs {
+      get { return logs_; }
+    }
+
+    /// <summary>Field number for the "logs_bloom" field.</summary>
+    public const int LogsBloomFieldNumber = 8;
+    private pb::ByteString logsBloom_ = pb::ByteString.Empty;
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public pb::ByteString LogsBloom {
+      get { return logsBloom_; }
+      set {
+        logsBloom_ = pb::ProtoPreconditions.CheckNotNull(value, "value");
+      }
+    }
+
+    /// <summary>Field number for the "status" field.</summary>
+    public const int StatusFieldNumber = 9;
+    private int status_;
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public int Status {
+      get { return status_; }
+      set {
+        status_ = value;
+      }
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public override bool Equals(object other) {
+      return Equals(other as EvmTxReceipt);
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public bool Equals(EvmTxReceipt other) {
+      if (ReferenceEquals(other, null)) {
+        return false;
+      }
+      if (ReferenceEquals(other, this)) {
+        return true;
+      }
+      if (TransactionIndex != other.TransactionIndex) return false;
+      if (BlockHash != other.BlockHash) return false;
+      if (BlockNumber != other.BlockNumber) return false;
+      if (CumulativeGasUsed != other.CumulativeGasUsed) return false;
+      if (GasUsed != other.GasUsed) return false;
+      if (ContractAddress != other.ContractAddress) return false;
+      if(!logs_.Equals(other.logs_)) return false;
+      if (LogsBloom != other.LogsBloom) return false;
+      if (Status != other.Status) return false;
+      return Equals(_unknownFields, other._unknownFields);
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public override int GetHashCode() {
+      int hash = 1;
+      if (TransactionIndex != 0) hash ^= TransactionIndex.GetHashCode();
+      if (BlockHash.Length != 0) hash ^= BlockHash.GetHashCode();
+      if (BlockNumber != 0L) hash ^= BlockNumber.GetHashCode();
+      if (CumulativeGasUsed != 0) hash ^= CumulativeGasUsed.GetHashCode();
+      if (GasUsed != 0) hash ^= GasUsed.GetHashCode();
+      if (ContractAddress.Length != 0) hash ^= ContractAddress.GetHashCode();
+      hash ^= logs_.GetHashCode();
+      if (LogsBloom.Length != 0) hash ^= LogsBloom.GetHashCode();
+      if (Status != 0) hash ^= Status.GetHashCode();
+      if (_unknownFields != null) {
+        hash ^= _unknownFields.GetHashCode();
+      }
+      return hash;
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public override string ToString() {
+      return pb::JsonFormatter.ToDiagnosticString(this);
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public void WriteTo(pb::CodedOutputStream output) {
+      if (TransactionIndex != 0) {
+        output.WriteRawTag(8);
+        output.WriteInt32(TransactionIndex);
+      }
+      if (BlockHash.Length != 0) {
+        output.WriteRawTag(18);
+        output.WriteBytes(BlockHash);
+      }
+      if (BlockNumber != 0L) {
+        output.WriteRawTag(24);
+        output.WriteInt64(BlockNumber);
+      }
+      if (CumulativeGasUsed != 0) {
+        output.WriteRawTag(32);
+        output.WriteInt32(CumulativeGasUsed);
+      }
+      if (GasUsed != 0) {
+        output.WriteRawTag(40);
+        output.WriteInt32(GasUsed);
+      }
+      if (ContractAddress.Length != 0) {
+        output.WriteRawTag(50);
+        output.WriteBytes(ContractAddress);
+      }
+      logs_.WriteTo(output, _repeated_logs_codec);
+      if (LogsBloom.Length != 0) {
+        output.WriteRawTag(66);
+        output.WriteBytes(LogsBloom);
+      }
+      if (Status != 0) {
+        output.WriteRawTag(72);
+        output.WriteInt32(Status);
+      }
+      if (_unknownFields != null) {
+        _unknownFields.WriteTo(output);
+      }
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public int CalculateSize() {
+      int size = 0;
+      if (TransactionIndex != 0) {
+        size += 1 + pb::CodedOutputStream.ComputeInt32Size(TransactionIndex);
+      }
+      if (BlockHash.Length != 0) {
+        size += 1 + pb::CodedOutputStream.ComputeBytesSize(BlockHash);
+      }
+      if (BlockNumber != 0L) {
+        size += 1 + pb::CodedOutputStream.ComputeInt64Size(BlockNumber);
+      }
+      if (CumulativeGasUsed != 0) {
+        size += 1 + pb::CodedOutputStream.ComputeInt32Size(CumulativeGasUsed);
+      }
+      if (GasUsed != 0) {
+        size += 1 + pb::CodedOutputStream.ComputeInt32Size(GasUsed);
+      }
+      if (ContractAddress.Length != 0) {
+        size += 1 + pb::CodedOutputStream.ComputeBytesSize(ContractAddress);
+      }
+      size += logs_.CalculateSize(_repeated_logs_codec);
+      if (LogsBloom.Length != 0) {
+        size += 1 + pb::CodedOutputStream.ComputeBytesSize(LogsBloom);
+      }
+      if (Status != 0) {
+        size += 1 + pb::CodedOutputStream.ComputeInt32Size(Status);
+      }
+      if (_unknownFields != null) {
+        size += _unknownFields.CalculateSize();
+      }
+      return size;
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public void MergeFrom(EvmTxReceipt other) {
+      if (other == null) {
+        return;
+      }
+      if (other.TransactionIndex != 0) {
+        TransactionIndex = other.TransactionIndex;
+      }
+      if (other.BlockHash.Length != 0) {
+        BlockHash = other.BlockHash;
+      }
+      if (other.BlockNumber != 0L) {
+        BlockNumber = other.BlockNumber;
+      }
+      if (other.CumulativeGasUsed != 0) {
+        CumulativeGasUsed = other.CumulativeGasUsed;
+      }
+      if (other.GasUsed != 0) {
+        GasUsed = other.GasUsed;
+      }
+      if (other.ContractAddress.Length != 0) {
+        ContractAddress = other.ContractAddress;
+      }
+      logs_.Add(other.logs_);
+      if (other.LogsBloom.Length != 0) {
+        LogsBloom = other.LogsBloom;
+      }
+      if (other.Status != 0) {
+        Status = other.Status;
+      }
+      _unknownFields = pb::UnknownFieldSet.MergeFrom(_unknownFields, other._unknownFields);
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public void MergeFrom(pb::CodedInputStream input) {
+      uint tag;
+      while ((tag = input.ReadTag()) != 0) {
+        switch(tag) {
+          default:
+            _unknownFields = pb::UnknownFieldSet.MergeFieldFrom(_unknownFields, input);
+            break;
+          case 8: {
+            TransactionIndex = input.ReadInt32();
+            break;
+          }
+          case 18: {
+            BlockHash = input.ReadBytes();
+            break;
+          }
+          case 24: {
+            BlockNumber = input.ReadInt64();
+            break;
+          }
+          case 32: {
+            CumulativeGasUsed = input.ReadInt32();
             break;
           }
           case 40: {
-            BlockHeight = input.ReadUInt64();
+            GasUsed = input.ReadInt32();
             break;
           }
           case 50: {
-            EncodedBody = input.ReadBytes();
+            ContractAddress = input.ReadBytes();
             break;
           }
           case 58: {
-            OriginalRequest = input.ReadBytes();
+            logs_.AddEntriesFrom(input, _repeated_logs_codec);
+            break;
+          }
+          case 66: {
+            LogsBloom = input.ReadBytes();
+            break;
+          }
+          case 72: {
+            Status = input.ReadInt32();
             break;
           }
         }

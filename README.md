@@ -79,6 +79,9 @@ Install prebuilt [Google.Protobuf 3.5 from NuGet] and copy them to `Assets/Plugi
 Clone https://github.com/sta/websocket-sharp and build the `Release` config for `AnyCPU`.
 The version currently was built from Git rev `000c0a76b4fb2045cabc4f0ae6a80bea03e2663e`.
 
+### Loom.Nethereum.Minimal
+
+Clone https://github.com/loomnetwork/Nethereum/tree/loom-minimal, build solution `Loom.Nethereum.Minimal` with `Release` configuration for `AnyCPU`.
 
 [Unity SDK Quickstart]: https://loomx.io/developers/docs/en/unity-sdk.html
 [Google Protocol Buffers]: https://developers.google.com/protocol-buffers/docs/csharptutorial
