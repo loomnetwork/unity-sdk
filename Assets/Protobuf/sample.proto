@@ -1,6 +1,8 @@
 syntax = "proto3";
 option csharp_namespace = "Loom.Unity3d.Samples";
 
+import "loom.proto";
+
 message MapEntry {
     string key = 1;
     string value = 2;
@@ -12,4 +14,35 @@ message HelloRequest {
 
 message HelloResponse {
     string out = 1;
+}
+
+// etherboy
+
+message EtherboyCreateAccountTx {
+	int32 version = 1;
+	string owner = 2;
+	bytes data = 3;
+}
+
+message EtherboyEndGameTx {
+    int32 version = 1;
+    string owner = 2;
+    bytes data = 3;
+}
+
+message EtherboyTransferTokenTx {
+    int32 version = 1;
+    string owner = 2;
+    Address toAddr = 3;
+}
+
+// coin
+
+message ApproveRequest {
+    Address spender = 1;
+    bytes amount = 2; // BigUInt
+}
+
+message ApproveResponse {
+
 }
