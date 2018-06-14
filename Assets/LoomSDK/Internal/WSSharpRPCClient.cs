@@ -224,7 +224,7 @@ namespace Loom.Unity3d
             }
             catch (Exception ex)
             {
-                Logger.Log(LogTag, "[WSSharpRPCClient_OnMessage error] " + ex.Message);
+                Logger.Log(LogTag, "[WSSharpRPCClient_OnMessage error] " + ex);
             }
         }
     }

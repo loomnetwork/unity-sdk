@@ -36,6 +36,17 @@ message MessageTx {
 message DeployTx {
     VMType vm_type = 1;
     bytes code = 2;
+    string name = 3;
+}
+
+message DeployResponse {
+    Address contract = 1;
+    bytes output = 2;
+}
+
+message DeployResponseData {
+    bytes tx_hash = 1;
+    bytes bytecode = 2;
 }
 
 message CallTx {
@@ -77,4 +88,23 @@ message EventData {
     uint64 block_height = 5;
     bytes encoded_body = 6;
     bytes original_request = 7;
+}
+
+// EVM Event
+message Event {
+    Address contract = 1;
+    repeated bytes topics = 2;
+    bytes data = 3;
+}
+
+message EvmTxReceipt {
+    int32 transaction_index = 1;
+    bytes block_hash = 2;
+    int64 block_number = 3;
+    int32 cumulative_gas_used = 4;
+    int32 gas_used = 5 ;
+    bytes contract_address = 6;
+    repeated Event logs = 7;
+    bytes logs_bloom = 8;
+    int32 status = 9;
 }

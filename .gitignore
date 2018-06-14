@@ -44,3 +44,6 @@ Assets/Plugins/AsyncAwaitUtil/Documentation/*
 /Assets/Plugins/Android/*.jar.meta
 /Assets/Plugins/Android/*.aar.meta
 /webgl-build/
+
+# JetBrains Rider
+.idea
