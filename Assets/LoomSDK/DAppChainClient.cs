@@ -92,11 +92,6 @@ namespace Loom.Unity3d
         public int NonceRetries { get; set; }
 
         /// <summary>
-        /// Whether the client is known to be in state when communication attempts might succeed.
-        /// </summary>
-        public bool IsConnected => this.readClient.IsConnected && this.writeClient.IsConnected;
-
-        /// <summary>
         /// Events emitted by the DAppChain.
         /// </summary>
         public event EventHandler<RawChainEventArgs> OnChainEvent
