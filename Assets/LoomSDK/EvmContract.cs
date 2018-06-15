@@ -45,9 +45,9 @@ namespace Loom.Unity3d
         /// <returns>Nothing.</returns>
         public async Task CallAsync(string method, params object[] functionInput)
         {
-            FunctionBuilder function = contractBuilder.GetFunctionBuilder(method);
+            FunctionBuilder function = this.contractBuilder.GetFunctionBuilder(method);
             CallInput callInput = function.CreateCallInput(functionInput);
-            await CallAsync(callInput.Data);
+            await this.CallAsync(callInput.Data);
         }
 
         /// <summary>
@@ -59,9 +59,9 @@ namespace Loom.Unity3d
         /// <see href="https://nethereum.readthedocs.io/en/latest/contracts/functiondtos/"/>
         public async Task CallAsync<TInput>(TInput functionInput)
         {
-            FunctionBuilder<TInput> function = contractBuilder.GetFunctionBuilder<TInput>();
+            FunctionBuilder<TInput> function = this.contractBuilder.GetFunctionBuilder<TInput>();
             CallInput callInput = function.CreateCallInput(functionInput);
-            await CallAsync(callInput.Data);
+            await this.CallAsync(callInput.Data);
         }
 
         /// <summary>
@@ -74,7 +74,7 @@ namespace Loom.Unity3d
         public async Task<T> CallSimpleTypeOutputAsync<T>(string method, params object[] functionInput)
         {
             FunctionBuilder functionBuilder;
-            return await CallAsync(CreateContractMethodCallInput(method, functionInput, out functionBuilder), functionBuilder, (fb, s) => fb.DecodeSimpleTypeOutput<T>(s));
+            return await this.CallAsync(this.CreateContractMethodCallInput(method, functionInput, out functionBuilder), functionBuilder, (fb, s) => fb.DecodeSimpleTypeOutput<T>(s));
         }
 
         /// <summary>
@@ -88,7 +88,7 @@ namespace Loom.Unity3d
         public async Task<TReturn> CallDTOTypeOutputAsync<TReturn>(string method, params object[] functionInput) where TReturn : new()
         {
             FunctionBuilder functionBuilder;
-            return await CallAsync(CreateContractMethodCallInput(method, functionInput, out functionBuilder), functionBuilder, (fb, s) => fb.DecodeDTOTypeOutput<TReturn>(s));
+            return await this.CallAsync(this.CreateContractMethodCallInput(method, functionInput, out functionBuilder), functionBuilder, (fb, s) => fb.DecodeDTOTypeOutput<TReturn>(s));
         }
 
         /// <summary>
@@ -103,7 +103,7 @@ namespace Loom.Unity3d
         public async Task<TReturn> CallDTOTypeOutputAsync<TReturn>(TReturn functionOutput, string method, params object[] functionInput) where TReturn : new()
         {
             FunctionBuilder functionBuilder;
-            return await CallAsync(CreateContractMethodCallInput(method, functionInput, out functionBuilder), functionBuilder, (fb, s) => fb.DecodeDTOTypeOutput(functionOutput, s));
+            return await this.CallAsync(this.CreateContractMethodCallInput(method, functionInput, out functionBuilder), functionBuilder, (fb, s) => fb.DecodeDTOTypeOutput(functionOutput, s));
         }
 
         /// <summary>
@@ -116,7 +116,7 @@ namespace Loom.Unity3d
         public async Task<TReturn> CallSimpleTypeOutputAsync<TInput, TReturn>(TInput functionInput)
         {
             FunctionBuilder<TInput> functionBuilder;
-            return await CallAsync(CreateContractMethodCallInput(functionInput, out functionBuilder), functionBuilder, (fb, s) => fb.DecodeSimpleTypeOutput<TReturn>(s));
+            return await this.CallAsync(this.CreateContractMethodCallInput(functionInput, out functionBuilder), functionBuilder, (fb, s) => fb.DecodeSimpleTypeOutput<TReturn>(s));
         }
 
         /// <summary>
@@ -129,7 +129,7 @@ namespace Loom.Unity3d
         public async Task<TReturn> CallDTOTypeOutputAsync<TInput, TReturn>(TInput functionInput) where TReturn : new()
         {
             FunctionBuilder<TInput> functionBuilder;
-            return await CallAsync(CreateContractMethodCallInput(functionInput, out functionBuilder), functionBuilder, (fb, s) => fb.DecodeDTOTypeOutput<TReturn>(s));
+            return await this.CallAsync(this.CreateContractMethodCallInput(functionInput, out functionBuilder), functionBuilder, (fb, s) => fb.DecodeDTOTypeOutput<TReturn>(s));
         }
 
         /// <summary>
@@ -143,7 +143,7 @@ namespace Loom.Unity3d
         public async Task<TReturn> CallDTOTypeOutputAsync<TInput, TReturn>(TInput functionInput, TReturn functionOutput) where TReturn : new()
         {
             FunctionBuilder<TInput> functionBuilder;
-            return await CallAsync(CreateContractMethodCallInput(functionInput, out functionBuilder), functionBuilder, (fb, s) => fb.DecodeDTOTypeOutput(functionOutput, s));
+            return await this.CallAsync(this.CreateContractMethodCallInput(functionInput, out functionBuilder), functionBuilder, (fb, s) => fb.DecodeDTOTypeOutput(functionOutput, s));
         }
 
         #endregion
@@ -159,9 +159,9 @@ namespace Loom.Unity3d
         /// <returns>Nothing.</returns>
         public async Task StaticCallAsync(string method, params object[] functionInput)
         {
-            FunctionBuilder function = contractBuilder.GetFunctionBuilder(method);
+            FunctionBuilder function = this.contractBuilder.GetFunctionBuilder(method);
             CallInput callInput = function.CreateCallInput(functionInput);
-            await StaticCallAsync(callInput.Data);
+            await this.StaticCallAsync(callInput.Data);
         }
 
         /// <summary>
@@ -173,9 +173,9 @@ namespace Loom.Unity3d
         /// <see href="https://nethereum.readthedocs.io/en/latest/contracts/functiondtos/"/>
         public async Task StaticCallAsync<TInput>(TInput functionInput)
         {
-            FunctionBuilder<TInput> function = contractBuilder.GetFunctionBuilder<TInput>();
+            FunctionBuilder<TInput> function = this.contractBuilder.GetFunctionBuilder<TInput>();
             CallInput callInput = function.CreateCallInput(functionInput);
-            await StaticCallAsync(callInput.Data);
+            await this.StaticCallAsync(callInput.Data);
         }
 
         /// <summary>
@@ -188,7 +188,7 @@ namespace Loom.Unity3d
         public async Task<T> StaticCallSimpleTypeOutputAsync<T>(string method, params object[] functionInput)
         {
             FunctionBuilder functionBuilder;
-            return await StaticCallAsync(CreateContractMethodCallInput(method, functionInput, out functionBuilder), functionBuilder, (fb, s) => fb.DecodeSimpleTypeOutput<T>(s));
+            return await this.StaticCallAsync(this.CreateContractMethodCallInput(method, functionInput, out functionBuilder), functionBuilder, (fb, s) => fb.DecodeSimpleTypeOutput<T>(s));
         }
 
         /// <summary>
@@ -202,7 +202,7 @@ namespace Loom.Unity3d
         public async Task<TReturn> StaticCallDTOTypeOutputAsync<TReturn>(string method, params object[] functionInput) where TReturn : new()
         {
             FunctionBuilder functionBuilder;
-            return await StaticCallAsync(CreateContractMethodCallInput(method, functionInput, out functionBuilder), functionBuilder, (fb, s) => fb.DecodeDTOTypeOutput<TReturn>(s));
+            return await this.StaticCallAsync(this.CreateContractMethodCallInput(method, functionInput, out functionBuilder), functionBuilder, (fb, s) => fb.DecodeDTOTypeOutput<TReturn>(s));
         }
 
         /// <summary>
@@ -217,7 +217,7 @@ namespace Loom.Unity3d
         public async Task<TReturn> StaticCallDTOTypeOutputAsync<TReturn>(TReturn functionOutput, string method, params object[] functionInput) where TReturn : new()
         {
             FunctionBuilder functionBuilder;
-            return await StaticCallAsync(CreateContractMethodCallInput(method, functionInput, out functionBuilder), functionBuilder, (fb, s) => fb.DecodeDTOTypeOutput(functionOutput, s));
+            return await this.StaticCallAsync(this.CreateContractMethodCallInput(method, functionInput, out functionBuilder), functionBuilder, (fb, s) => fb.DecodeDTOTypeOutput(functionOutput, s));
         }
 
         /// <summary>
@@ -230,7 +230,7 @@ namespace Loom.Unity3d
         public async Task<TReturn> StaticCallSimpleTypeOutputAsync<TInput, TReturn>(TInput functionInput)
         {
             FunctionBuilder<TInput> functionBuilder;
-            return await StaticCallAsync(CreateContractMethodCallInput(functionInput, out functionBuilder), functionBuilder, (fb, s) => fb.DecodeSimpleTypeOutput<TReturn>(s));
+            return await this.StaticCallAsync(this.CreateContractMethodCallInput(functionInput, out functionBuilder), functionBuilder, (fb, s) => fb.DecodeSimpleTypeOutput<TReturn>(s));
         }
 
         /// <summary>
@@ -243,7 +243,7 @@ namespace Loom.Unity3d
         public async Task<TReturn> StaticCallDTOTypeOutputAsync<TInput, TReturn>(TInput functionInput) where TReturn : new()
         {
             FunctionBuilder<TInput> functionBuilder;
-            return await StaticCallAsync(CreateContractMethodCallInput(functionInput, out functionBuilder), functionBuilder, (fb, s) => fb.DecodeDTOTypeOutput<TReturn>(s));
+            return await this.StaticCallAsync(this.CreateContractMethodCallInput(functionInput, out functionBuilder), functionBuilder, (fb, s) => fb.DecodeDTOTypeOutput<TReturn>(s));
         }
 
         /// <summary>
@@ -257,7 +257,7 @@ namespace Loom.Unity3d
         public async Task<TReturn> StaticCallDTOTypeOutputAsync<TInput, TReturn>(TInput functionInput, TReturn functionOutput) where TReturn : new()
         {
             FunctionBuilder<TInput> functionBuilder;
-            return await StaticCallAsync(CreateContractMethodCallInput(functionInput, out functionBuilder), functionBuilder, (fb, s) => fb.DecodeDTOTypeOutput(functionOutput, s));
+            return await this.StaticCallAsync(this.CreateContractMethodCallInput(functionInput, out functionBuilder), functionBuilder, (fb, s) => fb.DecodeDTOTypeOutput(functionOutput, s));
         }
 
         #endregion
@@ -295,12 +295,12 @@ namespace Loom.Unity3d
 
         private async Task StaticCallAsync(string callInput)
         {
-            await StaticCallAsyncByteArray(callInput);
+            await this.StaticCallAsyncByteArray(callInput);
         }
 
         private async Task<TReturn> StaticCallAsync<TReturn>(string callInput, FunctionBuilderBase functionBuilder, Func<FunctionBuilderBase, string, TReturn> decodeFunc)
         {
-            var result = await StaticCallAsyncByteArray(callInput);
+            var result = await this.StaticCallAsyncByteArray(callInput);
 
             var validResult = result != null && result.Length != 0;
             return validResult ? decodeFunc(functionBuilder, CryptoUtils.BytesToHexString(result)) : default(TReturn);
@@ -314,7 +314,7 @@ namespace Loom.Unity3d
 
         private async Task CallAsync(string callInput)
         {
-            await CallAsyncBrodcastTxResult(callInput);
+            await this.CallAsyncBrodcastTxResult(callInput);
         }
 
         private async Task<TReturn> CallAsync<TReturn>(string callInput, FunctionBuilderBase functionBuilder, Func<FunctionBuilderBase, string, TReturn> decodeFunc)
@@ -327,30 +327,30 @@ namespace Loom.Unity3d
 
         private string CreateContractMethodCallInput(string method, object[] functionInput, out FunctionBuilder functionBuilder)
         {
-            functionBuilder = contractBuilder.GetFunctionBuilder(method);
+            functionBuilder = this.contractBuilder.GetFunctionBuilder(method);
             CallInput callInput = functionBuilder.CreateCallInput(functionInput);
             return callInput.Data;
         }
 
         private string CreateContractMethodCallInput<TInput>(TInput functionInput, out FunctionBuilder<TInput> functionBuilder)
         {
-            functionBuilder = contractBuilder.GetFunctionBuilder<TInput>();
+            functionBuilder = this.contractBuilder.GetFunctionBuilder<TInput>();
             CallInput callInput = functionBuilder.CreateCallInput(functionInput);
             return callInput.Data;
         }
 
         private Transaction CreateContractMethodCallTx(string method, object[] functionInput, out FunctionBuilder functionBuilder)
         {
-            functionBuilder = contractBuilder.GetFunctionBuilder(method);
+            functionBuilder = this.contractBuilder.GetFunctionBuilder(method);
             CallInput callInput = functionBuilder.CreateCallInput(functionInput);
-            return CreateContractMethodCallTx(callInput.Data, VMType.Evm);
+            return this.CreateContractMethodCallTx(callInput.Data, VMType.Evm);
         }
 
         private Transaction CreateContractMethodCallTx<TInput>(TInput functionInput, out FunctionBuilder<TInput> functionBuilder)
         {
-            functionBuilder = contractBuilder.GetFunctionBuilder<TInput>();
+            functionBuilder = this.contractBuilder.GetFunctionBuilder<TInput>();
             CallInput callInput = functionBuilder.CreateCallInput(functionInput);
-            return CreateContractMethodCallTx(callInput.Data, VMType.Evm);
+            return this.CreateContractMethodCallTx(callInput.Data, VMType.Evm);
         }
 
         #endregion
