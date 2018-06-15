@@ -8,9 +8,9 @@ namespace Loom.Unity3d {
     /// Each instance of this class is bound to a specific smart contract, and provides a simple way of calling
     /// into and querying that contract.
     /// </summary>
-    public abstract class ContractBase {
+    public abstract class ContractBase<TChainEvent> {
         protected DAppChainClient client;
-        protected event EventHandler<DAppChainClient.ChainEventArgs> OnChainEvent;
+        protected event EventHandler<TChainEvent> chainEventReceived;
 
         /// <summary>
         /// Smart contract address.
@@ -38,12 +38,12 @@ namespace Loom.Unity3d {
         /// <summary>
         /// Event emitted by the corresponding smart contract.
         /// </summary>
-        public event EventHandler<DAppChainClient.ChainEventArgs> OnEvent
+        public event EventHandler<TChainEvent> ChainEventReceived
         {
             add
             {
-                var isFirstSub = this.OnChainEvent == null;
-                this.OnChainEvent += value;
+                var isFirstSub = this.chainEventReceived == null;
+                this.chainEventReceived += value;
                 if (isFirstSub)
                 {
                     this.client.OnChainEvent += this.NotifyContractEvent;
@@ -51,8 +51,8 @@ namespace Loom.Unity3d {
             }
             remove
             {
-                this.OnChainEvent -= value;
-                if (this.OnChainEvent == null)
+                this.chainEventReceived -= value;
+                if (this.chainEventReceived == null)
                 {
                     this.client.OnChainEvent -= this.NotifyContractEvent;
                 }
@@ -95,15 +95,17 @@ namespace Loom.Unity3d {
             };
         }
 
-        protected virtual void InvokeChainEvent(object sender, DAppChainClient.ChainEventArgs e)
+        protected void InvokeChainEvent(object sender, RawChainEventArgs e)
         {
-            if (this.OnChainEvent != null)
+            if (this.chainEventReceived != null)
             {
-                this.OnChainEvent(this, e);
+                this.chainEventReceived(this, TransformChainEvent(e));
             }
         }
 
-        protected virtual void NotifyContractEvent(object sender, DAppChainClient.ChainEventArgs e)
+        protected abstract TChainEvent TransformChainEvent(RawChainEventArgs e);
+
+        protected virtual void NotifyContractEvent(object sender, RawChainEventArgs e)
         {
             if (e.ContractAddress.Equals(this.Address))
             {

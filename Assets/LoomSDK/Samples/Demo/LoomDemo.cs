@@ -61,7 +61,7 @@ public class LoomDemo : MonoBehaviour
         {
             Logger = Debug.unityLogger
         };
-		
+
         client.TxMiddleware = new TxMiddleware(new ITxMiddlewareHandler[]{
             new NonceTxMiddleware{
                 PublicKey = publicKey,
@@ -69,10 +69,10 @@ public class LoomDemo : MonoBehaviour
             },
             new SignedTxMiddleware(privateKey)
         });
-		
+
         var contractAddr = await client.ResolveContractAddressAsync("BluePrint");
         this.contract = new Contract(client, contractAddr, callerAddr);
-        
+
         // Subscribe to DAppChainClient.OnChainEvent to receive all events
         /*
         client.OnChainEvent += (sender, e) =>
@@ -83,8 +83,8 @@ public class LoomDemo : MonoBehaviour
         };
         */
 
-        // Subscribe to DAppChainClient.OnEvent to receive events from a specific smart contract
-        this.contract.OnEvent += (sender, e) =>
+        // Subscribe to DAppChainClient.ChainEventReceived to receive events from a specific smart contract
+        this.contract.ChainEventReceived += (sender, e) =>
         {
             var jsonStr = System.Text.Encoding.UTF8.GetString(e.Data);
             var data = JsonConvert.DeserializeObject<SampleEvent>(jsonStr);

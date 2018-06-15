@@ -105,6 +105,7 @@ namespace Loom.Unity3d
 
     public interface IRPCClient : IDisposable
     {
+        bool IsConnected { get; }
         Task<TResult> SendAsync<TResult, TArgs>(string method, TArgs args);
         Task DisconnectAsync();
         Task SubscribeAsync(EventHandler<JsonRpcEventData> handler);

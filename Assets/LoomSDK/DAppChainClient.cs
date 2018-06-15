@@ -67,17 +67,10 @@ namespace Loom.Unity3d
     /// </summary>
     public class DAppChainClient : IDisposable
     {
-        public class ChainEventArgs
-        {
-            public Address ContractAddress { get; internal set; }
-            public Address CallerAddress { get; internal set; }
-            public UInt64 BlockHeight { get; internal set; }
-            public byte[] Data { get; internal set; }
-        }
 
         private static readonly string LogTag = "Loom.DAppChainClient";
 
-        private Dictionary<EventHandler<ChainEventArgs>, EventHandler<JsonRpcEventData>> eventSubs;
+        private Dictionary<EventHandler<RawChainEventArgs>, EventHandler<JsonRpcEventData>> eventSubs;
 
         private IRPCClient writeClient;
         private IRPCClient readClient;
@@ -99,9 +92,14 @@ namespace Loom.Unity3d
         public int NonceRetries { get; set; }
 
         /// <summary>
+        /// Whether the client is known to be in state when communication attempts might succeed.
+        /// </summary>
+        public bool IsConnected => this.readClient.IsConnected && this.writeClient.IsConnected;
+
+        /// <summary>
         /// Events emitted by the DAppChain.
         /// </summary>
-        public event EventHandler<ChainEventArgs> OnChainEvent
+        public event EventHandler<RawChainEventArgs> OnChainEvent
         {
             add
             {
@@ -120,7 +118,7 @@ namespace Loom.Unity3d
         /// <param name="readClient">RPC client to use for querying DAppChain state.</param>
         public DAppChainClient(IRPCClient writeClient, IRPCClient readClient)
         {
-            this.eventSubs = new Dictionary<EventHandler<ChainEventArgs>, EventHandler<JsonRpcEventData>>();
+            this.eventSubs = new Dictionary<EventHandler<RawChainEventArgs>, EventHandler<JsonRpcEventData>>();
             this.writeClient = writeClient;
             this.readClient = readClient;
             this.Logger = NullLogger.Instance;
@@ -141,27 +139,27 @@ namespace Loom.Unity3d
             }
         }
 
-        private async void SubReadClient(EventHandler<ChainEventArgs> handler)
+        private async void SubReadClient(EventHandler<RawChainEventArgs> handler)
         {
             try
             {
                 EventHandler<JsonRpcEventData> wrapper = (sender, e) =>
                 {
-                    handler(this, new ChainEventArgs
-                    {
-                        ContractAddress = new Address
+                    handler(this, new RawChainEventArgs
+                    (
+                        new Address
                         {
                             ChainId = e.ContractAddress.ChainID,
                             Local = ByteString.CopyFrom(e.ContractAddress.Local)
                         },
-                        CallerAddress = new Address
+                        new Address
                         {
                             ChainId = e.CallerAddress.ChainID,
                             Local = ByteString.CopyFrom(e.CallerAddress.Local)
                         },
-                        BlockHeight = e.BlockHeight,
-                        Data = e.Data
-                    });
+                        e.BlockHeight,
+                        e.Data
+                    ));
                 };
                 this.eventSubs.Add(handler, wrapper);
                 await this.readClient.SubscribeAsync(wrapper);
@@ -172,7 +170,7 @@ namespace Loom.Unity3d
             }
         }
 
-        private async void UnsubReadClient(EventHandler<ChainEventArgs> handler)
+        private async void UnsubReadClient(EventHandler<RawChainEventArgs> handler)
         {
             try
             {

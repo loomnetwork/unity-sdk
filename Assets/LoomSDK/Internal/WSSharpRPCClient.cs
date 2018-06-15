@@ -17,13 +17,28 @@ namespace Loom.Unity3d
 
         private WebSocket client;
         private Uri url;
+        private ILogger logger;
         private event EventHandler<JsonRpcEventData> OnEventMessage;
 
         /// <summary>
         /// Logger to be used for logging, defaults to <see cref="NullLogger"/>.
         /// </summary>
-        public ILogger Logger { get; set; }
-        
+        public ILogger Logger
+        {
+            get
+            {
+                return this.logger;
+            }
+            set
+            {
+                if (this.logger == value)
+                    return;
+
+                this.logger = value;
+                this.client.Log.Output = WSSharpProxyLoggerOutputFactory.CreateWSSharpProxyLoggerOutput(value);
+            }
+        }
+
         public WSSharpRPCClient(string url)
         {
             this.client = new WebSocket(url);
@@ -36,6 +51,8 @@ namespace Loom.Unity3d
                 this.Logger.Log(LogTag, "Error: " + e.Message);
             };
         }
+
+        public bool IsConnected => this.client.ReadyState == WebSocketState.Open || this.client.ReadyState == WebSocketState.Connecting;
 
         void IDisposable.Dispose()
         {
@@ -73,22 +90,30 @@ namespace Loom.Unity3d
                 return Task.CompletedTask;
             }
             var tcs = new TaskCompletionSource<object>();
-            EventHandler handler = null;
-            handler = (sender, e) =>
+            EventHandler openHandler = null;
+            EventHandler<CloseEventArgs> closeHandler = null;
+            openHandler = (sender, e) =>
             {
-                this.client.OnOpen -= handler;
+                this.client.OnOpen -= openHandler;
+                this.client.OnClose -= closeHandler;
                 tcs.TrySetResult(null);
                 Logger.Log(LogTag, "Connected to " + this.url.AbsoluteUri);
             };
-            this.client.OnOpen += handler;
+            closeHandler = (sender, e) =>
+            {
+                tcs.SetException(new Exception(e.Reason));
+            };
+            this.client.OnOpen += openHandler;
+            this.client.OnClose += closeHandler;
             try
             {
                 this.client.ConnectAsync();
             }
-            catch (Exception e)
+            catch (Exception)
             {
-                this.client.OnOpen -= handler;
-                throw e;
+                this.client.OnOpen -= openHandler;
+                this.client.OnClose -= closeHandler;
+                throw;
             }
             return tcs.Task;
         }
@@ -98,7 +123,7 @@ namespace Loom.Unity3d
             var isFirstSub = this.OnEventMessage == null;
             this.OnEventMessage += handler;
             if (isFirstSub)
-            {    
+            {
                 this.client.OnMessage += this.WSSharpRPCClient_OnMessage;
             }
             // TODO: once re-sub on reconnect is implemented this should only
