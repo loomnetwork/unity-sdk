@@ -1,19 +1,22 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 using Google.Protobuf;
+using Loom.Nethereum.ABI.Model;
 using Loom.Nethereum.Contracts;
 using Loom.Nethereum.RPC.Eth.DTOs;
 
 namespace Loom.Unity3d
 {
     /// <summary>
-    /// The Contract class streamlines interaction with a smart contract that was deployed on a EVM-based Loom DAppChain.
+    /// The EvmContract class streamlines interaction with a smart contract that was deployed on a EVM-based Loom DAppChain.
     /// Each instance of this class is bound to a specific smart contract, and provides a simple way of calling
     /// into and querying that contract.
     /// </summary>
-    public class EvmContract : Contract
+    public class EvmContract : ContractBase<EvmChainEventArgs>
     {
         private readonly ContractBuilder contractBuilder;
+        private readonly Dictionary<byte[], string> topicToEventName;
 
         /// <summary>
         /// Constructor.
@@ -24,6 +27,11 @@ namespace Loom.Unity3d
         /// <param name="abi">Contract Application Binary Interface as JSON object string.</param>
         public EvmContract(DAppChainClient client, Address contractAddr, Address callerAddr, string abi) : base(client, contractAddr, callerAddr) {
             this.contractBuilder = new ContractBuilder(abi, contractAddr.LocalAddressHexString);
+            this.topicToEventName = new Dictionary<byte[], string>(new ByteArrayComparer());
+            foreach (EventABI eventAbi in this.contractBuilder.ContractABI.Events)
+            {
+                this.topicToEventName.Add(CryptoUtils.HexStringToBytes(eventAbi.Sha33Signature), eventAbi.Name);
+            }
         }
 
         #region CallAsync methods
@@ -254,16 +262,28 @@ namespace Loom.Unity3d
 
         #endregion
 
-        protected override void NotifyContractEvent(object sender, DAppChainClient.ChainEventArgs e)
-        {
-            if (e.ContractAddress.Equals(this.Address))
-            {
-                Event evt = new Event();
-                evt.MergeFrom(e.Data);
-                e.Data = evt.Data.ToByteArray();
+        protected override EvmChainEventArgs TransformChainEvent(RawChainEventArgs e) {
+            Event evt = new Event();
+            evt.MergeFrom(e.Data);
 
-                InvokeChainEvent(sender, e);
+            byte[][] topics = new byte[evt.Topics.Count][];
+            for (int i = 0; i < evt.Topics.Count; i++)
+            {
+                topics[i] = evt.Topics[i].ToByteArray();
             }
+
+            // First topic is a signature of event itself
+            string eventName;
+            this.topicToEventName.TryGetValue(topics[0], out eventName);
+
+            return new EvmChainEventArgs(
+                e.ContractAddress,
+                e.CallerAddress,
+                e.BlockHeight,
+                evt.Data.ToByteArray(),
+                topics,
+                eventName
+            );
         }
 
         #region Call helper methods
@@ -334,5 +354,39 @@ namespace Loom.Unity3d
         }
 
         #endregion
+
+        private class ByteArrayComparer : EqualityComparer<byte[]>
+        {
+            public override bool Equals(byte[] left, byte[] right)
+            {
+                if (left == null || right == null)
+                    return left == right;
+
+                if (left.Length != right.Length)
+                    return false;
+
+                for (int i = 0; i < left.Length; i++)
+                {
+                    if (left[i] != right[i])
+                        return false;
+                }
+
+                return true;
+            }
+
+            public override int GetHashCode(byte[] key)
+            {
+                if (key == null)
+                    throw new ArgumentNullException("key");
+
+                int hash = 17;
+                for (int i = 0; i < key.Length; i++)
+                {
+                    hash += hash * 31 + key[i];
+                }
+
+                return hash;
+            }
+        }
     }
 }

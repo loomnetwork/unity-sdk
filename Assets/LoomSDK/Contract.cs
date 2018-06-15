@@ -1,6 +1,7 @@
-﻿using System;
+﻿using System.Text;
 using System.Threading.Tasks;
 using Google.Protobuf;
+using Newtonsoft.Json;
 
 namespace Loom.Unity3d
 {
@@ -9,7 +10,7 @@ namespace Loom.Unity3d
     /// Each instance of this class is bound to a specific smart contract, and provides a simple way of calling
     /// into and querying that contract.
     /// </summary>
-    public class Contract : ContractBase {
+    public class Contract : ContractBase<ChainEventArgs> {
         /// <summary>
         /// Constructor.
         /// </summary>
@@ -71,6 +72,20 @@ namespace Loom.Unity3d
             return default(T);
         }
 
+        protected override ChainEventArgs TransformChainEvent(RawChainEventArgs e) {
+            string jsonRpcEventString = Encoding.UTF8.GetString(e.Data);
+            JsonRpcEvent jsonRpcEvent = JsonConvert.DeserializeObject<JsonRpcEvent>(jsonRpcEventString);
+            byte[] eventData = Encoding.UTF8.GetBytes(jsonRpcEvent.Data);
+
+            return new ChainEventArgs(
+                e.ContractAddress,
+                e.CallerAddress,
+                e.BlockHeight,
+                eventData,
+                jsonRpcEvent.Method
+            );
+        }
+
         /// <summary>
         /// Calls a smart contract method that mutates state.
         /// The call into the smart contract is accomplished by committing a transaction to the DAppChain.
@@ -113,5 +128,13 @@ namespace Loom.Unity3d
             return CreateContractMethodCallTx(requestBytes, VMType.Plugin);
         }
 
+        private class JsonRpcEvent
+        {
+            [JsonProperty("Data")]
+            public string Data;
+
+            [JsonProperty("Method")]
+            public string Method;
+        }
     }
 }

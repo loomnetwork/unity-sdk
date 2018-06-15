@@ -33,6 +33,8 @@ namespace Loom.Unity3d
             this.Logger = NullLogger.Instance;
         }
 
+        public bool IsConnected => true;
+
         public void Dispose()
         {
         }
