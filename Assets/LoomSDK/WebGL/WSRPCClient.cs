@@ -103,6 +103,8 @@ namespace Loom.Unity3d.WebGL
             sockets.Add(this.socketId, new WebSocket());
         }
 
+        public bool IsConnected => GetWebSocketState(this.socketId) == WebSocketState.Open;
+
         public void Dispose()
         {
             this.Disconnect();
