@@ -84,7 +84,7 @@ public class LoomDemo : MonoBehaviour
         */
 
         // Subscribe to DAppChainClient.ChainEventReceived to receive events from a specific smart contract
-        this.contract.ChainEventReceived += (sender, e) =>
+        this.contract.EventReceived += (sender, e) =>
         {
             var jsonStr = System.Text.Encoding.UTF8.GetString(e.Data);
             var data = JsonConvert.DeserializeObject<SampleEvent>(jsonStr);
