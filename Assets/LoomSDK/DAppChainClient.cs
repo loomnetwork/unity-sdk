@@ -94,7 +94,7 @@ namespace Loom.Unity3d
         /// <summary>
         /// Events emitted by the DAppChain.
         /// </summary>
-        public event EventHandler<RawChainEventArgs> OnChainEvent
+        public event EventHandler<RawChainEventArgs> ChainEventReceived
         {
             add
             {
