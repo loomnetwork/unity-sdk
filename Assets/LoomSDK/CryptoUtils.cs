@@ -36,6 +36,25 @@ namespace Loom.Unity3d
         }
 
         /// <summary>
+        /// Generates a 64-byte private key from a 32-byte seed.
+        /// </summary>
+        /// <param name="privateKeySeed">32-byte private key seed.</param>
+        /// <returns>A 64-byte array.</returns>
+        public static byte[] GeneratePrivateKey(byte[] privateKeySeed)
+        {
+            if (privateKeySeed == null)
+                throw new ArgumentNullException("privateKeySeed");
+
+            if (privateKeySeed.Length != 32)
+                throw new ArgumentException("Expected a 32-byte array", "privateKeySeed");
+
+            byte[] publicKey32;
+            byte[] privateKey64;
+            Ed25519.KeyPairFromSeed(out publicKey32, out privateKey64, privateKeySeed);
+            return privateKey64;
+        }
+
+        /// <summary>
         /// Generates a 64-byte private key.
         /// </summary>
         /// <returns>A 64-byte array.</returns>
@@ -43,10 +62,7 @@ namespace Loom.Unity3d
         {
             var seed = new byte[32];
             rngCsp.GetBytes(seed);
-            byte[] publicKey32;
-            byte[] privateKey64;
-            Ed25519.KeyPairFromSeed(out publicKey32, out privateKey64, seed);
-            return privateKey64;
+            return GeneratePrivateKey(seed);
         }
 
         /// <summary>
