@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
-using Google.Protobuf;
 using Loom.Nethereum.ABI.Model;
 using Loom.Nethereum.Contracts;
 using Loom.Nethereum.RPC.Eth.DTOs;
@@ -16,7 +15,7 @@ namespace Loom.Unity3d
     public class EvmContract : ContractBase<EvmChainEventArgs>
     {
         private readonly ContractBuilder contractBuilder;
-        private readonly Dictionary<byte[], string> topicToEventName;
+        private readonly Dictionary<string, string> topicToEventName;
 
         /// <summary>
         /// Constructor.
@@ -27,10 +26,10 @@ namespace Loom.Unity3d
         /// <param name="abi">Contract Application Binary Interface as JSON object string.</param>
         public EvmContract(DAppChainClient client, Address contractAddr, Address callerAddr, string abi) : base(client, contractAddr, callerAddr) {
             this.contractBuilder = new ContractBuilder(abi, contractAddr.LocalAddressHexString);
-            this.topicToEventName = new Dictionary<byte[], string>(new ByteArrayComparer());
+            this.topicToEventName = new Dictionary<string, string>();
             foreach (EventABI eventAbi in this.contractBuilder.ContractABI.Events)
             {
-                this.topicToEventName.Add(CryptoUtils.HexStringToBytes(eventAbi.Sha33Signature), eventAbi.Name);
+                this.topicToEventName.Add(eventAbi.Sha33Signature, eventAbi.Name);
             }
         }
 
@@ -263,26 +262,26 @@ namespace Loom.Unity3d
         #endregion
 
         protected override EvmChainEventArgs TransformChainEvent(RawChainEventArgs e) {
-            Event evt = new Event();
-            evt.MergeFrom(e.Data);
+            if (e.Topics == null)
+                throw new ArgumentNullException("topics");
 
-            byte[][] topics = new byte[evt.Topics.Count][];
-            for (int i = 0; i < evt.Topics.Count; i++)
+            for (int i = 0; i < e.Topics.Length; i++)
             {
-                topics[i] = evt.Topics[i].ToByteArray();
+                // Remove 0x
+                e.Topics[i] = e.Topics[i].Substring(2);
             }
 
             // First topic is a signature of event itself
             string eventName;
-            this.topicToEventName.TryGetValue(topics[0], out eventName);
+            this.topicToEventName.TryGetValue(e.Topics[0], out eventName);
 
             return new EvmChainEventArgs(
                 e.ContractAddress,
                 e.CallerAddress,
                 e.BlockHeight,
-                evt.Data.ToByteArray(),
-                topics,
-                eventName
+                e.Data,
+                eventName,
+                e.Topics
             );
         }
 

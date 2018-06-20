@@ -153,7 +153,8 @@ namespace Loom.Unity3d
                             Local = ByteString.CopyFrom(e.CallerAddress.Local)
                         },
                         e.BlockHeight,
-                        e.Data
+                        e.Data,
+                        e.Topics
                     ));
                 };
                 this.eventSubs.Add(handler, wrapper);

@@ -1,22 +1,27 @@
 ﻿using Loom.Nethereum.ABI.FunctionEncoding;
 
 namespace Loom.Unity3d {
-    public class EvmChainEventArgs : RawChainEventArgs
+    public class EvmChainEventArgs : IChainEventArgs
     {
+        public Address ContractAddress { get; }
+        public Address CallerAddress { get; }
+        public ulong BlockHeight { get; }
+        public byte[] Data { get; }
+        public string EventName { get; }
+
         /// <summary>
         /// Ethereum log topics for the event.
         /// </summary>
-        public byte[][] Topics { get; }
+        public string[] Topics { get; }
 
-        /// <summary>
-        /// Event name from Solidity contract.
-        /// </summary>
-        public string EventName { get; }
-
-        public EvmChainEventArgs(Address contractAddress, Address callerAddress, ulong blockHeight, byte[] data, byte[][] topics, string eventName)
-            : base(contractAddress, callerAddress, blockHeight, data) {
-            this.Topics = topics;
+        public EvmChainEventArgs(Address contractAddress, Address callerAddress, ulong blockHeight, byte[] data, string eventName, string[] topics)
+        {
+            this.ContractAddress = contractAddress;
+            this.CallerAddress = callerAddress;
+            this.BlockHeight = blockHeight;
+            this.Data = data;
             this.EventName = eventName;
+            this.Topics = topics;
         }
 
         /// <summary>
@@ -28,13 +33,7 @@ namespace Loom.Unity3d {
         public T DecodeEventDTO<T>() where T : new()
         {
             EventTopicDecoder eventTopicDecoder = new EventTopicDecoder();
-            object[] topicStrings = new object[this.Topics.Length];
-            for (int i = 0; i < this.Topics.Length; i++)
-            {
-                topicStrings[i] = CryptoUtils.BytesToHexString(this.Topics[i]);
-            }
-
-            return eventTopicDecoder.DecodeTopics<T>(topicStrings, CryptoUtils.BytesToHexString(this.Data));
+            return eventTopicDecoder.DecodeTopics<T>(this.Topics, CryptoUtils.BytesToHexString(this.Data));
         }
     }
 }
