@@ -80,6 +80,9 @@ namespace Loom.Unity3d
             public byte[] Local;
         }
 
+        [JsonProperty("topics")]
+        public string[] Topics { get; internal set; }
+
         [JsonProperty("caller")]
         public Address CallerAddress { get; internal set; }
 
