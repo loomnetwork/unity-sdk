@@ -87,8 +87,6 @@ namespace Loom.Unity3d.Tests
                 await contract.CallAsync("setTestFixed32ByteArray", bytes32);
                 Assert.IsTrue(bytes32.SequenceEqual(await contract.StaticCallSimpleTypeOutputAsync<byte[]>("getTestFixed32ByteArray")));
                 Assert.AreEqual(0xDEADBEEF, new BigInteger(await contract.StaticCallSimpleTypeOutputAsync<byte[]>("getStaticTestFixed32ByteArray")).LongValue);
-
-                Debug.Log("finished");
             });
         }
 
