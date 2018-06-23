@@ -1,6 +1,7 @@
 ﻿using System.Text;
 using System.Threading.Tasks;
 using Google.Protobuf;
+using Loom.Unity3d.Internal.Protobuf;
 using Newtonsoft.Json;
 
 namespace Loom.Unity3d

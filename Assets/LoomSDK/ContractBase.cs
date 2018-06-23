@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Threading.Tasks;
 using Google.Protobuf;
+using Loom.Unity3d.Internal.Protobuf;
 
 namespace Loom.Unity3d {
     /// <summary>
@@ -65,16 +66,16 @@ namespace Loom.Unity3d {
         /// </summary>
         /// <param name="tx">Transaction message.</param>
         /// <returns>Nothing.</returns>
-        protected async Task CallAsync(Transaction tx)
+        internal async Task CallAsync(Transaction tx)
         {
             await this.client.CommitTxAsync(tx);
         }
 
-        protected Transaction CreateContractMethodCallTx(string hexData, VMType vmType) {
+        internal Transaction CreateContractMethodCallTx(string hexData, VMType vmType) {
             return CreateContractMethodCallTx(ByteString.CopyFrom(CryptoUtils.HexStringToBytes(hexData)), vmType);
         }
 
-        protected Transaction CreateContractMethodCallTx(ByteString callTxInput, VMType vmType) {
+        internal Transaction CreateContractMethodCallTx(ByteString callTxInput, VMType vmType) {
             var callTxBytes = new CallTx
             {
                 VmType = vmType,
@@ -83,8 +84,8 @@ namespace Loom.Unity3d {
 
             var msgTxBytes = new MessageTx
             {
-                From = this.Caller,
-                To = this.Address,
+                From = AddressToProtobufAddress(this.Caller),
+                To = AddressToProtobufAddress(this.Address),
                 Data = callTxBytes
             }.ToByteString();
 
@@ -111,6 +112,14 @@ namespace Loom.Unity3d {
             {
                 InvokeChainEvent(sender, e);
             }
+        }
+
+        private static Internal.Protobuf.Address AddressToProtobufAddress(Address address) {
+            return new Internal.Protobuf.Address
+            {
+                ChainId = address.ChainId,
+                Local = ByteString.CopyFrom(CryptoUtils.HexStringToBytes(address.LocalAddress))
+            };
         }
     }
 }

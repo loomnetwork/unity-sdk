@@ -9,10 +9,10 @@ using pb = global::Google.Protobuf;
 using pbc = global::Google.Protobuf.Collections;
 using pbr = global::Google.Protobuf.Reflection;
 using scg = global::System.Collections.Generic;
-namespace Loom.Unity3d {
+namespace Loom.Unity3d.Internal.Protobuf {
 
   /// <summary>Holder for reflection information generated from loom.proto</summary>
-  public static partial class LoomReflection {
+  internal static partial class LoomReflection {
 
     #region Descriptor
     /// <summary>File descriptor for loom.proto</summary>
@@ -54,41 +54,41 @@ namespace Loom.Unity3d {
             "BSABKAUSGAoQY29udHJhY3RfYWRkcmVzcxgGIAEoDBIYCgRsb2dzGAcgAygL",
             "MgouRXZlbnREYXRhEhIKCmxvZ3NfYmxvb20YCCABKAwSDgoGc3RhdHVzGAkg",
             "ASgFKh0KBlZNVHlwZRIKCgZQTFVHSU4QABIHCgNFVk0QASonCgxFbmNvZGlu",
-            "Z1R5cGUSCAoESlNPThAAEg0KCVBST1RPQlVGMxABQg+qAgxMb29tLlVuaXR5",
-            "M2RiBnByb3RvMw=="));
+            "Z1R5cGUSCAoESlNPThAAEg0KCVBST1RPQlVGMxABQiGqAh5Mb29tLlVuaXR5",
+            "M2QuSW50ZXJuYWwuUHJvdG9idWZiBnByb3RvMw=="));
       descriptor = pbr::FileDescriptor.FromGeneratedCode(descriptorData,
           new pbr::FileDescriptor[] { },
-          new pbr::GeneratedClrTypeInfo(new[] {typeof(global::Loom.Unity3d.VMType), typeof(global::Loom.Unity3d.EncodingType), }, new pbr::GeneratedClrTypeInfo[] {
-            new pbr::GeneratedClrTypeInfo(typeof(global::Loom.Unity3d.SignedTx), global::Loom.Unity3d.SignedTx.Parser, new[]{ "Inner", "Signature", "PublicKey" }, null, null, null),
-            new pbr::GeneratedClrTypeInfo(typeof(global::Loom.Unity3d.NonceTx), global::Loom.Unity3d.NonceTx.Parser, new[]{ "Inner", "Sequence" }, null, null, null),
-            new pbr::GeneratedClrTypeInfo(typeof(global::Loom.Unity3d.Address), global::Loom.Unity3d.Address.Parser, new[]{ "ChainId", "Local" }, null, null, null),
-            new pbr::GeneratedClrTypeInfo(typeof(global::Loom.Unity3d.Transaction), global::Loom.Unity3d.Transaction.Parser, new[]{ "Id", "Data" }, null, null, null),
-            new pbr::GeneratedClrTypeInfo(typeof(global::Loom.Unity3d.MessageTx), global::Loom.Unity3d.MessageTx.Parser, new[]{ "To", "From", "Data" }, null, null, null),
-            new pbr::GeneratedClrTypeInfo(typeof(global::Loom.Unity3d.DeployTx), global::Loom.Unity3d.DeployTx.Parser, new[]{ "VmType", "Code", "Name" }, null, null, null),
-            new pbr::GeneratedClrTypeInfo(typeof(global::Loom.Unity3d.DeployResponse), global::Loom.Unity3d.DeployResponse.Parser, new[]{ "Contract", "Output" }, null, null, null),
-            new pbr::GeneratedClrTypeInfo(typeof(global::Loom.Unity3d.DeployResponseData), global::Loom.Unity3d.DeployResponseData.Parser, new[]{ "TxHash", "Bytecode" }, null, null, null),
-            new pbr::GeneratedClrTypeInfo(typeof(global::Loom.Unity3d.CallTx), global::Loom.Unity3d.CallTx.Parser, new[]{ "VmType", "Input" }, null, null, null),
-            new pbr::GeneratedClrTypeInfo(typeof(global::Loom.Unity3d.PluginCode), global::Loom.Unity3d.PluginCode.Parser, new[]{ "Name", "Input" }, null, null, null),
-            new pbr::GeneratedClrTypeInfo(typeof(global::Loom.Unity3d.Request), global::Loom.Unity3d.Request.Parser, new[]{ "ContentType", "Accept", "Body" }, null, null, null),
-            new pbr::GeneratedClrTypeInfo(typeof(global::Loom.Unity3d.Response), global::Loom.Unity3d.Response.Parser, new[]{ "ContentType", "Body" }, null, null, null),
-            new pbr::GeneratedClrTypeInfo(typeof(global::Loom.Unity3d.ContractMethodCall), global::Loom.Unity3d.ContractMethodCall.Parser, new[]{ "Method", "Args" }, null, null, null),
-            new pbr::GeneratedClrTypeInfo(typeof(global::Loom.Unity3d.TxHashList), global::Loom.Unity3d.TxHashList.Parser, new[]{ "TxHash" }, null, null, null),
-            new pbr::GeneratedClrTypeInfo(typeof(global::Loom.Unity3d.EventDataList), global::Loom.Unity3d.EventDataList.Parser, new[]{ "Events" }, null, null, null),
-            new pbr::GeneratedClrTypeInfo(typeof(global::Loom.Unity3d.EventData), global::Loom.Unity3d.EventData.Parser, new[]{ "Topics", "Caller", "Address", "PluginName", "BlockHeight", "EncodedBody", "OriginalRequest", "TxHash" }, null, null, null),
-            new pbr::GeneratedClrTypeInfo(typeof(global::Loom.Unity3d.TxReceiptList), global::Loom.Unity3d.TxReceiptList.Parser, new[]{ "TxReceipts" }, null, null, null),
-            new pbr::GeneratedClrTypeInfo(typeof(global::Loom.Unity3d.EvmTxReceipt), global::Loom.Unity3d.EvmTxReceipt.Parser, new[]{ "TransactionIndex", "BlockHash", "BlockNumber", "CumulativeGasUsed", "GasUsed", "ContractAddress", "Logs", "LogsBloom", "Status" }, null, null, null)
+          new pbr::GeneratedClrTypeInfo(new[] {typeof(global::Loom.Unity3d.Internal.Protobuf.VMType), typeof(global::Loom.Unity3d.Internal.Protobuf.EncodingType), }, new pbr::GeneratedClrTypeInfo[] {
+            new pbr::GeneratedClrTypeInfo(typeof(global::Loom.Unity3d.Internal.Protobuf.SignedTx), global::Loom.Unity3d.Internal.Protobuf.SignedTx.Parser, new[]{ "Inner", "Signature", "PublicKey" }, null, null, null),
+            new pbr::GeneratedClrTypeInfo(typeof(global::Loom.Unity3d.Internal.Protobuf.NonceTx), global::Loom.Unity3d.Internal.Protobuf.NonceTx.Parser, new[]{ "Inner", "Sequence" }, null, null, null),
+            new pbr::GeneratedClrTypeInfo(typeof(global::Loom.Unity3d.Internal.Protobuf.Address), global::Loom.Unity3d.Internal.Protobuf.Address.Parser, new[]{ "ChainId", "Local" }, null, null, null),
+            new pbr::GeneratedClrTypeInfo(typeof(global::Loom.Unity3d.Internal.Protobuf.Transaction), global::Loom.Unity3d.Internal.Protobuf.Transaction.Parser, new[]{ "Id", "Data" }, null, null, null),
+            new pbr::GeneratedClrTypeInfo(typeof(global::Loom.Unity3d.Internal.Protobuf.MessageTx), global::Loom.Unity3d.Internal.Protobuf.MessageTx.Parser, new[]{ "To", "From", "Data" }, null, null, null),
+            new pbr::GeneratedClrTypeInfo(typeof(global::Loom.Unity3d.Internal.Protobuf.DeployTx), global::Loom.Unity3d.Internal.Protobuf.DeployTx.Parser, new[]{ "VmType", "Code", "Name" }, null, null, null),
+            new pbr::GeneratedClrTypeInfo(typeof(global::Loom.Unity3d.Internal.Protobuf.DeployResponse), global::Loom.Unity3d.Internal.Protobuf.DeployResponse.Parser, new[]{ "Contract", "Output" }, null, null, null),
+            new pbr::GeneratedClrTypeInfo(typeof(global::Loom.Unity3d.Internal.Protobuf.DeployResponseData), global::Loom.Unity3d.Internal.Protobuf.DeployResponseData.Parser, new[]{ "TxHash", "Bytecode" }, null, null, null),
+            new pbr::GeneratedClrTypeInfo(typeof(global::Loom.Unity3d.Internal.Protobuf.CallTx), global::Loom.Unity3d.Internal.Protobuf.CallTx.Parser, new[]{ "VmType", "Input" }, null, null, null),
+            new pbr::GeneratedClrTypeInfo(typeof(global::Loom.Unity3d.Internal.Protobuf.PluginCode), global::Loom.Unity3d.Internal.Protobuf.PluginCode.Parser, new[]{ "Name", "Input" }, null, null, null),
+            new pbr::GeneratedClrTypeInfo(typeof(global::Loom.Unity3d.Internal.Protobuf.Request), global::Loom.Unity3d.Internal.Protobuf.Request.Parser, new[]{ "ContentType", "Accept", "Body" }, null, null, null),
+            new pbr::GeneratedClrTypeInfo(typeof(global::Loom.Unity3d.Internal.Protobuf.Response), global::Loom.Unity3d.Internal.Protobuf.Response.Parser, new[]{ "ContentType", "Body" }, null, null, null),
+            new pbr::GeneratedClrTypeInfo(typeof(global::Loom.Unity3d.Internal.Protobuf.ContractMethodCall), global::Loom.Unity3d.Internal.Protobuf.ContractMethodCall.Parser, new[]{ "Method", "Args" }, null, null, null),
+            new pbr::GeneratedClrTypeInfo(typeof(global::Loom.Unity3d.Internal.Protobuf.TxHashList), global::Loom.Unity3d.Internal.Protobuf.TxHashList.Parser, new[]{ "TxHash" }, null, null, null),
+            new pbr::GeneratedClrTypeInfo(typeof(global::Loom.Unity3d.Internal.Protobuf.EventDataList), global::Loom.Unity3d.Internal.Protobuf.EventDataList.Parser, new[]{ "Events" }, null, null, null),
+            new pbr::GeneratedClrTypeInfo(typeof(global::Loom.Unity3d.Internal.Protobuf.EventData), global::Loom.Unity3d.Internal.Protobuf.EventData.Parser, new[]{ "Topics", "Caller", "Address", "PluginName", "BlockHeight", "EncodedBody", "OriginalRequest", "TxHash" }, null, null, null),
+            new pbr::GeneratedClrTypeInfo(typeof(global::Loom.Unity3d.Internal.Protobuf.TxReceiptList), global::Loom.Unity3d.Internal.Protobuf.TxReceiptList.Parser, new[]{ "TxReceipts" }, null, null, null),
+            new pbr::GeneratedClrTypeInfo(typeof(global::Loom.Unity3d.Internal.Protobuf.EvmTxReceipt), global::Loom.Unity3d.Internal.Protobuf.EvmTxReceipt.Parser, new[]{ "TransactionIndex", "BlockHash", "BlockNumber", "CumulativeGasUsed", "GasUsed", "ContractAddress", "Logs", "LogsBloom", "Status" }, null, null, null)
           }));
     }
     #endregion
 
   }
   #region Enums
-  public enum VMType {
+  internal enum VMType {
     [pbr::OriginalName("PLUGIN")] Plugin = 0,
     [pbr::OriginalName("EVM")] Evm = 1,
   }
 
-  public enum EncodingType {
+  internal enum EncodingType {
     [pbr::OriginalName("JSON")] Json = 0,
     [pbr::OriginalName("PROTOBUF3")] Protobuf3 = 1,
   }
@@ -96,7 +96,7 @@ namespace Loom.Unity3d {
   #endregion
 
   #region Messages
-  public sealed partial class SignedTx : pb::IMessage<SignedTx> {
+  internal sealed partial class SignedTx : pb::IMessage<SignedTx> {
     private static readonly pb::MessageParser<SignedTx> _parser = new pb::MessageParser<SignedTx>(() => new SignedTx());
     private pb::UnknownFieldSet _unknownFields;
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
@@ -104,7 +104,7 @@ namespace Loom.Unity3d {
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     public static pbr::MessageDescriptor Descriptor {
-      get { return global::Loom.Unity3d.LoomReflection.Descriptor.MessageTypes[0]; }
+      get { return global::Loom.Unity3d.Internal.Protobuf.LoomReflection.Descriptor.MessageTypes[0]; }
     }
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
@@ -281,7 +281,7 @@ namespace Loom.Unity3d {
 
   }
 
-  public sealed partial class NonceTx : pb::IMessage<NonceTx> {
+  internal sealed partial class NonceTx : pb::IMessage<NonceTx> {
     private static readonly pb::MessageParser<NonceTx> _parser = new pb::MessageParser<NonceTx>(() => new NonceTx());
     private pb::UnknownFieldSet _unknownFields;
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
@@ -289,7 +289,7 @@ namespace Loom.Unity3d {
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     public static pbr::MessageDescriptor Descriptor {
-      get { return global::Loom.Unity3d.LoomReflection.Descriptor.MessageTypes[1]; }
+      get { return global::Loom.Unity3d.Internal.Protobuf.LoomReflection.Descriptor.MessageTypes[1]; }
     }
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
@@ -438,7 +438,7 @@ namespace Loom.Unity3d {
 
   }
 
-  public sealed partial class Address : pb::IMessage<Address> {
+  internal sealed partial class Address : pb::IMessage<Address> {
     private static readonly pb::MessageParser<Address> _parser = new pb::MessageParser<Address>(() => new Address());
     private pb::UnknownFieldSet _unknownFields;
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
@@ -446,7 +446,7 @@ namespace Loom.Unity3d {
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     public static pbr::MessageDescriptor Descriptor {
-      get { return global::Loom.Unity3d.LoomReflection.Descriptor.MessageTypes[2]; }
+      get { return global::Loom.Unity3d.Internal.Protobuf.LoomReflection.Descriptor.MessageTypes[2]; }
     }
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
@@ -595,7 +595,7 @@ namespace Loom.Unity3d {
 
   }
 
-  public sealed partial class Transaction : pb::IMessage<Transaction> {
+  internal sealed partial class Transaction : pb::IMessage<Transaction> {
     private static readonly pb::MessageParser<Transaction> _parser = new pb::MessageParser<Transaction>(() => new Transaction());
     private pb::UnknownFieldSet _unknownFields;
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
@@ -603,7 +603,7 @@ namespace Loom.Unity3d {
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     public static pbr::MessageDescriptor Descriptor {
-      get { return global::Loom.Unity3d.LoomReflection.Descriptor.MessageTypes[3]; }
+      get { return global::Loom.Unity3d.Internal.Protobuf.LoomReflection.Descriptor.MessageTypes[3]; }
     }
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
@@ -752,7 +752,7 @@ namespace Loom.Unity3d {
 
   }
 
-  public sealed partial class MessageTx : pb::IMessage<MessageTx> {
+  internal sealed partial class MessageTx : pb::IMessage<MessageTx> {
     private static readonly pb::MessageParser<MessageTx> _parser = new pb::MessageParser<MessageTx>(() => new MessageTx());
     private pb::UnknownFieldSet _unknownFields;
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
@@ -760,7 +760,7 @@ namespace Loom.Unity3d {
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     public static pbr::MessageDescriptor Descriptor {
-      get { return global::Loom.Unity3d.LoomReflection.Descriptor.MessageTypes[4]; }
+      get { return global::Loom.Unity3d.Internal.Protobuf.LoomReflection.Descriptor.MessageTypes[4]; }
     }
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
@@ -790,9 +790,9 @@ namespace Loom.Unity3d {
 
     /// <summary>Field number for the "to" field.</summary>
     public const int ToFieldNumber = 1;
-    private global::Loom.Unity3d.Address to_;
+    private global::Loom.Unity3d.Internal.Protobuf.Address to_;
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
-    public global::Loom.Unity3d.Address To {
+    public global::Loom.Unity3d.Internal.Protobuf.Address To {
       get { return to_; }
       set {
         to_ = value;
@@ -801,9 +801,9 @@ namespace Loom.Unity3d {
 
     /// <summary>Field number for the "from" field.</summary>
     public const int FromFieldNumber = 2;
-    private global::Loom.Unity3d.Address from_;
+    private global::Loom.Unity3d.Internal.Protobuf.Address from_;
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
-    public global::Loom.Unity3d.Address From {
+    public global::Loom.Unity3d.Internal.Protobuf.Address From {
       get { return from_; }
       set {
         from_ = value;
@@ -901,13 +901,13 @@ namespace Loom.Unity3d {
       }
       if (other.to_ != null) {
         if (to_ == null) {
-          to_ = new global::Loom.Unity3d.Address();
+          to_ = new global::Loom.Unity3d.Internal.Protobuf.Address();
         }
         To.MergeFrom(other.To);
       }
       if (other.from_ != null) {
         if (from_ == null) {
-          from_ = new global::Loom.Unity3d.Address();
+          from_ = new global::Loom.Unity3d.Internal.Protobuf.Address();
         }
         From.MergeFrom(other.From);
       }
@@ -927,14 +927,14 @@ namespace Loom.Unity3d {
             break;
           case 10: {
             if (to_ == null) {
-              to_ = new global::Loom.Unity3d.Address();
+              to_ = new global::Loom.Unity3d.Internal.Protobuf.Address();
             }
             input.ReadMessage(to_);
             break;
           }
           case 18: {
             if (from_ == null) {
-              from_ = new global::Loom.Unity3d.Address();
+              from_ = new global::Loom.Unity3d.Internal.Protobuf.Address();
             }
             input.ReadMessage(from_);
             break;
@@ -949,7 +949,7 @@ namespace Loom.Unity3d {
 
   }
 
-  public sealed partial class DeployTx : pb::IMessage<DeployTx> {
+  internal sealed partial class DeployTx : pb::IMessage<DeployTx> {
     private static readonly pb::MessageParser<DeployTx> _parser = new pb::MessageParser<DeployTx>(() => new DeployTx());
     private pb::UnknownFieldSet _unknownFields;
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
@@ -957,7 +957,7 @@ namespace Loom.Unity3d {
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     public static pbr::MessageDescriptor Descriptor {
-      get { return global::Loom.Unity3d.LoomReflection.Descriptor.MessageTypes[5]; }
+      get { return global::Loom.Unity3d.Internal.Protobuf.LoomReflection.Descriptor.MessageTypes[5]; }
     }
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
@@ -987,9 +987,9 @@ namespace Loom.Unity3d {
 
     /// <summary>Field number for the "vm_type" field.</summary>
     public const int VmTypeFieldNumber = 1;
-    private global::Loom.Unity3d.VMType vmType_ = 0;
+    private global::Loom.Unity3d.Internal.Protobuf.VMType vmType_ = 0;
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
-    public global::Loom.Unity3d.VMType VmType {
+    public global::Loom.Unity3d.Internal.Protobuf.VMType VmType {
       get { return vmType_; }
       set {
         vmType_ = value;
@@ -1117,7 +1117,7 @@ namespace Loom.Unity3d {
             _unknownFields = pb::UnknownFieldSet.MergeFieldFrom(_unknownFields, input);
             break;
           case 8: {
-            vmType_ = (global::Loom.Unity3d.VMType) input.ReadEnum();
+            vmType_ = (global::Loom.Unity3d.Internal.Protobuf.VMType) input.ReadEnum();
             break;
           }
           case 18: {
@@ -1134,7 +1134,7 @@ namespace Loom.Unity3d {
 
   }
 
-  public sealed partial class DeployResponse : pb::IMessage<DeployResponse> {
+  internal sealed partial class DeployResponse : pb::IMessage<DeployResponse> {
     private static readonly pb::MessageParser<DeployResponse> _parser = new pb::MessageParser<DeployResponse>(() => new DeployResponse());
     private pb::UnknownFieldSet _unknownFields;
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
@@ -1142,7 +1142,7 @@ namespace Loom.Unity3d {
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     public static pbr::MessageDescriptor Descriptor {
-      get { return global::Loom.Unity3d.LoomReflection.Descriptor.MessageTypes[6]; }
+      get { return global::Loom.Unity3d.Internal.Protobuf.LoomReflection.Descriptor.MessageTypes[6]; }
     }
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
@@ -1171,9 +1171,9 @@ namespace Loom.Unity3d {
 
     /// <summary>Field number for the "contract" field.</summary>
     public const int ContractFieldNumber = 1;
-    private global::Loom.Unity3d.Address contract_;
+    private global::Loom.Unity3d.Internal.Protobuf.Address contract_;
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
-    public global::Loom.Unity3d.Address Contract {
+    public global::Loom.Unity3d.Internal.Protobuf.Address Contract {
       get { return contract_; }
       set {
         contract_ = value;
@@ -1262,7 +1262,7 @@ namespace Loom.Unity3d {
       }
       if (other.contract_ != null) {
         if (contract_ == null) {
-          contract_ = new global::Loom.Unity3d.Address();
+          contract_ = new global::Loom.Unity3d.Internal.Protobuf.Address();
         }
         Contract.MergeFrom(other.Contract);
       }
@@ -1282,7 +1282,7 @@ namespace Loom.Unity3d {
             break;
           case 10: {
             if (contract_ == null) {
-              contract_ = new global::Loom.Unity3d.Address();
+              contract_ = new global::Loom.Unity3d.Internal.Protobuf.Address();
             }
             input.ReadMessage(contract_);
             break;
@@ -1297,7 +1297,7 @@ namespace Loom.Unity3d {
 
   }
 
-  public sealed partial class DeployResponseData : pb::IMessage<DeployResponseData> {
+  internal sealed partial class DeployResponseData : pb::IMessage<DeployResponseData> {
     private static readonly pb::MessageParser<DeployResponseData> _parser = new pb::MessageParser<DeployResponseData>(() => new DeployResponseData());
     private pb::UnknownFieldSet _unknownFields;
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
@@ -1305,7 +1305,7 @@ namespace Loom.Unity3d {
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     public static pbr::MessageDescriptor Descriptor {
-      get { return global::Loom.Unity3d.LoomReflection.Descriptor.MessageTypes[7]; }
+      get { return global::Loom.Unity3d.Internal.Protobuf.LoomReflection.Descriptor.MessageTypes[7]; }
     }
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
@@ -1454,7 +1454,7 @@ namespace Loom.Unity3d {
 
   }
 
-  public sealed partial class CallTx : pb::IMessage<CallTx> {
+  internal sealed partial class CallTx : pb::IMessage<CallTx> {
     private static readonly pb::MessageParser<CallTx> _parser = new pb::MessageParser<CallTx>(() => new CallTx());
     private pb::UnknownFieldSet _unknownFields;
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
@@ -1462,7 +1462,7 @@ namespace Loom.Unity3d {
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     public static pbr::MessageDescriptor Descriptor {
-      get { return global::Loom.Unity3d.LoomReflection.Descriptor.MessageTypes[8]; }
+      get { return global::Loom.Unity3d.Internal.Protobuf.LoomReflection.Descriptor.MessageTypes[8]; }
     }
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
@@ -1491,9 +1491,9 @@ namespace Loom.Unity3d {
 
     /// <summary>Field number for the "vm_type" field.</summary>
     public const int VmTypeFieldNumber = 1;
-    private global::Loom.Unity3d.VMType vmType_ = 0;
+    private global::Loom.Unity3d.Internal.Protobuf.VMType vmType_ = 0;
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
-    public global::Loom.Unity3d.VMType VmType {
+    public global::Loom.Unity3d.Internal.Protobuf.VMType VmType {
       get { return vmType_; }
       set {
         vmType_ = value;
@@ -1598,7 +1598,7 @@ namespace Loom.Unity3d {
             _unknownFields = pb::UnknownFieldSet.MergeFieldFrom(_unknownFields, input);
             break;
           case 8: {
-            vmType_ = (global::Loom.Unity3d.VMType) input.ReadEnum();
+            vmType_ = (global::Loom.Unity3d.Internal.Protobuf.VMType) input.ReadEnum();
             break;
           }
           case 18: {
@@ -1611,7 +1611,7 @@ namespace Loom.Unity3d {
 
   }
 
-  public sealed partial class PluginCode : pb::IMessage<PluginCode> {
+  internal sealed partial class PluginCode : pb::IMessage<PluginCode> {
     private static readonly pb::MessageParser<PluginCode> _parser = new pb::MessageParser<PluginCode>(() => new PluginCode());
     private pb::UnknownFieldSet _unknownFields;
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
@@ -1619,7 +1619,7 @@ namespace Loom.Unity3d {
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     public static pbr::MessageDescriptor Descriptor {
-      get { return global::Loom.Unity3d.LoomReflection.Descriptor.MessageTypes[9]; }
+      get { return global::Loom.Unity3d.Internal.Protobuf.LoomReflection.Descriptor.MessageTypes[9]; }
     }
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
@@ -1768,7 +1768,7 @@ namespace Loom.Unity3d {
 
   }
 
-  public sealed partial class Request : pb::IMessage<Request> {
+  internal sealed partial class Request : pb::IMessage<Request> {
     private static readonly pb::MessageParser<Request> _parser = new pb::MessageParser<Request>(() => new Request());
     private pb::UnknownFieldSet _unknownFields;
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
@@ -1776,7 +1776,7 @@ namespace Loom.Unity3d {
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     public static pbr::MessageDescriptor Descriptor {
-      get { return global::Loom.Unity3d.LoomReflection.Descriptor.MessageTypes[10]; }
+      get { return global::Loom.Unity3d.Internal.Protobuf.LoomReflection.Descriptor.MessageTypes[10]; }
     }
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
@@ -1806,9 +1806,9 @@ namespace Loom.Unity3d {
 
     /// <summary>Field number for the "content_type" field.</summary>
     public const int ContentTypeFieldNumber = 1;
-    private global::Loom.Unity3d.EncodingType contentType_ = 0;
+    private global::Loom.Unity3d.Internal.Protobuf.EncodingType contentType_ = 0;
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
-    public global::Loom.Unity3d.EncodingType ContentType {
+    public global::Loom.Unity3d.Internal.Protobuf.EncodingType ContentType {
       get { return contentType_; }
       set {
         contentType_ = value;
@@ -1817,9 +1817,9 @@ namespace Loom.Unity3d {
 
     /// <summary>Field number for the "accept" field.</summary>
     public const int AcceptFieldNumber = 2;
-    private global::Loom.Unity3d.EncodingType accept_ = 0;
+    private global::Loom.Unity3d.Internal.Protobuf.EncodingType accept_ = 0;
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
-    public global::Loom.Unity3d.EncodingType Accept {
+    public global::Loom.Unity3d.Internal.Protobuf.EncodingType Accept {
       get { return accept_; }
       set {
         accept_ = value;
@@ -1936,11 +1936,11 @@ namespace Loom.Unity3d {
             _unknownFields = pb::UnknownFieldSet.MergeFieldFrom(_unknownFields, input);
             break;
           case 8: {
-            contentType_ = (global::Loom.Unity3d.EncodingType) input.ReadEnum();
+            contentType_ = (global::Loom.Unity3d.Internal.Protobuf.EncodingType) input.ReadEnum();
             break;
           }
           case 16: {
-            accept_ = (global::Loom.Unity3d.EncodingType) input.ReadEnum();
+            accept_ = (global::Loom.Unity3d.Internal.Protobuf.EncodingType) input.ReadEnum();
             break;
           }
           case 26: {
@@ -1953,7 +1953,7 @@ namespace Loom.Unity3d {
 
   }
 
-  public sealed partial class Response : pb::IMessage<Response> {
+  internal sealed partial class Response : pb::IMessage<Response> {
     private static readonly pb::MessageParser<Response> _parser = new pb::MessageParser<Response>(() => new Response());
     private pb::UnknownFieldSet _unknownFields;
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
@@ -1961,7 +1961,7 @@ namespace Loom.Unity3d {
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     public static pbr::MessageDescriptor Descriptor {
-      get { return global::Loom.Unity3d.LoomReflection.Descriptor.MessageTypes[11]; }
+      get { return global::Loom.Unity3d.Internal.Protobuf.LoomReflection.Descriptor.MessageTypes[11]; }
     }
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
@@ -1990,9 +1990,9 @@ namespace Loom.Unity3d {
 
     /// <summary>Field number for the "content_type" field.</summary>
     public const int ContentTypeFieldNumber = 1;
-    private global::Loom.Unity3d.EncodingType contentType_ = 0;
+    private global::Loom.Unity3d.Internal.Protobuf.EncodingType contentType_ = 0;
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
-    public global::Loom.Unity3d.EncodingType ContentType {
+    public global::Loom.Unity3d.Internal.Protobuf.EncodingType ContentType {
       get { return contentType_; }
       set {
         contentType_ = value;
@@ -2097,7 +2097,7 @@ namespace Loom.Unity3d {
             _unknownFields = pb::UnknownFieldSet.MergeFieldFrom(_unknownFields, input);
             break;
           case 8: {
-            contentType_ = (global::Loom.Unity3d.EncodingType) input.ReadEnum();
+            contentType_ = (global::Loom.Unity3d.Internal.Protobuf.EncodingType) input.ReadEnum();
             break;
           }
           case 18: {
@@ -2110,7 +2110,7 @@ namespace Loom.Unity3d {
 
   }
 
-  public sealed partial class ContractMethodCall : pb::IMessage<ContractMethodCall> {
+  internal sealed partial class ContractMethodCall : pb::IMessage<ContractMethodCall> {
     private static readonly pb::MessageParser<ContractMethodCall> _parser = new pb::MessageParser<ContractMethodCall>(() => new ContractMethodCall());
     private pb::UnknownFieldSet _unknownFields;
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
@@ -2118,7 +2118,7 @@ namespace Loom.Unity3d {
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     public static pbr::MessageDescriptor Descriptor {
-      get { return global::Loom.Unity3d.LoomReflection.Descriptor.MessageTypes[12]; }
+      get { return global::Loom.Unity3d.Internal.Protobuf.LoomReflection.Descriptor.MessageTypes[12]; }
     }
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
@@ -2267,7 +2267,7 @@ namespace Loom.Unity3d {
 
   }
 
-  public sealed partial class TxHashList : pb::IMessage<TxHashList> {
+  internal sealed partial class TxHashList : pb::IMessage<TxHashList> {
     private static readonly pb::MessageParser<TxHashList> _parser = new pb::MessageParser<TxHashList>(() => new TxHashList());
     private pb::UnknownFieldSet _unknownFields;
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
@@ -2275,7 +2275,7 @@ namespace Loom.Unity3d {
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     public static pbr::MessageDescriptor Descriptor {
-      get { return global::Loom.Unity3d.LoomReflection.Descriptor.MessageTypes[13]; }
+      get { return global::Loom.Unity3d.Internal.Protobuf.LoomReflection.Descriptor.MessageTypes[13]; }
     }
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
@@ -2388,7 +2388,7 @@ namespace Loom.Unity3d {
 
   }
 
-  public sealed partial class EventDataList : pb::IMessage<EventDataList> {
+  internal sealed partial class EventDataList : pb::IMessage<EventDataList> {
     private static readonly pb::MessageParser<EventDataList> _parser = new pb::MessageParser<EventDataList>(() => new EventDataList());
     private pb::UnknownFieldSet _unknownFields;
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
@@ -2396,7 +2396,7 @@ namespace Loom.Unity3d {
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     public static pbr::MessageDescriptor Descriptor {
-      get { return global::Loom.Unity3d.LoomReflection.Descriptor.MessageTypes[14]; }
+      get { return global::Loom.Unity3d.Internal.Protobuf.LoomReflection.Descriptor.MessageTypes[14]; }
     }
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
@@ -2424,11 +2424,11 @@ namespace Loom.Unity3d {
 
     /// <summary>Field number for the "events" field.</summary>
     public const int EventsFieldNumber = 1;
-    private static readonly pb::FieldCodec<global::Loom.Unity3d.EventData> _repeated_events_codec
-        = pb::FieldCodec.ForMessage(10, global::Loom.Unity3d.EventData.Parser);
-    private readonly pbc::RepeatedField<global::Loom.Unity3d.EventData> events_ = new pbc::RepeatedField<global::Loom.Unity3d.EventData>();
+    private static readonly pb::FieldCodec<global::Loom.Unity3d.Internal.Protobuf.EventData> _repeated_events_codec
+        = pb::FieldCodec.ForMessage(10, global::Loom.Unity3d.Internal.Protobuf.EventData.Parser);
+    private readonly pbc::RepeatedField<global::Loom.Unity3d.Internal.Protobuf.EventData> events_ = new pbc::RepeatedField<global::Loom.Unity3d.Internal.Protobuf.EventData>();
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
-    public pbc::RepeatedField<global::Loom.Unity3d.EventData> Events {
+    public pbc::RepeatedField<global::Loom.Unity3d.Internal.Protobuf.EventData> Events {
       get { return events_; }
     }
 
@@ -2509,7 +2509,7 @@ namespace Loom.Unity3d {
 
   }
 
-  public sealed partial class EventData : pb::IMessage<EventData> {
+  internal sealed partial class EventData : pb::IMessage<EventData> {
     private static readonly pb::MessageParser<EventData> _parser = new pb::MessageParser<EventData>(() => new EventData());
     private pb::UnknownFieldSet _unknownFields;
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
@@ -2517,7 +2517,7 @@ namespace Loom.Unity3d {
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     public static pbr::MessageDescriptor Descriptor {
-      get { return global::Loom.Unity3d.LoomReflection.Descriptor.MessageTypes[15]; }
+      get { return global::Loom.Unity3d.Internal.Protobuf.LoomReflection.Descriptor.MessageTypes[15]; }
     }
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
@@ -2562,9 +2562,9 @@ namespace Loom.Unity3d {
 
     /// <summary>Field number for the "caller" field.</summary>
     public const int CallerFieldNumber = 2;
-    private global::Loom.Unity3d.Address caller_;
+    private global::Loom.Unity3d.Internal.Protobuf.Address caller_;
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
-    public global::Loom.Unity3d.Address Caller {
+    public global::Loom.Unity3d.Internal.Protobuf.Address Caller {
       get { return caller_; }
       set {
         caller_ = value;
@@ -2573,9 +2573,9 @@ namespace Loom.Unity3d {
 
     /// <summary>Field number for the "address" field.</summary>
     public const int AddressFieldNumber = 3;
-    private global::Loom.Unity3d.Address address_;
+    private global::Loom.Unity3d.Internal.Protobuf.Address address_;
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
-    public global::Loom.Unity3d.Address Address {
+    public global::Loom.Unity3d.Internal.Protobuf.Address Address {
       get { return address_; }
       set {
         address_ = value;
@@ -2758,13 +2758,13 @@ namespace Loom.Unity3d {
       topics_.Add(other.topics_);
       if (other.caller_ != null) {
         if (caller_ == null) {
-          caller_ = new global::Loom.Unity3d.Address();
+          caller_ = new global::Loom.Unity3d.Internal.Protobuf.Address();
         }
         Caller.MergeFrom(other.Caller);
       }
       if (other.address_ != null) {
         if (address_ == null) {
-          address_ = new global::Loom.Unity3d.Address();
+          address_ = new global::Loom.Unity3d.Internal.Protobuf.Address();
         }
         Address.MergeFrom(other.Address);
       }
@@ -2800,14 +2800,14 @@ namespace Loom.Unity3d {
           }
           case 18: {
             if (caller_ == null) {
-              caller_ = new global::Loom.Unity3d.Address();
+              caller_ = new global::Loom.Unity3d.Internal.Protobuf.Address();
             }
             input.ReadMessage(caller_);
             break;
           }
           case 26: {
             if (address_ == null) {
-              address_ = new global::Loom.Unity3d.Address();
+              address_ = new global::Loom.Unity3d.Internal.Protobuf.Address();
             }
             input.ReadMessage(address_);
             break;
@@ -2838,7 +2838,7 @@ namespace Loom.Unity3d {
 
   }
 
-  public sealed partial class TxReceiptList : pb::IMessage<TxReceiptList> {
+  internal sealed partial class TxReceiptList : pb::IMessage<TxReceiptList> {
     private static readonly pb::MessageParser<TxReceiptList> _parser = new pb::MessageParser<TxReceiptList>(() => new TxReceiptList());
     private pb::UnknownFieldSet _unknownFields;
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
@@ -2846,7 +2846,7 @@ namespace Loom.Unity3d {
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     public static pbr::MessageDescriptor Descriptor {
-      get { return global::Loom.Unity3d.LoomReflection.Descriptor.MessageTypes[16]; }
+      get { return global::Loom.Unity3d.Internal.Protobuf.LoomReflection.Descriptor.MessageTypes[16]; }
     }
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
@@ -2874,11 +2874,11 @@ namespace Loom.Unity3d {
 
     /// <summary>Field number for the "tx_receipts" field.</summary>
     public const int TxReceiptsFieldNumber = 1;
-    private static readonly pb::FieldCodec<global::Loom.Unity3d.EvmTxReceipt> _repeated_txReceipts_codec
-        = pb::FieldCodec.ForMessage(10, global::Loom.Unity3d.EvmTxReceipt.Parser);
-    private readonly pbc::RepeatedField<global::Loom.Unity3d.EvmTxReceipt> txReceipts_ = new pbc::RepeatedField<global::Loom.Unity3d.EvmTxReceipt>();
+    private static readonly pb::FieldCodec<global::Loom.Unity3d.Internal.Protobuf.EvmTxReceipt> _repeated_txReceipts_codec
+        = pb::FieldCodec.ForMessage(10, global::Loom.Unity3d.Internal.Protobuf.EvmTxReceipt.Parser);
+    private readonly pbc::RepeatedField<global::Loom.Unity3d.Internal.Protobuf.EvmTxReceipt> txReceipts_ = new pbc::RepeatedField<global::Loom.Unity3d.Internal.Protobuf.EvmTxReceipt>();
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
-    public pbc::RepeatedField<global::Loom.Unity3d.EvmTxReceipt> TxReceipts {
+    public pbc::RepeatedField<global::Loom.Unity3d.Internal.Protobuf.EvmTxReceipt> TxReceipts {
       get { return txReceipts_; }
     }
 
@@ -2959,7 +2959,7 @@ namespace Loom.Unity3d {
 
   }
 
-  public sealed partial class EvmTxReceipt : pb::IMessage<EvmTxReceipt> {
+  internal sealed partial class EvmTxReceipt : pb::IMessage<EvmTxReceipt> {
     private static readonly pb::MessageParser<EvmTxReceipt> _parser = new pb::MessageParser<EvmTxReceipt>(() => new EvmTxReceipt());
     private pb::UnknownFieldSet _unknownFields;
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
@@ -2967,7 +2967,7 @@ namespace Loom.Unity3d {
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     public static pbr::MessageDescriptor Descriptor {
-      get { return global::Loom.Unity3d.LoomReflection.Descriptor.MessageTypes[17]; }
+      get { return global::Loom.Unity3d.Internal.Protobuf.LoomReflection.Descriptor.MessageTypes[17]; }
     }
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
@@ -3069,11 +3069,11 @@ namespace Loom.Unity3d {
 
     /// <summary>Field number for the "logs" field.</summary>
     public const int LogsFieldNumber = 7;
-    private static readonly pb::FieldCodec<global::Loom.Unity3d.EventData> _repeated_logs_codec
-        = pb::FieldCodec.ForMessage(58, global::Loom.Unity3d.EventData.Parser);
-    private readonly pbc::RepeatedField<global::Loom.Unity3d.EventData> logs_ = new pbc::RepeatedField<global::Loom.Unity3d.EventData>();
+    private static readonly pb::FieldCodec<global::Loom.Unity3d.Internal.Protobuf.EventData> _repeated_logs_codec
+        = pb::FieldCodec.ForMessage(58, global::Loom.Unity3d.Internal.Protobuf.EventData.Parser);
+    private readonly pbc::RepeatedField<global::Loom.Unity3d.Internal.Protobuf.EventData> logs_ = new pbc::RepeatedField<global::Loom.Unity3d.Internal.Protobuf.EventData>();
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
-    public pbc::RepeatedField<global::Loom.Unity3d.EventData> Logs {
+    public pbc::RepeatedField<global::Loom.Unity3d.Internal.Protobuf.EventData> Logs {
       get { return logs_; }
     }
 

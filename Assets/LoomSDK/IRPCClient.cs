@@ -70,16 +70,6 @@ namespace Loom.Unity3d
 
     public class JsonRpcEventData
     {
-        // TODO: Create custom Newtonsoft JsonConverter to deserialize the protobuf,
-        //       the tricky bit is getting it to work with the AOT version of Newtonsoft.
-        public class Address
-        {
-            [JsonProperty("chain_id")]
-            public string ChainID;
-            [JsonProperty("local")]
-            public byte[] Local;
-        }
-
         [JsonProperty("topics")]
         public string[] Topics { get; internal set; }
 
