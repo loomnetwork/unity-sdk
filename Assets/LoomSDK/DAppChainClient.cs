@@ -5,6 +5,8 @@ using System.Threading.Tasks;
 using System;
 using Newtonsoft.Json;
 using System.Collections.Generic;
+using System.Threading;
+using Loom.Unity3d.Internal.Protobuf;
 
 namespace Loom.Unity3d
 {
@@ -67,7 +69,6 @@ namespace Loom.Unity3d
     /// </summary>
     public class DAppChainClient : IDisposable
     {
-
         private static readonly string LogTag = "Loom.DAppChainClient";
 
         private Dictionary<EventHandler<RawChainEventArgs>, EventHandler<JsonRpcEventData>> eventSubs;
@@ -142,16 +143,8 @@ namespace Loom.Unity3d
                 {
                     handler(this, new RawChainEventArgs
                     (
-                        new Address
-                        {
-                            ChainId = e.ContractAddress.ChainID,
-                            Local = ByteString.CopyFrom(e.ContractAddress.Local)
-                        },
-                        new Address
-                        {
-                            ChainId = e.CallerAddress.ChainID,
-                            Local = ByteString.CopyFrom(e.CallerAddress.Local)
-                        },
+                        e.ContractAddress,
+                        e.CallerAddress,
                         e.BlockHeight,
                         e.Data,
                         e.Topics
@@ -292,8 +285,9 @@ namespace Loom.Unity3d
         /// <param name="contract">Address of the contract to query.</param>
         /// <param name="query">Query parameters object.</param>
         /// <param name="caller">Optional caller address.</param>
+        /// <param name="vmType">Virtual machine type.</param>
         /// <returns>Deserialized response.</returns>
-        public async Task<T> QueryAsync<T>(Address contract, IMessage query, Address caller = null, VMType vmType = VMType.Plugin)
+        internal async Task<T> QueryAsync<T>(Address contract, IMessage query, Address caller = default(Address), VMType vmType = VMType.Plugin)
         {
             return await QueryAsync<T>(contract, query.ToByteArray(), caller, vmType);
         }
@@ -305,16 +299,17 @@ namespace Loom.Unity3d
         /// <param name="contract">Address of the contract to query.</param>
         /// <param name="query">Raw query parameters data.</param>
         /// <param name="caller">Optional caller address.</param>
+        /// <param name="vmType">Virtual machine type.</param>
         /// <returns>Deserialized response.</returns>
-        public async Task<T> QueryAsync<T>(Address contract, byte[] query, Address caller = null, VMType vmType = VMType.Plugin)
+        internal async Task<T> QueryAsync<T>(Address contract, byte[] query, Address caller = default(Address), VMType vmType = VMType.Plugin)
         {
             var queryParams = new QueryParams
             {
-                ContractAddress = contract.LocalAddressHexString,
+                ContractAddress = contract.LocalAddress,
                 Params = query,
                 VmType = vmType
             };
-            if (caller != null)
+            if (caller.LocalAddress != null && caller.ChainId != null)
             {
                 queryParams.CallerAddress = caller.ToAddressString();
             }
@@ -349,17 +344,17 @@ namespace Loom.Unity3d
         /// Tries to resolve a contract name to an address.
         /// </summary>
         /// <param name="contractName">Name of a smart contract on a Loom DAppChain.</param>
-        /// <returns>Contract address, or null if a contract matching the given name wasn't found.</returns>
+        /// <exception cref="Exception">If a contract matching the given name wasn't found</exception>
         public async Task<Address> ResolveContractAddressAsync(string contractName)
         {
             var addrStr = await this.readClient.SendAsync<string, ResolveParams>(
                 "resolve", new ResolveParams { ContractName = contractName }
             );
-            if (string.IsNullOrEmpty(addrStr))
-            {
-                return null;
-            }
-            return Address.FromAddressString(addrStr);
+
+            if (String.IsNullOrEmpty(addrStr))
+                throw new Exception("Unable to find a contract with a matching name");
+
+            return Address.FromString(addrStr);
         }
     }
 }

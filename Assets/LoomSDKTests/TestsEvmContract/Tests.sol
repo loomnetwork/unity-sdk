@@ -4,7 +4,7 @@ contract Tests {
     address testAddress;
     int testInt;
     uint testUint;
-	bytes testByteArray;
+    bytes testByteArray;
     bytes4 testFixed4ByteArray;
     bytes32 testFixed32ByteArray;
     bytes testStaticByteArray;
@@ -18,7 +18,7 @@ contract Tests {
     
     // address
     
-    function setTestAddress(address _testAddress) public  {
+    function setTestAddress(address _testAddress) public {
     	testAddress = _testAddress;
     }
     
@@ -46,7 +46,7 @@ contract Tests {
     
     // int
     
-    function setTestInt(int _testInt) public  {
+    function setTestInt(int _testInt) public {
     	testInt = _testInt;
     }
     
@@ -76,7 +76,7 @@ contract Tests {
     
     // bytes
     
-    function setTestByteArray(bytes _testByteArray) public  {
+    function setTestByteArray(bytes _testByteArray) public {
     	testByteArray = _testByteArray;
     }
     
@@ -90,7 +90,7 @@ contract Tests {
     
     // bytes4
     
-    function setTestFixed4ByteArray(bytes4 _testFixed4ByteArray) public  {
+    function setTestFixed4ByteArray(bytes4 _testFixed4ByteArray) public {
     	testFixed4ByteArray = _testFixed4ByteArray;
     }
     
@@ -104,7 +104,7 @@ contract Tests {
     
     // bytes32
     
-    function setTestFixed32ByteArray(bytes32 _testFixed32ByteArray) public  {
+    function setTestFixed32ByteArray(bytes32 _testFixed32ByteArray) public {
     	testFixed32ByteArray = _testFixed32ByteArray;
     }
     
