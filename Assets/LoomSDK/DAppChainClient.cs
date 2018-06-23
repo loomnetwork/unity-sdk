@@ -199,7 +199,15 @@ namespace Loom.Unity3d
                 {
                     ++badNonceCount;
                 }
-                await new WaitForSecondsRealtime(0.5f);
+
+                // WaitForSecondsRealtime can throw a "get_realtimeSinceStartup can only be called from the main thread." error.
+                // WebGL doesn't have threads, so use WaitForSecondsRealtime for WebGL anyway
+                const float delay = 0.5f;
+#if UNITY_WEBGL && !UNITY_EDITOR
+                await new WaitForSecondsRealtime(delay);
+#else
+                await Task.Delay(TimeSpan.FromSeconds(delay));
+#endif
             } while ((this.NonceRetries != 0) && (badNonceCount <= this.NonceRetries));
 
             if (badNonceCount > 0)
