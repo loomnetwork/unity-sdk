@@ -7,7 +7,7 @@ namespace Loom.Unity3d.Internal
 {
     internal class WebSocketProxyLoggerOutputFactory
     {
-        public static Action<LogData, string> CreateWebsocketProxyLoggerOutput(UnityEngine.ILogger logger)
+        public static Action<LogData, string> CreateWebSocketProxyLoggerOutput(UnityEngine.ILogger logger)
         {
             const string tag = "WebSocket";
             return (data, s) =>

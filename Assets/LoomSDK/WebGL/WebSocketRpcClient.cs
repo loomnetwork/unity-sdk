@@ -16,12 +16,12 @@ namespace Loom.Unity3d.Internal.WebGL
     internal class WebSocketRpcClient : IRpcClient
     {
         private const string LogTag = "Loom.WebSocketRpcClient";
-        private static Dictionary<int, WebSocket> sockets = new Dictionary<int, WebSocket>();
+        private static readonly Dictionary<int, WebSocket> sockets = new Dictionary<int, WebSocket>();
         private static bool isLibInitialized = false;
 
-        private Uri url;
+        private readonly Uri url;
+        private readonly int socketId = 0;
         private event EventHandler<JsonRpcEventData> OnEventMessage;
-        private int socketId = 0;
 
         /// <summary>
         /// Logger to be used for logging, defaults to <see cref="NullLogger"/>.
