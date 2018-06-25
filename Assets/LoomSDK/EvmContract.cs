@@ -4,6 +4,7 @@ using System.Threading.Tasks;
 using Loom.Nethereum.ABI.Model;
 using Loom.Nethereum.Contracts;
 using Loom.Nethereum.RPC.Eth.DTOs;
+using Loom.Unity3d.Internal;
 
 namespace Loom.Unity3d
 {
@@ -24,9 +25,10 @@ namespace Loom.Unity3d
         /// </summary>
         /// <param name="client">Client to use to communicate with the contract.</param>
         /// <param name="contractAddr">Address of a contract on the Loom DAppChain.</param>
-        /// <param name="callerAddr">Address of the caller, generated from the public key of the tx signer.</param>
+        /// <param name="callerAddr">Address of the caller, generated from the public key of the transaction signer.</param>
         /// <param name="abi">Contract Application Binary Interface as JSON object string.</param>
-        public EvmContract(DAppChainClient client, Address contractAddr, Address callerAddr, string abi) : base(client, contractAddr, callerAddr) {
+        public EvmContract(DAppChainClient client, Address contractAddr, Address callerAddr, string abi) : base(client, contractAddr, callerAddr)
+        {
             this.contractBuilder = new ContractBuilder(abi, contractAddr.LocalAddress);
             this.topicToEventName = new Dictionary<string, string>();
             foreach (EventABI eventAbi in this.contractBuilder.ContractABI.Events)
@@ -263,7 +265,8 @@ namespace Loom.Unity3d
 
         #endregion
 
-        protected override EvmChainEventArgs TransformChainEvent(RawChainEventArgs e) {
+        protected override EvmChainEventArgs TransformChainEvent(RawChainEventArgs e)
+        {
             if (e.Topics == null)
                 throw new ArgumentNullException("topics");
 
@@ -355,5 +358,6 @@ namespace Loom.Unity3d
         }
 
         #endregion
+
     }
 }

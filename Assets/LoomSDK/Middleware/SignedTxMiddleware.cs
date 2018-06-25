@@ -10,14 +10,14 @@ namespace Loom.Unity3d
     public class SignedTxMiddleware : ITxMiddlewareHandler
     {
         /// <summary>
-        /// The private key that should be used to sign txs.
+        /// The private key that should be used to sign transactions.
         /// </summary>
         public byte[] PrivateKey { get; set; }
 
         /// <summary>
-        /// Creates middlware that signs txs with the given key.
+        /// Creates middleware that signs transactions with the given key.
         /// </summary>
-        /// <param name="privateKey">The private key that should be used to sign txs.</param>
+        /// <param name="privateKey">The private key that should be used to sign transactions.</param>
         public SignedTxMiddleware(byte[] privateKey)
         {
             this.PrivateKey = privateKey;

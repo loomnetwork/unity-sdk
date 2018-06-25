@@ -5,13 +5,13 @@ using System.Text;
 using UnityEngine.Networking;
 using UnityEngine;
 
-namespace Loom.Unity3d
+namespace Loom.Unity3d.Internal
 {
-    internal class HTTPRPCClient : IRPCClient
+    internal class HttpRpcClient : IRpcClient
     {
-        private static readonly string LogTag = "Loom.HTTPRPCClient";
+        private const string LogTag = "Loom.HttpRpcClient";
 
-        private Uri url;
+        private readonly Uri url;
 
         /// <summary>
         /// Logger to be used for logging, defaults to <see cref="NullLogger"/>.
@@ -27,7 +27,7 @@ namespace Loom.Unity3d
             throw new NotImplementedException();
         }
 
-        public HTTPRPCClient(string url)
+        public HttpRpcClient(string url)
         {
             this.url = new Uri(url);
             this.Logger = NullLogger.Instance;

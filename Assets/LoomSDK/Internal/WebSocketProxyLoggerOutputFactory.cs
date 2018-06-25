@@ -3,11 +3,11 @@
 using System;
 using WebSocketSharp;
 
-namespace Loom.Unity3d
+namespace Loom.Unity3d.Internal
 {
-    internal class WSSharpProxyLoggerOutputFactory
+    internal class WebSocketProxyLoggerOutputFactory
     {
-        public static Action<LogData, string> CreateWSSharpProxyLoggerOutput(UnityEngine.ILogger logger)
+        public static Action<LogData, string> CreateWebsocketProxyLoggerOutput(UnityEngine.ILogger logger)
         {
             const string tag = "WebSocket";
             return (data, s) =>

@@ -1,11 +1,7 @@
 ﻿using Newtonsoft.Json;
-using System;
-using System.Threading.Tasks;
 
-namespace Loom.Unity3d
+namespace Loom.Unity3d.Internal
 {
-    #region JSON RPC Interfaces
-
     internal class JsonRpcRequest<T>
     {
         [JsonProperty("jsonrpc")]
@@ -68,40 +64,42 @@ namespace Loom.Unity3d
         public JsonRpcEventData Result;
     }
 
-    public class JsonRpcEventData
+    internal class BroadcastTxResult
     {
-        [JsonProperty("topics")]
-        public string[] Topics { get; internal set; }
+        [JsonProperty("code")]
+        public string Code { get; set; }
 
-        [JsonProperty("caller")]
-        public Address CallerAddress { get; internal set; }
+        /// <summary>
+        /// Error message.
+        /// </summary>
+        [JsonProperty("log")]
+        public string Log { get; set; }
 
-        [JsonProperty("address")]
-        public Address ContractAddress { get; internal set; }
+        [JsonProperty("hash")]
+        public string Hash { get; set; }
 
-        [JsonProperty("block_height")]
-        public UInt64 BlockHeight { get; internal set; }
+        /// <summary>
+        /// Block height at which the Tx was committed.
+        /// </summary>
+        [JsonProperty("height")]
+        public long Height { get; set; }
 
-        [JsonProperty("encoded_body")]
-        public byte[] Data { get; internal set; }
+        public class TxResult
+        {
+            [JsonProperty("code")]
+            public int Code { get; set; }
 
-        // Ignore these fields until there's a concrete use for them.*/
-        /*
-        [JsonProperty("plugin_name")]
-        public string PluginName { get; internal set; }
-        [JsonProperty("original_request")]
-        public byte[] OriginalRequest { get; internal set; }
-        */
-    }
+            [JsonProperty("log")]
+            public string Error { get; set; }
 
-    #endregion
+            [JsonProperty("data")]
+            public byte[] Data { get; set; }
+        }
 
-    public interface IRPCClient : IDisposable
-    {
-        bool IsConnected { get; }
-        Task<TResult> SendAsync<TResult, TArgs>(string method, TArgs args);
-        Task DisconnectAsync();
-        Task SubscribeAsync(EventHandler<JsonRpcEventData> handler);
-        Task UnsubscribeAsync(EventHandler<JsonRpcEventData> handler);
+        [JsonProperty("check_tx")]
+        public TxResult CheckTx { get; set; }
+
+        [JsonProperty("deliver_tx")]
+        public TxResult DeliverTx { get; set; }
     }
 }

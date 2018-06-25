@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace Loom.Unity3d
+namespace Loom.Unity3d.Internal
 {
     public sealed class RawChainEventArgs
     {

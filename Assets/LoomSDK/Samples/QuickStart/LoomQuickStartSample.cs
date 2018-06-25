@@ -8,13 +8,13 @@ public class LoomQuickStartSample : MonoBehaviour {
 
     async Task<Contract> GetContract(byte[] privateKey, byte[] publicKey)
     {
-        var writer = RPCClientFactory.Configure()
+        var writer = RpcClientFactory.Configure()
             .WithLogger(Debug.unityLogger)
             .WithHTTP("http://127.0.0.1:46658/rpc")
             //.WithWebSocket("ws://127.0.0.1:46657/websocket")
             .Create();
 
-        var reader = RPCClientFactory.Configure()
+        var reader = RpcClientFactory.Configure()
             .WithLogger(Debug.unityLogger)
             .WithHTTP("http://127.0.0.1:46658/query")
             //.WithWebSocket("ws://127.0.0.1:9999/queryws")
@@ -26,10 +26,7 @@ public class LoomQuickStartSample : MonoBehaviour {
         };
         // required middleware
         client.TxMiddleware = new TxMiddleware(new ITxMiddlewareHandler[]{
-            new NonceTxMiddleware{
-                PublicKey = publicKey,
-                Client = client
-            },
+            new NonceTxMiddleware(publicKey, client),
             new SignedTxMiddleware(privateKey)
         });
 

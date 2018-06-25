@@ -6,17 +6,17 @@ using Newtonsoft.Json;
 using UnityEngine;
 using WebSocketSharp;
 
-namespace Loom.Unity3d
+namespace Loom.Unity3d.Internal
 {
     /// <summary>
     /// WebSocket JSON-RPC client implemented with WebSocketSharp.
     /// </summary>
-    internal class WSSharpRPCClient : IRPCClient
+    internal class WebSocketRpcClient : IRpcClient
     {
-        private static readonly string LogTag = "Loom.WSSharpRPCClient";
+        private const string LogTag = "Loom.WebSocketRpcClient";
 
-        private WebSocket client;
-        private Uri url;
+        private readonly WebSocket client;
+        private readonly Uri url;
         private ILogger logger;
         private event EventHandler<JsonRpcEventData> OnEventMessage;
 
@@ -31,15 +31,21 @@ namespace Loom.Unity3d
             }
             set
             {
+
+                if (value == null)
+                {
+                    value = NullLogger.Instance;
+                }
+
                 if (this.logger == value)
                     return;
 
                 this.logger = value;
-                this.client.Log.Output = WSSharpProxyLoggerOutputFactory.CreateWSSharpProxyLoggerOutput(value);
+                this.client.Log.Output = WebSocketProxyLoggerOutputFactory.CreateWebsocketProxyLoggerOutput(value);
             }
         }
 
-        public WSSharpRPCClient(string url)
+        public WebSocketRpcClient(string url)
         {
             this.client = new WebSocket(url);
             this.client.WaitTime = TimeSpan.FromMilliseconds(500);

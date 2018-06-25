@@ -115,12 +115,12 @@ namespace Loom.Unity3d.Tests
         }
 
         private async Task<EvmContract> GetContract(byte[] privateKey, byte[] publicKey, string abi) {
-            var writer = RPCClientFactory.Configure()
+            var writer = RpcClientFactory.Configure()
                 .WithLogger(Debug.unityLogger)
                 .WithWebSocket("ws://127.0.0.1:46657/websocket")
                 .Create();
 
-            var reader = RPCClientFactory.Configure()
+            var reader = RpcClientFactory.Configure()
                 .WithLogger(Debug.unityLogger)
                 .WithWebSocket("ws://127.0.0.1:9999/queryws")
                 .Create();
@@ -131,11 +131,7 @@ namespace Loom.Unity3d.Tests
             // required middleware
             client.TxMiddleware = new TxMiddleware(new ITxMiddlewareHandler[]
             {
-                new NonceTxMiddleware
-                {
-                    PublicKey = publicKey,
-                    Client = client
-                },
+                new NonceTxMiddleware(publicKey, client),
                 new SignedTxMiddleware(privateKey)
             });
 

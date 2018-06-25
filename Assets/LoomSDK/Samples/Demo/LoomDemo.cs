@@ -43,15 +43,15 @@ public class LoomDemo : MonoBehaviour
         var privateKey = CryptoUtils.GeneratePrivateKey();
         var publicKey = CryptoUtils.PublicKeyFromPrivateKey(privateKey);
         var callerAddr = Address.FromPublicKey(publicKey);
-        this.statusTextRef.text = "Signed in as " + callerAddr.ToAddressString();
+        this.statusTextRef.text = "Signed in as " + callerAddr.QualifiedAddress;
 
-        var writer = RPCClientFactory.Configure()
+        var writer = RpcClientFactory.Configure()
             .WithLogger(Debug.unityLogger)
             //.WithHTTP("http://127.0.0.1:46658/rpc")
             .WithWebSocket("ws://127.0.0.1:46657/websocket")
             .Create();
 
-        var reader = RPCClientFactory.Configure()
+        var reader = RpcClientFactory.Configure()
             .WithLogger(Debug.unityLogger)
             //.WithHTTP("http://127.0.0.1:46658/query")
             .WithWebSocket("ws://127.0.0.1:9999/queryws")
@@ -63,10 +63,7 @@ public class LoomDemo : MonoBehaviour
         };
 
         client.TxMiddleware = new TxMiddleware(new ITxMiddlewareHandler[]{
-            new NonceTxMiddleware{
-                PublicKey = publicKey,
-                Client = client
-            },
+            new NonceTxMiddleware(publicKey, client),
             new SignedTxMiddleware(privateKey)
         });
 
