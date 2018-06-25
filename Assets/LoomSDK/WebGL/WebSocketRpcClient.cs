@@ -8,78 +8,16 @@ using System.Threading.Tasks;
 using System.Collections.Generic;
 using UnityEngine;
 
-namespace Loom.Unity3d.WebGL
+namespace Loom.Unity3d.Internal.WebGL
 {
-    internal enum WebSocketState : int
-    {
-        Connecting = 0,
-        Open = 1,
-        Closing = 2,
-        Closed = 3
-    }
-
-    internal class WebSocket
-    {
-        public Action OnOpen;
-        public Action<string> OnClose;
-        public EventHandler<string> OnMessage;
-    }
-
     /// <summary>
     /// WebSocket JSON-RPC client implemented with browser WebSockets.
     /// </summary>
-    internal class WSRPCClient : IRPCClient
+    internal class WebSocketRpcClient : IRpcClient
     {
+        private const string LogTag = "Loom.WebSocketRpcClient";
         private static Dictionary<int, WebSocket> sockets = new Dictionary<int, WebSocket>();
         private static bool isLibInitialized = false;
-
-        [DllImport("__Internal")]
-        private static extern void InitWebSocketManagerLib(
-            Action<int> openCallback,
-            Action<int,string> closeCallback,
-            Action<int,string> msgCallback);
-        [DllImport("__Internal")]
-        private static extern int WebSocketCreate();
-        [DllImport("__Internal")]
-        private static extern WebSocketState GetWebSocketState(int sockedId);
-        [DllImport("__Internal")]
-        private static extern void WebSocketConnect(int socketId, string url);
-        [DllImport("__Internal")]
-        private static extern void WebSocketClose(int socketId);
-        [DllImport("__Internal")]
-        private static extern void WebSocketSend(int socketId, string msg);
-        
-        [MonoPInvokeCallback(typeof(Action<int>))]
-        private static void OnWebSocketOpen(int socketId)
-        {
-            var socket = sockets[socketId];
-            socket.OnOpen();
-            socket.OnOpen = null;
-        }
-
-        [MonoPInvokeCallback(typeof(Action<int, string>))]
-        private static void OnWebSocketClose(int socketId, string err)
-        {
-            // If DisconnectAsync() was called from Dispose() the socket is no longer 
-            if (sockets.ContainsKey(socketId))
-            {
-                var socket = sockets[socketId];
-                if (socket.OnClose != null)
-                {
-                    socket.OnClose(err);
-                    socket.OnClose = null;
-                }
-            }
-        }
-
-        [MonoPInvokeCallback(typeof(Action<int>))]
-        private static void OnWebSocketMessage(int socketId, string msg)
-        {
-            var socket = sockets[socketId];
-            socket.OnMessage?.Invoke(socket, msg);
-        }
-
-        private static readonly string LogTag = "Loom.WSRPCClient";
 
         private Uri url;
         private event EventHandler<JsonRpcEventData> OnEventMessage;
@@ -90,7 +28,7 @@ namespace Loom.Unity3d.WebGL
         /// </summary>
         public ILogger Logger { get; set; }
 
-        public WSRPCClient(string url)
+        public WebSocketRpcClient(string url)
         {
             if (!isLibInitialized)
             {
@@ -227,7 +165,7 @@ namespace Loom.Unity3d.WebGL
                         if (partialMsg.Id == msgId)
                         {
                             webSocket.OnMessage -= handler;
-                            Logger.Log(LogTag, "RPC Resp Body: " + msgBody);                         
+                            Logger.Log(LogTag, "RPC Resp Body: " + msgBody);
                             if (partialMsg.Error != null)
                             {
                                 throw new Exception(String.Format(
@@ -298,6 +236,67 @@ namespace Loom.Unity3d.WebGL
             {
                 Logger.Log(LogTag, "[WSRPCClient_OnMessage error] " + ex.Message);
             }
+        }
+
+        [DllImport("__Internal")]
+        private static extern void InitWebSocketManagerLib(
+            Action<int> openCallback,
+            Action<int,string> closeCallback,
+            Action<int,string> msgCallback);
+        [DllImport("__Internal")]
+        private static extern int WebSocketCreate();
+        [DllImport("__Internal")]
+        private static extern WebSocketState GetWebSocketState(int sockedId);
+        [DllImport("__Internal")]
+        private static extern void WebSocketConnect(int socketId, string url);
+        [DllImport("__Internal")]
+        private static extern void WebSocketClose(int socketId);
+        [DllImport("__Internal")]
+        private static extern void WebSocketSend(int socketId, string msg);
+
+        [MonoPInvokeCallback(typeof(Action<int>))]
+        private static void OnWebSocketOpen(int socketId)
+        {
+            var socket = sockets[socketId];
+            socket.OnOpen();
+            socket.OnOpen = null;
+        }
+
+        [MonoPInvokeCallback(typeof(Action<int, string>))]
+        private static void OnWebSocketClose(int socketId, string err)
+        {
+            // If DisconnectAsync() was called from Dispose() the socket is no longer
+            if (sockets.ContainsKey(socketId))
+            {
+                var socket = sockets[socketId];
+                if (socket.OnClose != null)
+                {
+                    socket.OnClose(err);
+                    socket.OnClose = null;
+                }
+            }
+        }
+
+        [MonoPInvokeCallback(typeof(Action<int>))]
+        private static void OnWebSocketMessage(int socketId, string msg)
+        {
+            var socket = sockets[socketId];
+            socket.OnMessage?.Invoke(socket, msg);
+        }
+
+        internal enum WebSocketState : int
+        {
+            Connecting = 0,
+            Open = 1,
+            Closing = 2,
+            Closed = 3
+        }
+
+        internal class WebSocket
+        {
+            public Action OnOpen;
+            public Action<string> OnClose;
+            public EventHandler<string> OnMessage;
         }
     }
 }

@@ -5,23 +5,10 @@ using System.Text;
 
 namespace Loom.Unity3d
 {
-    public class LoomCryptoSignature
+    public static class CryptoUtils
     {
-        /// <summary>
-        /// 64-byte signature.
-        /// </summary>
-        public byte[] Signature { get; internal set; }
-        /// <summary>
-        /// 32-byte public key.
-        /// </summary>
-        public byte[] PublicKey { get; internal set; }
-    }
-
-
-    public class CryptoUtils
-    {
-        private static RNGCryptoServiceProvider rngCsp = new RNGCryptoServiceProvider();
-        private static RIPEMD160 ripemd160 = RIPEMD160.Create();
+        private static readonly RNGCryptoServiceProvider rngCsp = new RNGCryptoServiceProvider();
+        private static readonly RIPEMD160 ripemd160 = RIPEMD160.Create();
 
         /// <summary>
         /// Generates a cryptographically strong sequence of random bytes.
@@ -76,6 +63,7 @@ namespace Loom.Unity3d
             {
                 throw new ArgumentException("Expected 64-byte array", "privateKey");
             }
+
             var publicKey = new byte[32];
             // the last 32 bytes of the 64 byte private key is the public key
             Array.Copy(privateKey, 32, publicKey, 0, 32);
@@ -92,10 +80,10 @@ namespace Loom.Unity3d
         {
             byte[] signature = Ed25519.Sign(message, privateKey);
             return new LoomCryptoSignature
-            {
-                Signature = signature,
-                PublicKey = PublicKeyFromPrivateKey(privateKey)
-            };
+            (
+                signature,
+                PublicKeyFromPrivateKey(privateKey)
+            );
         }
 
         public static string BytesToHexString(byte[] bytes)
@@ -105,8 +93,8 @@ namespace Loom.Unity3d
 
             foreach (byte b in bytes)
             {
-                hex.Append(alphabet[(int)(b >> 4)]);
-                hex.Append(alphabet[(int)(b & 0xF)]);
+                hex.Append(alphabet[(int) (b >> 4)]);
+                hex.Append(alphabet[(int) (b & 0xF)]);
             }
 
             return hex.ToString();
@@ -123,6 +111,7 @@ namespace Loom.Unity3d
             {
                 return CryptoBytes.FromHexString(hexStr.Substring(2));
             }
+
             return CryptoBytes.FromHexString(hexStr);
         }
 
@@ -136,5 +125,4 @@ namespace Loom.Unity3d
             return ripemd160.ComputeHash(publicKey);
         }
     }
-
 }

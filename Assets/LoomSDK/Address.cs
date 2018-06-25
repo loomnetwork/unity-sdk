@@ -1,5 +1,6 @@
 ﻿using System;
 using Loom.Nethereum.Util;
+using Loom.Unity3d.Internal;
 using Newtonsoft.Json;
 
 namespace Loom.Unity3d

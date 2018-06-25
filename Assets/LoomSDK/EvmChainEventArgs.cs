@@ -1,6 +1,8 @@
-﻿using Loom.Nethereum.ABI.FunctionEncoding;
+﻿using System;
+using Loom.Nethereum.ABI.FunctionEncoding;
 
-namespace Loom.Unity3d {
+namespace Loom.Unity3d
+{
     public class EvmChainEventArgs : IChainEventArgs
     {
         public Address ContractAddress { get; }
@@ -30,10 +32,22 @@ namespace Loom.Unity3d {
         /// <typeparam name="T"></typeparam>
         /// <returns>Decoded event DTO.</returns>
         /// <see href="https://nethereum.readthedocs.io/en/latest/contracts/calling-transactions-events/"/>
-        public T DecodeEventDTO<T>() where T : new()
+        public T DecodeEventDto<T>() where T : new()
         {
             EventTopicDecoder eventTopicDecoder = new EventTopicDecoder();
             return eventTopicDecoder.DecodeTopics<T>(this.Topics, CryptoUtils.BytesToHexString(this.Data));
+        }
+
+        /// <summary>
+        /// Decodes event data into event DTO.
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <returns>Decoded event DTO.</returns>
+        /// <see href="https://nethereum.readthedocs.io/en/latest/contracts/calling-transactions-events/"/>
+        [Obsolete("Use DecodeEventDto")]
+        public T DecodeEventDTO<T>() where T : new()
+        {
+            return DecodeEventDto<T>();
         }
     }
 }

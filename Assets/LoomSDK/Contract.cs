@@ -1,6 +1,7 @@
 ﻿using System.Text;
 using System.Threading.Tasks;
 using Google.Protobuf;
+using Loom.Unity3d.Internal;
 using Loom.Unity3d.Internal.Protobuf;
 using Newtonsoft.Json;
 
@@ -17,7 +18,7 @@ namespace Loom.Unity3d
         /// </summary>
         /// <param name="client">Client to use to communicate with the contract.</param>
         /// <param name="contractAddr">Address of a contract on the Loom DAppChain.</param>
-        /// <param name="callerAddr">Address of the caller, generated from the public key of the tx signer.</param>
+        /// <param name="callerAddr">Address of the caller, generated from the public key of the transaction signer.</param>
         public Contract(DAppChainClient client, Address contractAddr, Address callerAddr) : base(client, contractAddr, callerAddr) {
         }
 

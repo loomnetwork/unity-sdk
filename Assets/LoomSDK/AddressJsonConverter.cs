@@ -2,11 +2,12 @@
 using System.Text;
 using Newtonsoft.Json;
 
-namespace Loom.Unity3d
+namespace Loom.Unity3d.Internal
 {
-    public class AddressJsonConverter : JsonConverter
+    internal class AddressJsonConverter : JsonConverter
     {
-        public override void WriteJson(JsonWriter writer, object value, JsonSerializer serializer) {
+        public override void WriteJson(JsonWriter writer, object value, JsonSerializer serializer)
+        {
             Address address = (Address) value;
             AddressJsonModel jsonModel = new AddressJsonModel
             {
@@ -16,12 +17,14 @@ namespace Loom.Unity3d
             serializer.Serialize(writer, jsonModel);
         }
 
-        public override object ReadJson(JsonReader reader, Type objectType, object existingValue, JsonSerializer serializer) {
+        public override object ReadJson(JsonReader reader, Type objectType, object existingValue, JsonSerializer serializer)
+        {
             AddressJsonModel jsonModel = serializer.Deserialize<AddressJsonModel>(reader);
             return new Address(CryptoUtils.BytesToHexString(jsonModel.Local), String.IsNullOrEmpty(jsonModel.ChainId) ? Address.kDefaultChainId : jsonModel.ChainId);
         }
 
-        public override bool CanConvert(Type objectType) {
+        public override bool CanConvert(Type objectType)
+        {
             return objectType == typeof(Address);
         }
 
