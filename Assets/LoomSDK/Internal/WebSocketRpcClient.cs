@@ -41,7 +41,7 @@ namespace Loom.Unity3d.Internal
                     return;
 
                 this.logger = value;
-                this.client.Log.Output = WebSocketProxyLoggerOutputFactory.CreateWebsocketProxyLoggerOutput(value);
+                this.client.Log.Output = WebSocketProxyLoggerOutputFactory.CreateWebSocketProxyLoggerOutput(value);
             }
         }
 

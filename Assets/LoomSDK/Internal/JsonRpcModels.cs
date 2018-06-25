@@ -84,6 +84,12 @@ namespace Loom.Unity3d.Internal
         [JsonProperty("height")]
         public long Height { get; set; }
 
+        [JsonProperty("check_tx")]
+        public TxResult CheckTx { get; set; }
+
+        [JsonProperty("deliver_tx")]
+        public TxResult DeliverTx { get; set; }
+
         public class TxResult
         {
             [JsonProperty("code")]
@@ -95,11 +101,5 @@ namespace Loom.Unity3d.Internal
             [JsonProperty("data")]
             public byte[] Data { get; set; }
         }
-
-        [JsonProperty("check_tx")]
-        public TxResult CheckTx { get; set; }
-
-        [JsonProperty("deliver_tx")]
-        public TxResult DeliverTx { get; set; }
     }
 }
