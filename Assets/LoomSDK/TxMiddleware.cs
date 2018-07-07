@@ -4,7 +4,7 @@ namespace Loom.Unity3d
 {
     public class TxMiddleware : ITxMiddlewareHandler
     {
-        ITxMiddlewareHandler[] Handlers { get; set; }
+        ITxMiddlewareHandler[] Handlers { get; }
 
         public TxMiddleware(ITxMiddlewareHandler[] handlers)
         {

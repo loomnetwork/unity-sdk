@@ -12,7 +12,7 @@ namespace Loom.Unity3d
         /// <summary>
         /// The private key that should be used to sign transactions.
         /// </summary>
-        public byte[] PrivateKey { get; set; }
+        public byte[] PrivateKey { get; }
 
         /// <summary>
         /// Creates middleware that signs transactions with the given key.

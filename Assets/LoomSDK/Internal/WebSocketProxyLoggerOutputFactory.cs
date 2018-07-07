@@ -5,7 +5,7 @@ using WebSocketSharp;
 
 namespace Loom.Unity3d.Internal
 {
-    internal class WebSocketProxyLoggerOutputFactory
+    internal static class WebSocketProxyLoggerOutputFactory
     {
         public static Action<LogData, string> CreateWebSocketProxyLoggerOutput(UnityEngine.ILogger logger)
         {

@@ -30,12 +30,12 @@ namespace Loom.Unity3d
             PublicKey = publicKey;
             Client = client;
 
-            publicKeyHex = CryptoUtils.BytesToHexString(this.PublicKey);
+            this.publicKeyHex = CryptoUtils.BytesToHexString(this.PublicKey);
         }
 
         public async Task<byte[]> Handle(byte[] txData)
         {
-            var nonce = await this.Client.GetNonceAsync(publicKeyHex);
+            var nonce = await this.Client.GetNonceAsync(this.publicKeyHex);
             var tx = new NonceTx
             {
                 Inner = ByteString.CopyFrom(txData),
