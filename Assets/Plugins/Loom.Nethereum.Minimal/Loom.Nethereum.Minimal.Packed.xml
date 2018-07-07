@@ -1,7 +1,7 @@
-<?xml version="1.0"?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 <doc>
     <assembly>
-        <name>Loom.Nethereum.Minimal</name>
+        <name>Loom.Nethereum.Minimal.Packed</name>
     </assembly>
     <members>
         <member name="T:Loom.Nethereum.ABI.ABIType">
@@ -27,7 +27,7 @@
             <summary>
                 Encodes the value according to specific type rules
             </summary>
-            <param name="value"> </param>
+            <param name="value" />
         </member>
         <member name="M:Loom.Nethereum.ABI.FunctionEncoding.FunctionCallDecoder.DecodeOutput``1(System.String,Loom.Nethereum.ABI.Model.Parameter[])">
             <summary>
@@ -567,6 +567,57 @@
             Error data (Optional)
             </summary>
         </member>
+        <member name="M:Loom.Nethereum.KeyStore.Crypto.ScryptNet.BulkCopy(System.Void*,System.Void*,System.Int32)">
+            <summary>
+            Copies a specified number of bytes from a source pointer to a destination pointer.
+            </summary>
+        </member>
+        <member name="M:Loom.Nethereum.KeyStore.Crypto.ScryptNet.BulkXor(System.Void*,System.Void*,System.Int32)">
+            <summary>
+            Copies a specified number of bytes from a source pointer to a destination pointer.
+            </summary>
+        </member>
+        <member name="M:Loom.Nethereum.KeyStore.Crypto.ScryptNet.Encode32(System.Byte*,System.UInt32)">
+            <summary>
+            Encode an integer to byte array on any alignment in little endian format.
+            </summary>
+        </member>
+        <member name="M:Loom.Nethereum.KeyStore.Crypto.ScryptNet.Decode32(System.Byte*)">
+            <summary>
+            Decode an integer from byte array on any alignment in little endian format.
+            </summary>
+        </member>
+        <member name="M:Loom.Nethereum.KeyStore.Crypto.ScryptNet.Salsa208(System.UInt32*)">
+            <summary>
+            Apply the salsa20/8 core to the provided block.
+            </summary>
+        </member>
+        <member name="M:Loom.Nethereum.KeyStore.Crypto.ScryptNet.R(System.UInt32,System.Int32)">
+            <summary>
+            Utility method for Salsa208.
+            </summary>
+        </member>
+        <member name="M:Loom.Nethereum.KeyStore.Crypto.ScryptNet.BlockMix(System.UInt32*,System.UInt32*,System.UInt32*,System.Int32)">
+            <summary>
+            Compute Bout = BlockMix_{salsa20/8, r}(Bin).  The input Bin must be 128r
+            bytes in length; the output Bout must also be the same size.
+            The temporary space X must be 64 bytes.
+            </summary>
+        </member>
+        <member name="M:Loom.Nethereum.KeyStore.Crypto.ScryptNet.Integerify(System.UInt32*,System.Int32)">
+            <summary>
+            Return the result of parsing B_{2r-1} as a little-endian integer.
+            </summary>
+        </member>
+        <member name="M:Loom.Nethereum.KeyStore.Crypto.ScryptNet.SMix(System.Byte*,System.Int32,System.Int32,System.UInt32*,System.UInt32*)">
+            <summary>
+            Compute B = SMix_r(B, N).  The input B must be 128r bytes in length;
+            the temporary storage V must be 128rN bytes in length; the temporary
+            storage XY must be 256r + 64 bytes in length.  The value N must be a
+            power of 2 greater than 1.  The arrays B, V, and XY must be aligned to a
+            multiple of 64 bytes.
+            </summary>
+        </member>
         <member name="T:Loom.Nethereum.KeyStore.Crypto.SCrypt">
             <summary>Implementation of the scrypt a password-based key derivation function.</summary>
             <remarks>
@@ -580,11 +631,16 @@
             <param name="S">the salt to use for this invocation.</param>
             <param name="N">CPU/Memory cost parameter. Must be larger than 1, a power of 2 and less than
                 <code>2^(128 * r / 8)</code>.</param>
-            <param name="r">the block size, must be >= 1.</param>
+            <param name="r">the block size, must be &gt;= 1.</param>
             <param name="p">Parallelization parameter. Must be a positive integer less than or equal to
                 <code>Int32.MaxValue / (128 * r * 8)</code>.</param>
             <param name="dkLen">the length of the key to generate.</param>
             <returns>the generated key.</returns>
+        </member>
+        <member name="M:Loom.Nethereum.Util.AddressUtil.IsValidEthereumAdressHexFormat(System.String)">
+            <summary>
+            Validates if the hex string is 40 alphanumeric characters
+            </summary>
         </member>
         <member name="T:Loom.Nethereum.Util.BigDecimal">
             BigNumber based on the original http://uberscraper.blogspot.co.uk/2013/09/c-bigdecimal-class-from-stackoverflow.html
@@ -592,13 +648,12 @@
             Original Author: Jan Christoph Bernack (contact: jc.bernack at googlemail.com)
             Changes JB: Added parse, Fix Normalise, Added Floor, New ToString, Change Equals (normalise to validate first), Change Casting to avoid overflows (even if might be slower), Added Normalise Bigger than zero, test on operations, parsing, casting, and other test coverage for ethereum unit conversions
             Changes KJ: Added Culture formatting
-            http://stackoverflow.com/a/13813535/956364" />
+            http://stackoverflow.com/a/13813535/956364" /&gt;
             <summary>
                 Arbitrary precision Decimal.
                 All operations are exact, except for division.
                 Division never determines more digits than the given precision of 50.
-            </summary>
-        </member>
+            </summary></member>
         <member name="F:Loom.Nethereum.Util.BigDecimal.Precision">
             <summary>
                 Sets the maximum precision of division operations.
@@ -606,9 +661,8 @@
             </summary>
         </member>
         <member name="M:Loom.Nethereum.Util.BigDecimal.#ctor(System.Numerics.BigInteger,System.Int32,System.Boolean)">
-            <summary>
-            </summary>
-            <param name="mantissa"></param>
+            <summary />
+            <param name="mantissa" />
             <param name="exponent">
                 The number of decimal units for example (-18). A positive value will be normalised as 10 ^
                 exponent

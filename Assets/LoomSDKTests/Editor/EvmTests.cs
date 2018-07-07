@@ -4,9 +4,9 @@ using UnityEngine.TestTools;
 using NUnit.Framework;
 using System.Collections;
 using System.Linq;
+using System.Numerics;
 using System.Runtime.ExceptionServices;
 using System.Threading.Tasks;
-using Org.BouncyCastle.Math;
 
 namespace Loom.Unity3d.Tests
 {
@@ -37,9 +37,9 @@ namespace Loom.Unity3d.Tests
         public IEnumerator UintTest() {
             return ContractTest(async () =>
             {
-                contract.CallAsync("setTestUint", BigInteger.ValueOf(123456789)).Wait();
-                Assert.AreEqual(BigInteger.ValueOf(123456789), await contract.StaticCallSimpleTypeOutputAsync<BigInteger>("getTestUint"));
-                Assert.AreEqual(BigInteger.ValueOf(0xDEADBEEF), await contract.StaticCallSimpleTypeOutputAsync<BigInteger>("getStaticTestUint"));
+                contract.CallAsync("setTestUint", new BigInteger(123456789)).Wait();
+                Assert.AreEqual(new BigInteger(123456789), await contract.StaticCallSimpleTypeOutputAsync<BigInteger>("getTestUint"));
+                Assert.AreEqual(new BigInteger(0xDEADBEEF), await contract.StaticCallSimpleTypeOutputAsync<BigInteger>("getStaticTestUint"));
             });
         }
 
@@ -47,13 +47,13 @@ namespace Loom.Unity3d.Tests
         public IEnumerator IntTest() {
             return ContractTest(async () =>
             {
-                contract.CallAsync("setTestInt", BigInteger.ValueOf(-123456789)).Wait();
-                Assert.AreEqual(BigInteger.ValueOf(-123456789), await contract.StaticCallSimpleTypeOutputAsync<BigInteger>("getTestInt"));
-                Assert.AreEqual(BigInteger.ValueOf(0xDEADBEEF), await contract.StaticCallSimpleTypeOutputAsync<BigInteger>("getStaticTestIntPositive"));
-                Assert.AreEqual(BigInteger.ValueOf(-0xDEADBEEF), await contract.StaticCallSimpleTypeOutputAsync<BigInteger>("getStaticTestIntNegative"));
-                Assert.AreEqual(BigInteger.ValueOf(-1L), await contract.StaticCallSimpleTypeOutputAsync<BigInteger>("getStaticTestIntMinus1"));
-                Assert.AreEqual(BigInteger.ValueOf(-255L), await contract.StaticCallSimpleTypeOutputAsync<BigInteger>("getStaticTestIntMinus255"));
-                Assert.AreEqual(BigInteger.ValueOf(-256L), await contract.StaticCallSimpleTypeOutputAsync<BigInteger>("getStaticTestIntMinus256"));
+                contract.CallAsync("setTestInt", new BigInteger(-123456789)).Wait();
+                Assert.AreEqual(new BigInteger(-123456789), await contract.StaticCallSimpleTypeOutputAsync<BigInteger>("getTestInt"));
+                Assert.AreEqual(new BigInteger(0xDEADBEEF), await contract.StaticCallSimpleTypeOutputAsync<BigInteger>("getStaticTestIntPositive"));
+                Assert.AreEqual(new BigInteger(-0xDEADBEEF), await contract.StaticCallSimpleTypeOutputAsync<BigInteger>("getStaticTestIntNegative"));
+                Assert.AreEqual(new BigInteger(-1L), await contract.StaticCallSimpleTypeOutputAsync<BigInteger>("getStaticTestIntMinus1"));
+                Assert.AreEqual(new BigInteger(-255L), await contract.StaticCallSimpleTypeOutputAsync<BigInteger>("getStaticTestIntMinus255"));
+                Assert.AreEqual(new BigInteger(-256L), await contract.StaticCallSimpleTypeOutputAsync<BigInteger>("getStaticTestIntMinus256"));
             });
         }
 
@@ -62,8 +62,8 @@ namespace Loom.Unity3d.Tests
             return ContractTest(async () =>
             {
                 await contract.CallAsync("setTestByteArray", bytes4);
-                Assert.IsTrue(bytes4.SequenceEqual(await contract.StaticCallSimpleTypeOutputAsync<byte[]>("getTestByteArray")));
-                Assert.IsTrue(bytes4.SequenceEqual(await contract.StaticCallSimpleTypeOutputAsync<byte[]>("getStaticTestByteArray")));
+                Assert.AreEqual(bytes4, await contract.StaticCallSimpleTypeOutputAsync<byte[]>("getTestByteArray"));
+                Assert.AreEqual(bytes4, await contract.StaticCallSimpleTypeOutputAsync<byte[]>("getStaticTestByteArray"));
             });
         }
 
@@ -71,9 +71,13 @@ namespace Loom.Unity3d.Tests
         public IEnumerator Fixed4ByteArrayTest() {
             return ContractTest(async () =>
             {
+                Debug.Log(FormatBytes(await contract.StaticCallSimpleTypeOutputAsync<byte[]>("getStaticTestFixed4ByteArray")));
                 await contract.CallAsync("setTestFixed4ByteArray", bytes4);
-                Assert.IsTrue(bytes4.SequenceEqual(await contract.StaticCallSimpleTypeOutputAsync<byte[]>("getTestFixed4ByteArray")));
-                Assert.AreEqual(BigInteger.ValueOf(0xDEADBEEF).ToByteArrayUnsigned(), await contract.StaticCallSimpleTypeOutputAsync<byte[]>("getStaticTestFixed4ByteArray"));
+                Assert.AreEqual(bytes4, await contract.StaticCallSimpleTypeOutputAsync<byte[]>("getTestFixed4ByteArray"));
+                Assert.AreEqual(
+                    new BigInteger(0xDEADBEEF),
+                    new BigInteger((await contract.StaticCallSimpleTypeOutputAsync<byte[]>("getStaticTestFixed4ByteArray")).Reverse().Concat(new byte[] { 0 }).ToArray())
+                );
             });
         }
 
@@ -81,12 +85,16 @@ namespace Loom.Unity3d.Tests
         public IEnumerator Fixed32ByteArrayTest() {
             return ContractTest(async () =>
             {
+                Debug.Log(FormatBytes(await contract.StaticCallSimpleTypeOutputAsync<byte[]>("getStaticTestFixed32ByteArray")));
                 byte[] bytes32 = new byte[32];
                 Array.Copy(bytes4, bytes32, bytes4.Length);
 
                 await contract.CallAsync("setTestFixed32ByteArray", bytes32);
-                Assert.IsTrue(bytes32.SequenceEqual(await contract.StaticCallSimpleTypeOutputAsync<byte[]>("getTestFixed32ByteArray")));
-                Assert.AreEqual(0xDEADBEEF, new BigInteger(await contract.StaticCallSimpleTypeOutputAsync<byte[]>("getStaticTestFixed32ByteArray")).LongValue);
+                Assert.AreEqual(bytes32, await this.contract.StaticCallSimpleTypeOutputAsync<byte[]>("getTestFixed32ByteArray"));
+                Assert.AreEqual(
+                    new BigInteger(0xDEADBEEF),
+                    new BigInteger((await contract.StaticCallSimpleTypeOutputAsync<byte[]>("getStaticTestFixed32ByteArray")).Reverse().ToArray())
+                );
             });
         }
 
@@ -139,6 +147,11 @@ namespace Loom.Unity3d.Tests
             var callerAddr = Address.FromPublicKey(publicKey);
 
             return new EvmContract(client, contractAddr, callerAddr, abi);
+        }
+
+        private static string FormatBytes(byte[] bytes)
+        {
+            return "[" + string.Join(", ", bytes) + "]";
         }
     }
 }
