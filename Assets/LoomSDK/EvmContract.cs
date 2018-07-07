@@ -88,7 +88,7 @@ namespace Loom.Unity3d
         /// <param name="functionInput">Argument objects arrays for the smart contract method.</param>
         /// <returns>Return Data Transfer Object of the smart contract method.</returns>
         /// <see href="https://nethereum.readthedocs.io/en/latest/contracts/functiondtos/"/>
-        public async Task<TReturn> CallDTOTypeOutputAsync<TReturn>(string method, params object[] functionInput) where TReturn : new()
+        public async Task<TReturn> CallDtoTypeOutputAsync<TReturn>(string method, params object[] functionInput) where TReturn : new()
         {
             FunctionBuilder functionBuilder;
             return await this.CallAsync(this.CreateContractMethodCallInput(method, functionInput, out functionBuilder), functionBuilder, (fb, s) => fb.DecodeDTOTypeOutput<TReturn>(s));
@@ -100,13 +100,42 @@ namespace Loom.Unity3d
         /// </summary>
         /// <param name="method">Smart contract method name.</param>
         /// <param name="functionInput">Argument objects arrays for the smart contract method.</param>
+        /// <returns>Return Data Transfer Object of the smart contract method.</returns>
+        /// <see href="https://nethereum.readthedocs.io/en/latest/contracts/functiondtos/"/>
+        [Obsolete("Use CallDtoTypeOutputAsync")]
+        public async Task<TReturn> CallDTOTypeOutputAsync<TReturn>(string method, params object[] functionInput) where TReturn : new()
+        {
+            return await CallDtoTypeOutputAsync<TReturn>(method, functionInput);
+        }
+
+        /// <summary>
+        /// Calls a smart contract method that mutates state.
+        /// The call into the smart contract is accomplished by committing a transaction to the DAppChain.
+        /// </summary>
+        /// <param name="method">Smart contract method name.</param>
+        /// <param name="functionInput">Argument objects arrays for the smart contract method.</param>
         /// <param name="functionOutput">Return Data Transfer Object of the smart contract method. A pre-existing object can be reused.</param>
         /// <returns>Return Data Transfer Object of the smart contract method. Same object instance as <paramref name="functionOutput"/>.</returns>
         /// <see href="https://nethereum.readthedocs.io/en/latest/contracts/functiondtos/"/>
-        public async Task<TReturn> CallDTOTypeOutputAsync<TReturn>(TReturn functionOutput, string method, params object[] functionInput) where TReturn : new()
+        public async Task<TReturn> CallDtoTypeOutputAsync<TReturn>(TReturn functionOutput, string method, params object[] functionInput) where TReturn : new()
         {
             FunctionBuilder functionBuilder;
             return await this.CallAsync(this.CreateContractMethodCallInput(method, functionInput, out functionBuilder), functionBuilder, (fb, s) => fb.DecodeDTOTypeOutput(functionOutput, s));
+        }
+
+        /// <summary>
+        /// Calls a smart contract method that mutates state.
+        /// The call into the smart contract is accomplished by committing a transaction to the DAppChain.
+        /// </summary>
+        /// <param name="method">Smart contract method name.</param>
+        /// <param name="functionInput">Argument objects arrays for the smart contract method.</param>
+        /// <param name="functionOutput">Return Data Transfer Object of the smart contract method. A pre-existing object can be reused.</param>
+        /// <returns>Return Data Transfer Object of the smart contract method. Same object instance as <paramref name="functionOutput"/>.</returns>
+        /// <see href="https://nethereum.readthedocs.io/en/latest/contracts/functiondtos/"/>
+        [Obsolete("Use CallDtoTypeOutputAsync")]
+        public async Task<TReturn> CallDTOTypeOutputAsync<TReturn>(TReturn functionOutput, string method, params object[] functionInput) where TReturn : new()
+        {
+            return await CallDtoTypeOutputAsync(functionOutput, method, functionInput);
         }
 
         /// <summary>
@@ -129,7 +158,7 @@ namespace Loom.Unity3d
         /// <param name="functionInput">Input Data Transfer Object for smart contract method.</param>
         /// <returns>Return Data Transfer Object of the smart contract method.</returns>
         /// <see href="https://nethereum.readthedocs.io/en/latest/contracts/functiondtos/"/>
-        public async Task<TReturn> CallDTOTypeOutputAsync<TInput, TReturn>(TInput functionInput) where TReturn : new()
+        public async Task<TReturn> CallDtoTypeOutputAsync<TInput, TReturn>(TInput functionInput) where TReturn : new()
         {
             FunctionBuilder<TInput> functionBuilder;
             return await this.CallAsync(this.CreateContractMethodCallInput(functionInput, out functionBuilder), functionBuilder, (fb, s) => fb.DecodeDTOTypeOutput<TReturn>(s));
@@ -140,13 +169,40 @@ namespace Loom.Unity3d
         /// The call into the smart contract is accomplished by committing a transaction to the DAppChain.
         /// </summary>
         /// <param name="functionInput">Input Data Transfer Object for smart contract method.</param>
+        /// <returns>Return Data Transfer Object of the smart contract method.</returns>
+        /// <see href="https://nethereum.readthedocs.io/en/latest/contracts/functiondtos/"/>
+        [Obsolete("Use CallDtoTypeOutputAsync")]
+        public async Task<TReturn> CallDTOTypeOutputAsync<TInput, TReturn>(TInput functionInput) where TReturn : new()
+        {
+            return await CallDtoTypeOutputAsync<TInput, TReturn>(functionInput);
+        }
+
+        /// <summary>
+        /// Calls a smart contract method that mutates state.
+        /// The call into the smart contract is accomplished by committing a transaction to the DAppChain.
+        /// </summary>
+        /// <param name="functionInput">Input Data Transfer Object for smart contract method.</param>
         /// <param name="functionOutput">Return Data Transfer Object of the smart contract method. A pre-existing object can be reused.</param>
         /// <returns>Return Data Transfer Object of the smart contract method. Same object instance as <paramref name="functionOutput"/>.</returns>
         /// <see href="https://nethereum.readthedocs.io/en/latest/contracts/functiondtos/"/>
-        public async Task<TReturn> CallDTOTypeOutputAsync<TInput, TReturn>(TInput functionInput, TReturn functionOutput) where TReturn : new()
+        public async Task<TReturn> CallDtoTypeOutputAsync<TInput, TReturn>(TInput functionInput, TReturn functionOutput) where TReturn : new()
         {
             FunctionBuilder<TInput> functionBuilder;
             return await this.CallAsync(this.CreateContractMethodCallInput(functionInput, out functionBuilder), functionBuilder, (fb, s) => fb.DecodeDTOTypeOutput(functionOutput, s));
+        }
+
+        /// <summary>
+        /// Calls a smart contract method that mutates state.
+        /// The call into the smart contract is accomplished by committing a transaction to the DAppChain.
+        /// </summary>
+        /// <param name="functionInput">Input Data Transfer Object for smart contract method.</param>
+        /// <param name="functionOutput">Return Data Transfer Object of the smart contract method. A pre-existing object can be reused.</param>
+        /// <returns>Return Data Transfer Object of the smart contract method. Same object instance as <paramref name="functionOutput"/>.</returns>
+        /// <see href="https://nethereum.readthedocs.io/en/latest/contracts/functiondtos/"/>
+        [Obsolete("Use CallDtoTypeOutputAsync")]
+        public async Task<TReturn> CallDTOTypeOutputAsync<TInput, TReturn>(TInput functionInput, TReturn functionOutput) where TReturn : new()
+        {
+            return await CallDtoTypeOutputAsync(functionInput, functionOutput);
         }
 
         #endregion
@@ -202,7 +258,7 @@ namespace Loom.Unity3d
         /// <param name="functionInput">Argument objects arrays for the smart contract method.</param>
         /// <returns>Return Data Transfer Object of the smart contract method.</returns>
         /// <see href="https://nethereum.readthedocs.io/en/latest/contracts/functiondtos/"/>
-        public async Task<TReturn> StaticCallDTOTypeOutputAsync<TReturn>(string method, params object[] functionInput) where TReturn : new()
+        public async Task<TReturn> StaticCallDtoTypeOutputAsync<TReturn>(string method, params object[] functionInput) where TReturn : new()
         {
             FunctionBuilder functionBuilder;
             return await this.StaticCallAsync(this.CreateContractMethodCallInput(method, functionInput, out functionBuilder), functionBuilder, (fb, s) => fb.DecodeDTOTypeOutput<TReturn>(s));
@@ -214,13 +270,42 @@ namespace Loom.Unity3d
         /// </summary>
         /// <param name="method">Smart contract method name.</param>
         /// <param name="functionInput">Argument objects arrays for the smart contract method.</param>
+        /// <returns>Return Data Transfer Object of the smart contract method.</returns>
+        /// <see href="https://nethereum.readthedocs.io/en/latest/contracts/functiondtos/"/>
+        [Obsolete("Use StaticCallDtoTypeOutputAsync")]
+        public async Task<TReturn> StaticCallDTOTypeOutputAsync<TReturn>(string method, params object[] functionInput) where TReturn : new()
+        {
+            return await StaticCallDtoTypeOutputAsync<TReturn>(method, functionInput);
+        }
+
+        /// <summary>
+        /// Calls a contract method that doesn't mutate state.
+        /// This method is usually used to query the current smart contract state, it doesn't commit any transactions.
+        /// </summary>
+        /// <param name="method">Smart contract method name.</param>
+        /// <param name="functionInput">Argument objects arrays for the smart contract method.</param>
         /// <param name="functionOutput">Return Data Transfer Object of the smart contract method. A pre-existing object can be reused.</param>
         /// <returns>Return Data Transfer Object of the smart contract method. Same object instance as <paramref name="functionOutput"/>.</returns>
         /// <see href="https://nethereum.readthedocs.io/en/latest/contracts/functiondtos/"/>
-        public async Task<TReturn> StaticCallDTOTypeOutputAsync<TReturn>(TReturn functionOutput, string method, params object[] functionInput) where TReturn : new()
+        public async Task<TReturn> StaticCallDtoTypeOutputAsync<TReturn>(TReturn functionOutput, string method, params object[] functionInput) where TReturn : new()
         {
             FunctionBuilder functionBuilder;
             return await this.StaticCallAsync(this.CreateContractMethodCallInput(method, functionInput, out functionBuilder), functionBuilder, (fb, s) => fb.DecodeDTOTypeOutput(functionOutput, s));
+        }
+
+        /// <summary>
+        /// Calls a contract method that doesn't mutate state.
+        /// This method is usually used to query the current smart contract state, it doesn't commit any transactions.
+        /// </summary>
+        /// <param name="method">Smart contract method name.</param>
+        /// <param name="functionInput">Argument objects arrays for the smart contract method.</param>
+        /// <param name="functionOutput">Return Data Transfer Object of the smart contract method. A pre-existing object can be reused.</param>
+        /// <returns>Return Data Transfer Object of the smart contract method. Same object instance as <paramref name="functionOutput"/>.</returns>
+        /// <see href="https://nethereum.readthedocs.io/en/latest/contracts/functiondtos/"/>
+        [Obsolete("Use StaticCallDtoTypeOutputAsync")]
+        public async Task<TReturn> StaticCallDTOTypeOutputAsync<TReturn>(TReturn functionOutput, string method, params object[] functionInput) where TReturn : new()
+        {
+            return await StaticCallDtoTypeOutputAsync(functionOutput, method, functionInput);
         }
 
         /// <summary>
@@ -243,7 +328,7 @@ namespace Loom.Unity3d
         /// <param name="functionInput">Input Data Transfer Object for smart contract method.</param>
         /// <returns>Return Data Transfer Object of the smart contract method.</returns>
         /// <see href="https://nethereum.readthedocs.io/en/latest/contracts/functiondtos/"/>
-        public async Task<TReturn> StaticCallDTOTypeOutputAsync<TInput, TReturn>(TInput functionInput) where TReturn : new()
+        public async Task<TReturn> StaticCallDtoTypeOutputAsync<TInput, TReturn>(TInput functionInput) where TReturn : new()
         {
             FunctionBuilder<TInput> functionBuilder;
             return await this.StaticCallAsync(this.CreateContractMethodCallInput(functionInput, out functionBuilder), functionBuilder, (fb, s) => fb.DecodeDTOTypeOutput<TReturn>(s));
@@ -254,13 +339,40 @@ namespace Loom.Unity3d
         /// This method is usually used to query the current smart contract state, it doesn't commit any transactions.
         /// </summary>
         /// <param name="functionInput">Input Data Transfer Object for smart contract method.</param>
+        /// <returns>Return Data Transfer Object of the smart contract method.</returns>
+        /// <see href="https://nethereum.readthedocs.io/en/latest/contracts/functiondtos/"/>
+        [Obsolete("Use StaticCallDtoTypeOutputAsync")]
+        public async Task<TReturn> StaticCallDTOTypeOutputAsync<TInput, TReturn>(TInput functionInput) where TReturn : new()
+        {
+            return await StaticCallDtoTypeOutputAsync<TInput, TReturn>(functionInput);
+        }
+
+        /// <summary>
+        /// Calls a contract method that doesn't mutate state.
+        /// This method is usually used to query the current smart contract state, it doesn't commit any transactions.
+        /// </summary>
+        /// <param name="functionInput">Input Data Transfer Object for smart contract method.</param>
         /// <param name="functionOutput">Return Data Transfer Object of the smart contract method. A pre-existing object can be reused.</param>
         /// <returns>Return Data Transfer Object of the smart contract method. Same object instance as <paramref name="functionOutput"/>.</returns>
         /// <see href="https://nethereum.readthedocs.io/en/latest/contracts/functiondtos/"/>
-        public async Task<TReturn> StaticCallDTOTypeOutputAsync<TInput, TReturn>(TInput functionInput, TReturn functionOutput) where TReturn : new()
+        public async Task<TReturn> StaticCallDtoTypeOutputAsync<TInput, TReturn>(TInput functionInput, TReturn functionOutput) where TReturn : new()
         {
             FunctionBuilder<TInput> functionBuilder;
             return await this.StaticCallAsync(this.CreateContractMethodCallInput(functionInput, out functionBuilder), functionBuilder, (fb, s) => fb.DecodeDTOTypeOutput(functionOutput, s));
+        }
+
+        /// <summary>
+        /// Calls a contract method that doesn't mutate state.
+        /// This method is usually used to query the current smart contract state, it doesn't commit any transactions.
+        /// </summary>
+        /// <param name="functionInput">Input Data Transfer Object for smart contract method.</param>
+        /// <param name="functionOutput">Return Data Transfer Object of the smart contract method. A pre-existing object can be reused.</param>
+        /// <returns>Return Data Transfer Object of the smart contract method. Same object instance as <paramref name="functionOutput"/>.</returns>
+        /// <see href="https://nethereum.readthedocs.io/en/latest/contracts/functiondtos/"/>
+        [Obsolete("Use StaticCallDtoTypeOutputAsync")]
+        public async Task<TReturn> StaticCallDTOTypeOutputAsync<TInput, TReturn>(TInput functionInput, TReturn functionOutput) where TReturn : new()
+        {
+            return await StaticCallDtoTypeOutputAsync(functionInput, functionOutput);
         }
 
         #endregion
@@ -276,7 +388,7 @@ namespace Loom.Unity3d
                 e.Topics[i] = e.Topics[i].Substring(2);
             }
 
-            // First topic is a signature of event itself
+            // First topic is the signature of event itself
             string eventName;
             this.topicToEventName.TryGetValue(e.Topics[0], out eventName);
 
