@@ -27,7 +27,7 @@ namespace Loom.Unity3d.Tests
             {
                 string testAddress = "0x1d655354f10499ef1e32e5a4e8b712606af33628";
 
-                contract.CallAsync("setTestAddress", testAddress).Wait();
+                await contract.CallAsync("setTestAddress", testAddress);
                 Assert.AreEqual(testAddress, await contract.StaticCallSimpleTypeOutputAsync<string>("getTestAddress"));
                 Assert.AreEqual(testAddress, await  contract.StaticCallSimpleTypeOutputAsync<string>("getStaticTestAddress"));
             });
@@ -37,7 +37,7 @@ namespace Loom.Unity3d.Tests
         public IEnumerator UintTest() {
             return ContractTest(async () =>
             {
-                contract.CallAsync("setTestUint", new BigInteger(123456789)).Wait();
+                await contract.CallAsync("setTestUint", new BigInteger(123456789));
                 Assert.AreEqual(new BigInteger(123456789), await contract.StaticCallSimpleTypeOutputAsync<BigInteger>("getTestUint"));
                 Assert.AreEqual(new BigInteger(0xDEADBEEF), await contract.StaticCallSimpleTypeOutputAsync<BigInteger>("getStaticTestUint"));
             });
@@ -47,7 +47,7 @@ namespace Loom.Unity3d.Tests
         public IEnumerator IntTest() {
             return ContractTest(async () =>
             {
-                contract.CallAsync("setTestInt", new BigInteger(-123456789)).Wait();
+                await contract.CallAsync("setTestInt", new BigInteger(-123456789));
                 Assert.AreEqual(new BigInteger(-123456789), await contract.StaticCallSimpleTypeOutputAsync<BigInteger>("getTestInt"));
                 Assert.AreEqual(new BigInteger(0xDEADBEEF), await contract.StaticCallSimpleTypeOutputAsync<BigInteger>("getStaticTestIntPositive"));
                 Assert.AreEqual(new BigInteger(-0xDEADBEEF), await contract.StaticCallSimpleTypeOutputAsync<BigInteger>("getStaticTestIntNegative"));
