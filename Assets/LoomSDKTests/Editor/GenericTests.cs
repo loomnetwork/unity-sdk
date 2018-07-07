@@ -11,7 +11,6 @@ namespace Loom.Unity3d.Tests
         public void AddressTest() {
             const string testStringAddress = "0x1d655354f10499ef1e32e5a4e8b712606af33628";
             Address address = (Address) testStringAddress;
-            Debug.Log(address);
 
             Assert.AreEqual(testStringAddress.ToLowerInvariant(), address.LocalAddress.ToLowerInvariant());
             Assert.AreEqual(address, Address.FromString(testStringAddress));
