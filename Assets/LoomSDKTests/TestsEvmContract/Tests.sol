@@ -1,6 +1,8 @@
 pragma solidity ^0.4.24;
 
 contract Tests {
+    event TestEvent(uint number);
+
     address testAddress;
     int testInt;
     uint testUint;
@@ -14,6 +16,25 @@ contract Tests {
         testStaticByteArray.push(2);
         testStaticByteArray.push(3);
         testStaticByteArray.push(4);
+    }
+
+    // events
+    function sendTestEvents(uint base) public {
+        emit TestEvent(base + 1);
+        emit TestEvent(base + 2);
+        emit TestEvent(base + 3);
+        emit TestEvent(base + 4);
+        emit TestEvent(base + 5);
+        emit TestEvent(base + 6);
+        emit TestEvent(base + 7);
+        emit TestEvent(base + 8);
+        emit TestEvent(base + 9);
+        emit TestEvent(base + 10);
+        emit TestEvent(base + 11);
+        emit TestEvent(base + 12);
+        emit TestEvent(base + 13);
+        emit TestEvent(base + 14);
+        emit TestEvent(base + 15);
     }
     
     // address

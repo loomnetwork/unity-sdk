@@ -100,6 +100,41 @@ namespace Loom.Unity3d.Tests
             });
         }
 
+        [UnityTest]
+        public IEnumerator EventsSequentialityTest() {
+            return ContractTest(async () =>
+            {
+
+                AutoResetEvent waitForEvents = new AutoResetEvent(false);
+                List<int> testEventArguments = new List<int>();
+                EventHandler<EvmChainEventArgs> handler = (sender, args) =>
+                {
+                    if (args.EventName != "TestEvent")
+                    {
+                        waitForEvents.Set();
+                        throw new Exception();
+                    }
+
+                    int val = new IntTypeDecoder(false).DecodeInt(args.Data);
+                    testEventArguments.Add(val);
+
+                    if (testEventArguments.Count == 15)
+                    {
+                        waitForEvents.Set();
+                    }
+
+                    Debug.Log("TestEvent: " + val);
+                };
+                this.contract.EventReceived += handler;
+                await this.contract.CallAsync("sendTestEvents", 0);
+                waitForEvents.WaitOne(5000);
+                this.contract.EventReceived -= handler;
+                Debug.Log(String.Join(", ", testEventArguments.ToArray()));
+                Assert.AreEqual(15, testEventArguments.Count);
+                Assert.AreEqual(testEventArguments.OrderBy(i => i).ToList(), testEventArguments);
+            });
+        }
+
         private IEnumerator ContractTest(Func<Task> action) {
             return
                 Task.Run(() =>
