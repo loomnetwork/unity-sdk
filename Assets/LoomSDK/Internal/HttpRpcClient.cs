@@ -62,7 +62,7 @@ namespace Loom.Unity3d.Internal
                     var respMsg = JsonConvert.DeserializeObject<JsonRpcResponse<T>>(r.downloadHandler.text);
                     if (respMsg.Error != null)
                     {
-                        throw new Exception(String.Format(
+                        throw new RpcClientException(String.Format(
                             "JSON-RPC Error {0} ({1}): {2}",
                             respMsg.Error.Code, respMsg.Error.Message, respMsg.Error.Data
                         ));
@@ -78,15 +78,15 @@ namespace Loom.Unity3d.Internal
         {
             if (r.isNetworkError)
             {
-                throw new Exception(String.Format("HTTP '{0}' request to '{1}' failed", r.method, r.url));
+                throw new RpcClientException(String.Format("HTTP '{0}' request to '{1}' failed", r.method, r.url));
             }
             else if (r.isHttpError)
             {
                 if (r.downloadHandler != null && !String.IsNullOrEmpty(r.downloadHandler.text))
                 {
-                    // TOOD: extract error message if any
+                    // TODO: extract error message if any
                 }
-                throw new Exception(String.Format("HTTP Error {0}", r.responseCode));
+                throw new RpcClientException(String.Format("HTTP Error {0}", r.responseCode));
             }
         }
     }

@@ -107,7 +107,7 @@ namespace Loom.Unity3d.Internal
             };
             closeHandler = (sender, e) =>
             {
-                tcs.SetException(new Exception(e.Reason));
+                tcs.SetException(new RpcClientException($"WebSocket closed unexpectedly with error {e.Code}: {e.Reason}"));
             };
             this.client.OnOpen += openHandler;
             this.client.OnClose += closeHandler;
@@ -155,6 +155,13 @@ namespace Loom.Unity3d.Internal
             var reqMsg = new JsonRpcRequest<T>(method, args, msgId);
             var reqMsgBody = JsonConvert.SerializeObject(reqMsg);
             Logger.Log(LogTag, "[Request Body] " + reqMsgBody);
+
+            ErrorEventArgs errorEventArgs = null;
+            EventHandler<ErrorEventArgs> errorHandler = (sender, eventArgs) =>
+            {
+                errorEventArgs = eventArgs;
+            };
+            this.client.OnError += errorHandler;
             this.client.SendAsync(reqMsgBody, (bool success) =>
             {
                 if (success)
@@ -163,11 +170,10 @@ namespace Loom.Unity3d.Internal
                 }
                 else
                 {
-                    // TODO: sub to this.client.OnError() and store the error when it happens,
-                    // then throw it in here.
-                    tcs.TrySetException(new Exception("Send error"));
+                    tcs.TrySetException(new RpcClientException("Send error", errorEventArgs.Exception));
                 }
             });
+            this.client.OnError -= errorHandler;
             await tcs.Task;
         }
 
@@ -189,7 +195,7 @@ namespace Loom.Unity3d.Internal
                             this.client.OnMessage -= handler;
                             if (partialMsg.Error != null)
                             {
-                                throw new Exception(String.Format(
+                                throw new RpcClientException(String.Format(
                                     "JSON-RPC Error {0} ({1}): {2}",
                                     partialMsg.Error.Code, partialMsg.Error.Message, partialMsg.Error.Data
                                 ));
@@ -236,7 +242,7 @@ namespace Loom.Unity3d.Internal
                     {
                         if (partialMsg.Error != null)
                         {
-                            throw new Exception(String.Format(
+                            throw new RpcClientException(String.Format(
                                 "JSON-RPC Error {0} ({1}): {2}",
                                 partialMsg.Error.Code, partialMsg.Error.Message, partialMsg.Error.Data
                             ));

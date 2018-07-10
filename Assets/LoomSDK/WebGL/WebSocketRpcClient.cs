@@ -74,7 +74,7 @@ namespace Loom.Unity3d.Internal.WebGL
                 }
                 else
                 {
-                    tcs.TrySetException(new Exception(err));
+                    tcs.TrySetException(new RpcClientException(err));
                 }
             };
             try
@@ -168,7 +168,7 @@ namespace Loom.Unity3d.Internal.WebGL
                             Logger.Log(LogTag, "RPC Resp Body: " + msgBody);
                             if (partialMsg.Error != null)
                             {
-                                throw new Exception(String.Format(
+                                throw new RpcClientException(String.Format(
                                     "JSON-RPC Error {0} ({1}): {2}",
                                     partialMsg.Error.Code, partialMsg.Error.Message, partialMsg.Error.Data
                                 ));
@@ -215,7 +215,7 @@ namespace Loom.Unity3d.Internal.WebGL
                     {
                         if (partialMsg.Error != null)
                         {
-                            throw new Exception(String.Format(
+                            throw new RpcClientException(String.Format(
                                 "JSON-RPC Error {0} ({1}): {2}",
                                 partialMsg.Error.Code, partialMsg.Error.Message, partialMsg.Error.Data
                             ));
