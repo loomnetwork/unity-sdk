@@ -105,7 +105,7 @@ namespace Loom.Unity3d
             );
 
             if (String.IsNullOrEmpty(addrStr))
-                throw new Exception("Unable to find a contract with a matching name");
+                throw new LoomException("Unable to find a contract with a matching name");
 
             return Address.FromString(addrStr);
         }
@@ -143,7 +143,7 @@ namespace Loom.Unity3d
 
             if (badNonceCount > 0)
             {
-                throw new InvalidTxNonceException();
+                throw new InvalidTxNonceException(1, "sequence number does not match");
             }
             return result;
         }
@@ -205,23 +205,15 @@ namespace Loom.Unity3d
             {
                 if (result.CheckTx.Code != 0)
                 {
-                    if (string.IsNullOrEmpty(result.CheckTx.Error))
-                    {
-                        throw new Exception(String.Format("Failed to commit Tx: {0}", result.CheckTx.Code));
-                    }
                     if ((result.CheckTx.Code == 1) && (result.CheckTx.Error == "sequence number does not match"))
                     {
-                        throw new InvalidTxNonceException();
+                        throw new InvalidTxNonceException(result.CheckTx.Code, result.CheckTx.Error);
                     }
-                    throw new Exception(String.Format("Failed to commit Tx: {0}", result.CheckTx.Error));
+                    throw new TxCommitException(result.CheckTx.Code, result.CheckTx.Error);
                 }
                 if (result.DeliverTx.Code != 0)
                 {
-                    if (string.IsNullOrEmpty(result.DeliverTx.Error))
-                    {
-                        throw new Exception(String.Format("Failed to commit Tx: {0}", result.DeliverTx.Code));
-                    }
-                    throw new Exception(String.Format("Failed to commit Tx: {0}", result.DeliverTx.Error));
+                    throw new TxCommitException(result.DeliverTx.Code, result.DeliverTx.Error);
                 }
             }
             return result;
