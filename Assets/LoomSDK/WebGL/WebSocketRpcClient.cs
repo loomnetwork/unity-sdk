@@ -24,6 +24,7 @@ namespace Loom.Unity3d.Internal.WebGL
         private RpcConnectionState? lastConnectionState;
         private event EventHandler<JsonRpcEventData> OnEventMessage;
 
+        // TODO: use OnClose and OnOpen events specifically, for more reliable state change reporting
         public event RpcClientConnectionStateChangedHandler ConnectionStateChanged;
 
         public bool IsConnectable => true;
@@ -116,6 +117,7 @@ namespace Loom.Unity3d.Internal.WebGL
 
         private Task EnsureConnectionAsync()
         {
+            // TODO: make sure to not reconnect while state WebSocketState.Connecting
             if (GetWebSocketState(this.socketId) == WebSocketState.Open)
             {
                 return Task.CompletedTask;

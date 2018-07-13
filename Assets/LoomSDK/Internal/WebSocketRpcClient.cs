@@ -120,6 +120,7 @@ namespace Loom.Unity3d.Internal
             try
             {
                 this.client.CloseAsync(CloseStatusCode.Normal, "Client disconnected.");
+                NotifyConnectionStateChanged();
             }
             catch (Exception)
             {
