@@ -13,6 +13,18 @@ namespace Loom.Unity3d.Internal
 
         private readonly Uri url;
 
+        public event RpcClientConnectionStateChangedHandler ConnectionStateChanged;
+
+        public bool IsConnectable => false;
+
+        public RpcConnectionState ConnectionState
+        {
+            get
+            {
+                throw new InvalidOperationException("Not yet applicable for HttpRpcClient");
+            }
+        }
+
         /// <summary>
         /// Logger to be used for logging, defaults to <see cref="NullLogger"/>.
         /// </summary>
@@ -32,8 +44,6 @@ namespace Loom.Unity3d.Internal
             this.url = new Uri(url);
             this.Logger = NullLogger.Instance;
         }
-
-        public bool IsConnected => true;
 
         public void Dispose()
         {
