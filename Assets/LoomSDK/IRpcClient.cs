@@ -3,7 +3,7 @@ using System.Threading.Tasks;
 
 namespace Loom.Unity3d
 {
-    public delegate int RpcClientConnectionStateChangedHandler(IRpcClient sender, RpcConnectionState state);
+    public delegate void RpcClientConnectionStateChangedHandler(IRpcClient sender, RpcConnectionState state);
 
     public interface IRpcClient : IDisposable
     {
