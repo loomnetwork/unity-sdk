@@ -13,7 +13,11 @@ namespace Loom.Unity3d.Internal
 
         private readonly Uri url;
 
-        public event RpcClientConnectionStateChangedHandler ConnectionStateChanged;
+        public event RpcClientConnectionStateChangedHandler ConnectionStateChanged
+        {
+            add { throw new NotSupportedException(); }
+            remove { throw new NotSupportedException(); }
+        }
 
         public bool IsConnectable => false;
 
@@ -34,6 +38,7 @@ namespace Loom.Unity3d.Internal
         {
             throw new NotImplementedException();
         }
+
         public Task UnsubscribeAsync(EventHandler<JsonRpcEventData> handler)
         {
             throw new NotImplementedException();
