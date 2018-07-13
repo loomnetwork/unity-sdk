@@ -77,14 +77,31 @@ namespace Loom.Unity3d.Internal
             this.client.Log.Level = LogLevel.Trace;
             this.url = new Uri(url);
             this.Logger = NullLogger.Instance;
-            this.client.OnError += (sender, e) =>
-            {
-                this.Logger.Log(LogTag, "Error: " + e.Message);
-            };
+            this.client.OnError += ClientOnError;
+            this.client.OnOpen += ClientOnOpen;
+            this.client.OnClose += ClientOnClose;
+        }
+
+        private void ClientOnClose(object sender, CloseEventArgs e)
+        {
+            NotifyConnectionStateChanged();
+        }
+
+        private void ClientOnOpen(object sender, EventArgs e)
+        {
+            NotifyConnectionStateChanged();
+        }
+
+        private void ClientOnError(object sender, ErrorEventArgs e)
+        {
+            this.Logger.Log(LogTag, "Error: " + e.Message);
         }
 
         void IDisposable.Dispose()
         {
+            this.client.OnError -= ClientOnError;
+            this.client.OnOpen -= ClientOnOpen;
+            this.client.OnClose -= ClientOnClose;
             ((IDisposable)this.client).Dispose();
         }
 
@@ -98,18 +115,15 @@ namespace Loom.Unity3d.Internal
             {
                 this.client.OnClose -= handler;
                 tcs.TrySetResult(e);
-                NotifyConnectionStateChanged();
             };
             this.client.OnClose += handler;
             try
             {
                 this.client.CloseAsync(CloseStatusCode.Normal, "Client disconnected.");
-                NotifyConnectionStateChanged();
             }
             catch (Exception)
             {
                 this.client.OnClose -= handler;
-                NotifyConnectionStateChanged();
                 throw;
             }
             return tcs.Task;
@@ -130,18 +144,17 @@ namespace Loom.Unity3d.Internal
                 this.client.OnClose -= closeHandler;
                 tcs.TrySetResult(null);
                 Logger.Log(LogTag, "Connected to " + this.url.AbsoluteUri);
-                NotifyConnectionStateChanged();
             };
             closeHandler = (sender, e) =>
             {
                 tcs.SetException(new RpcClientException($"WebSocket closed unexpectedly with error {e.Code}: {e.Reason}"));
-                NotifyConnectionStateChanged();
             };
             this.client.OnOpen += openHandler;
             this.client.OnClose += closeHandler;
             try
             {
                 this.client.ConnectAsync();
+                NotifyConnectionStateChanged();
             }
             catch (Exception)
             {
@@ -263,7 +276,7 @@ namespace Loom.Unity3d.Internal
         private void NotifyConnectionStateChanged()
         {
             RpcConnectionState state = ConnectionState;
-            if (this.lastConnectionState == null || this.lastConnectionState == state)
+            if (this.lastConnectionState != null && this.lastConnectionState == state)
                 return;
 
             this.lastConnectionState = state;

@@ -237,7 +237,7 @@ namespace Loom.Unity3d.Internal.WebGL
         private void NotifyConnectionStateChanged()
         {
             RpcConnectionState state = ConnectionState;
-            if (this.lastConnectionState == null || this.lastConnectionState == state)
+            if (this.lastConnectionState != null && this.lastConnectionState == state)
                 return;
 
             this.lastConnectionState = state;
