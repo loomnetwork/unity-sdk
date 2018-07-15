@@ -1,10 +1,6 @@
-using System;
-using System.Collections;
-using System.Collections.Generic;
-using System.Linq;
 using UnityEngine;
 
-namespace UnityAsyncAwaitUtil
+namespace Loom.Internal.UnityAsyncAwaitUtil
 {
     public class AsyncCoroutineRunner : MonoBehaviour
     {

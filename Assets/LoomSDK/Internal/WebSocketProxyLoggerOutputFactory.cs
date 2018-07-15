@@ -1,7 +1,7 @@
 ﻿#if !UNITY_WEBGL || UNITY_EDITOR
 
 using System;
-using WebSocketSharp;
+using Loom.WebSocketSharp;
 
 namespace Loom.Unity3d.Internal
 {

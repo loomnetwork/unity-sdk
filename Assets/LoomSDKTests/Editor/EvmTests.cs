@@ -137,7 +137,7 @@ namespace Loom.Unity3d.Tests
 
         private IEnumerator ContractTest(Func<Task> action) {
             return
-                Task.Run(() =>
+                TaskAsIEnumerator(Task.Run(() =>
                 {
                     try
                     {
@@ -147,7 +147,7 @@ namespace Loom.Unity3d.Tests
                     {
                         ExceptionDispatchInfo.Capture(e.InnerException).Throw();
                     }
-                }).AsIEnumerator();
+                }));
         }
 
         private async Task EnsureContract() {
@@ -186,6 +186,15 @@ namespace Loom.Unity3d.Tests
             Address callerAddr = Address.FromPublicKey(publicKey);
 
             return new EvmContract(client, contractAddr, callerAddr, abi);
+        }
+
+        private static IEnumerator TaskAsIEnumerator(Task task)
+        {
+            while (!task.IsCompleted)
+                yield return null;
+
+            if (task.IsFaulted)
+                throw task.Exception;
         }
     }
 }
