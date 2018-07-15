@@ -1,4 +1,4 @@
-﻿using Newtonsoft.Json;
+﻿using Loom.Newtonsoft.Json;
 using System;
 
 namespace Loom.Unity3d

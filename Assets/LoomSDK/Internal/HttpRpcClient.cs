@@ -1,7 +1,8 @@
 ﻿using System.Threading.Tasks;
 using System;
-using Newtonsoft.Json;
+using Loom.Newtonsoft.Json;
 using System.Text;
+using Loom.Internal.UnityAsyncAwaitUtil;
 using UnityEngine.Networking;
 using UnityEngine;
 

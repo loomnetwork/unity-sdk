@@ -4,7 +4,7 @@ using System.Threading.Tasks;
 #if UNITY_WEBGL
 using AOT;
 using System.Runtime.InteropServices;
-using Newtonsoft.Json;
+using Loom.Newtonsoft.Json;
 #endif
 
 namespace Loom.Unity3d

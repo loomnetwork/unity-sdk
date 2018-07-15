@@ -1,4 +1,4 @@
-﻿using Newtonsoft.Json;
+﻿using Loom.Newtonsoft.Json;
 
 namespace Loom.Unity3d.Internal
 {
