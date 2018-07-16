@@ -7,6 +7,9 @@ using Loom.Newtonsoft.Json;
 using System.Collections.Generic;
 using Loom.Unity3d.Internal;
 using Loom.Unity3d.Internal.Protobuf;
+#if UNITY_WEBGL && !UNITY_EDITOR
+using Loom.Internal.UnityAsyncAwaitUtil;
+#endif
 
 namespace Loom.Unity3d
 {
