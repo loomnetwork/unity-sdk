@@ -2,6 +2,7 @@
 
 using System.Threading.Tasks;
 using System;
+using System.ComponentModel;
 using Newtonsoft.Json;
 using UnityEngine;
 using WebSocketSharp;
@@ -23,8 +24,6 @@ namespace Loom.Unity3d.Internal
 
         public event RpcClientConnectionStateChangedHandler ConnectionStateChanged;
 
-        public bool IsConnectable => true;
-
         public RpcConnectionState ConnectionState
         {
             get
@@ -40,7 +39,7 @@ namespace Loom.Unity3d.Internal
                     case WebSocketState.Closed:
                         return RpcConnectionState.Disconnected;
                     default:
-                        throw new ArgumentOutOfRangeException();
+                        throw new InvalidEnumArgumentException(nameof(this.client.ReadyState), (int) this.client.ReadyState, typeof(WebSocketState));
                 }
             }
         }

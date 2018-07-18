@@ -6,6 +6,7 @@
         Connecting,
         Connected,
         Disconnecting,
-        Disconnected
+        Disconnected,
+        NonApplicable
     }
 }

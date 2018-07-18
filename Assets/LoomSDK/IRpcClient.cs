@@ -9,7 +9,6 @@ namespace Loom.Unity3d
     {
         event RpcClientConnectionStateChangedHandler ConnectionStateChanged;
 
-        bool IsConnectable { get; }
         RpcConnectionState ConnectionState { get; }
         Task<TResult> SendAsync<TResult, TArgs>(string method, TArgs args);
         Task DisconnectAsync();

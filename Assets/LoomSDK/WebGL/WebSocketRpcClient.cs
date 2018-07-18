@@ -6,6 +6,7 @@ using System;
 using System.Runtime.InteropServices;
 using System.Threading.Tasks;
 using System.Collections.Generic;
+using System.ComponentModel;
 using UnityEngine;
 
 namespace Loom.Unity3d.Internal.WebGL
@@ -27,13 +28,12 @@ namespace Loom.Unity3d.Internal.WebGL
         // TODO: use OnClose and OnOpen events specifically, for more reliable state change reporting
         public event RpcClientConnectionStateChangedHandler ConnectionStateChanged;
 
-        public bool IsConnectable => true;
-
         public RpcConnectionState ConnectionState
         {
             get
             {
-                switch (GetWebSocketState(this.socketId))
+                WebSocketState state = GetWebSocketState(this.socketId);
+                switch (state)
                 {
                     case WebSocketState.Connecting:
                         return RpcConnectionState.Connecting;
@@ -44,7 +44,7 @@ namespace Loom.Unity3d.Internal.WebGL
                     case WebSocketState.Closed:
                         return RpcConnectionState.Disconnected;
                     default:
-                        throw new ArgumentOutOfRangeException();
+                        throw new InvalidEnumArgumentException(nameof(state), (int) state, typeof(WebSocketState));
                 }
             }
         }

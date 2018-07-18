@@ -19,15 +19,7 @@ namespace Loom.Unity3d.Internal
             remove { throw new NotSupportedException(); }
         }
 
-        public bool IsConnectable => false;
-
-        public RpcConnectionState ConnectionState
-        {
-            get
-            {
-                throw new InvalidOperationException("Not yet applicable for HttpRpcClient");
-            }
-        }
+        public RpcConnectionState ConnectionState => RpcConnectionState.NonApplicable;
 
         /// <summary>
         /// Logger to be used for logging, defaults to <see cref="NullLogger"/>.
