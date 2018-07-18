@@ -1,12 +1,15 @@
-﻿using Google.Protobuf;
-using Chaos.NaCl;
+﻿using Loom.Google.Protobuf;
+using Loom.Chaos.NaCl;
 using UnityEngine;
 using System.Threading.Tasks;
 using System;
-using Newtonsoft.Json;
+using Loom.Newtonsoft.Json;
 using System.Collections.Generic;
 using Loom.Unity3d.Internal;
 using Loom.Unity3d.Internal.Protobuf;
+#if UNITY_WEBGL && !UNITY_EDITOR
+using Loom.Internal.UnityAsyncAwaitUtil;
+#endif
 
 namespace Loom.Unity3d
 {

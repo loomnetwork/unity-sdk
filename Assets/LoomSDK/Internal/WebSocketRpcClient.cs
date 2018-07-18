@@ -3,9 +3,9 @@
 using System.Threading.Tasks;
 using System;
 using System.ComponentModel;
-using Newtonsoft.Json;
+using Loom.Newtonsoft.Json;
+using Loom.WebSocketSharp;
 using UnityEngine;
-using WebSocketSharp;
 
 namespace Loom.Unity3d.Internal
 {

@@ -1,6 +1,6 @@
 ﻿using System;
 using System.Threading.Tasks;
-using Google.Protobuf;
+using Loom.Google.Protobuf;
 using Loom.Unity3d.Internal;
 using Loom.Unity3d.Internal.Protobuf;
 

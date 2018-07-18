@@ -1,7 +1,7 @@
 ﻿#if UNITY_WEBGL
 
 using AOT;
-using Newtonsoft.Json;
+using Loom.Newtonsoft.Json;
 using System;
 using System.Runtime.InteropServices;
 using System.Threading.Tasks;

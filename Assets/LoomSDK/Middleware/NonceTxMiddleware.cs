@@ -1,4 +1,4 @@
-﻿using Google.Protobuf;
+﻿using Loom.Google.Protobuf;
 using System.Threading.Tasks;
 using Loom.Unity3d.Internal.Protobuf;
 
