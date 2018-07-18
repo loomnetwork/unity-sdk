@@ -28,7 +28,8 @@ namespace Loom.Unity3d.Internal
         {
             get
             {
-                switch (this.client.ReadyState)
+                WebSocketState state = this.client.ReadyState;
+                switch (state)
                 {
                     case WebSocketState.Connecting:
                         return RpcConnectionState.Connecting;
@@ -39,7 +40,7 @@ namespace Loom.Unity3d.Internal
                     case WebSocketState.Closed:
                         return RpcConnectionState.Disconnected;
                     default:
-                        throw new InvalidEnumArgumentException(nameof(this.client.ReadyState), (int) this.client.ReadyState, typeof(WebSocketState));
+                        throw new InvalidEnumArgumentException(nameof(this.client.ReadyState), (int) state, typeof(WebSocketState));
                 }
             }
         }
