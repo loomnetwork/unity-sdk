@@ -3,7 +3,7 @@ using System.Numerics;
 using NUnit.Framework;
 using UnityEngine;
 
-namespace Loom.Unity3d.Tests
+namespace Loom.ClientSdk.Tests
 {
     public class GenericTests
     {
