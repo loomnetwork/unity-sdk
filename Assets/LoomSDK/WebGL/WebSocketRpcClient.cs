@@ -6,6 +6,7 @@ using System;
 using System.Runtime.InteropServices;
 using System.Threading.Tasks;
 using System.Collections.Generic;
+using System.ComponentModel;
 using UnityEngine;
 
 namespace Loom.Unity3d.Internal.WebGL
@@ -21,7 +22,32 @@ namespace Loom.Unity3d.Internal.WebGL
 
         private readonly Uri url;
         private readonly int socketId = 0;
+        private RpcConnectionState? lastConnectionState;
         private event EventHandler<JsonRpcEventData> OnEventMessage;
+
+        // TODO: use OnClose and OnOpen events specifically, for more reliable state change reporting
+        public event RpcClientConnectionStateChangedHandler ConnectionStateChanged;
+
+        public RpcConnectionState ConnectionState
+        {
+            get
+            {
+                WebSocketState state = GetWebSocketState(this.socketId);
+                switch (state)
+                {
+                    case WebSocketState.Connecting:
+                        return RpcConnectionState.Connecting;
+                    case WebSocketState.Open:
+                        return RpcConnectionState.Connected;
+                    case WebSocketState.Closing:
+                        return RpcConnectionState.Disconnecting;
+                    case WebSocketState.Closed:
+                        return RpcConnectionState.Disconnected;
+                    default:
+                        throw new InvalidEnumArgumentException(nameof(state), (int) state, typeof(WebSocketState));
+                }
+            }
+        }
 
         /// <summary>
         /// Logger to be used for logging, defaults to <see cref="NullLogger"/>.
@@ -40,8 +66,6 @@ namespace Loom.Unity3d.Internal.WebGL
             this.socketId = WebSocketCreate();
             sockets.Add(this.socketId, new WebSocket());
         }
-
-        public bool IsConnected => GetWebSocketState(this.socketId) == WebSocketState.Open;
 
         public void Dispose()
         {
@@ -80,17 +104,20 @@ namespace Loom.Unity3d.Internal.WebGL
             try
             {
                 this.Disconnect();
+                NotifyConnectionStateChanged();
             }
-            catch (Exception e)
+            catch (Exception)
             {
                 webSocket.OnClose = null;
-                throw e;
+                NotifyConnectionStateChanged();
+                throw;
             }
             return tcs.Task;
         }
 
         private Task EnsureConnectionAsync()
         {
+            // TODO: make sure to not reconnect while state WebSocketState.Connecting
             if (GetWebSocketState(this.socketId) == WebSocketState.Open)
             {
                 return Task.CompletedTask;
@@ -105,11 +132,13 @@ namespace Loom.Unity3d.Internal.WebGL
             try
             {
                 WebSocketConnect(this.socketId, this.url.AbsoluteUri);
+                NotifyConnectionStateChanged();
             }
-            catch (Exception e)
+            catch (Exception)
             {
                 webSocket.OnOpen = null;
-                throw e;
+                NotifyConnectionStateChanged();
+                throw;
             }
             return tcs.Task;
         }
@@ -189,18 +218,32 @@ namespace Loom.Unity3d.Internal.WebGL
                 {
                     tcs.TrySetException(ex);
                 }
+
+                NotifyConnectionStateChanged();
             };
             webSocket.OnMessage += handler;
             try
             {
                 await this.SendAsync<U>(method, args, msgId);
+                NotifyConnectionStateChanged();
             }
-            catch (Exception e)
+            catch (Exception)
             {
                 webSocket.OnMessage -= handler;
-                throw e;
+                NotifyConnectionStateChanged();
+                throw;
             }
             return await tcs.Task;
+        }
+
+        private void NotifyConnectionStateChanged()
+        {
+            RpcConnectionState state = ConnectionState;
+            if (this.lastConnectionState != null && this.lastConnectionState == state)
+                return;
+
+            this.lastConnectionState = state;
+            ConnectionStateChanged?.Invoke(this, state);
         }
 
         private void WSRPCClient_OnMessage(object sender, string msgBody)
@@ -236,6 +279,8 @@ namespace Loom.Unity3d.Internal.WebGL
             {
                 Logger.Log(LogTag, "[WSRPCClient_OnMessage error] " + ex.Message);
             }
+
+            NotifyConnectionStateChanged();
         }
 
         [DllImport("__Internal")]
@@ -284,7 +329,7 @@ namespace Loom.Unity3d.Internal.WebGL
             socket.OnMessage?.Invoke(socket, msg);
         }
 
-        internal enum WebSocketState : int
+        private enum WebSocketState : int
         {
             Connecting = 0,
             Open = 1,
@@ -292,7 +337,7 @@ namespace Loom.Unity3d.Internal.WebGL
             Closed = 3
         }
 
-        internal class WebSocket
+        private class WebSocket
         {
             public Action OnOpen;
             public Action<string> OnClose;

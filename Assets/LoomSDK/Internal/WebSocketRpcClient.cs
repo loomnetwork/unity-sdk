@@ -2,9 +2,10 @@
 
 using System.Threading.Tasks;
 using System;
+using System.ComponentModel;
 using Loom.Newtonsoft.Json;
-using UnityEngine;
 using Loom.WebSocketSharp;
+using UnityEngine;
 
 namespace Loom.Unity3d.Internal
 {
@@ -18,7 +19,31 @@ namespace Loom.Unity3d.Internal
         private readonly WebSocket client;
         private readonly Uri url;
         private ILogger logger;
+        private RpcConnectionState? lastConnectionState;
         private event EventHandler<JsonRpcEventData> OnEventMessage;
+
+        public event RpcClientConnectionStateChangedHandler ConnectionStateChanged;
+
+        public RpcConnectionState ConnectionState
+        {
+            get
+            {
+                WebSocketState state = this.client.ReadyState;
+                switch (state)
+                {
+                    case WebSocketState.Connecting:
+                        return RpcConnectionState.Connecting;
+                    case WebSocketState.Open:
+                        return RpcConnectionState.Connected;
+                    case WebSocketState.Closing:
+                        return RpcConnectionState.Disconnecting;
+                    case WebSocketState.Closed:
+                        return RpcConnectionState.Disconnected;
+                    default:
+                        throw new InvalidEnumArgumentException(nameof(this.client.ReadyState), (int) state, typeof(WebSocketState));
+                }
+            }
+        }
 
         /// <summary>
         /// Logger to be used for logging, defaults to <see cref="NullLogger"/>.
@@ -52,16 +77,31 @@ namespace Loom.Unity3d.Internal
             this.client.Log.Level = LogLevel.Trace;
             this.url = new Uri(url);
             this.Logger = NullLogger.Instance;
-            this.client.OnError += (sender, e) =>
-            {
-                this.Logger.Log(LogTag, "Error: " + e.Message);
-            };
+            this.client.OnError += ClientOnError;
+            this.client.OnOpen += ClientOnOpen;
+            this.client.OnClose += ClientOnClose;
         }
 
-        public bool IsConnected => this.client.ReadyState == WebSocketState.Open || this.client.ReadyState == WebSocketState.Connecting;
+        private void ClientOnClose(object sender, CloseEventArgs e)
+        {
+            NotifyConnectionStateChanged();
+        }
+
+        private void ClientOnOpen(object sender, EventArgs e)
+        {
+            NotifyConnectionStateChanged();
+        }
+
+        private void ClientOnError(object sender, ErrorEventArgs e)
+        {
+            this.Logger.Log(LogTag, "Error: " + e.Message);
+        }
 
         void IDisposable.Dispose()
         {
+            this.client.OnError -= ClientOnError;
+            this.client.OnOpen -= ClientOnOpen;
+            this.client.OnClose -= ClientOnClose;
             ((IDisposable)this.client).Dispose();
         }
 
@@ -80,11 +120,12 @@ namespace Loom.Unity3d.Internal
             try
             {
                 this.client.CloseAsync(CloseStatusCode.Normal, "Client disconnected.");
+                NotifyConnectionStateChanged();
             }
-            catch (Exception e)
+            catch (Exception)
             {
                 this.client.OnClose -= handler;
-                throw e;
+                throw;
             }
             return tcs.Task;
         }
@@ -114,6 +155,7 @@ namespace Loom.Unity3d.Internal
             try
             {
                 this.client.ConnectAsync();
+                NotifyConnectionStateChanged();
             }
             catch (Exception)
             {
@@ -216,6 +258,8 @@ namespace Loom.Unity3d.Internal
                 {
                     tcs.TrySetException(ex);
                 }
+
+                NotifyConnectionStateChanged();
             };
             this.client.OnMessage += handler;
             try
@@ -228,6 +272,16 @@ namespace Loom.Unity3d.Internal
                 throw e;
             }
             return await tcs.Task;
+        }
+
+        private void NotifyConnectionStateChanged()
+        {
+            RpcConnectionState state = ConnectionState;
+            if (this.lastConnectionState != null && this.lastConnectionState == state)
+                return;
+
+            this.lastConnectionState = state;
+            ConnectionStateChanged?.Invoke(this, state);
         }
 
         private void WSSharpRPCClient_OnMessage(object sender, MessageEventArgs e)
@@ -263,6 +317,8 @@ namespace Loom.Unity3d.Internal
             {
                 Logger.LogError(LogTag, "[WSSharpRPCClient_OnMessage error] " + ex);
             }
+
+            NotifyConnectionStateChanged();
         }
     }
 }

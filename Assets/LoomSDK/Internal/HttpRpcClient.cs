@@ -14,6 +14,14 @@ namespace Loom.Unity3d.Internal
 
         private readonly Uri url;
 
+        public event RpcClientConnectionStateChangedHandler ConnectionStateChanged
+        {
+            add { throw new NotSupportedException(); }
+            remove { throw new NotSupportedException(); }
+        }
+
+        public RpcConnectionState ConnectionState => RpcConnectionState.NonApplicable;
+
         /// <summary>
         /// Logger to be used for logging, defaults to <see cref="NullLogger"/>.
         /// </summary>
@@ -23,6 +31,7 @@ namespace Loom.Unity3d.Internal
         {
             throw new NotImplementedException();
         }
+
         public Task UnsubscribeAsync(EventHandler<JsonRpcEventData> handler)
         {
             throw new NotImplementedException();
@@ -33,8 +42,6 @@ namespace Loom.Unity3d.Internal
             this.url = new Uri(url);
             this.Logger = NullLogger.Instance;
         }
-
-        public bool IsConnected => true;
 
         public void Dispose()
         {

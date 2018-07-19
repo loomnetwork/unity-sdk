@@ -3,9 +3,13 @@ using System.Threading.Tasks;
 
 namespace Loom.Unity3d
 {
+    public delegate void RpcClientConnectionStateChangedHandler(IRpcClient sender, RpcConnectionState state);
+
     public interface IRpcClient : IDisposable
     {
-        bool IsConnected { get; }
+        event RpcClientConnectionStateChangedHandler ConnectionStateChanged;
+
+        RpcConnectionState ConnectionState { get; }
         Task<TResult> SendAsync<TResult, TArgs>(string method, TArgs args);
         Task DisconnectAsync();
         Task SubscribeAsync(EventHandler<JsonRpcEventData> handler);
