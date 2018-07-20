@@ -1,6 +1,6 @@
 ﻿using Loom.Newtonsoft.Json;
 
-namespace Loom.ClientSdk.Internal
+namespace Loom.Client.Internal
 {
     internal class JsonRpcRequest<T>
     {

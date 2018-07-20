@@ -1,8 +1,8 @@
 ﻿using UnityEngine;
 using System;
-using Loom.ClientSdk.Internal;
+using Loom.Client.Internal;
 
-namespace Loom.ClientSdk
+namespace Loom.Client
 {
     public class RpcClientFactory
     {

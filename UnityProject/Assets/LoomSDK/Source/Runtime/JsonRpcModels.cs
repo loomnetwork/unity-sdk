@@ -1,7 +1,7 @@
 ﻿using Loom.Newtonsoft.Json;
 using System;
 
-namespace Loom.ClientSdk
+namespace Loom.Client
 {
     public class JsonRpcEventData
     {

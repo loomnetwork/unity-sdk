@@ -1,5 +1,5 @@
 syntax = "proto3";
-option csharp_namespace = "Loom.ClientSdk.Internal.Protobuf";
+option csharp_namespace = "Loom.Client.Internal.Protobuf";
 
 message SignedTx {
     bytes inner = 1;

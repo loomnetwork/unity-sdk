@@ -1,11 +1,11 @@
 ﻿using System.Text;
 using System.Threading.Tasks;
-using Loom.ClientSdk.Internal;
-using Loom.ClientSdk.Internal.Protobuf;
+using Loom.Client.Internal;
+using Loom.Client.Internal.Protobuf;
 using Loom.Google.Protobuf;
 using Loom.Newtonsoft.Json;
 
-namespace Loom.ClientSdk
+namespace Loom.Client
 {
     /// <summary>
     /// The Contract class streamlines interaction with a smart contract that was deployed on a Loom DAppChain.

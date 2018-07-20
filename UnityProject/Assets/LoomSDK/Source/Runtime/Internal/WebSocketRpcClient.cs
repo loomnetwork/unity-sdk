@@ -7,7 +7,7 @@ using Loom.Newtonsoft.Json;
 using Loom.WebSocketSharp;
 using UnityEngine;
 
-namespace Loom.ClientSdk.Internal
+namespace Loom.Client.Internal
 {
     /// <summary>
     /// WebSocket JSON-RPC client implemented with WebSocketSharp.

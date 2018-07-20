@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace Loom.ClientSdk {
+namespace Loom.Client {
     public interface IChainEventArgs
     {
         Address ContractAddress { get; }

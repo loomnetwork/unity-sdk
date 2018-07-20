@@ -2,11 +2,11 @@
 using System;
 using Loom.Newtonsoft.Json;
 using System.Text;
-using Loom.ClientSdk.Unity.Internal.UnityAsyncAwaitUtil;
+using Loom.Client.Unity.Internal.UnityAsyncAwaitUtil;
 using UnityEngine.Networking;
 using UnityEngine;
 
-namespace Loom.ClientSdk.Internal
+namespace Loom.Client.Internal
 {
     internal class HttpRpcClient : IRpcClient
     {

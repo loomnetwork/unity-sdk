@@ -3,7 +3,7 @@ using System;
 using System.Security.Cryptography;
 using System.Text;
 
-namespace Loom.ClientSdk
+namespace Loom.Client
 {
     public static class CryptoUtils
     {

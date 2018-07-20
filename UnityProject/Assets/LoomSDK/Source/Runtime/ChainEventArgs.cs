@@ -1,4 +1,4 @@
-﻿namespace Loom.ClientSdk
+﻿namespace Loom.Client
 {
     public class ChainEventArgs : IChainEventArgs
     {

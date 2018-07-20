@@ -1,9 +1,9 @@
 ﻿using System;
-using Loom.ClientSdk.Internal;
+using Loom.Client.Internal;
 using Loom.Nethereum.Util;
 using Loom.Newtonsoft.Json;
 
-namespace Loom.ClientSdk
+namespace Loom.Client
 {
     [JsonConverter(typeof(AddressJsonConverter))]
     public struct Address : IEquatable<Address>

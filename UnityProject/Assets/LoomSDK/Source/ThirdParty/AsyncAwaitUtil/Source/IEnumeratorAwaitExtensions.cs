@@ -8,7 +8,7 @@ using System.Text;
 using System.Threading;
 using UnityEngine;
 
-namespace Loom.ClientSdk.Unity.Internal.UnityAsyncAwaitUtil
+namespace Loom.Client.Unity.Internal.UnityAsyncAwaitUtil
 {
     // We could just add a generic GetAwaiter to YieldInstruction and CustomYieldInstruction
     // but instead we add specific methods to each derived class to allow for return values

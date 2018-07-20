@@ -5,14 +5,14 @@ using System.Threading.Tasks;
 using System;
 using Loom.Newtonsoft.Json;
 using System.Collections.Generic;
-using Loom.ClientSdk.Internal;
-using Loom.ClientSdk.Internal.Protobuf;
+using Loom.Client.Internal;
+using Loom.Client.Internal.Protobuf;
 
 #if UNITY_WEBGL && !UNITY_EDITOR
 using Loom.Internal.UnityAsyncAwaitUtil;
 #endif
 
-namespace Loom.ClientSdk
+namespace Loom.Client
 {
     /// <summary>
     /// Writes to & reads from a Loom DAppChain.

@@ -9,7 +9,7 @@ using pb = global::Loom.Google.Protobuf;
 using pbc = global::Loom.Google.Protobuf.Collections;
 using pbr = global::Loom.Google.Protobuf.Reflection;
 using scg = global::System.Collections.Generic;
-namespace Loom.ClientSdk.Samples {
+namespace Loom.Client.Samples {
 
   /// <summary>Holder for reflection information generated from sample.proto</summary>
   public static partial class SampleReflection {
@@ -31,9 +31,9 @@ namespace Loom.ClientSdk.Samples {
       descriptor = pbr::FileDescriptor.FromGeneratedCode(descriptorData,
           new pbr::FileDescriptor[] { },
           new pbr::GeneratedClrTypeInfo(null, new pbr::GeneratedClrTypeInfo[] {
-            new pbr::GeneratedClrTypeInfo(typeof(global::Loom.ClientSdk.Samples.MapEntry), global::Loom.ClientSdk.Samples.MapEntry.Parser, new[]{ "Key", "Value" }, null, null, null),
-            new pbr::GeneratedClrTypeInfo(typeof(global::Loom.ClientSdk.Samples.HelloRequest), global::Loom.ClientSdk.Samples.HelloRequest.Parser, new[]{ "In" }, null, null, null),
-            new pbr::GeneratedClrTypeInfo(typeof(global::Loom.ClientSdk.Samples.HelloResponse), global::Loom.ClientSdk.Samples.HelloResponse.Parser, new[]{ "Out" }, null, null, null)
+            new pbr::GeneratedClrTypeInfo(typeof(global::Loom.Client.Samples.MapEntry), global::Loom.Client.Samples.MapEntry.Parser, new[]{ "Key", "Value" }, null, null, null),
+            new pbr::GeneratedClrTypeInfo(typeof(global::Loom.Client.Samples.HelloRequest), global::Loom.Client.Samples.HelloRequest.Parser, new[]{ "In" }, null, null, null),
+            new pbr::GeneratedClrTypeInfo(typeof(global::Loom.Client.Samples.HelloResponse), global::Loom.Client.Samples.HelloResponse.Parser, new[]{ "Out" }, null, null, null)
           }));
     }
     #endregion
@@ -48,7 +48,7 @@ namespace Loom.ClientSdk.Samples {
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     public static pbr::MessageDescriptor Descriptor {
-      get { return global::Loom.ClientSdk.Samples.SampleReflection.Descriptor.MessageTypes[0]; }
+      get { return global::Loom.Client.Samples.SampleReflection.Descriptor.MessageTypes[0]; }
     }
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
@@ -205,7 +205,7 @@ namespace Loom.ClientSdk.Samples {
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     public static pbr::MessageDescriptor Descriptor {
-      get { return global::Loom.ClientSdk.Samples.SampleReflection.Descriptor.MessageTypes[1]; }
+      get { return global::Loom.Client.Samples.SampleReflection.Descriptor.MessageTypes[1]; }
     }
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
@@ -334,7 +334,7 @@ namespace Loom.ClientSdk.Samples {
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     public static pbr::MessageDescriptor Descriptor {
-      get { return global::Loom.ClientSdk.Samples.SampleReflection.Descriptor.MessageTypes[2]; }
+      get { return global::Loom.Client.Samples.SampleReflection.Descriptor.MessageTypes[2]; }
     }
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]

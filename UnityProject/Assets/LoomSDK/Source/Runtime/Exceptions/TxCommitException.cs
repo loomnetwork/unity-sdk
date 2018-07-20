@@ -1,4 +1,4 @@
-﻿namespace Loom.ClientSdk
+﻿namespace Loom.Client
 {
     /// <summary>
     /// Used to signal that commiting a transaction has failed.

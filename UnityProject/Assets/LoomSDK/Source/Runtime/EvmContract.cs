@@ -1,12 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
-using Loom.ClientSdk.Internal;
+using Loom.Client.Internal;
 using Loom.Nethereum.ABI.Model;
 using Loom.Nethereum.Contracts;
 using Loom.Nethereum.RPC.Eth.DTOs;
 
-namespace Loom.ClientSdk
+namespace Loom.Client
 {
     using Protobuf = Internal.Protobuf;
 

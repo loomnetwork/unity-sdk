@@ -1,4 +1,4 @@
-﻿namespace Loom.ClientSdk
+﻿namespace Loom.Client
 {
     /// <summary>
     /// Used to signal that a transaction was rejected because it had a bad nonce.

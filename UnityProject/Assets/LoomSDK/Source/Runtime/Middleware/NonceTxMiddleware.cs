@@ -1,8 +1,8 @@
 ﻿using Loom.Google.Protobuf;
 using System.Threading.Tasks;
-using Loom.ClientSdk.Internal.Protobuf;
+using Loom.Client.Internal.Protobuf;
 
-namespace Loom.ClientSdk
+namespace Loom.Client
 {
     /// <summary>
     /// Adds a nonce to transactions.

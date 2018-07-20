@@ -12,7 +12,7 @@ using System.Threading.Tasks;
 using Loom.Nethereum.ABI;
 using Loom.Nethereum.ABI.Decoders;
 
-namespace Loom.ClientSdk.Tests
+namespace Loom.Client.Tests
 {
     public class EvmTests
     {

@@ -1,7 +1,7 @@
 using System.Threading;
 using UnityEngine;
 
-namespace Loom.ClientSdk.Unity.Internal.UnityAsyncAwaitUtil
+namespace Loom.Client.Unity.Internal.UnityAsyncAwaitUtil
 {
     internal static class SyncContextUtil
     {

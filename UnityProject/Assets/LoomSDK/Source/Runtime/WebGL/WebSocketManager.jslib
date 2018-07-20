@@ -1,4 +1,4 @@
-// Bridges Loom.ClientSdk.Unity.Internal.WebGL.WebSocketRpcClient and the WebSocketManager in web-socket-manager.js
+// Bridges Loom.Client.Unity.Internal.WebGL.WebSocketRpcClient and the WebSocketManager in web-socket-manager.js
 var WebSocketManagerLib = {
   // NOTE: WSML will be undefined if the Use pre-built Engine option is enabled!
   $WSML: {

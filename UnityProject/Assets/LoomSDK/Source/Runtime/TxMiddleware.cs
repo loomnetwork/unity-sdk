@@ -1,6 +1,6 @@
 ﻿using System.Threading.Tasks;
 
-namespace Loom.ClientSdk
+namespace Loom.Client
 {
     public class TxMiddleware : ITxMiddlewareHandler
     {

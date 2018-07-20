@@ -1,5 +1,5 @@
 syntax = "proto3";
-option csharp_namespace = "Loom.ClientSdk.Unity.Samples";
+option csharp_namespace = "Loom.Client.Unity.Samples";
 
 message MapEntry {
     string key = 1;

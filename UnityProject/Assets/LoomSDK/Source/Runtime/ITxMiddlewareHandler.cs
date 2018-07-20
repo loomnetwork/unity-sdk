@@ -1,6 +1,6 @@
 ﻿using System.Threading.Tasks;
 
-namespace Loom.ClientSdk
+namespace Loom.Client
 {
     /// <summary>
     /// Middleware handlers are expected to transform the input data and return the result.

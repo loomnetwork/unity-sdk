@@ -7,10 +7,10 @@ using System.Runtime.InteropServices;
 using System.Threading.Tasks;
 using System.Collections.Generic;
 using System.ComponentModel;
-using Loom.ClientSdk.Internal;
+using Loom.Client.Internal;
 using UnityEngine;
 
-namespace Loom.ClientSdk.Unity.Internal.WebGL
+namespace Loom.Client.Unity.Internal.WebGL
 {
     /// <summary>
     /// WebSocket JSON-RPC client implemented with browser WebSockets.

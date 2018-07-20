@@ -1,7 +1,7 @@
 ﻿using System;
 using UnityEngine;
 
-namespace Loom.ClientSdk
+namespace Loom.Client
 {
     public class NullLogger : ILogger
     {

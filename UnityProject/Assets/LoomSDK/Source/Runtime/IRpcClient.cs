@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Threading.Tasks;
 
-namespace Loom.ClientSdk
+namespace Loom.Client
 {
     public delegate void RpcClientConnectionStateChangedHandler(IRpcClient sender, RpcConnectionState state);
 

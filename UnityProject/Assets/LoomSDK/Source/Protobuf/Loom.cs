@@ -9,7 +9,7 @@ using pb = global::Loom.Google.Protobuf;
 using pbc = global::Loom.Google.Protobuf.Collections;
 using pbr = global::Loom.Google.Protobuf.Reflection;
 using scg = global::System.Collections.Generic;
-namespace Loom.ClientSdk.Internal.Protobuf {
+namespace Loom.Client.Internal.Protobuf {
 
   /// <summary>Holder for reflection information generated from loom.proto</summary>
   internal static partial class LoomReflection {
@@ -58,25 +58,25 @@ namespace Loom.ClientSdk.Internal.Protobuf {
             "dFNkay5JbnRlcm5hbC5Qcm90b2J1ZmIGcHJvdG8z"));
       descriptor = pbr::FileDescriptor.FromGeneratedCode(descriptorData,
           new pbr::FileDescriptor[] { },
-          new pbr::GeneratedClrTypeInfo(new[] {typeof(global::Loom.ClientSdk.Internal.Protobuf.VMType), typeof(global::Loom.ClientSdk.Internal.Protobuf.EncodingType), }, new pbr::GeneratedClrTypeInfo[] {
-            new pbr::GeneratedClrTypeInfo(typeof(global::Loom.ClientSdk.Internal.Protobuf.SignedTx), global::Loom.ClientSdk.Internal.Protobuf.SignedTx.Parser, new[]{ "Inner", "Signature", "PublicKey" }, null, null, null),
-            new pbr::GeneratedClrTypeInfo(typeof(global::Loom.ClientSdk.Internal.Protobuf.NonceTx), global::Loom.ClientSdk.Internal.Protobuf.NonceTx.Parser, new[]{ "Inner", "Sequence" }, null, null, null),
-            new pbr::GeneratedClrTypeInfo(typeof(global::Loom.ClientSdk.Internal.Protobuf.Address), global::Loom.ClientSdk.Internal.Protobuf.Address.Parser, new[]{ "ChainId", "Local" }, null, null, null),
-            new pbr::GeneratedClrTypeInfo(typeof(global::Loom.ClientSdk.Internal.Protobuf.Transaction), global::Loom.ClientSdk.Internal.Protobuf.Transaction.Parser, new[]{ "Id", "Data" }, null, null, null),
-            new pbr::GeneratedClrTypeInfo(typeof(global::Loom.ClientSdk.Internal.Protobuf.MessageTx), global::Loom.ClientSdk.Internal.Protobuf.MessageTx.Parser, new[]{ "To", "From", "Data" }, null, null, null),
-            new pbr::GeneratedClrTypeInfo(typeof(global::Loom.ClientSdk.Internal.Protobuf.DeployTx), global::Loom.ClientSdk.Internal.Protobuf.DeployTx.Parser, new[]{ "VmType", "Code", "Name" }, null, null, null),
-            new pbr::GeneratedClrTypeInfo(typeof(global::Loom.ClientSdk.Internal.Protobuf.DeployResponse), global::Loom.ClientSdk.Internal.Protobuf.DeployResponse.Parser, new[]{ "Contract", "Output" }, null, null, null),
-            new pbr::GeneratedClrTypeInfo(typeof(global::Loom.ClientSdk.Internal.Protobuf.DeployResponseData), global::Loom.ClientSdk.Internal.Protobuf.DeployResponseData.Parser, new[]{ "TxHash", "Bytecode" }, null, null, null),
-            new pbr::GeneratedClrTypeInfo(typeof(global::Loom.ClientSdk.Internal.Protobuf.CallTx), global::Loom.ClientSdk.Internal.Protobuf.CallTx.Parser, new[]{ "VmType", "Input" }, null, null, null),
-            new pbr::GeneratedClrTypeInfo(typeof(global::Loom.ClientSdk.Internal.Protobuf.PluginCode), global::Loom.ClientSdk.Internal.Protobuf.PluginCode.Parser, new[]{ "Name", "Input" }, null, null, null),
-            new pbr::GeneratedClrTypeInfo(typeof(global::Loom.ClientSdk.Internal.Protobuf.Request), global::Loom.ClientSdk.Internal.Protobuf.Request.Parser, new[]{ "ContentType", "Accept", "Body" }, null, null, null),
-            new pbr::GeneratedClrTypeInfo(typeof(global::Loom.ClientSdk.Internal.Protobuf.Response), global::Loom.ClientSdk.Internal.Protobuf.Response.Parser, new[]{ "ContentType", "Body" }, null, null, null),
-            new pbr::GeneratedClrTypeInfo(typeof(global::Loom.ClientSdk.Internal.Protobuf.ContractMethodCall), global::Loom.ClientSdk.Internal.Protobuf.ContractMethodCall.Parser, new[]{ "Method", "Args" }, null, null, null),
-            new pbr::GeneratedClrTypeInfo(typeof(global::Loom.ClientSdk.Internal.Protobuf.TxHashList), global::Loom.ClientSdk.Internal.Protobuf.TxHashList.Parser, new[]{ "TxHash" }, null, null, null),
-            new pbr::GeneratedClrTypeInfo(typeof(global::Loom.ClientSdk.Internal.Protobuf.EventDataList), global::Loom.ClientSdk.Internal.Protobuf.EventDataList.Parser, new[]{ "Events" }, null, null, null),
-            new pbr::GeneratedClrTypeInfo(typeof(global::Loom.ClientSdk.Internal.Protobuf.EventData), global::Loom.ClientSdk.Internal.Protobuf.EventData.Parser, new[]{ "Topics", "Caller", "Address", "PluginName", "BlockHeight", "EncodedBody", "OriginalRequest", "TxHash" }, null, null, null),
-            new pbr::GeneratedClrTypeInfo(typeof(global::Loom.ClientSdk.Internal.Protobuf.TxReceiptList), global::Loom.ClientSdk.Internal.Protobuf.TxReceiptList.Parser, new[]{ "TxReceipts" }, null, null, null),
-            new pbr::GeneratedClrTypeInfo(typeof(global::Loom.ClientSdk.Internal.Protobuf.EvmTxReceipt), global::Loom.ClientSdk.Internal.Protobuf.EvmTxReceipt.Parser, new[]{ "TransactionIndex", "BlockHash", "BlockNumber", "CumulativeGasUsed", "GasUsed", "ContractAddress", "Logs", "LogsBloom", "Status" }, null, null, null)
+          new pbr::GeneratedClrTypeInfo(new[] {typeof(global::Loom.Client.Internal.Protobuf.VMType), typeof(global::Loom.Client.Internal.Protobuf.EncodingType), }, new pbr::GeneratedClrTypeInfo[] {
+            new pbr::GeneratedClrTypeInfo(typeof(global::Loom.Client.Internal.Protobuf.SignedTx), global::Loom.Client.Internal.Protobuf.SignedTx.Parser, new[]{ "Inner", "Signature", "PublicKey" }, null, null, null),
+            new pbr::GeneratedClrTypeInfo(typeof(global::Loom.Client.Internal.Protobuf.NonceTx), global::Loom.Client.Internal.Protobuf.NonceTx.Parser, new[]{ "Inner", "Sequence" }, null, null, null),
+            new pbr::GeneratedClrTypeInfo(typeof(global::Loom.Client.Internal.Protobuf.Address), global::Loom.Client.Internal.Protobuf.Address.Parser, new[]{ "ChainId", "Local" }, null, null, null),
+            new pbr::GeneratedClrTypeInfo(typeof(global::Loom.Client.Internal.Protobuf.Transaction), global::Loom.Client.Internal.Protobuf.Transaction.Parser, new[]{ "Id", "Data" }, null, null, null),
+            new pbr::GeneratedClrTypeInfo(typeof(global::Loom.Client.Internal.Protobuf.MessageTx), global::Loom.Client.Internal.Protobuf.MessageTx.Parser, new[]{ "To", "From", "Data" }, null, null, null),
+            new pbr::GeneratedClrTypeInfo(typeof(global::Loom.Client.Internal.Protobuf.DeployTx), global::Loom.Client.Internal.Protobuf.DeployTx.Parser, new[]{ "VmType", "Code", "Name" }, null, null, null),
+            new pbr::GeneratedClrTypeInfo(typeof(global::Loom.Client.Internal.Protobuf.DeployResponse), global::Loom.Client.Internal.Protobuf.DeployResponse.Parser, new[]{ "Contract", "Output" }, null, null, null),
+            new pbr::GeneratedClrTypeInfo(typeof(global::Loom.Client.Internal.Protobuf.DeployResponseData), global::Loom.Client.Internal.Protobuf.DeployResponseData.Parser, new[]{ "TxHash", "Bytecode" }, null, null, null),
+            new pbr::GeneratedClrTypeInfo(typeof(global::Loom.Client.Internal.Protobuf.CallTx), global::Loom.Client.Internal.Protobuf.CallTx.Parser, new[]{ "VmType", "Input" }, null, null, null),
+            new pbr::GeneratedClrTypeInfo(typeof(global::Loom.Client.Internal.Protobuf.PluginCode), global::Loom.Client.Internal.Protobuf.PluginCode.Parser, new[]{ "Name", "Input" }, null, null, null),
+            new pbr::GeneratedClrTypeInfo(typeof(global::Loom.Client.Internal.Protobuf.Request), global::Loom.Client.Internal.Protobuf.Request.Parser, new[]{ "ContentType", "Accept", "Body" }, null, null, null),
+            new pbr::GeneratedClrTypeInfo(typeof(global::Loom.Client.Internal.Protobuf.Response), global::Loom.Client.Internal.Protobuf.Response.Parser, new[]{ "ContentType", "Body" }, null, null, null),
+            new pbr::GeneratedClrTypeInfo(typeof(global::Loom.Client.Internal.Protobuf.ContractMethodCall), global::Loom.Client.Internal.Protobuf.ContractMethodCall.Parser, new[]{ "Method", "Args" }, null, null, null),
+            new pbr::GeneratedClrTypeInfo(typeof(global::Loom.Client.Internal.Protobuf.TxHashList), global::Loom.Client.Internal.Protobuf.TxHashList.Parser, new[]{ "TxHash" }, null, null, null),
+            new pbr::GeneratedClrTypeInfo(typeof(global::Loom.Client.Internal.Protobuf.EventDataList), global::Loom.Client.Internal.Protobuf.EventDataList.Parser, new[]{ "Events" }, null, null, null),
+            new pbr::GeneratedClrTypeInfo(typeof(global::Loom.Client.Internal.Protobuf.EventData), global::Loom.Client.Internal.Protobuf.EventData.Parser, new[]{ "Topics", "Caller", "Address", "PluginName", "BlockHeight", "EncodedBody", "OriginalRequest", "TxHash" }, null, null, null),
+            new pbr::GeneratedClrTypeInfo(typeof(global::Loom.Client.Internal.Protobuf.TxReceiptList), global::Loom.Client.Internal.Protobuf.TxReceiptList.Parser, new[]{ "TxReceipts" }, null, null, null),
+            new pbr::GeneratedClrTypeInfo(typeof(global::Loom.Client.Internal.Protobuf.EvmTxReceipt), global::Loom.Client.Internal.Protobuf.EvmTxReceipt.Parser, new[]{ "TransactionIndex", "BlockHash", "BlockNumber", "CumulativeGasUsed", "GasUsed", "ContractAddress", "Logs", "LogsBloom", "Status" }, null, null, null)
           }));
     }
     #endregion
@@ -104,7 +104,7 @@ namespace Loom.ClientSdk.Internal.Protobuf {
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     public static pbr::MessageDescriptor Descriptor {
-      get { return global::Loom.ClientSdk.Internal.Protobuf.LoomReflection.Descriptor.MessageTypes[0]; }
+      get { return global::Loom.Client.Internal.Protobuf.LoomReflection.Descriptor.MessageTypes[0]; }
     }
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
@@ -289,7 +289,7 @@ namespace Loom.ClientSdk.Internal.Protobuf {
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     public static pbr::MessageDescriptor Descriptor {
-      get { return global::Loom.ClientSdk.Internal.Protobuf.LoomReflection.Descriptor.MessageTypes[1]; }
+      get { return global::Loom.Client.Internal.Protobuf.LoomReflection.Descriptor.MessageTypes[1]; }
     }
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
@@ -446,7 +446,7 @@ namespace Loom.ClientSdk.Internal.Protobuf {
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     public static pbr::MessageDescriptor Descriptor {
-      get { return global::Loom.ClientSdk.Internal.Protobuf.LoomReflection.Descriptor.MessageTypes[2]; }
+      get { return global::Loom.Client.Internal.Protobuf.LoomReflection.Descriptor.MessageTypes[2]; }
     }
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
@@ -603,7 +603,7 @@ namespace Loom.ClientSdk.Internal.Protobuf {
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     public static pbr::MessageDescriptor Descriptor {
-      get { return global::Loom.ClientSdk.Internal.Protobuf.LoomReflection.Descriptor.MessageTypes[3]; }
+      get { return global::Loom.Client.Internal.Protobuf.LoomReflection.Descriptor.MessageTypes[3]; }
     }
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
@@ -760,7 +760,7 @@ namespace Loom.ClientSdk.Internal.Protobuf {
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     public static pbr::MessageDescriptor Descriptor {
-      get { return global::Loom.ClientSdk.Internal.Protobuf.LoomReflection.Descriptor.MessageTypes[4]; }
+      get { return global::Loom.Client.Internal.Protobuf.LoomReflection.Descriptor.MessageTypes[4]; }
     }
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
@@ -790,9 +790,9 @@ namespace Loom.ClientSdk.Internal.Protobuf {
 
     /// <summary>Field number for the "to" field.</summary>
     public const int ToFieldNumber = 1;
-    private global::Loom.ClientSdk.Internal.Protobuf.Address to_;
+    private global::Loom.Client.Internal.Protobuf.Address to_;
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
-    public global::Loom.ClientSdk.Internal.Protobuf.Address To {
+    public global::Loom.Client.Internal.Protobuf.Address To {
       get { return to_; }
       set {
         to_ = value;
@@ -801,9 +801,9 @@ namespace Loom.ClientSdk.Internal.Protobuf {
 
     /// <summary>Field number for the "from" field.</summary>
     public const int FromFieldNumber = 2;
-    private global::Loom.ClientSdk.Internal.Protobuf.Address from_;
+    private global::Loom.Client.Internal.Protobuf.Address from_;
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
-    public global::Loom.ClientSdk.Internal.Protobuf.Address From {
+    public global::Loom.Client.Internal.Protobuf.Address From {
       get { return from_; }
       set {
         from_ = value;
@@ -901,13 +901,13 @@ namespace Loom.ClientSdk.Internal.Protobuf {
       }
       if (other.to_ != null) {
         if (to_ == null) {
-          to_ = new global::Loom.ClientSdk.Internal.Protobuf.Address();
+          to_ = new global::Loom.Client.Internal.Protobuf.Address();
         }
         To.MergeFrom(other.To);
       }
       if (other.from_ != null) {
         if (from_ == null) {
-          from_ = new global::Loom.ClientSdk.Internal.Protobuf.Address();
+          from_ = new global::Loom.Client.Internal.Protobuf.Address();
         }
         From.MergeFrom(other.From);
       }
@@ -927,14 +927,14 @@ namespace Loom.ClientSdk.Internal.Protobuf {
             break;
           case 10: {
             if (to_ == null) {
-              to_ = new global::Loom.ClientSdk.Internal.Protobuf.Address();
+              to_ = new global::Loom.Client.Internal.Protobuf.Address();
             }
             input.ReadMessage(to_);
             break;
           }
           case 18: {
             if (from_ == null) {
-              from_ = new global::Loom.ClientSdk.Internal.Protobuf.Address();
+              from_ = new global::Loom.Client.Internal.Protobuf.Address();
             }
             input.ReadMessage(from_);
             break;
@@ -957,7 +957,7 @@ namespace Loom.ClientSdk.Internal.Protobuf {
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     public static pbr::MessageDescriptor Descriptor {
-      get { return global::Loom.ClientSdk.Internal.Protobuf.LoomReflection.Descriptor.MessageTypes[5]; }
+      get { return global::Loom.Client.Internal.Protobuf.LoomReflection.Descriptor.MessageTypes[5]; }
     }
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
@@ -987,9 +987,9 @@ namespace Loom.ClientSdk.Internal.Protobuf {
 
     /// <summary>Field number for the "vm_type" field.</summary>
     public const int VmTypeFieldNumber = 1;
-    private global::Loom.ClientSdk.Internal.Protobuf.VMType vmType_ = 0;
+    private global::Loom.Client.Internal.Protobuf.VMType vmType_ = 0;
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
-    public global::Loom.ClientSdk.Internal.Protobuf.VMType VmType {
+    public global::Loom.Client.Internal.Protobuf.VMType VmType {
       get { return vmType_; }
       set {
         vmType_ = value;
@@ -1117,7 +1117,7 @@ namespace Loom.ClientSdk.Internal.Protobuf {
             _unknownFields = pb::UnknownFieldSet.MergeFieldFrom(_unknownFields, input);
             break;
           case 8: {
-            vmType_ = (global::Loom.ClientSdk.Internal.Protobuf.VMType) input.ReadEnum();
+            vmType_ = (global::Loom.Client.Internal.Protobuf.VMType) input.ReadEnum();
             break;
           }
           case 18: {
@@ -1142,7 +1142,7 @@ namespace Loom.ClientSdk.Internal.Protobuf {
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     public static pbr::MessageDescriptor Descriptor {
-      get { return global::Loom.ClientSdk.Internal.Protobuf.LoomReflection.Descriptor.MessageTypes[6]; }
+      get { return global::Loom.Client.Internal.Protobuf.LoomReflection.Descriptor.MessageTypes[6]; }
     }
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
@@ -1171,9 +1171,9 @@ namespace Loom.ClientSdk.Internal.Protobuf {
 
     /// <summary>Field number for the "contract" field.</summary>
     public const int ContractFieldNumber = 1;
-    private global::Loom.ClientSdk.Internal.Protobuf.Address contract_;
+    private global::Loom.Client.Internal.Protobuf.Address contract_;
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
-    public global::Loom.ClientSdk.Internal.Protobuf.Address Contract {
+    public global::Loom.Client.Internal.Protobuf.Address Contract {
       get { return contract_; }
       set {
         contract_ = value;
@@ -1262,7 +1262,7 @@ namespace Loom.ClientSdk.Internal.Protobuf {
       }
       if (other.contract_ != null) {
         if (contract_ == null) {
-          contract_ = new global::Loom.ClientSdk.Internal.Protobuf.Address();
+          contract_ = new global::Loom.Client.Internal.Protobuf.Address();
         }
         Contract.MergeFrom(other.Contract);
       }
@@ -1282,7 +1282,7 @@ namespace Loom.ClientSdk.Internal.Protobuf {
             break;
           case 10: {
             if (contract_ == null) {
-              contract_ = new global::Loom.ClientSdk.Internal.Protobuf.Address();
+              contract_ = new global::Loom.Client.Internal.Protobuf.Address();
             }
             input.ReadMessage(contract_);
             break;
@@ -1305,7 +1305,7 @@ namespace Loom.ClientSdk.Internal.Protobuf {
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     public static pbr::MessageDescriptor Descriptor {
-      get { return global::Loom.ClientSdk.Internal.Protobuf.LoomReflection.Descriptor.MessageTypes[7]; }
+      get { return global::Loom.Client.Internal.Protobuf.LoomReflection.Descriptor.MessageTypes[7]; }
     }
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
@@ -1462,7 +1462,7 @@ namespace Loom.ClientSdk.Internal.Protobuf {
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     public static pbr::MessageDescriptor Descriptor {
-      get { return global::Loom.ClientSdk.Internal.Protobuf.LoomReflection.Descriptor.MessageTypes[8]; }
+      get { return global::Loom.Client.Internal.Protobuf.LoomReflection.Descriptor.MessageTypes[8]; }
     }
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
@@ -1491,9 +1491,9 @@ namespace Loom.ClientSdk.Internal.Protobuf {
 
     /// <summary>Field number for the "vm_type" field.</summary>
     public const int VmTypeFieldNumber = 1;
-    private global::Loom.ClientSdk.Internal.Protobuf.VMType vmType_ = 0;
+    private global::Loom.Client.Internal.Protobuf.VMType vmType_ = 0;
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
-    public global::Loom.ClientSdk.Internal.Protobuf.VMType VmType {
+    public global::Loom.Client.Internal.Protobuf.VMType VmType {
       get { return vmType_; }
       set {
         vmType_ = value;
@@ -1598,7 +1598,7 @@ namespace Loom.ClientSdk.Internal.Protobuf {
             _unknownFields = pb::UnknownFieldSet.MergeFieldFrom(_unknownFields, input);
             break;
           case 8: {
-            vmType_ = (global::Loom.ClientSdk.Internal.Protobuf.VMType) input.ReadEnum();
+            vmType_ = (global::Loom.Client.Internal.Protobuf.VMType) input.ReadEnum();
             break;
           }
           case 18: {
@@ -1619,7 +1619,7 @@ namespace Loom.ClientSdk.Internal.Protobuf {
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     public static pbr::MessageDescriptor Descriptor {
-      get { return global::Loom.ClientSdk.Internal.Protobuf.LoomReflection.Descriptor.MessageTypes[9]; }
+      get { return global::Loom.Client.Internal.Protobuf.LoomReflection.Descriptor.MessageTypes[9]; }
     }
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
@@ -1776,7 +1776,7 @@ namespace Loom.ClientSdk.Internal.Protobuf {
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     public static pbr::MessageDescriptor Descriptor {
-      get { return global::Loom.ClientSdk.Internal.Protobuf.LoomReflection.Descriptor.MessageTypes[10]; }
+      get { return global::Loom.Client.Internal.Protobuf.LoomReflection.Descriptor.MessageTypes[10]; }
     }
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
@@ -1806,9 +1806,9 @@ namespace Loom.ClientSdk.Internal.Protobuf {
 
     /// <summary>Field number for the "content_type" field.</summary>
     public const int ContentTypeFieldNumber = 1;
-    private global::Loom.ClientSdk.Internal.Protobuf.EncodingType contentType_ = 0;
+    private global::Loom.Client.Internal.Protobuf.EncodingType contentType_ = 0;
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
-    public global::Loom.ClientSdk.Internal.Protobuf.EncodingType ContentType {
+    public global::Loom.Client.Internal.Protobuf.EncodingType ContentType {
       get { return contentType_; }
       set {
         contentType_ = value;
@@ -1817,9 +1817,9 @@ namespace Loom.ClientSdk.Internal.Protobuf {
 
     /// <summary>Field number for the "accept" field.</summary>
     public const int AcceptFieldNumber = 2;
-    private global::Loom.ClientSdk.Internal.Protobuf.EncodingType accept_ = 0;
+    private global::Loom.Client.Internal.Protobuf.EncodingType accept_ = 0;
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
-    public global::Loom.ClientSdk.Internal.Protobuf.EncodingType Accept {
+    public global::Loom.Client.Internal.Protobuf.EncodingType Accept {
       get { return accept_; }
       set {
         accept_ = value;
@@ -1936,11 +1936,11 @@ namespace Loom.ClientSdk.Internal.Protobuf {
             _unknownFields = pb::UnknownFieldSet.MergeFieldFrom(_unknownFields, input);
             break;
           case 8: {
-            contentType_ = (global::Loom.ClientSdk.Internal.Protobuf.EncodingType) input.ReadEnum();
+            contentType_ = (global::Loom.Client.Internal.Protobuf.EncodingType) input.ReadEnum();
             break;
           }
           case 16: {
-            accept_ = (global::Loom.ClientSdk.Internal.Protobuf.EncodingType) input.ReadEnum();
+            accept_ = (global::Loom.Client.Internal.Protobuf.EncodingType) input.ReadEnum();
             break;
           }
           case 26: {
@@ -1961,7 +1961,7 @@ namespace Loom.ClientSdk.Internal.Protobuf {
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     public static pbr::MessageDescriptor Descriptor {
-      get { return global::Loom.ClientSdk.Internal.Protobuf.LoomReflection.Descriptor.MessageTypes[11]; }
+      get { return global::Loom.Client.Internal.Protobuf.LoomReflection.Descriptor.MessageTypes[11]; }
     }
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
@@ -1990,9 +1990,9 @@ namespace Loom.ClientSdk.Internal.Protobuf {
 
     /// <summary>Field number for the "content_type" field.</summary>
     public const int ContentTypeFieldNumber = 1;
-    private global::Loom.ClientSdk.Internal.Protobuf.EncodingType contentType_ = 0;
+    private global::Loom.Client.Internal.Protobuf.EncodingType contentType_ = 0;
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
-    public global::Loom.ClientSdk.Internal.Protobuf.EncodingType ContentType {
+    public global::Loom.Client.Internal.Protobuf.EncodingType ContentType {
       get { return contentType_; }
       set {
         contentType_ = value;
@@ -2097,7 +2097,7 @@ namespace Loom.ClientSdk.Internal.Protobuf {
             _unknownFields = pb::UnknownFieldSet.MergeFieldFrom(_unknownFields, input);
             break;
           case 8: {
-            contentType_ = (global::Loom.ClientSdk.Internal.Protobuf.EncodingType) input.ReadEnum();
+            contentType_ = (global::Loom.Client.Internal.Protobuf.EncodingType) input.ReadEnum();
             break;
           }
           case 18: {
@@ -2118,7 +2118,7 @@ namespace Loom.ClientSdk.Internal.Protobuf {
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     public static pbr::MessageDescriptor Descriptor {
-      get { return global::Loom.ClientSdk.Internal.Protobuf.LoomReflection.Descriptor.MessageTypes[12]; }
+      get { return global::Loom.Client.Internal.Protobuf.LoomReflection.Descriptor.MessageTypes[12]; }
     }
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
@@ -2275,7 +2275,7 @@ namespace Loom.ClientSdk.Internal.Protobuf {
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     public static pbr::MessageDescriptor Descriptor {
-      get { return global::Loom.ClientSdk.Internal.Protobuf.LoomReflection.Descriptor.MessageTypes[13]; }
+      get { return global::Loom.Client.Internal.Protobuf.LoomReflection.Descriptor.MessageTypes[13]; }
     }
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
@@ -2396,7 +2396,7 @@ namespace Loom.ClientSdk.Internal.Protobuf {
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     public static pbr::MessageDescriptor Descriptor {
-      get { return global::Loom.ClientSdk.Internal.Protobuf.LoomReflection.Descriptor.MessageTypes[14]; }
+      get { return global::Loom.Client.Internal.Protobuf.LoomReflection.Descriptor.MessageTypes[14]; }
     }
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
@@ -2424,11 +2424,11 @@ namespace Loom.ClientSdk.Internal.Protobuf {
 
     /// <summary>Field number for the "events" field.</summary>
     public const int EventsFieldNumber = 1;
-    private static readonly pb::FieldCodec<global::Loom.ClientSdk.Internal.Protobuf.EventData> _repeated_events_codec
-        = pb::FieldCodec.ForMessage(10, global::Loom.ClientSdk.Internal.Protobuf.EventData.Parser);
-    private readonly pbc::RepeatedField<global::Loom.ClientSdk.Internal.Protobuf.EventData> events_ = new pbc::RepeatedField<global::Loom.ClientSdk.Internal.Protobuf.EventData>();
+    private static readonly pb::FieldCodec<global::Loom.Client.Internal.Protobuf.EventData> _repeated_events_codec
+        = pb::FieldCodec.ForMessage(10, global::Loom.Client.Internal.Protobuf.EventData.Parser);
+    private readonly pbc::RepeatedField<global::Loom.Client.Internal.Protobuf.EventData> events_ = new pbc::RepeatedField<global::Loom.Client.Internal.Protobuf.EventData>();
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
-    public pbc::RepeatedField<global::Loom.ClientSdk.Internal.Protobuf.EventData> Events {
+    public pbc::RepeatedField<global::Loom.Client.Internal.Protobuf.EventData> Events {
       get { return events_; }
     }
 
@@ -2517,7 +2517,7 @@ namespace Loom.ClientSdk.Internal.Protobuf {
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     public static pbr::MessageDescriptor Descriptor {
-      get { return global::Loom.ClientSdk.Internal.Protobuf.LoomReflection.Descriptor.MessageTypes[15]; }
+      get { return global::Loom.Client.Internal.Protobuf.LoomReflection.Descriptor.MessageTypes[15]; }
     }
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
@@ -2562,9 +2562,9 @@ namespace Loom.ClientSdk.Internal.Protobuf {
 
     /// <summary>Field number for the "caller" field.</summary>
     public const int CallerFieldNumber = 2;
-    private global::Loom.ClientSdk.Internal.Protobuf.Address caller_;
+    private global::Loom.Client.Internal.Protobuf.Address caller_;
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
-    public global::Loom.ClientSdk.Internal.Protobuf.Address Caller {
+    public global::Loom.Client.Internal.Protobuf.Address Caller {
       get { return caller_; }
       set {
         caller_ = value;
@@ -2573,9 +2573,9 @@ namespace Loom.ClientSdk.Internal.Protobuf {
 
     /// <summary>Field number for the "address" field.</summary>
     public const int AddressFieldNumber = 3;
-    private global::Loom.ClientSdk.Internal.Protobuf.Address address_;
+    private global::Loom.Client.Internal.Protobuf.Address address_;
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
-    public global::Loom.ClientSdk.Internal.Protobuf.Address Address {
+    public global::Loom.Client.Internal.Protobuf.Address Address {
       get { return address_; }
       set {
         address_ = value;
@@ -2758,13 +2758,13 @@ namespace Loom.ClientSdk.Internal.Protobuf {
       topics_.Add(other.topics_);
       if (other.caller_ != null) {
         if (caller_ == null) {
-          caller_ = new global::Loom.ClientSdk.Internal.Protobuf.Address();
+          caller_ = new global::Loom.Client.Internal.Protobuf.Address();
         }
         Caller.MergeFrom(other.Caller);
       }
       if (other.address_ != null) {
         if (address_ == null) {
-          address_ = new global::Loom.ClientSdk.Internal.Protobuf.Address();
+          address_ = new global::Loom.Client.Internal.Protobuf.Address();
         }
         Address.MergeFrom(other.Address);
       }
@@ -2800,14 +2800,14 @@ namespace Loom.ClientSdk.Internal.Protobuf {
           }
           case 18: {
             if (caller_ == null) {
-              caller_ = new global::Loom.ClientSdk.Internal.Protobuf.Address();
+              caller_ = new global::Loom.Client.Internal.Protobuf.Address();
             }
             input.ReadMessage(caller_);
             break;
           }
           case 26: {
             if (address_ == null) {
-              address_ = new global::Loom.ClientSdk.Internal.Protobuf.Address();
+              address_ = new global::Loom.Client.Internal.Protobuf.Address();
             }
             input.ReadMessage(address_);
             break;
@@ -2846,7 +2846,7 @@ namespace Loom.ClientSdk.Internal.Protobuf {
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     public static pbr::MessageDescriptor Descriptor {
-      get { return global::Loom.ClientSdk.Internal.Protobuf.LoomReflection.Descriptor.MessageTypes[16]; }
+      get { return global::Loom.Client.Internal.Protobuf.LoomReflection.Descriptor.MessageTypes[16]; }
     }
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
@@ -2874,11 +2874,11 @@ namespace Loom.ClientSdk.Internal.Protobuf {
 
     /// <summary>Field number for the "tx_receipts" field.</summary>
     public const int TxReceiptsFieldNumber = 1;
-    private static readonly pb::FieldCodec<global::Loom.ClientSdk.Internal.Protobuf.EvmTxReceipt> _repeated_txReceipts_codec
-        = pb::FieldCodec.ForMessage(10, global::Loom.ClientSdk.Internal.Protobuf.EvmTxReceipt.Parser);
-    private readonly pbc::RepeatedField<global::Loom.ClientSdk.Internal.Protobuf.EvmTxReceipt> txReceipts_ = new pbc::RepeatedField<global::Loom.ClientSdk.Internal.Protobuf.EvmTxReceipt>();
+    private static readonly pb::FieldCodec<global::Loom.Client.Internal.Protobuf.EvmTxReceipt> _repeated_txReceipts_codec
+        = pb::FieldCodec.ForMessage(10, global::Loom.Client.Internal.Protobuf.EvmTxReceipt.Parser);
+    private readonly pbc::RepeatedField<global::Loom.Client.Internal.Protobuf.EvmTxReceipt> txReceipts_ = new pbc::RepeatedField<global::Loom.Client.Internal.Protobuf.EvmTxReceipt>();
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
-    public pbc::RepeatedField<global::Loom.ClientSdk.Internal.Protobuf.EvmTxReceipt> TxReceipts {
+    public pbc::RepeatedField<global::Loom.Client.Internal.Protobuf.EvmTxReceipt> TxReceipts {
       get { return txReceipts_; }
     }
 
@@ -2967,7 +2967,7 @@ namespace Loom.ClientSdk.Internal.Protobuf {
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     public static pbr::MessageDescriptor Descriptor {
-      get { return global::Loom.ClientSdk.Internal.Protobuf.LoomReflection.Descriptor.MessageTypes[17]; }
+      get { return global::Loom.Client.Internal.Protobuf.LoomReflection.Descriptor.MessageTypes[17]; }
     }
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
@@ -3069,11 +3069,11 @@ namespace Loom.ClientSdk.Internal.Protobuf {
 
     /// <summary>Field number for the "logs" field.</summary>
     public const int LogsFieldNumber = 7;
-    private static readonly pb::FieldCodec<global::Loom.ClientSdk.Internal.Protobuf.EventData> _repeated_logs_codec
-        = pb::FieldCodec.ForMessage(58, global::Loom.ClientSdk.Internal.Protobuf.EventData.Parser);
-    private readonly pbc::RepeatedField<global::Loom.ClientSdk.Internal.Protobuf.EventData> logs_ = new pbc::RepeatedField<global::Loom.ClientSdk.Internal.Protobuf.EventData>();
+    private static readonly pb::FieldCodec<global::Loom.Client.Internal.Protobuf.EventData> _repeated_logs_codec
+        = pb::FieldCodec.ForMessage(58, global::Loom.Client.Internal.Protobuf.EventData.Parser);
+    private readonly pbc::RepeatedField<global::Loom.Client.Internal.Protobuf.EventData> logs_ = new pbc::RepeatedField<global::Loom.Client.Internal.Protobuf.EventData>();
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
-    public pbc::RepeatedField<global::Loom.ClientSdk.Internal.Protobuf.EventData> Logs {
+    public pbc::RepeatedField<global::Loom.Client.Internal.Protobuf.EventData> Logs {
       get { return logs_; }
     }
 

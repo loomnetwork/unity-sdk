@@ -1,7 +1,7 @@
 ﻿using System;
 using Loom.Nethereum.ABI.FunctionEncoding;
 
-namespace Loom.ClientSdk
+namespace Loom.Client
 {
     public class EvmChainEventArgs : IChainEventArgs
     {

@@ -1,7 +1,7 @@
 ﻿using UnityEditor;
 using UnityEditor.Build;
 
-namespace Loom.ClientSdk.Unity.Editor.Internal
+namespace Loom.Client.Unity.Editor.Internal
 {
     internal class CheckProject : IPreprocessBuild
     {

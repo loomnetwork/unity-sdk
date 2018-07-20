@@ -1,7 +1,7 @@
 ﻿using UnityEngine;
 using UnityEngine.UI;
-using Loom.ClientSdk;
-using Loom.ClientSdk.Samples;
+using Loom.Client;
+using Loom.Client.Samples;
 using System;
 using System.Threading.Tasks;
 using Loom.Newtonsoft.Json;

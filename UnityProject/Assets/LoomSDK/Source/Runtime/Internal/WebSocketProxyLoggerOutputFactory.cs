@@ -3,7 +3,7 @@
 using System;
 using Loom.WebSocketSharp;
 
-namespace Loom.ClientSdk.Internal
+namespace Loom.Client.Internal
 {
     internal static class WebSocketProxyLoggerOutputFactory
     {

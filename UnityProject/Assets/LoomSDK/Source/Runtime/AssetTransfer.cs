@@ -7,7 +7,7 @@ using System.Runtime.InteropServices;
 using Loom.Newtonsoft.Json;
 #endif
 
-namespace Loom.ClientSdk
+namespace Loom.Client
 {
     public class AssetTransfer
     {

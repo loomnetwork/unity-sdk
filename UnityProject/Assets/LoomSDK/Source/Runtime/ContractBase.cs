@@ -1,10 +1,10 @@
 ﻿using System;
 using System.Threading.Tasks;
-using Loom.ClientSdk.Internal;
-using Loom.ClientSdk.Internal.Protobuf;
+using Loom.Client.Internal;
+using Loom.Client.Internal.Protobuf;
 using Loom.Google.Protobuf;
 
-namespace Loom.ClientSdk {
+namespace Loom.Client {
     /// <summary>
     /// The Contract class streamlines interaction with a smart contract that was deployed on a Loom DAppChain.
     /// Each instance of this class is bound to a specific smart contract, and provides a simple way of calling

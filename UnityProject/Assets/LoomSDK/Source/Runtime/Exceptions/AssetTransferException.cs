@@ -1,4 +1,4 @@
-﻿namespace Loom.ClientSdk
+﻿namespace Loom.Client
 {
     /// <summary>
     /// Represents an asset transfer error.
