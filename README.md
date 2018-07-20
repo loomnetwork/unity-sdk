@@ -1,4 +1,4 @@
-# Loom Network SDK for Unity3d
+# Loom Network SDK for Unity
 
 This repo contains the SDK code and a **Unity 2017.4** project that provides examples.
 

@@ -1,0 +1,10 @@
+{
+    "contracts": [
+        {
+            "vm": "EVM",
+            "format": "hex",
+            "name": "Tests",
+            "location": "../../Compiled/Tests.bin"
+        }
+    ]
+}
