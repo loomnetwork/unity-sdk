@@ -9,7 +9,7 @@ using Loom.Client.Internal;
 using Loom.Client.Internal.Protobuf;
 
 #if UNITY_WEBGL && !UNITY_EDITOR
-using Loom.Internal.UnityAsyncAwaitUtil;
+using Loom.Client.Unity.Internal.UnityAsyncAwaitUtil;
 #endif
 
 namespace Loom.Client
