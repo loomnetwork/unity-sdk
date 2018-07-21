@@ -11,7 +11,7 @@ if [ -f "${DEFAULT_UNITY_PATH}" ]; then
 fi
 
 if [ -z "${UNITY_PATH}" ]; then
-    echo "Error: Unity path not defined. Please set the UNITY_PATH environment variable to the Unity installation directory, or pass the pass as an argument"
+    echo "Error: Unity path not defined. Please set the UNITY_PATH environment variable to the Unity installation directory, or pass the path as argument"
     exit 1
 fi
 

@@ -12,7 +12,7 @@ if exist "%DEFAULT_UNITY_PATH%" (
 )
 
 if "%UNITY_PATH%" == "" (
-    echo Error: Unity path not defined. Please set the UNITY_PATH environment variable to the Unity.exe file, or pass the pass as an argument
+    echo Error: Unity path not defined. Please set the UNITY_PATH environment variable to the Unity.exe file, or pass the path as argument
     exit /B 1
 )
 
