@@ -4,7 +4,6 @@
 [Bb]uild/
 [Bb]uilds/
 [Bb]uild.meta
-Assets/AssetStoreTools*
 Assets/~NonVersioned*
 
 # Visual Studio 2015 cache directory
