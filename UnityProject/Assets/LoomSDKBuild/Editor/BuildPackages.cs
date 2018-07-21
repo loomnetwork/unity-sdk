@@ -3,7 +3,7 @@ using UnityEditor;
 using UnityEngine;
 
 namespace Loom.Client.Unity.Editor.Build {
-    public class BuildPackages {
+    public static class BuildPackages {
         private const string kAssetNameShort = "Loom SDK";
         private const string kPackageName = "loom-unity-sdk";
 
