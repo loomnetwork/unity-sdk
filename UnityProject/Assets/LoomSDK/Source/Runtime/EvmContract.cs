@@ -33,7 +33,7 @@ namespace Loom.Client
             this.topicToEventName = new Dictionary<string, string>();
             foreach (EventABI eventAbi in this.contractBuilder.ContractABI.Events)
             {
-                this.topicToEventName.Add(eventAbi.Sha33Signature, eventAbi.Name);
+                this.topicToEventName.Add("0x" + eventAbi.Sha33Signature, eventAbi.Name);
             }
         }
 
@@ -380,13 +380,7 @@ namespace Loom.Client
         protected override EvmChainEventArgs TransformChainEvent(RawChainEventArgs e)
         {
             if (e.Topics == null)
-                throw new ArgumentNullException("topics");
-
-            for (int i = 0; i < e.Topics.Length; i++)
-            {
-                // Remove 0x
-                e.Topics[i] = e.Topics[i].Substring(2);
-            }
+                throw new ArgumentNullException(nameof(e.Topics));
 
             // First topic is the signature of event itself
             string eventName;

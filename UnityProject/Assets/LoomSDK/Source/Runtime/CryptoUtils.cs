@@ -30,10 +30,10 @@ namespace Loom.Client
         public static byte[] GeneratePrivateKey(byte[] privateKeySeed)
         {
             if (privateKeySeed == null)
-                throw new ArgumentNullException("privateKeySeed");
+                throw new ArgumentNullException(nameof(privateKeySeed));
 
             if (privateKeySeed.Length != 32)
-                throw new ArgumentException("Expected a 32-byte array", "privateKeySeed");
+                throw new ArgumentException("Expected a 32-byte array", nameof(privateKeySeed));
 
             byte[] publicKey32;
             byte[] privateKey64;
@@ -61,7 +61,7 @@ namespace Loom.Client
         {
             if (privateKey.Length != 64)
             {
-                throw new ArgumentException("Expected 64-byte array", "privateKey");
+                throw new ArgumentException("Expected 64-byte array", nameof(privateKey));
             }
 
             var publicKey = new byte[32];

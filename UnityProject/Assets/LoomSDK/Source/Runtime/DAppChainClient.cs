@@ -122,7 +122,6 @@ namespace Loom.Client
         /// <exception cref="InvalidTxNonceException">Thrown if transaction is rejected due to a bad nonce after <see cref="NonceRetries"/> attempts.</exception>
         internal async Task<BroadcastTxResult> CommitTxAsync(IMessage tx)
         {
-            BroadcastTxResult result = null;
             int badNonceCount = 0;
             do
             {
@@ -143,13 +142,9 @@ namespace Loom.Client
 #else
                 await Task.Delay(TimeSpan.FromSeconds(delay));
 #endif
-            } while ((this.NonceRetries != 0) && (badNonceCount <= this.NonceRetries));
+            } while (this.NonceRetries != 0 && badNonceCount <= this.NonceRetries);
 
-            if (badNonceCount > 0)
-            {
-                throw new InvalidTxNonceException(1, "sequence number does not match");
-            }
-            return result;
+            throw new InvalidTxNonceException(1, "sequence number does not match");
         }
 
         /// <summary>
