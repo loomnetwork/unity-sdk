@@ -1,10 +1,10 @@
 set -e
 
-if [ ! -d ./.build ]; then
-    mkdir .build
+if [ ! -d ./build ]; then
+    mkdir build
 fi
 
-cd .build
+cd build
 
 if [ ! -f ./loom ]; then
     ../download-loom.sh 276
