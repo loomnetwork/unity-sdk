@@ -22,13 +22,13 @@ namespace Loom.Client.Unity.Editor.Build {
             return paths;
         }
 
-        public static int RunProcess(string buildAssembliesBat, string arguments = null) {
-            Process buildAssemblyProcess = new Process();
-            buildAssemblyProcess.StartInfo = new ProcessStartInfo(buildAssembliesBat);
-            buildAssemblyProcess.StartInfo.Arguments = arguments ?? "";
-            buildAssemblyProcess.Start();
-            buildAssemblyProcess.WaitForExit();
-            return buildAssemblyProcess.ExitCode;
+        public static int RunProcess(string path, string arguments = null) {
+            Process process = new Process();
+            process.StartInfo = new ProcessStartInfo(path);
+            process.StartInfo.Arguments = arguments ?? "";
+            process.Start();
+            process.WaitForExit();
+            return process.ExitCode;
         }
     }
 }
