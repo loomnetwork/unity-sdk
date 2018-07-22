@@ -40,8 +40,8 @@ namespace Loom.Client.Unity.Editor.Build {
                             $"Downloading Sample {i + 1}/{kSamplesUrls.Length}",
                             String.Format(
                                 "Downloading archive... {0} MB/{1} MB",
-                                Math.Round(request.downloadedBytes / 1000f / 1000f, 2),
-                                Math.Round((double) Convert.ToUInt32(request.GetResponseHeader("Content-Length")) / 1000f / 1000f, 2)
+                                Math.Round(requestAsyncOperation.webRequest.downloadedBytes / 1000f / 1000f, 2),
+                                Math.Round((double) Convert.ToUInt32(requestAsyncOperation.webRequest.GetResponseHeader("Content-Length")) / 1000f / 1000f, 2)
                             ),
                             requestAsyncOperation.progress
                         );
