@@ -112,7 +112,7 @@ namespace Loom.Client.Tests
                     if (args.EventName != "TestEvent")
                     {
                         waitForEvents.Set();
-                        throw new Exception("args.EventName != TestEvent");
+                        throw new Exception();
                     }
 
                     int val = new IntTypeDecoder(false).DecodeInt(args.Data);
@@ -126,7 +126,7 @@ namespace Loom.Client.Tests
                     Debug.Log("TestEvent: " + val);
                 };
                 this.contract.EventReceived += handler;
-                await this.contract.CallAsync("emitTestEvents", 0);
+                await this.contract.CallAsync("sendTestEvents", 0);
                 waitForEvents.WaitOne(5000);
                 this.contract.EventReceived -= handler;
                 Debug.Log(String.Join(", ", testEventArguments.ToArray()));
