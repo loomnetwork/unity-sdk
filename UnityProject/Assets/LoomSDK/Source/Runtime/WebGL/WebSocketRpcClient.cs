@@ -1,187 +1,111 @@
 ﻿#if UNITY_WEBGL
 
-using AOT;
 using Loom.Newtonsoft.Json;
 using System;
-using System.Runtime.InteropServices;
 using System.Threading.Tasks;
-using System.Collections.Generic;
 using System.ComponentModel;
 using Loom.Client.Internal;
 using UnityEngine;
 
-namespace Loom.Client.Unity.Internal.WebGL
+namespace Loom.Client.Unity.WebGL.Internal
 {
     /// <summary>
     /// WebSocket JSON-RPC client implemented with browser WebSockets.
     /// </summary>
-    internal class WebSocketRpcClient : IRpcClient
+    internal class WebSocketRpcClient : BaseRpcClient
     {
         private const string LogTag = "Loom.WebSocketRpcClient";
-        private static readonly Dictionary<int, WebSocket> sockets = new Dictionary<int, WebSocket>();
-        private static bool isLibInitialized = false;
 
         private readonly Uri url;
-        private readonly int socketId = 0;
-        private RpcConnectionState? lastConnectionState;
-        private event EventHandler<JsonRpcEventData> OnEventMessage;
+        private readonly WebSocket webSocket;
+        private event EventHandler<JsonRpcEventData> eventReceived;
 
-        // TODO: use OnClose and OnOpen events specifically, for more reliable state change reporting
-        public event RpcClientConnectionStateChangedHandler ConnectionStateChanged;
-
-        public RpcConnectionState ConnectionState
+        public override RpcConnectionState ConnectionState
         {
             get
             {
-                WebSocketState state = GetWebSocketState(this.socketId);
+                WebSocket.WebSocketState state = this.webSocket.State;
                 switch (state)
                 {
-                    case WebSocketState.Connecting:
+                    case WebSocket.WebSocketState.Connecting:
                         return RpcConnectionState.Connecting;
-                    case WebSocketState.Open:
+                    case WebSocket.WebSocketState.Open:
                         return RpcConnectionState.Connected;
-                    case WebSocketState.Closing:
+                    case WebSocket.WebSocketState.Closing:
                         return RpcConnectionState.Disconnecting;
-                    case WebSocketState.Closed:
+                    case WebSocket.WebSocketState.Closed:
                         return RpcConnectionState.Disconnected;
                     default:
-                        throw new InvalidEnumArgumentException(nameof(state), (int) state, typeof(WebSocketState));
+                        throw new InvalidEnumArgumentException(nameof(state), (int) state, typeof(WebSocket.WebSocketState));
                 }
             }
         }
 
-        /// <summary>
-        /// Logger to be used for logging, defaults to <see cref="NullLogger"/>.
-        /// </summary>
-        public ILogger Logger { get; set; }
-
         public WebSocketRpcClient(string url)
         {
-            if (!isLibInitialized)
-            {
-                InitWebSocketManagerLib(OnWebSocketOpen, OnWebSocketClose, OnWebSocketMessage);
-                isLibInitialized = true;
-            }
             this.url = new Uri(url);
-            this.Logger = NullLogger.Instance;
-            this.socketId = WebSocketCreate();
-            sockets.Add(this.socketId, new WebSocket());
+            this.webSocket = new WebSocket();
         }
 
-        public void Dispose()
+        public override async Task DisconnectAsync()
         {
-            this.Disconnect();
-            sockets.Remove(this.socketId);
-        }
-
-        private void Disconnect()
-        {
-            // NOTE: The current implementation of this function will destroy the
-            // browser-side socket so it can't be re-opened... this could be
-            // fixed in the JS code if needed.
-            WebSocketClose(this.socketId);
-        }
-
-        public Task DisconnectAsync()
-        {
-            var currentState = GetWebSocketState(this.socketId);
-            if ((currentState == WebSocketState.Closed) || (currentState == WebSocketState.Closing))
+            var currentState = this.webSocket.State;
+            if ((currentState == WebSocket.WebSocketState.Closed) || (currentState == WebSocket.WebSocketState.Closing))
             {
-                return Task.CompletedTask;
+                return;
             }
-            var webSocket = sockets[this.socketId];
             var tcs = new TaskCompletionSource<object>();
-            webSocket.OnClose = (err) =>
+
+            Action<string> closedHandler = (err) =>
             {
                 if (string.IsNullOrEmpty(err))
                 {
                     tcs.TrySetResult(null);
-                }
-                else
+                } else
                 {
                     tcs.TrySetException(new RpcClientException(err));
                 }
             };
+
+            this.webSocket.Closed += closedHandler;
             try
             {
-                this.Disconnect();
-                NotifyConnectionStateChanged();
+                Disconnect();
             }
             catch (Exception)
             {
-                webSocket.OnClose = null;
+                this.webSocket.Closed -= closedHandler;
                 NotifyConnectionStateChanged();
                 throw;
             }
-            return tcs.Task;
+            await tcs.Task;
         }
 
-        private Task EnsureConnectionAsync()
+        public override async Task SubscribeAsync(EventHandler<JsonRpcEventData> handler)
         {
-            // TODO: make sure to not reconnect while state WebSocketState.Connecting
-            if (GetWebSocketState(this.socketId) == WebSocketState.Open)
-            {
-                return Task.CompletedTask;
-            }
-            var webSocket = sockets[this.socketId];
-            var tcs = new TaskCompletionSource<object>();
-            webSocket.OnOpen = () =>
-            {
-                tcs.TrySetResult(null);
-                Logger.Log(LogTag, "Connected to " + this.url.AbsoluteUri);
-            };
-            try
-            {
-                WebSocketConnect(this.socketId, this.url.AbsoluteUri);
-                NotifyConnectionStateChanged();
-            }
-            catch (Exception)
-            {
-                webSocket.OnOpen = null;
-                NotifyConnectionStateChanged();
-                throw;
-            }
-            return tcs.Task;
-        }
-
-        public Task SubscribeAsync(EventHandler<JsonRpcEventData> handler)
-        {
-            var isFirstSub = this.OnEventMessage == null;
-            this.OnEventMessage += handler;
+            var isFirstSub = this.eventReceived == null;
+            this.eventReceived += handler;
             if (isFirstSub)
             {
-                var webSocket = sockets[this.socketId];
-                webSocket.OnMessage += this.WSRPCClient_OnMessage;
+                this.webSocket.MessageReceived += WSRPCClient_MessageReceived;
             }
             // TODO: once re-sub on reconnect is implemented this should only
             // be done on first sub
-            return this.SendAsync<object, object>("subevents", new object());
+            await SendAsync<object, object>("subevents", new object());
         }
 
-        public Task UnsubscribeAsync(EventHandler<JsonRpcEventData> handler)
+        public override async Task UnsubscribeAsync(EventHandler<JsonRpcEventData> handler)
         {
-            this.OnEventMessage -= handler;
-            if (this.OnEventMessage == null)
+            this.eventReceived -= handler;
+            if (this.eventReceived == null)
             {
-                var webSocket = sockets[this.socketId];
-                webSocket.OnMessage -= this.WSRPCClient_OnMessage;
-                return this.SendAsync<object, object>("unsubevents", new object());
+                this.webSocket.MessageReceived -= WSRPCClient_MessageReceived;
+                await SendAsync<object, object>("unsubevents", new object());
             }
-            return Task.CompletedTask;
         }
 
-        private async Task SendAsync<T>(string method, T args, string msgId)
+        public override async Task<T> SendAsync<T, U>(string method, U args)
         {
-            await this.EnsureConnectionAsync();
-            var reqMsg = new JsonRpcRequest<T>(method, args, msgId);
-            var reqMsgBody = JsonConvert.SerializeObject(reqMsg);
-            Logger.Log(LogTag, "RPC Req: " + reqMsgBody);
-            WebSocketSend(this.socketId, reqMsgBody);
-        }
-
-        public async Task<T> SendAsync<T, U>(string method, U args)
-        {
-            var webSocket = sockets[this.socketId];
             var tcs = new TaskCompletionSource<T>();
             var msgId = Guid.NewGuid().ToString();
             EventHandler<string> handler = null;
@@ -194,8 +118,8 @@ namespace Loom.Client.Unity.Internal.WebGL
                         var partialMsg = JsonConvert.DeserializeObject<JsonRpcResponse>(msgBody);
                         if (partialMsg.Id == msgId)
                         {
-                            webSocket.OnMessage -= handler;
-                            Logger.Log(LogTag, "RPC Resp Body: " + msgBody);
+                            this.webSocket.MessageReceived -= handler;
+                            this.Logger.Log(LogTag, "RPC Resp Body: " + msgBody);
                             if (partialMsg.Error != null)
                             {
                                 throw new RpcClientException(String.Format(
@@ -212,7 +136,7 @@ namespace Loom.Client.Unity.Internal.WebGL
                     }
                     else
                     {
-                        Logger.Log(LogTag, "[ignoring msg]");
+                        this.Logger.Log(LogTag, "[ignoring msg]");
                     }
                 }
                 catch (Exception ex)
@@ -222,38 +146,82 @@ namespace Loom.Client.Unity.Internal.WebGL
 
                 NotifyConnectionStateChanged();
             };
-            webSocket.OnMessage += handler;
+            this.webSocket.MessageReceived += handler;
             try
             {
-                await this.SendAsync<U>(method, args, msgId);
+                await SendAsync<U>(method, args, msgId);
                 NotifyConnectionStateChanged();
             }
             catch (Exception)
             {
-                webSocket.OnMessage -= handler;
+                this.webSocket.MessageReceived -= handler;
                 NotifyConnectionStateChanged();
                 throw;
             }
             return await tcs.Task;
         }
 
-        private void NotifyConnectionStateChanged()
+        protected override void Dispose(bool disposing)
         {
-            RpcConnectionState state = ConnectionState;
-            if (this.lastConnectionState != null && this.lastConnectionState == state)
-                return;
-
-            this.lastConnectionState = state;
-            ConnectionStateChanged?.Invoke(this, state);
+            this.webSocket.Dispose();
         }
 
-        private void WSRPCClient_OnMessage(object sender, string msgBody)
+        private async Task SendAsync<T>(string method, T args, string msgId)
+        {
+            await EnsureConnectionAsync();
+            var reqMsg = new JsonRpcRequest<T>(method, args, msgId);
+            var reqMsgBody = JsonConvert.SerializeObject(reqMsg);
+            this.Logger.Log(LogTag, "RPC Req: " + reqMsgBody);
+            this.webSocket.Send(reqMsgBody);
+        }
+
+        private void Disconnect()
+        {
+            // NOTE: The current implementation of this function will destroy the
+            // browser-side socket so it can't be re-opened... this could be
+            // fixed in the JS code if needed.
+            this.webSocket.Close();
+
+            NotifyConnectionStateChanged();
+        }
+
+        private async Task EnsureConnectionAsync()
+        {
+            // TODO: make sure to not reconnect while state WebSocketState.Connecting
+            if (this.webSocket.State == WebSocket.WebSocketState.Open)
+            {
+                return;
+            }
+            var tcs = new TaskCompletionSource<object>();
+
+            Action openedHandler = () =>
+            {
+                tcs.TrySetResult(null);
+                this.Logger.Log(LogTag, "Connected to " + this.url.AbsoluteUri);
+            };
+
+            this.webSocket.Opened += openedHandler;
+            try
+            {
+                this.webSocket.Connect(this.url.AbsoluteUri);
+                NotifyConnectionStateChanged();
+            }
+            catch (Exception)
+            {
+                this.webSocket.Opened -= openedHandler;
+                NotifyConnectionStateChanged();
+                throw;
+            }
+            await tcs.Task;
+        }
+
+        private void WSRPCClient_MessageReceived(object sender, string msgBody)
         {
             try
             {
                 if (!string.IsNullOrEmpty(msgBody))
                 {
-                    Logger.Log(LogTag, "[WSRPCClient_OnMessage msg body] " + msgBody);
+                    this.Logger.Log(LogTag, "[WSRPCClient_MessageReceived msg body] " + msgBody);
                     var partialMsg = JsonConvert.DeserializeObject<JsonRpcResponse>(msgBody);
                     if (partialMsg.Id == "0")
                     {
@@ -267,84 +235,25 @@ namespace Loom.Client.Unity.Internal.WebGL
                         else
                         {
                             var fullMsg = JsonConvert.DeserializeObject<JsonRpcEvent>(msgBody);
-                            this.OnEventMessage?.Invoke(this, fullMsg.Result);
+                            this.eventReceived?.Invoke(this, fullMsg.Result);
                         }
                     }
                 }
                 else
                 {
-                    Logger.Log(LogTag, "[WSRPCClient_OnMessage ignoring msg]");
+                    this.Logger.Log(LogTag, "[WSRPCClient_MessageReceived ignoring msg]");
                 }
             }
             catch (Exception ex)
             {
-                Logger.Log(LogTag, "[WSRPCClient_OnMessage error] " + ex.Message);
+                this.Logger.Log(LogTag, "[WSRPCClient_MessageReceived error] " + ex.Message);
             }
 
             NotifyConnectionStateChanged();
         }
 
-        [DllImport("__Internal")]
-        private static extern void InitWebSocketManagerLib(
-            Action<int> openCallback,
-            Action<int,string> closeCallback,
-            Action<int,string> msgCallback);
-        [DllImport("__Internal")]
-        private static extern int WebSocketCreate();
-        [DllImport("__Internal")]
-        private static extern WebSocketState GetWebSocketState(int sockedId);
-        [DllImport("__Internal")]
-        private static extern void WebSocketConnect(int socketId, string url);
-        [DllImport("__Internal")]
-        private static extern void WebSocketClose(int socketId);
-        [DllImport("__Internal")]
-        private static extern void WebSocketSend(int socketId, string msg);
-
-        [MonoPInvokeCallback(typeof(Action<int>))]
-        private static void OnWebSocketOpen(int socketId)
-        {
-            var socket = sockets[socketId];
-            socket.OnOpen();
-            socket.OnOpen = null;
-        }
-
-        [MonoPInvokeCallback(typeof(Action<int, string>))]
-        private static void OnWebSocketClose(int socketId, string err)
-        {
-            // If DisconnectAsync() was called from Dispose() the socket is no longer
-            if (sockets.ContainsKey(socketId))
-            {
-                var socket = sockets[socketId];
-                if (socket.OnClose != null)
-                {
-                    socket.OnClose(err);
-                    socket.OnClose = null;
-                }
-            }
-        }
-
-        [MonoPInvokeCallback(typeof(Action<int>))]
-        private static void OnWebSocketMessage(int socketId, string msg)
-        {
-            var socket = sockets[socketId];
-            socket.OnMessage?.Invoke(socket, msg);
-        }
-
-        private enum WebSocketState : int
-        {
-            Connecting = 0,
-            Open = 1,
-            Closing = 2,
-            Closed = 3
-        }
-
-        private class WebSocket
-        {
-            public Action OnOpen;
-            public Action<string> OnClose;
-            public EventHandler<string> OnMessage;
-        }
     }
+
 }
 
 #endif
