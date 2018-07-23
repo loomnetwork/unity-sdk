@@ -39,7 +39,7 @@ namespace Loom.Client
             if (this.websocketUrl != null)
             {
 #if UNITY_WEBGL && !UNITY_EDITOR
-                return new Internal.WebGL.WebSocketRpcClient(this.websocketUrl) { Logger = logger };
+                return new Unity.WebGL.Internal.WebSocketRpcClient(this.websocketUrl) { Logger = logger };
 #else
                 return new WebSocketRpcClient(this.websocketUrl) { Logger = logger };
 #endif
