@@ -4,7 +4,10 @@
 [Bb]uild/
 [Bb]uilds/
 [Bb]uild.meta
-Assets/AssetStoreTools*
+
+Assets/~NonVersioned*
+Assets/LoomSDK/Samples/*.zip
+Assets/LoomSDK/Samples/*.zip.meta
 
 # Visual Studio 2015 cache directory
 /.vs/
