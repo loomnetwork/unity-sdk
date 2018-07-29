@@ -1,0 +1,8 @@
+{
+    "name": "LoomSDKBootstrapper",
+    "references": [],
+    "includePlatforms": [
+        "Editor"
+    ],
+    "excludePlatforms": []
+}
