@@ -52,7 +52,7 @@ namespace Loom.Client {
                 this.eventReceived += value;
                 if (isFirstSub)
                 {
-                    this.Client.ChainEventReceived += this.NotifyContractEventReceived;
+                    this.Client.ChainEventReceived += NotifyContractEventReceived;
                 }
             }
             remove
@@ -60,13 +60,13 @@ namespace Loom.Client {
                 this.eventReceived -= value;
                 if (this.eventReceived == null)
                 {
-                    this.Client.ChainEventReceived -= this.NotifyContractEventReceived;
+                    this.Client.ChainEventReceived -= NotifyContractEventReceived;
                 }
             }
         }
 
         protected void InvokeChainEvent(object sender, RawChainEventArgs e) {
-            eventReceived?.Invoke(this, TransformChainEvent(e));
+            this.eventReceived?.Invoke(this, TransformChainEvent(e));
         }
 
         protected abstract TChainEvent TransformChainEvent(RawChainEventArgs e);
