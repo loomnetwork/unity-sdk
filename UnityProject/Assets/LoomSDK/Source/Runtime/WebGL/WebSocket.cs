@@ -67,6 +67,23 @@ namespace Loom.Client.Unity.WebGL.Internal
             socket.MessageReceived?.Invoke(socket, msg);
         }
 
+        private void ReleaseUnmanagedResources()
+        {
+            WebSocketClose(this.socketId);
+            sockets.Remove(this.socketId);
+        }
+
+        public void Dispose()
+        {
+            ReleaseUnmanagedResources();
+            GC.SuppressFinalize(this);
+        }
+
+        ~WebSocket()
+        {
+            ReleaseUnmanagedResources();
+        }
+
         [DllImport("__Internal")]
         private static extern void InitWebSocketManagerLib(
             Action<int> openCallback,
@@ -94,23 +111,6 @@ namespace Loom.Client.Unity.WebGL.Internal
             Open = 1,
             Closing = 2,
             Closed = 3
-        }
-
-        private void ReleaseUnmanagedResources()
-        {
-            WebSocketClose(this.socketId);
-            sockets.Remove(this.socketId);
-        }
-
-        public void Dispose()
-        {
-            ReleaseUnmanagedResources();
-            GC.SuppressFinalize(this);
-        }
-
-        ~WebSocket()
-        {
-            ReleaseUnmanagedResources();
         }
     }
 }
