@@ -6,7 +6,7 @@ namespace Loom.Client
 {
     public class RpcClientFactory
     {
-        private ILogger logger;
+        private ILogger logger = NullLogger.Instance;
         private string websocketUrl;
         private string httpUrl;
 
@@ -17,7 +17,7 @@ namespace Loom.Client
 
         public RpcClientFactory WithLogger(ILogger logger)
         {
-            this.logger = logger;
+            this.logger = logger ?? NullLogger.Instance;
             return this;
         }
 
@@ -35,17 +35,16 @@ namespace Loom.Client
 
         public IRpcClient Create()
         {
-            var logger = this.logger ?? NullLogger.Instance;
             if (this.websocketUrl != null)
             {
 #if UNITY_WEBGL && !UNITY_EDITOR
-                return new Unity.Internal.WebGL.WebSocketRpcClient(this.websocketUrl) { Logger = logger };
+                return new Unity.WebGL.Internal.WebSocketRpcClient(this.websocketUrl) { Logger = logger };
 #else
-                return new WebSocketRpcClient(this.websocketUrl) { Logger = logger };
+                return new WebSocketRpcClient(this.websocketUrl) { Logger = this.logger };
 #endif
             } else if (this.httpUrl != null)
             {
-                return new HttpRpcClient(this.httpUrl) { Logger = logger };
+                return new HttpRpcClient(this.httpUrl) { Logger = this.logger };
             }
 
             throw new InvalidOperationException("RpcClientFactory configuration invalid.");

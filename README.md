@@ -59,6 +59,11 @@ corresponding methods in `Assets/authSample.cs`, these must be pressed in the co
    return the key/value it stored.
 4. You can press the `Call GetMsg` button to send a simple query to the `BluePrint` contract.
 
+## Building the SDK
+
+`BuildScripts` folder contains scripts for building loom-unity-sdk.unitypackage for Windows and macOS. Scripts use the `UNITY_PATH` environment variable to determine the Unity executable path, if it is set; alternatively, the path can be passed as an argument. As a fallback, standard Unity installation directory might be used.
+The package is built to `Assets\~NonVersioned\loom-unity-sdk.unitypackage`.
+
 ## Dependencies
 
 For ease of use all necessary prebuilt dependencies are located in the `Assets/Plugins` directory in

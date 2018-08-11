@@ -27,8 +27,8 @@ namespace Loom.Client
         /// <param name="publicKey">Public key for which the nonce should be set.</param>
         /// <param name="client">Client that should be used to retrieve the nonce.</param>
         public NonceTxMiddleware(byte[] publicKey, DAppChainClient client) {
-            PublicKey = publicKey;
-            Client = client;
+            this.PublicKey = publicKey;
+            this.Client = client;
 
             this.publicKeyHex = CryptoUtils.BytesToHexString(this.PublicKey);
         }

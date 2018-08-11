@@ -33,7 +33,7 @@ namespace Loom.Client
             this.topicToEventName = new Dictionary<string, string>();
             foreach (EventABI eventAbi in this.contractBuilder.ContractABI.Events)
             {
-                this.topicToEventName.Add(eventAbi.Sha33Signature, eventAbi.Name);
+                this.topicToEventName.Add("0x" + eventAbi.Sha33Signature, eventAbi.Name);
             }
         }
 
@@ -380,13 +380,7 @@ namespace Loom.Client
         protected override EvmChainEventArgs TransformChainEvent(RawChainEventArgs e)
         {
             if (e.Topics == null)
-                throw new ArgumentNullException("topics");
-
-            for (int i = 0; i < e.Topics.Length; i++)
-            {
-                // Remove 0x
-                e.Topics[i] = e.Topics[i].Substring(2);
-            }
+                throw new ArgumentNullException(nameof(e.Topics));
 
             // First topic is the signature of event itself
             string eventName;
@@ -407,7 +401,7 @@ namespace Loom.Client
 
         private async Task<byte[]> StaticCallAsyncByteArray(string callInput)
         {
-            return await this.client.QueryAsync<byte[]>(this.Address, CryptoUtils.HexStringToBytes(callInput), this.Caller, Protobuf::VMType.Evm);
+            return await this.Client.QueryAsync<byte[]>(this.Address, CryptoUtils.HexStringToBytes(callInput), this.Caller, Protobuf::VMType.Evm);
         }
 
         private async Task StaticCallAsync(string callInput)
@@ -426,7 +420,7 @@ namespace Loom.Client
         private async Task<BroadcastTxResult> CallAsyncBrodcastTxResult(string callInput)
         {
             var tx = this.CreateContractMethodCallTx(callInput, Protobuf::VMType.Evm);
-            return await this.client.CommitTxAsync(tx);
+            return await this.Client.CommitTxAsync(tx);
         }
 
         private async Task CallAsync(string callInput)
@@ -437,7 +431,7 @@ namespace Loom.Client
         private async Task<TReturn> CallAsync<TReturn>(string callInput, FunctionBuilderBase functionBuilder, Func<FunctionBuilderBase, string, TReturn> decodeFunc)
         {
             var tx = this.CreateContractMethodCallTx(callInput, Protobuf::VMType.Evm);
-            var result = await this.client.CommitTxAsync(tx);
+            var result = await this.Client.CommitTxAsync(tx);
             var validResult = result?.DeliverTx.Data != null && result.DeliverTx.Data.Length != 0;
             return validResult ? decodeFunc(functionBuilder, CryptoUtils.BytesToHexString(result.DeliverTx.Data)) : default(TReturn);
         }

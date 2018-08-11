@@ -11,8 +11,12 @@ namespace Loom.Client {
     /// into and querying that contract.
     /// </summary>
     public abstract class ContractBase<TChainEvent> {
-        protected readonly DAppChainClient client;
         protected event EventHandler<TChainEvent> eventReceived;
+
+        /// <summary>
+        /// Client that writes to and reads from a Loom DAppChain.
+        /// </summary>
+        public DAppChainClient Client { get; }
 
         /// <summary>
         /// Smart contract address.
@@ -32,7 +36,7 @@ namespace Loom.Client {
         /// <param name="callerAddr">Address of the caller, generated from the public key of the transaction signer.</param>
         protected ContractBase(DAppChainClient client, Address contractAddr, Address callerAddr)
         {
-            this.client = client;
+            this.Client = client;
             this.Address = contractAddr;
             this.Caller = callerAddr;
         }
@@ -48,7 +52,7 @@ namespace Loom.Client {
                 this.eventReceived += value;
                 if (isFirstSub)
                 {
-                    this.client.ChainEventReceived += this.NotifyContractEventReceived;
+                    this.Client.ChainEventReceived += NotifyContractEventReceived;
                 }
             }
             remove
@@ -56,17 +60,13 @@ namespace Loom.Client {
                 this.eventReceived -= value;
                 if (this.eventReceived == null)
                 {
-                    this.client.ChainEventReceived -= this.NotifyContractEventReceived;
+                    this.Client.ChainEventReceived -= NotifyContractEventReceived;
                 }
             }
         }
 
-        protected void InvokeChainEvent(object sender, RawChainEventArgs e)
-        {
-            if (this.eventReceived != null)
-            {
-                this.eventReceived(this, TransformChainEvent(e));
-            }
+        protected void InvokeChainEvent(object sender, RawChainEventArgs e) {
+            this.eventReceived?.Invoke(this, TransformChainEvent(e));
         }
 
         protected abstract TChainEvent TransformChainEvent(RawChainEventArgs e);
@@ -87,7 +87,7 @@ namespace Loom.Client {
         /// <returns>Nothing.</returns>
         internal async Task CallAsync(Transaction tx)
         {
-            await this.client.CommitTxAsync(tx);
+            await this.Client.CommitTxAsync(tx);
         }
 
         internal Transaction CreateContractMethodCallTx(string hexData, VMType vmType) {

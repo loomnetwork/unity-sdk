@@ -8,51 +8,45 @@ using UnityEngine;
 
 namespace Loom.Client.Internal
 {
-    internal class HttpRpcClient : IRpcClient
+    internal class HttpRpcClient : BaseRpcClient
     {
         private const string LogTag = "Loom.HttpRpcClient";
 
         private readonly Uri url;
 
-        public event RpcClientConnectionStateChangedHandler ConnectionStateChanged
+        public override event RpcClientConnectionStateChangedHandler ConnectionStateChanged
         {
             add { throw new NotSupportedException(); }
             remove { throw new NotSupportedException(); }
         }
 
-        public RpcConnectionState ConnectionState => RpcConnectionState.NonApplicable;
-
-        /// <summary>
-        /// Logger to be used for logging, defaults to <see cref="NullLogger"/>.
-        /// </summary>
-        public ILogger Logger { get; set; }
-
-        public Task SubscribeAsync(EventHandler<JsonRpcEventData> handler)
-        {
-            throw new NotImplementedException();
-        }
-
-        public Task UnsubscribeAsync(EventHandler<JsonRpcEventData> handler)
-        {
-            throw new NotImplementedException();
-        }
+        public override RpcConnectionState ConnectionState => RpcConnectionState.NonApplicable;
 
         public HttpRpcClient(string url)
         {
             this.url = new Uri(url);
-            this.Logger = NullLogger.Instance;
         }
 
-        public void Dispose()
+        public override Task SubscribeAsync(EventHandler<JsonRpcEventData> handler)
+        {
+            throw new NotImplementedException();
+        }
+
+        public override Task UnsubscribeAsync(EventHandler<JsonRpcEventData> handler)
+        {
+            throw new NotImplementedException();
+        }
+
+        protected override void Dispose(bool disposing)
         {
         }
 
-        public Task DisconnectAsync()
+        public override Task DisconnectAsync()
         {
             return Task.CompletedTask;
         }
 
-        public async Task<T> SendAsync<T, U>(string method, U args)
+        public override async Task<T> SendAsync<T, U>(string method, U args)
         {
             string body = JsonConvert.SerializeObject(new JsonRpcRequest<U>(method, args, Guid.NewGuid().ToString()));
             Logger.Log(LogTag, "[Request Body] " + body);

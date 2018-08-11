@@ -64,7 +64,7 @@ namespace Loom.Client
                 Method = method,
                 Args = args.ToByteString()
             };
-            var result = await this.client.QueryAsync<byte[]>(this.Address, query, this.Caller, VMType.Plugin);
+            var result = await this.Client.QueryAsync<byte[]>(this.Address, query, this.Caller, VMType.Plugin);
             if (result != null)
             {
                 T msg = new T();
@@ -97,7 +97,7 @@ namespace Loom.Client
         /// <returns>The return value of the smart contract method.</returns>
         private async Task<T> CallAsync<T>(Transaction tx) where T : IMessage, new()
         {
-            var result = await this.client.CommitTxAsync(tx);
+            var result = await this.Client.CommitTxAsync(tx);
             if (result != null && result.DeliverTx.Data != null && result.DeliverTx.Data.Length != 0)
             {
                 var resp = new Response();

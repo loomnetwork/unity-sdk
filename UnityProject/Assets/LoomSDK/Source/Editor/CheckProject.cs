@@ -1,4 +1,8 @@
-﻿using UnityEditor;
+﻿#if !NET_4_6
+    #error Loom SDK requires .NET 4.6. Please go to Build Settings -> Player Settings -> Configuration and set Scripting Runtime Version to .NET 4.6
+#endif
+
+using UnityEditor;
 using UnityEditor.Build;
 
 namespace Loom.Client.Unity.Editor.Internal

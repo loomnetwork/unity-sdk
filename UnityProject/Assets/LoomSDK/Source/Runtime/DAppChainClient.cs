@@ -21,10 +21,12 @@ namespace Loom.Client
     {
         private const string LogTag = "Loom.DAppChainClient";
 
-        private Dictionary<EventHandler<RawChainEventArgs>, EventHandler<JsonRpcEventData>> eventSubs;
+        private readonly Dictionary<EventHandler<RawChainEventArgs>, EventHandler<JsonRpcEventData>> eventSubs =
+            new Dictionary<EventHandler<RawChainEventArgs>, EventHandler<JsonRpcEventData>>();
 
         private IRpcClient writeClient;
         private IRpcClient readClient;
+        private ILogger logger = NullLogger.Instance;
 
         /// <summary>
         /// Middleware to apply when committing transactions.
@@ -34,13 +36,25 @@ namespace Loom.Client
         /// <summary>
         /// Logger to be used for logging, defaults to <see cref="NullLogger"/>.
         /// </summary>
-        public ILogger Logger { get; set; }
+        public ILogger Logger {
+            get {
+                return logger;
+            }
+            set {
+                if (value == null)
+                {
+                    value = NullLogger.Instance;
+                }
+
+                this.logger = value;
+            }
+        }
 
         /// <summary>
         /// Maximum number of times a tx should be resent after being rejected because of a bad nonce.
         /// Defaults to 5.
         /// </summary>
-        public int NonceRetries { get; set; }
+        public int NonceRetries { get; set; } = 5;
 
         /// <summary>
         /// Events emitted by the DAppChain.
@@ -64,11 +78,8 @@ namespace Loom.Client
         /// <param name="readClient">RPC client to use for querying DAppChain state.</param>
         public DAppChainClient(IRpcClient writeClient, IRpcClient readClient)
         {
-            this.eventSubs = new Dictionary<EventHandler<RawChainEventArgs>, EventHandler<JsonRpcEventData>>();
             this.writeClient = writeClient;
             this.readClient = readClient;
-            this.Logger = NullLogger.Instance;
-            this.NonceRetries = 5;
         }
 
         public void Dispose()
@@ -122,7 +133,6 @@ namespace Loom.Client
         /// <exception cref="InvalidTxNonceException">Thrown if transaction is rejected due to a bad nonce after <see cref="NonceRetries"/> attempts.</exception>
         internal async Task<BroadcastTxResult> CommitTxAsync(IMessage tx)
         {
-            BroadcastTxResult result = null;
             int badNonceCount = 0;
             do
             {
@@ -143,13 +153,9 @@ namespace Loom.Client
 #else
                 await Task.Delay(TimeSpan.FromSeconds(delay));
 #endif
-            } while ((this.NonceRetries != 0) && (badNonceCount <= this.NonceRetries));
+            } while (this.NonceRetries != 0 && badNonceCount <= this.NonceRetries);
 
-            if (badNonceCount > 0)
-            {
-                throw new InvalidTxNonceException(1, "sequence number does not match");
-            }
-            return result;
+            throw new InvalidTxNonceException(1, "sequence number does not match");
         }
 
         /// <summary>
@@ -260,13 +266,13 @@ namespace Loom.Client
             }
         }
 
-        private class NonceParams
+        private struct NonceParams
         {
             [JsonProperty("key")]
             public string Key;
         }
 
-        private class ResolveParams
+        private struct ResolveParams
         {
             [JsonProperty("name")]
             public string ContractName;

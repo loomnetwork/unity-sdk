@@ -12,23 +12,19 @@ namespace Loom.Client.Internal
     /// <summary>
     /// WebSocket JSON-RPC client implemented with WebSocketSharp.
     /// </summary>
-    internal class WebSocketRpcClient : IRpcClient
+    internal class WebSocketRpcClient : BaseRpcClient
     {
         private const string LogTag = "Loom.WebSocketRpcClient";
 
-        private readonly WebSocket client;
+        private readonly WebSocket webSocket;
         private readonly Uri url;
-        private ILogger logger;
-        private RpcConnectionState? lastConnectionState;
-        private event EventHandler<JsonRpcEventData> OnEventMessage;
+        private event EventHandler<JsonRpcEventData> eventReceived;
 
-        public event RpcClientConnectionStateChangedHandler ConnectionStateChanged;
-
-        public RpcConnectionState ConnectionState
+        public override RpcConnectionState ConnectionState
         {
             get
             {
-                WebSocketState state = this.client.ReadyState;
+                WebSocketState state = this.webSocket.ReadyState;
                 switch (state)
                 {
                     case WebSocketState.Connecting:
@@ -40,7 +36,7 @@ namespace Loom.Client.Internal
                     case WebSocketState.Closed:
                         return RpcConnectionState.Disconnected;
                     default:
-                        throw new InvalidEnumArgumentException(nameof(this.client.ReadyState), (int) state, typeof(WebSocketState));
+                        throw new InvalidEnumArgumentException(nameof(this.webSocket.ReadyState), (int) state, typeof(WebSocketState));
                 }
             }
         }
@@ -48,64 +44,47 @@ namespace Loom.Client.Internal
         /// <summary>
         /// Logger to be used for logging, defaults to <see cref="NullLogger"/>.
         /// </summary>
-        public ILogger Logger
+        public override ILogger Logger
         {
-            get
-            {
-                return this.logger;
-            }
             set
             {
-
-                if (value == null)
+                if (base.Logger != value)
                 {
-                    value = NullLogger.Instance;
+                    this.webSocket.Log.Output = WebSocketProxyLoggerOutputFactory.CreateWebSocketProxyLoggerOutput(value);
                 }
 
-                if (this.logger == value)
-                    return;
-
-                this.logger = value;
-                this.client.Log.Output = WebSocketProxyLoggerOutputFactory.CreateWebSocketProxyLoggerOutput(value);
+                base.Logger = value;
             }
         }
 
         public WebSocketRpcClient(string url)
         {
-            this.client = new WebSocket(url);
-            this.client.WaitTime = TimeSpan.FromMilliseconds(500);
-            this.client.Log.Level = LogLevel.Trace;
             this.url = new Uri(url);
-            this.Logger = NullLogger.Instance;
-            this.client.OnError += ClientOnError;
-            this.client.OnOpen += ClientOnOpen;
-            this.client.OnClose += ClientOnClose;
+            this.webSocket = new WebSocket(url);
+            this.webSocket.WaitTime = TimeSpan.FromMilliseconds(500);
+            this.webSocket.Log.Level = LogLevel.Trace;
+            this.webSocket.OnError += WebSocketOnError;
+            this.webSocket.OnOpen += WebSocketOnOpen;
+            this.webSocket.OnClose += WebSocketOnClose;
         }
 
-        private void ClientOnClose(object sender, CloseEventArgs e)
+        protected override void Dispose(bool disposing)
         {
-            NotifyConnectionStateChanged();
+            if (this.disposed)
+                return;
+
+            if (disposing)
+            {
+                this.webSocket.OnError -= WebSocketOnError;
+                this.webSocket.OnOpen -= WebSocketOnOpen;
+                this.webSocket.OnClose -= WebSocketOnClose;
+                ((IDisposable) this.webSocket).Dispose();
+            }
+
+            this.disposed = true;
         }
 
-        private void ClientOnOpen(object sender, EventArgs e)
-        {
-            NotifyConnectionStateChanged();
-        }
-
-        private void ClientOnError(object sender, ErrorEventArgs e)
-        {
-            this.Logger.Log(LogTag, "Error: " + e.Message);
-        }
-
-        void IDisposable.Dispose()
-        {
-            this.client.OnError -= ClientOnError;
-            this.client.OnOpen -= ClientOnOpen;
-            this.client.OnClose -= ClientOnClose;
-            ((IDisposable)this.client).Dispose();
-        }
-
-        public Task DisconnectAsync()
+        public override Task DisconnectAsync()
         {
             // TODO: should be listening for disconnection all the time
             // and auto-reconnect if there are event subscriptions
@@ -113,113 +92,47 @@ namespace Loom.Client.Internal
             EventHandler<CloseEventArgs> handler = null;
             handler = (sender, e) =>
             {
-                this.client.OnClose -= handler;
+                this.webSocket.OnClose -= handler;
                 tcs.TrySetResult(e);
             };
-            this.client.OnClose += handler;
+            this.webSocket.OnClose += handler;
             try
             {
-                this.client.CloseAsync(CloseStatusCode.Normal, "Client disconnected.");
-                NotifyConnectionStateChanged();
+                this.webSocket.CloseAsync(CloseStatusCode.Normal, "Client disconnected.");
             }
             catch (Exception)
             {
-                this.client.OnClose -= handler;
+                this.webSocket.OnClose -= handler;
                 throw;
             }
             return tcs.Task;
         }
 
-        private Task EnsureConnectionAsync()
+        public override Task SubscribeAsync(EventHandler<JsonRpcEventData> handler)
         {
-            if (this.client.ReadyState == WebSocketState.Open)
-            {
-                return Task.CompletedTask;
-            }
-            var tcs = new TaskCompletionSource<object>();
-            EventHandler openHandler = null;
-            EventHandler<CloseEventArgs> closeHandler = null;
-            openHandler = (sender, e) =>
-            {
-                this.client.OnOpen -= openHandler;
-                this.client.OnClose -= closeHandler;
-                tcs.TrySetResult(null);
-                Logger.Log(LogTag, "Connected to " + this.url.AbsoluteUri);
-            };
-            closeHandler = (sender, e) =>
-            {
-                tcs.SetException(new RpcClientException($"WebSocket closed unexpectedly with error {e.Code}: {e.Reason}"));
-            };
-            this.client.OnOpen += openHandler;
-            this.client.OnClose += closeHandler;
-            try
-            {
-                this.client.ConnectAsync();
-                NotifyConnectionStateChanged();
-            }
-            catch (Exception)
-            {
-                this.client.OnOpen -= openHandler;
-                this.client.OnClose -= closeHandler;
-                throw;
-            }
-            return tcs.Task;
-        }
-
-        public Task SubscribeAsync(EventHandler<JsonRpcEventData> handler)
-        {
-            var isFirstSub = this.OnEventMessage == null;
-            this.OnEventMessage += handler;
+            var isFirstSub = this.eventReceived == null;
+            this.eventReceived += handler;
             if (isFirstSub)
             {
-                this.client.OnMessage += this.WSSharpRPCClient_OnMessage;
+                this.webSocket.OnMessage += WSSharpRPCClient_OnMessage;
             }
             // TODO: once re-sub on reconnect is implemented this should only
             // be done on first sub
-            return this.SendAsync<object, object>("subevents", new object());
+            return SendAsync<object, object>("subevents", new object());
         }
 
-        public Task UnsubscribeAsync(EventHandler<JsonRpcEventData> handler)
+        public override Task UnsubscribeAsync(EventHandler<JsonRpcEventData> handler)
         {
-            this.OnEventMessage -= handler;
-            if (this.OnEventMessage == null)
+            this.eventReceived -= handler;
+            if (this.eventReceived == null)
             {
-                this.client.OnMessage -= this.WSSharpRPCClient_OnMessage;
-                return this.SendAsync<object, object>("unsubevents", new object());
+                this.webSocket.OnMessage -= WSSharpRPCClient_OnMessage;
+                return SendAsync<object, object>("unsubevents", new object());
             }
             return Task.CompletedTask;
         }
 
-        private async Task SendAsync<T>(string method, T args, string msgId)
-        {
-            var tcs = new TaskCompletionSource<object>();
-            await this.EnsureConnectionAsync();
-            var reqMsg = new JsonRpcRequest<T>(method, args, msgId);
-            var reqMsgBody = JsonConvert.SerializeObject(reqMsg);
-            Logger.Log(LogTag, "[Request Body] " + reqMsgBody);
-
-            ErrorEventArgs errorEventArgs = null;
-            EventHandler<ErrorEventArgs> errorHandler = (sender, eventArgs) =>
-            {
-                errorEventArgs = eventArgs;
-            };
-            this.client.OnError += errorHandler;
-            this.client.SendAsync(reqMsgBody, (bool success) =>
-            {
-                if (success)
-                {
-                    tcs.TrySetResult(null);
-                }
-                else
-                {
-                    tcs.TrySetException(new RpcClientException("Send error", errorEventArgs.Exception));
-                }
-            });
-            this.client.OnError -= errorHandler;
-            await tcs.Task;
-        }
-
-        public async Task<T> SendAsync<T, U>(string method, U args)
+        public override async Task<T> SendAsync<T, U>(string method, U args)
         {
             var tcs = new TaskCompletionSource<T>();
             var msgId = Guid.NewGuid().ToString();
@@ -234,7 +147,7 @@ namespace Loom.Client.Internal
                         var partialMsg = JsonConvert.DeserializeObject<JsonRpcResponse>(e.Data);
                         if (partialMsg.Id == msgId)
                         {
-                            this.client.OnMessage -= handler;
+                            this.webSocket.OnMessage -= handler;
                             if (partialMsg.Error != null)
                             {
                                 throw new RpcClientException(String.Format(
@@ -251,37 +164,105 @@ namespace Loom.Client.Internal
                     }
                     else
                     {
-                        Logger.Log(LogTag, "[ignoring msg]");
+                        this.Logger.Log(LogTag, "[ignoring msg]");
                     }
                 }
                 catch (Exception ex)
                 {
                     tcs.TrySetException(ex);
                 }
-
-                NotifyConnectionStateChanged();
             };
-            this.client.OnMessage += handler;
+            this.webSocket.OnMessage += handler;
             try
             {
-                await this.SendAsync<U>(method, args, msgId);
+                await SendAsync<U>(method, args, msgId);
             }
-            catch (Exception e)
+            catch (Exception)
             {
-                this.client.OnMessage -= handler;
-                throw e;
+                this.webSocket.OnMessage -= handler;
+                throw;
             }
             return await tcs.Task;
         }
 
-        private void NotifyConnectionStateChanged()
+        private void WebSocketOnClose(object sender, CloseEventArgs e)
         {
-            RpcConnectionState state = ConnectionState;
-            if (this.lastConnectionState != null && this.lastConnectionState == state)
-                return;
+            NotifyConnectionStateChanged();
+        }
 
-            this.lastConnectionState = state;
-            ConnectionStateChanged?.Invoke(this, state);
+        private void WebSocketOnOpen(object sender, EventArgs e)
+        {
+            NotifyConnectionStateChanged();
+        }
+
+        private void WebSocketOnError(object sender, ErrorEventArgs e)
+        {
+            this.Logger.Log(LogTag, "Error: " + e.Message);
+            NotifyConnectionStateChanged();
+        }
+
+        private Task EnsureConnectionAsync()
+        {
+            if (this.webSocket.ReadyState == WebSocketState.Open)
+            {
+                return Task.CompletedTask;
+            }
+            var tcs = new TaskCompletionSource<object>();
+            EventHandler openHandler = null;
+            EventHandler<CloseEventArgs> closeHandler = null;
+            openHandler = (sender, e) =>
+            {
+                this.webSocket.OnOpen -= openHandler;
+                this.webSocket.OnClose -= closeHandler;
+                tcs.TrySetResult(null);
+                this.Logger.Log(LogTag, "Connected to " + this.url.AbsoluteUri);
+            };
+            closeHandler = (sender, e) =>
+            {
+                tcs.SetException(new RpcClientException($"WebSocket closed unexpectedly with error {e.Code}: {e.Reason}"));
+            };
+            this.webSocket.OnOpen += openHandler;
+            this.webSocket.OnClose += closeHandler;
+            try
+            {
+                this.webSocket.ConnectAsync();
+            }
+            catch (Exception)
+            {
+                this.webSocket.OnOpen -= openHandler;
+                this.webSocket.OnClose -= closeHandler;
+                throw;
+            }
+            return tcs.Task;
+        }
+
+        private async Task SendAsync<T>(string method, T args, string msgId)
+        {
+            var tcs = new TaskCompletionSource<object>();
+            await EnsureConnectionAsync();
+            var reqMsg = new JsonRpcRequest<T>(method, args, msgId);
+            var reqMsgBody = JsonConvert.SerializeObject(reqMsg);
+            this.Logger.Log(LogTag, "[Request Body] " + reqMsgBody);
+
+            ErrorEventArgs errorEventArgs = null;
+            EventHandler<ErrorEventArgs> errorHandler = (sender, eventArgs) =>
+            {
+                errorEventArgs = eventArgs;
+            };
+            this.webSocket.OnError += errorHandler;
+            this.webSocket.SendAsync(reqMsgBody, (bool success) =>
+            {
+                if (success)
+                {
+                    tcs.TrySetResult(null);
+                }
+                else
+                {
+                    tcs.TrySetException(new RpcClientException("Send error", errorEventArgs.Exception));
+                }
+            });
+            this.webSocket.OnError -= errorHandler;
+            await tcs.Task;
         }
 
         private void WSSharpRPCClient_OnMessage(object sender, MessageEventArgs e)
@@ -290,7 +271,7 @@ namespace Loom.Client.Internal
             {
                 if (e.IsText && !string.IsNullOrEmpty(e.Data))
                 {
-                    Logger.Log(LogTag, "[WSSharpRPCClient_OnMessage msg body] " + e.Data);
+                    this.Logger.Log(LogTag, "[WSSharpRPCClient_OnMessage msg body] " + e.Data);
                     var partialMsg = JsonConvert.DeserializeObject<JsonRpcResponse>(e.Data);
                     if (partialMsg.Id == "0")
                     {
@@ -304,21 +285,19 @@ namespace Loom.Client.Internal
                         else
                         {
                             var fullMsg = JsonConvert.DeserializeObject<JsonRpcEvent>(e.Data);
-                            this.OnEventMessage?.Invoke(this, fullMsg.Result);
+                            this.eventReceived?.Invoke(this, fullMsg.Result);
                         }
                     }
                 }
                 else
                 {
-                    Logger.Log(LogTag, "[WSSharpRPCClient_OnMessage ignoring msg]");
+                    this.Logger.Log(LogTag, "[WSSharpRPCClient_OnMessage ignoring msg]");
                 }
             }
             catch (Exception ex)
             {
-                Logger.LogError(LogTag, "[WSSharpRPCClient_OnMessage error] " + ex);
+                this.Logger.LogError(LogTag, "[WSSharpRPCClient_OnMessage error] " + ex);
             }
-
-            NotifyConnectionStateChanged();
         }
     }
 }
