@@ -192,12 +192,13 @@ namespace Loom.Client.Unity.WebGL.Internal
             this.webSocket.Dispose();
         }
 
-        private async Task SendAsync<T>(string method, T args, string msgId)
+        private Task SendAsync<T>(string method, T args, string msgId)
         {
             var reqMsg = new JsonRpcRequest<T>(method, args, msgId);
             var reqMsgBody = JsonConvert.SerializeObject(reqMsg);
             this.Logger.Log(LogTag, "RPC Req: " + reqMsgBody);
             this.webSocket.Send(reqMsgBody);
+            return Task.CompletedTask;
         }
 
         private void Disconnect()
