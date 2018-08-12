@@ -28,6 +28,10 @@ namespace Loom.Client
         private IRpcClient readClient;
         private ILogger logger = NullLogger.Instance;
 
+        public IRpcClient WriteClient => this.writeClient;
+
+        public IRpcClient ReadClient => this.readClient;
+        
         /// <summary>
         /// Middleware to apply when committing transactions.
         /// </summary>
@@ -103,6 +107,7 @@ namespace Loom.Client
         /// <returns>The nonce.</returns>
         public async Task<ulong> GetNonceAsync(string key)
         {
+            await EnsureConnected();
             return await this.readClient.SendAsync<ulong, NonceParams>(
                 "nonce", new NonceParams { Key = key }
             );
@@ -115,6 +120,7 @@ namespace Loom.Client
         /// <exception cref="Exception">If a contract matching the given name wasn't found</exception>
         public async Task<Address> ResolveContractAddressAsync(string contractName)
         {
+            await EnsureConnected();
             var addrStr = await this.readClient.SendAsync<string, ResolveParams>(
                 "resolve", new ResolveParams { ContractName = contractName }
             );
@@ -193,6 +199,7 @@ namespace Loom.Client
             {
                 queryParams.CallerAddress = caller.QualifiedAddress;
             }
+            await EnsureConnected();
             return await this.readClient.SendAsync<T, QueryParams>("query", queryParams);
         }
 
@@ -210,6 +217,7 @@ namespace Loom.Client
                 txBytes = await this.TxMiddleware.Handle(txBytes);
             }
             string payload = CryptoBytes.ToBase64String(txBytes);
+            await EnsureConnected();
             var result = await this.writeClient.SendAsync<BroadcastTxResult, string[]>("broadcast_tx_commit", new string[] { payload });
             if (result != null)
             {
@@ -245,6 +253,7 @@ namespace Loom.Client
                     ));
                 };
                 this.eventSubs.Add(handler, wrapper);
+                await EnsureConnected();
                 await this.readClient.SubscribeAsync(wrapper);
             }
             catch (Exception e)
@@ -263,6 +272,18 @@ namespace Loom.Client
             catch (Exception e)
             {
                 Logger.Log(LogTag, e.Message);
+            }
+        }
+        
+        private async Task EnsureConnected() {
+            await EnsureConnected(this.readClient);
+            await EnsureConnected(this.writeClient);
+        }
+
+        private async Task EnsureConnected(IRpcClient rpcClient) {
+            if (rpcClient.ConnectionState != RpcConnectionState.Connected)
+            {
+                await rpcClient.ConnectAsync();
             }
         }
 

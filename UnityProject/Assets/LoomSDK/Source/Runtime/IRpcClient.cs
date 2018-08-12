@@ -11,6 +11,7 @@ namespace Loom.Client
 
         RpcConnectionState ConnectionState { get; }
         Task<TResult> SendAsync<TResult, TArgs>(string method, TArgs args);
+        Task ConnectAsync();
         Task DisconnectAsync();
         Task SubscribeAsync(EventHandler<JsonRpcEventData> handler);
         Task UnsubscribeAsync(EventHandler<JsonRpcEventData> handler);
