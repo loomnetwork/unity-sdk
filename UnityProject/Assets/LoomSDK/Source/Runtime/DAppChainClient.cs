@@ -281,6 +281,7 @@ namespace Loom.Client
         }
 
         private async Task EnsureConnected(IRpcClient rpcClient) {
+            // TODO: handle edge-case when ConnectionState == RpcConnectionState.Connecting
             if (rpcClient.ConnectionState != RpcConnectionState.Connected)
             {
                 await rpcClient.ConnectAsync();
