@@ -239,7 +239,7 @@ namespace Loom.Client
                     (
                         e.ContractAddress,
                         e.CallerAddress,
-                        e.BlockHeight,
+                        UInt64.Parse(e.BlockHeight), 
                         e.Data,
                         e.Topics
                     ));

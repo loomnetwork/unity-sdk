@@ -12,6 +12,10 @@ message NonceTx {
     uint64 sequence = 2;
 }
 
+message BigUInt {
+    bytes value = 1;
+}
+
 message Address {
     string chain_id = 1;
     bytes local = 2;
@@ -78,39 +82,4 @@ message Response {
 message ContractMethodCall {
     string method = 1;
     bytes args = 2;
-}
-
-message TxHashList {
-    repeated bytes tx_hash = 1;
-}
-
-message EventDataList {
-    repeated EventData events = 1;
-}
-
-message EventData {
-    repeated string topics = 1;
-    Address caller = 2;
-    Address address = 3;
-    string plugin_name = 4;
-    uint64 block_height = 5;
-    bytes encoded_body = 6;
-    bytes original_request = 7;
-    bytes tx_hash = 8;
-}
-
-message TxReceiptList {
-    repeated EvmTxReceipt tx_receipts = 1;
-}
-
-message EvmTxReceipt {
-    int32 transaction_index = 1;
-    bytes block_hash = 2;
-    int64 block_number = 3;
-    int32 cumulative_gas_used = 4;
-    int32 gas_used = 5 ;
-    bytes contract_address = 6;
-    repeated EventData logs = 7;
-    bytes logs_bloom = 8;
-    int32 status = 9;
 }
