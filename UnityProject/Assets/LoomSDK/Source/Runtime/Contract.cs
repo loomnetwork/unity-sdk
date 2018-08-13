@@ -102,7 +102,7 @@ namespace Loom.Client
             {
                 var resp = new Response();
                 resp.MergeFrom(result.DeliverTx.Data);
-                if (resp.Body != null && resp.Body.Length != 0)
+                if (resp.Body != null)
                 {
                     T msg = new T();
                     msg.MergeFrom(resp.Body);
