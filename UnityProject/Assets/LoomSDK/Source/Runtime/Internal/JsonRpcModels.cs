@@ -33,7 +33,7 @@ namespace Loom.Client.Internal
         public class ErrorData
         {
             [JsonProperty("code")]
-            public long Code;
+            public string Code;
 
             [JsonProperty("message")]
             public string Message;
@@ -82,7 +82,7 @@ namespace Loom.Client.Internal
         /// Block height at which the Tx was committed.
         /// </summary>
         [JsonProperty("height")]
-        public long Height { get; set; }
+        public string Height { get; set; }
 
         [JsonProperty("check_tx")]
         public TxResult CheckTx { get; set; }

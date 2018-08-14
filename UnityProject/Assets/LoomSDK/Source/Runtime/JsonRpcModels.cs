@@ -15,7 +15,7 @@ namespace Loom.Client
         public Address ContractAddress { get; internal set; }
 
         [JsonProperty("block_height")]
-        public UInt64 BlockHeight { get; internal set; }
+        public string BlockHeight { get; internal set; }
 
         [JsonProperty("encoded_body")]
         public byte[] Data { get; internal set; }

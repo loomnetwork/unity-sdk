@@ -6,7 +6,7 @@ namespace Loom.Client.Internal
     {
         public Address ContractAddress { get; }
         public Address CallerAddress { get; }
-        public UInt64 BlockHeight { get; }
+        public ulong BlockHeight { get; }
         public byte[] Data { get; }
 
         /// <summary>

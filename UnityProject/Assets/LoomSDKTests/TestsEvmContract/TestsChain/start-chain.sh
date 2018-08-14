@@ -7,7 +7,7 @@ fi
 cd .build
 
 if [ ! -f ./loom ]; then
-    ../download-loom.sh 276
+    ../download-loom.sh latest
 fi
 
 rm -rf ./app.db
