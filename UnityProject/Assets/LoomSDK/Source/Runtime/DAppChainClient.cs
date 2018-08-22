@@ -38,6 +38,12 @@ namespace Loom.Client
         public TxMiddleware TxMiddleware { get; set; }
 
         /// <summary>
+        /// Whether clients will attempt to connect automatically when in Disconnected state
+        /// before communicating.
+        /// </summary>
+        public bool AutoReconnect { get; set; } = true;
+
+        /// <summary>
         /// Logger to be used for logging, defaults to <see cref="NullLogger"/>.
         /// </summary>
         public ILogger Logger {
@@ -107,10 +113,14 @@ namespace Loom.Client
         /// <returns>The nonce.</returns>
         public async Task<ulong> GetNonceAsync(string key)
         {
+            if (this.readClient == null)
+                throw new InvalidOperationException("Read client is not set");
+
             await EnsureConnected();
-            return await this.readClient.SendAsync<ulong, NonceParams>(
+            string nonce = await this.readClient.SendAsync<string, NonceParams>(
                 "nonce", new NonceParams { Key = key }
             );
+            return UInt64.Parse(nonce); 
         }
 
         /// <summary>
@@ -120,6 +130,9 @@ namespace Loom.Client
         /// <exception cref="Exception">If a contract matching the given name wasn't found</exception>
         public async Task<Address> ResolveContractAddressAsync(string contractName)
         {
+            if (this.readClient == null)
+                throw new InvalidOperationException("Read client is not set");
+
             await EnsureConnected();
             var addrStr = await this.readClient.SendAsync<string, ResolveParams>(
                 "resolve", new ResolveParams { ContractName = contractName }
@@ -189,6 +202,9 @@ namespace Loom.Client
         /// <returns>Deserialized response.</returns>
         internal async Task<T> QueryAsync<T>(Address contract, byte[] query, Address caller = default(Address), VMType vmType = VMType.Plugin)
         {
+            if (this.readClient == null)
+                throw new InvalidOperationException("Read client is not set");
+            
             var queryParams = new QueryParams
             {
                 ContractAddress = contract.LocalAddress,
@@ -211,13 +227,16 @@ namespace Loom.Client
         /// <exception cref="InvalidTxNonceException">Thrown when transaction is rejected by the DAppChain due to a bad nonce.</exception>
         private async Task<BroadcastTxResult> TryCommitTxAsync(IMessage tx)
         {
+            if (this.writeClient == null)
+                throw new InvalidOperationException("Write client was not set");
+            
+            await EnsureConnected();
             byte[] txBytes = tx.ToByteArray();
             if (this.TxMiddleware != null)
             {
                 txBytes = await this.TxMiddleware.Handle(txBytes);
             }
             string payload = CryptoBytes.ToBase64String(txBytes);
-            await EnsureConnected();
             var result = await this.writeClient.SendAsync<BroadcastTxResult, string[]>("broadcast_tx_commit", new string[] { payload });
             if (result != null)
             {
@@ -241,19 +260,19 @@ namespace Loom.Client
         {
             try
             {
+                await EnsureConnected();
                 EventHandler<JsonRpcEventData> wrapper = (sender, e) =>
                 {
                     handler(this, new RawChainEventArgs
                     (
                         e.ContractAddress,
                         e.CallerAddress,
-                        e.BlockHeight,
+                        UInt64.Parse(e.BlockHeight), 
                         e.Data,
                         e.Topics
                     ));
                 };
                 this.eventSubs.Add(handler, wrapper);
-                await EnsureConnected();
                 await this.readClient.SubscribeAsync(wrapper);
             }
             catch (Exception e)
@@ -275,9 +294,20 @@ namespace Loom.Client
             }
         }
         
-        private async Task EnsureConnected() {
-            await EnsureConnected(this.readClient);
-            await EnsureConnected(this.writeClient);
+        private async Task EnsureConnected()
+        {
+            if (!this.AutoReconnect)
+                return;
+
+            if (this.readClient != null)
+            {
+                await EnsureConnected(this.readClient);
+            }
+
+            if (this.writeClient != null)
+            {
+                await EnsureConnected(this.writeClient);
+            }
         }
 
         private async Task EnsureConnected(IRpcClient rpcClient) {
