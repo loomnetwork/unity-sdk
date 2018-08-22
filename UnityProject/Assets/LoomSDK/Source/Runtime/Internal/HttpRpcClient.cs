@@ -41,6 +41,11 @@ namespace Loom.Client.Internal
         {
         }
 
+        public override Task ConnectAsync()
+        {
+            return Task.CompletedTask;
+        }
+        
         public override Task DisconnectAsync()
         {
             return Task.CompletedTask;
