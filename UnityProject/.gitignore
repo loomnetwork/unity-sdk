@@ -51,3 +51,7 @@ Assets/Plugins/AsyncAwaitUtil/Documentation/*
 
 # JetBrains Rider
 .idea
+Assets/Plugins.meta
+Assets/Plugins/Editor.meta
+Assets/Plugins/Editor/JetBrains
+Assets/Plugins/Editor/JetBrains.meta
