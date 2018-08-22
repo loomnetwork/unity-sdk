@@ -258,6 +258,9 @@ namespace Loom.Client
 
         private async void SubReadClient(EventHandler<RawChainEventArgs> handler)
         {
+            if (this.readClient == null)
+                throw new InvalidOperationException("Read client is not set");
+
             try
             {
                 await EnsureConnected();
@@ -283,6 +286,9 @@ namespace Loom.Client
 
         private async void UnsubReadClient(EventHandler<RawChainEventArgs> handler)
         {
+            if (this.readClient == null)
+                throw new InvalidOperationException("Read client is not set");
+
             try
             {
                 EventHandler<JsonRpcEventData> wrapper = this.eventSubs[handler];
