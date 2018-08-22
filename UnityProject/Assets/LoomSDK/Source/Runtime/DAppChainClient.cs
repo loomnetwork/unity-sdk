@@ -28,8 +28,14 @@ namespace Loom.Client
         private IRpcClient readClient;
         private ILogger logger = NullLogger.Instance;
 
+        /// <summary>
+        /// RPC client to use for submitting transactions.
+        /// </summary>
         public IRpcClient WriteClient => this.writeClient;
 
+        /// <summary>
+        /// RPC client to use for querying DAppChain state.
+        /// </summary>
         public IRpcClient ReadClient => this.readClient;
         
         /// <summary>
