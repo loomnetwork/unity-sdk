@@ -46,6 +46,32 @@ namespace Loom.Client.Unity.WebGL.Internal
             this.url = new Uri(url);
             this.webSocket = new WebSocket();
         }
+        
+        public override async Task ConnectAsync()
+        {
+            AssertNotAlreadyConnectedOrConnecting();
+            var tcs = new TaskCompletionSource<object>();
+
+            Action openedHandler = () =>
+            {
+                tcs.TrySetResult(null);
+                this.Logger.Log(LogTag, "Connected to " + this.url.AbsoluteUri);
+            };
+
+            this.webSocket.Opened += openedHandler;
+            try
+            {
+                this.webSocket.Connect(this.url.AbsoluteUri);
+                NotifyConnectionStateChanged();
+            }
+            catch (Exception)
+            {
+                this.webSocket.Opened -= openedHandler;
+                NotifyConnectionStateChanged();
+                throw;
+            }
+            await tcs.Task;
+        }
 
         public override async Task DisconnectAsync()
         {
@@ -166,13 +192,13 @@ namespace Loom.Client.Unity.WebGL.Internal
             this.webSocket.Dispose();
         }
 
-        private async Task SendAsync<T>(string method, T args, string msgId)
+        private Task SendAsync<T>(string method, T args, string msgId)
         {
-            await EnsureConnectionAsync();
             var reqMsg = new JsonRpcRequest<T>(method, args, msgId);
             var reqMsgBody = JsonConvert.SerializeObject(reqMsg);
             this.Logger.Log(LogTag, "RPC Req: " + reqMsgBody);
             this.webSocket.Send(reqMsgBody);
+            return Task.CompletedTask;
         }
 
         private void Disconnect()
@@ -183,36 +209,6 @@ namespace Loom.Client.Unity.WebGL.Internal
             this.webSocket.Close();
 
             NotifyConnectionStateChanged();
-        }
-
-        private async Task EnsureConnectionAsync()
-        {
-            // TODO: make sure to not reconnect while state WebSocketState.Connecting
-            if (this.webSocket.State == WebSocket.WebSocketState.Open)
-            {
-                return;
-            }
-            var tcs = new TaskCompletionSource<object>();
-
-            Action openedHandler = () =>
-            {
-                tcs.TrySetResult(null);
-                this.Logger.Log(LogTag, "Connected to " + this.url.AbsoluteUri);
-            };
-
-            this.webSocket.Opened += openedHandler;
-            try
-            {
-                this.webSocket.Connect(this.url.AbsoluteUri);
-                NotifyConnectionStateChanged();
-            }
-            catch (Exception)
-            {
-                this.webSocket.Opened -= openedHandler;
-                NotifyConnectionStateChanged();
-                throw;
-            }
-            await tcs.Task;
         }
 
         private void WSRPCClient_MessageReceived(object sender, string msgBody)
