@@ -6,7 +6,7 @@ using UnityEngine;
 
 namespace Loom.Client.Unity.Editor.Build {
     public static class PackageBuilder {
-        private const string kPackageName = "loom-unity-sdk";
+        private const string PackageName = "loom-unity-sdk";
 
         public static void BuildPackage() {
             AttemptPotentiallyFailingOperation(SamplesDownloader.DownloadSamples, delayBetweenAttempts: 5000);
@@ -18,7 +18,7 @@ namespace Loom.Client.Unity.Editor.Build {
                 AssetDatabase.CreateFolder("Assets", "~NonVersioned");
             }
 
-            string packagePath = $"Assets/~NonVersioned/{kPackageName}.unitypackage";
+            string packagePath = $"Assets/~NonVersioned/{PackageName}.unitypackage";
             ExportPackage(paths, packagePath);
 
             EditorGUIUtility.PingObject(AssetDatabase.LoadAssetAtPath<UnityEngine.Object>(packagePath));

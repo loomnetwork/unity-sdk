@@ -9,10 +9,10 @@ using pb = global::Loom.Google.Protobuf;
 using pbc = global::Loom.Google.Protobuf.Collections;
 using pbr = global::Loom.Google.Protobuf.Reflection;
 using scg = global::System.Collections.Generic;
-namespace Loom.Client.Internal.Protobuf {
+namespace Loom.Client.Protobuf {
 
   /// <summary>Holder for reflection information generated from proto/evm.proto</summary>
-  internal static partial class EvmReflection {
+  public static partial class EvmReflection {
 
     #region Descriptor
     /// <summary>File descriptor for proto/evm.proto</summary>
@@ -24,65 +24,65 @@ namespace Loom.Client.Internal.Protobuf {
     static EvmReflection() {
       byte[] descriptorData = global::System.Convert.FromBase64String(
           string.Concat(
-            "Cg9wcm90by9ldm0ucHJvdG8aEHByb3RvL2xvb20ucHJvdG8irgEKEUV0aEZp",
-            "bHRlckVudmVsb3BlEjAKE2V0aF9ibG9ja19oYXNoX2xpc3QYASABKAsyES5F",
-            "dGhCbG9ja0hhc2hMaXN0SAASMAoTZXRoX2ZpbHRlcl9sb2dfbGlzdBgCIAEo",
-            "CzIRLkV0aEZpbHRlckxvZ0xpc3RIABIqChBldGhfdHhfaGFzaF9saXN0GAMg",
-            "ASgLMg4uRXRoVHhIYXNoTGlzdEgAQgkKB21lc3NhZ2UiKgoQRXRoQmxvY2tI",
-            "YXNoTGlzdBIWCg5ldGhfYmxvY2tfaGFzaBgBIAMoDCIkCg1FdGhUeEhhc2hM",
-            "aXN0EhMKC2V0aF90eF9oYXNoGAEgAygMIisKDUV2ZW50RGF0YUxpc3QSGgoG",
-            "ZXZlbnRzGAEgAygLMgouRXZlbnREYXRhIrwBCglFdmVudERhdGESDgoGdG9w",
-            "aWNzGAEgAygJEhgKBmNhbGxlchgCIAEoCzIILkFkZHJlc3MSGQoHYWRkcmVz",
-            "cxgDIAEoCzIILkFkZHJlc3MSEwoLcGx1Z2luX25hbWUYBCABKAkSFAoMYmxv",
-            "Y2tfaGVpZ2h0GAUgASgEEhQKDGVuY29kZWRfYm9keRgGIAEoDBIYChBvcmln",
-            "aW5hbF9yZXF1ZXN0GAcgASgMEg8KB3R4X2hhc2gYCCABKAwiMwoNVHhSZWNl",
-            "aXB0TGlzdBIiCgt0eF9yZWNlaXB0cxgBIAMoCzINLkV2bVR4UmVjZWlwdCLr",
-            "AQoMRXZtVHhSZWNlaXB0EhkKEXRyYW5zYWN0aW9uX2luZGV4GAEgASgFEhIK",
-            "CmJsb2NrX2hhc2gYAiABKAwSFAoMYmxvY2tfbnVtYmVyGAMgASgDEhsKE2N1",
-            "bXVsYXRpdmVfZ2FzX3VzZWQYBCABKAUSEAoIZ2FzX3VzZWQYBSABKAUSGAoQ",
-            "Y29udHJhY3RfYWRkcmVzcxgGIAEoDBIYCgRsb2dzGAcgAygLMgouRXZlbnRE",
-            "YXRhEhIKCmxvZ3NfYmxvb20YCCABKAwSDgoGc3RhdHVzGAkgASgFEg8KB3R4",
-            "X2hhc2gYCiABKAwixwEKC0V2bVR4T2JqZWN0EgwKBGhhc2gYASABKAwSDQoF",
-            "bm9uY2UYAiABKAQSEgoKYmxvY2tfaGFzaBgDIAEoDBIUCgxibG9ja19udW1i",
-            "ZXIYBCABKAMSGQoRdHJhbnNhY3Rpb25faW5kZXgYBSABKAUSDAoEZnJvbRgG",
-            "IAEoDBIKCgJ0bxgHIAEoDBINCgV2YWx1ZRgIIAEoAxIRCglnYXNfcHJpY2UY",
-            "CSABKAMSCwoDZ2FzGAogASgDEg0KBWlucHV0GAsgASgMIvoCCgxFdGhCbG9j",
-            "a0luZm8SDgoGbnVtYmVyGAEgASgDEgwKBGhhc2gYAiABKAwSEwoLcGFyZW50",
-            "X2hhc2gYAyABKAwSDQoFbm9uY2UYBCABKAwSEwoLc2hhM191bmNsZXMYBSAB",
-            "KAwSEgoKbG9nc19ibG9vbRgGIAEoDBIZChF0cmFuc2FjdGlvbnNfcm9vdBgH",
-            "IAEoDBISCgpzdGF0ZV9yb290GAggASgMEhUKDXJlY2VpcHRzX3Jvb3QYCSAB",
-            "KAwSDQoFbWluZXIYCiABKAwSEgoKZGlmZmljdWx0eRgLIAEoAxIYChB0b3Rh",
-            "bF9kaWZmaWN1bHR5GAwgASgDEhIKCmV4dHJhX2RhdGEYDSABKAwSDAoEc2l6",
-            "ZRgOIAEoAxIQCghnYXNMaW1pdBgPIAEoAxIPCgdnYXNVc2VkGBAgASgDEhEK",
-            "CXRpbWVzdGFtcBgRIAEoAxIUCgx0cmFuc2FjdGlvbnMYEiADKAwSDgoGdW5j",
-            "bGVzGBMgAygMIjkKEEV0aEZpbHRlckxvZ0xpc3QSJQoOZXRoX2Jsb2NrX2xv",
-            "Z3MYASADKAsyDS5FdGhGaWx0ZXJMb2ciwAEKDEV0aEZpbHRlckxvZxIPCgdy",
-            "ZW1vdmVkGAEgASgIEhEKCWxvZ19pbmRleBgCIAEoAxIZChF0cmFuc2FjdGlv",
-            "bl9pbmRleBgDIAEoBRIYChB0cmFuc2FjdGlvbl9oYXNoGAQgASgMEhIKCmJs",
-            "b2NrX2hhc2gYBSABKAwSFAoMYmxvY2tfbnVtYmVyGAYgASgDEg8KB2FkZHJl",
-            "c3MYByABKAwSDAoEZGF0YRgIIAEoDBIOCgZ0b3BpY3MYCSADKAxCIKoCHUxv",
-            "b20uQ2xpZW50LkludGVybmFsLlByb3RvYnVmYgZwcm90bzM="));
+            "Cg9wcm90by9ldm0ucHJvdG8aEXByb3RvL3R5cGVzLnByb3RvIq4BChFFdGhG",
+            "aWx0ZXJFbnZlbG9wZRIwChNldGhfYmxvY2tfaGFzaF9saXN0GAEgASgLMhEu",
+            "RXRoQmxvY2tIYXNoTGlzdEgAEjAKE2V0aF9maWx0ZXJfbG9nX2xpc3QYAiAB",
+            "KAsyES5FdGhGaWx0ZXJMb2dMaXN0SAASKgoQZXRoX3R4X2hhc2hfbGlzdBgD",
+            "IAEoCzIOLkV0aFR4SGFzaExpc3RIAEIJCgdtZXNzYWdlIioKEEV0aEJsb2Nr",
+            "SGFzaExpc3QSFgoOZXRoX2Jsb2NrX2hhc2gYASADKAwiJAoNRXRoVHhIYXNo",
+            "TGlzdBITCgtldGhfdHhfaGFzaBgBIAMoDCIrCg1FdmVudERhdGFMaXN0EhoK",
+            "BmV2ZW50cxgBIAMoCzIKLkV2ZW50RGF0YSK8AQoJRXZlbnREYXRhEg4KBnRv",
+            "cGljcxgBIAMoCRIYCgZjYWxsZXIYAiABKAsyCC5BZGRyZXNzEhkKB2FkZHJl",
+            "c3MYAyABKAsyCC5BZGRyZXNzEhMKC3BsdWdpbl9uYW1lGAQgASgJEhQKDGJs",
+            "b2NrX2hlaWdodBgFIAEoBBIUCgxlbmNvZGVkX2JvZHkYBiABKAwSGAoQb3Jp",
+            "Z2luYWxfcmVxdWVzdBgHIAEoDBIPCgd0eF9oYXNoGAggASgMIjMKDVR4UmVj",
+            "ZWlwdExpc3QSIgoLdHhfcmVjZWlwdHMYASADKAsyDS5Fdm1UeFJlY2VpcHQi",
+            "6wEKDEV2bVR4UmVjZWlwdBIZChF0cmFuc2FjdGlvbl9pbmRleBgBIAEoBRIS",
+            "CgpibG9ja19oYXNoGAIgASgMEhQKDGJsb2NrX251bWJlchgDIAEoAxIbChNj",
+            "dW11bGF0aXZlX2dhc191c2VkGAQgASgFEhAKCGdhc191c2VkGAUgASgFEhgK",
+            "EGNvbnRyYWN0X2FkZHJlc3MYBiABKAwSGAoEbG9ncxgHIAMoCzIKLkV2ZW50",
+            "RGF0YRISCgpsb2dzX2Jsb29tGAggASgMEg4KBnN0YXR1cxgJIAEoBRIPCgd0",
+            "eF9oYXNoGAogASgMIscBCgtFdm1UeE9iamVjdBIMCgRoYXNoGAEgASgMEg0K",
+            "BW5vbmNlGAIgASgEEhIKCmJsb2NrX2hhc2gYAyABKAwSFAoMYmxvY2tfbnVt",
+            "YmVyGAQgASgDEhkKEXRyYW5zYWN0aW9uX2luZGV4GAUgASgFEgwKBGZyb20Y",
+            "BiABKAwSCgoCdG8YByABKAwSDQoFdmFsdWUYCCABKAMSEQoJZ2FzX3ByaWNl",
+            "GAkgASgDEgsKA2dhcxgKIAEoAxINCgVpbnB1dBgLIAEoDCL6AgoMRXRoQmxv",
+            "Y2tJbmZvEg4KBm51bWJlchgBIAEoAxIMCgRoYXNoGAIgASgMEhMKC3BhcmVu",
+            "dF9oYXNoGAMgASgMEg0KBW5vbmNlGAQgASgMEhMKC3NoYTNfdW5jbGVzGAUg",
+            "ASgMEhIKCmxvZ3NfYmxvb20YBiABKAwSGQoRdHJhbnNhY3Rpb25zX3Jvb3QY",
+            "ByABKAwSEgoKc3RhdGVfcm9vdBgIIAEoDBIVCg1yZWNlaXB0c19yb290GAkg",
+            "ASgMEg0KBW1pbmVyGAogASgMEhIKCmRpZmZpY3VsdHkYCyABKAMSGAoQdG90",
+            "YWxfZGlmZmljdWx0eRgMIAEoAxISCgpleHRyYV9kYXRhGA0gASgMEgwKBHNp",
+            "emUYDiABKAMSEAoIZ2FzTGltaXQYDyABKAMSDwoHZ2FzVXNlZBgQIAEoAxIR",
+            "Cgl0aW1lc3RhbXAYESABKAMSFAoMdHJhbnNhY3Rpb25zGBIgAygMEg4KBnVu",
+            "Y2xlcxgTIAMoDCI5ChBFdGhGaWx0ZXJMb2dMaXN0EiUKDmV0aF9ibG9ja19s",
+            "b2dzGAEgAygLMg0uRXRoRmlsdGVyTG9nIsABCgxFdGhGaWx0ZXJMb2cSDwoH",
+            "cmVtb3ZlZBgBIAEoCBIRCglsb2dfaW5kZXgYAiABKAMSGQoRdHJhbnNhY3Rp",
+            "b25faW5kZXgYAyABKAUSGAoQdHJhbnNhY3Rpb25faGFzaBgEIAEoDBISCgpi",
+            "bG9ja19oYXNoGAUgASgMEhQKDGJsb2NrX251bWJlchgGIAEoAxIPCgdhZGRy",
+            "ZXNzGAcgASgMEgwKBGRhdGEYCCABKAwSDgoGdG9waWNzGAkgAygMQheqAhRM",
+            "b29tLkNsaWVudC5Qcm90b2J1ZmIGcHJvdG8z"));
       descriptor = pbr::FileDescriptor.FromGeneratedCode(descriptorData,
-          new pbr::FileDescriptor[] { global::Loom.Client.Internal.Protobuf.LoomReflection.Descriptor, },
+          new pbr::FileDescriptor[] { global::Loom.Client.Protobuf.TypesReflection.Descriptor, },
           new pbr::GeneratedClrTypeInfo(null, new pbr::GeneratedClrTypeInfo[] {
-            new pbr::GeneratedClrTypeInfo(typeof(global::Loom.Client.Internal.Protobuf.EthFilterEnvelope), global::Loom.Client.Internal.Protobuf.EthFilterEnvelope.Parser, new[]{ "EthBlockHashList", "EthFilterLogList", "EthTxHashList" }, new[]{ "Message" }, null, null),
-            new pbr::GeneratedClrTypeInfo(typeof(global::Loom.Client.Internal.Protobuf.EthBlockHashList), global::Loom.Client.Internal.Protobuf.EthBlockHashList.Parser, new[]{ "EthBlockHash" }, null, null, null),
-            new pbr::GeneratedClrTypeInfo(typeof(global::Loom.Client.Internal.Protobuf.EthTxHashList), global::Loom.Client.Internal.Protobuf.EthTxHashList.Parser, new[]{ "EthTxHash" }, null, null, null),
-            new pbr::GeneratedClrTypeInfo(typeof(global::Loom.Client.Internal.Protobuf.EventDataList), global::Loom.Client.Internal.Protobuf.EventDataList.Parser, new[]{ "Events" }, null, null, null),
-            new pbr::GeneratedClrTypeInfo(typeof(global::Loom.Client.Internal.Protobuf.EventData), global::Loom.Client.Internal.Protobuf.EventData.Parser, new[]{ "Topics", "Caller", "Address", "PluginName", "BlockHeight", "EncodedBody", "OriginalRequest", "TxHash" }, null, null, null),
-            new pbr::GeneratedClrTypeInfo(typeof(global::Loom.Client.Internal.Protobuf.TxReceiptList), global::Loom.Client.Internal.Protobuf.TxReceiptList.Parser, new[]{ "TxReceipts" }, null, null, null),
-            new pbr::GeneratedClrTypeInfo(typeof(global::Loom.Client.Internal.Protobuf.EvmTxReceipt), global::Loom.Client.Internal.Protobuf.EvmTxReceipt.Parser, new[]{ "TransactionIndex", "BlockHash", "BlockNumber", "CumulativeGasUsed", "GasUsed", "ContractAddress", "Logs", "LogsBloom", "Status", "TxHash" }, null, null, null),
-            new pbr::GeneratedClrTypeInfo(typeof(global::Loom.Client.Internal.Protobuf.EvmTxObject), global::Loom.Client.Internal.Protobuf.EvmTxObject.Parser, new[]{ "Hash", "Nonce", "BlockHash", "BlockNumber", "TransactionIndex", "From", "To", "Value", "GasPrice", "Gas", "Input" }, null, null, null),
-            new pbr::GeneratedClrTypeInfo(typeof(global::Loom.Client.Internal.Protobuf.EthBlockInfo), global::Loom.Client.Internal.Protobuf.EthBlockInfo.Parser, new[]{ "Number", "Hash", "ParentHash", "Nonce", "Sha3Uncles", "LogsBloom", "TransactionsRoot", "StateRoot", "ReceiptsRoot", "Miner", "Difficulty", "TotalDifficulty", "ExtraData", "Size", "GasLimit", "GasUsed", "Timestamp", "Transactions", "Uncles" }, null, null, null),
-            new pbr::GeneratedClrTypeInfo(typeof(global::Loom.Client.Internal.Protobuf.EthFilterLogList), global::Loom.Client.Internal.Protobuf.EthFilterLogList.Parser, new[]{ "EthBlockLogs" }, null, null, null),
-            new pbr::GeneratedClrTypeInfo(typeof(global::Loom.Client.Internal.Protobuf.EthFilterLog), global::Loom.Client.Internal.Protobuf.EthFilterLog.Parser, new[]{ "Removed", "LogIndex", "TransactionIndex", "TransactionHash", "BlockHash", "BlockNumber", "Address", "Data", "Topics" }, null, null, null)
+            new pbr::GeneratedClrTypeInfo(typeof(global::Loom.Client.Protobuf.EthFilterEnvelope), global::Loom.Client.Protobuf.EthFilterEnvelope.Parser, new[]{ "EthBlockHashList", "EthFilterLogList", "EthTxHashList" }, new[]{ "Message" }, null, null),
+            new pbr::GeneratedClrTypeInfo(typeof(global::Loom.Client.Protobuf.EthBlockHashList), global::Loom.Client.Protobuf.EthBlockHashList.Parser, new[]{ "EthBlockHash" }, null, null, null),
+            new pbr::GeneratedClrTypeInfo(typeof(global::Loom.Client.Protobuf.EthTxHashList), global::Loom.Client.Protobuf.EthTxHashList.Parser, new[]{ "EthTxHash" }, null, null, null),
+            new pbr::GeneratedClrTypeInfo(typeof(global::Loom.Client.Protobuf.EventDataList), global::Loom.Client.Protobuf.EventDataList.Parser, new[]{ "Events" }, null, null, null),
+            new pbr::GeneratedClrTypeInfo(typeof(global::Loom.Client.Protobuf.EventData), global::Loom.Client.Protobuf.EventData.Parser, new[]{ "Topics", "Caller", "Address", "PluginName", "BlockHeight", "EncodedBody", "OriginalRequest", "TxHash" }, null, null, null),
+            new pbr::GeneratedClrTypeInfo(typeof(global::Loom.Client.Protobuf.TxReceiptList), global::Loom.Client.Protobuf.TxReceiptList.Parser, new[]{ "TxReceipts" }, null, null, null),
+            new pbr::GeneratedClrTypeInfo(typeof(global::Loom.Client.Protobuf.EvmTxReceipt), global::Loom.Client.Protobuf.EvmTxReceipt.Parser, new[]{ "TransactionIndex", "BlockHash", "BlockNumber", "CumulativeGasUsed", "GasUsed", "ContractAddress", "Logs", "LogsBloom", "Status", "TxHash" }, null, null, null),
+            new pbr::GeneratedClrTypeInfo(typeof(global::Loom.Client.Protobuf.EvmTxObject), global::Loom.Client.Protobuf.EvmTxObject.Parser, new[]{ "Hash", "Nonce", "BlockHash", "BlockNumber", "TransactionIndex", "From", "To", "Value", "GasPrice", "Gas", "Input" }, null, null, null),
+            new pbr::GeneratedClrTypeInfo(typeof(global::Loom.Client.Protobuf.EthBlockInfo), global::Loom.Client.Protobuf.EthBlockInfo.Parser, new[]{ "Number", "Hash", "ParentHash", "Nonce", "Sha3Uncles", "LogsBloom", "TransactionsRoot", "StateRoot", "ReceiptsRoot", "Miner", "Difficulty", "TotalDifficulty", "ExtraData", "Size", "GasLimit", "GasUsed", "Timestamp", "Transactions", "Uncles" }, null, null, null),
+            new pbr::GeneratedClrTypeInfo(typeof(global::Loom.Client.Protobuf.EthFilterLogList), global::Loom.Client.Protobuf.EthFilterLogList.Parser, new[]{ "EthBlockLogs" }, null, null, null),
+            new pbr::GeneratedClrTypeInfo(typeof(global::Loom.Client.Protobuf.EthFilterLog), global::Loom.Client.Protobuf.EthFilterLog.Parser, new[]{ "Removed", "LogIndex", "TransactionIndex", "TransactionHash", "BlockHash", "BlockNumber", "Address", "Data", "Topics" }, null, null, null)
           }));
     }
     #endregion
 
   }
   #region Messages
-  internal sealed partial class EthFilterEnvelope : pb::IMessage<EthFilterEnvelope> {
+  public sealed partial class EthFilterEnvelope : pb::IMessage<EthFilterEnvelope> {
     private static readonly pb::MessageParser<EthFilterEnvelope> _parser = new pb::MessageParser<EthFilterEnvelope>(() => new EthFilterEnvelope());
     private pb::UnknownFieldSet _unknownFields;
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
@@ -90,7 +90,7 @@ namespace Loom.Client.Internal.Protobuf {
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     public static pbr::MessageDescriptor Descriptor {
-      get { return global::Loom.Client.Internal.Protobuf.EvmReflection.Descriptor.MessageTypes[0]; }
+      get { return global::Loom.Client.Protobuf.EvmReflection.Descriptor.MessageTypes[0]; }
     }
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
@@ -130,8 +130,8 @@ namespace Loom.Client.Internal.Protobuf {
     /// <summary>Field number for the "eth_block_hash_list" field.</summary>
     public const int EthBlockHashListFieldNumber = 1;
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
-    public global::Loom.Client.Internal.Protobuf.EthBlockHashList EthBlockHashList {
-      get { return messageCase_ == MessageOneofCase.EthBlockHashList ? (global::Loom.Client.Internal.Protobuf.EthBlockHashList) message_ : null; }
+    public global::Loom.Client.Protobuf.EthBlockHashList EthBlockHashList {
+      get { return messageCase_ == MessageOneofCase.EthBlockHashList ? (global::Loom.Client.Protobuf.EthBlockHashList) message_ : null; }
       set {
         message_ = value;
         messageCase_ = value == null ? MessageOneofCase.None : MessageOneofCase.EthBlockHashList;
@@ -141,8 +141,8 @@ namespace Loom.Client.Internal.Protobuf {
     /// <summary>Field number for the "eth_filter_log_list" field.</summary>
     public const int EthFilterLogListFieldNumber = 2;
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
-    public global::Loom.Client.Internal.Protobuf.EthFilterLogList EthFilterLogList {
-      get { return messageCase_ == MessageOneofCase.EthFilterLogList ? (global::Loom.Client.Internal.Protobuf.EthFilterLogList) message_ : null; }
+    public global::Loom.Client.Protobuf.EthFilterLogList EthFilterLogList {
+      get { return messageCase_ == MessageOneofCase.EthFilterLogList ? (global::Loom.Client.Protobuf.EthFilterLogList) message_ : null; }
       set {
         message_ = value;
         messageCase_ = value == null ? MessageOneofCase.None : MessageOneofCase.EthFilterLogList;
@@ -152,8 +152,8 @@ namespace Loom.Client.Internal.Protobuf {
     /// <summary>Field number for the "eth_tx_hash_list" field.</summary>
     public const int EthTxHashListFieldNumber = 3;
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
-    public global::Loom.Client.Internal.Protobuf.EthTxHashList EthTxHashList {
-      get { return messageCase_ == MessageOneofCase.EthTxHashList ? (global::Loom.Client.Internal.Protobuf.EthTxHashList) message_ : null; }
+    public global::Loom.Client.Protobuf.EthTxHashList EthTxHashList {
+      get { return messageCase_ == MessageOneofCase.EthTxHashList ? (global::Loom.Client.Protobuf.EthTxHashList) message_ : null; }
       set {
         message_ = value;
         messageCase_ = value == null ? MessageOneofCase.None : MessageOneofCase.EthTxHashList;
@@ -263,19 +263,19 @@ namespace Loom.Client.Internal.Protobuf {
       switch (other.MessageCase) {
         case MessageOneofCase.EthBlockHashList:
           if (EthBlockHashList == null) {
-            EthBlockHashList = new global::Loom.Client.Internal.Protobuf.EthBlockHashList();
+            EthBlockHashList = new global::Loom.Client.Protobuf.EthBlockHashList();
           }
           EthBlockHashList.MergeFrom(other.EthBlockHashList);
           break;
         case MessageOneofCase.EthFilterLogList:
           if (EthFilterLogList == null) {
-            EthFilterLogList = new global::Loom.Client.Internal.Protobuf.EthFilterLogList();
+            EthFilterLogList = new global::Loom.Client.Protobuf.EthFilterLogList();
           }
           EthFilterLogList.MergeFrom(other.EthFilterLogList);
           break;
         case MessageOneofCase.EthTxHashList:
           if (EthTxHashList == null) {
-            EthTxHashList = new global::Loom.Client.Internal.Protobuf.EthTxHashList();
+            EthTxHashList = new global::Loom.Client.Protobuf.EthTxHashList();
           }
           EthTxHashList.MergeFrom(other.EthTxHashList);
           break;
@@ -293,7 +293,7 @@ namespace Loom.Client.Internal.Protobuf {
             _unknownFields = pb::UnknownFieldSet.MergeFieldFrom(_unknownFields, input);
             break;
           case 10: {
-            global::Loom.Client.Internal.Protobuf.EthBlockHashList subBuilder = new global::Loom.Client.Internal.Protobuf.EthBlockHashList();
+            global::Loom.Client.Protobuf.EthBlockHashList subBuilder = new global::Loom.Client.Protobuf.EthBlockHashList();
             if (messageCase_ == MessageOneofCase.EthBlockHashList) {
               subBuilder.MergeFrom(EthBlockHashList);
             }
@@ -302,7 +302,7 @@ namespace Loom.Client.Internal.Protobuf {
             break;
           }
           case 18: {
-            global::Loom.Client.Internal.Protobuf.EthFilterLogList subBuilder = new global::Loom.Client.Internal.Protobuf.EthFilterLogList();
+            global::Loom.Client.Protobuf.EthFilterLogList subBuilder = new global::Loom.Client.Protobuf.EthFilterLogList();
             if (messageCase_ == MessageOneofCase.EthFilterLogList) {
               subBuilder.MergeFrom(EthFilterLogList);
             }
@@ -311,7 +311,7 @@ namespace Loom.Client.Internal.Protobuf {
             break;
           }
           case 26: {
-            global::Loom.Client.Internal.Protobuf.EthTxHashList subBuilder = new global::Loom.Client.Internal.Protobuf.EthTxHashList();
+            global::Loom.Client.Protobuf.EthTxHashList subBuilder = new global::Loom.Client.Protobuf.EthTxHashList();
             if (messageCase_ == MessageOneofCase.EthTxHashList) {
               subBuilder.MergeFrom(EthTxHashList);
             }
@@ -325,7 +325,7 @@ namespace Loom.Client.Internal.Protobuf {
 
   }
 
-  internal sealed partial class EthBlockHashList : pb::IMessage<EthBlockHashList> {
+  public sealed partial class EthBlockHashList : pb::IMessage<EthBlockHashList> {
     private static readonly pb::MessageParser<EthBlockHashList> _parser = new pb::MessageParser<EthBlockHashList>(() => new EthBlockHashList());
     private pb::UnknownFieldSet _unknownFields;
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
@@ -333,7 +333,7 @@ namespace Loom.Client.Internal.Protobuf {
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     public static pbr::MessageDescriptor Descriptor {
-      get { return global::Loom.Client.Internal.Protobuf.EvmReflection.Descriptor.MessageTypes[1]; }
+      get { return global::Loom.Client.Protobuf.EvmReflection.Descriptor.MessageTypes[1]; }
     }
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
@@ -446,7 +446,7 @@ namespace Loom.Client.Internal.Protobuf {
 
   }
 
-  internal sealed partial class EthTxHashList : pb::IMessage<EthTxHashList> {
+  public sealed partial class EthTxHashList : pb::IMessage<EthTxHashList> {
     private static readonly pb::MessageParser<EthTxHashList> _parser = new pb::MessageParser<EthTxHashList>(() => new EthTxHashList());
     private pb::UnknownFieldSet _unknownFields;
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
@@ -454,7 +454,7 @@ namespace Loom.Client.Internal.Protobuf {
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     public static pbr::MessageDescriptor Descriptor {
-      get { return global::Loom.Client.Internal.Protobuf.EvmReflection.Descriptor.MessageTypes[2]; }
+      get { return global::Loom.Client.Protobuf.EvmReflection.Descriptor.MessageTypes[2]; }
     }
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
@@ -567,7 +567,7 @@ namespace Loom.Client.Internal.Protobuf {
 
   }
 
-  internal sealed partial class EventDataList : pb::IMessage<EventDataList> {
+  public sealed partial class EventDataList : pb::IMessage<EventDataList> {
     private static readonly pb::MessageParser<EventDataList> _parser = new pb::MessageParser<EventDataList>(() => new EventDataList());
     private pb::UnknownFieldSet _unknownFields;
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
@@ -575,7 +575,7 @@ namespace Loom.Client.Internal.Protobuf {
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     public static pbr::MessageDescriptor Descriptor {
-      get { return global::Loom.Client.Internal.Protobuf.EvmReflection.Descriptor.MessageTypes[3]; }
+      get { return global::Loom.Client.Protobuf.EvmReflection.Descriptor.MessageTypes[3]; }
     }
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
@@ -603,11 +603,11 @@ namespace Loom.Client.Internal.Protobuf {
 
     /// <summary>Field number for the "events" field.</summary>
     public const int EventsFieldNumber = 1;
-    private static readonly pb::FieldCodec<global::Loom.Client.Internal.Protobuf.EventData> _repeated_events_codec
-        = pb::FieldCodec.ForMessage(10, global::Loom.Client.Internal.Protobuf.EventData.Parser);
-    private readonly pbc::RepeatedField<global::Loom.Client.Internal.Protobuf.EventData> events_ = new pbc::RepeatedField<global::Loom.Client.Internal.Protobuf.EventData>();
+    private static readonly pb::FieldCodec<global::Loom.Client.Protobuf.EventData> _repeated_events_codec
+        = pb::FieldCodec.ForMessage(10, global::Loom.Client.Protobuf.EventData.Parser);
+    private readonly pbc::RepeatedField<global::Loom.Client.Protobuf.EventData> events_ = new pbc::RepeatedField<global::Loom.Client.Protobuf.EventData>();
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
-    public pbc::RepeatedField<global::Loom.Client.Internal.Protobuf.EventData> Events {
+    public pbc::RepeatedField<global::Loom.Client.Protobuf.EventData> Events {
       get { return events_; }
     }
 
@@ -688,7 +688,7 @@ namespace Loom.Client.Internal.Protobuf {
 
   }
 
-  internal sealed partial class EventData : pb::IMessage<EventData> {
+  public sealed partial class EventData : pb::IMessage<EventData> {
     private static readonly pb::MessageParser<EventData> _parser = new pb::MessageParser<EventData>(() => new EventData());
     private pb::UnknownFieldSet _unknownFields;
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
@@ -696,7 +696,7 @@ namespace Loom.Client.Internal.Protobuf {
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     public static pbr::MessageDescriptor Descriptor {
-      get { return global::Loom.Client.Internal.Protobuf.EvmReflection.Descriptor.MessageTypes[4]; }
+      get { return global::Loom.Client.Protobuf.EvmReflection.Descriptor.MessageTypes[4]; }
     }
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
@@ -741,9 +741,9 @@ namespace Loom.Client.Internal.Protobuf {
 
     /// <summary>Field number for the "caller" field.</summary>
     public const int CallerFieldNumber = 2;
-    private global::Loom.Client.Internal.Protobuf.Address caller_;
+    private global::Loom.Client.Protobuf.Address caller_;
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
-    public global::Loom.Client.Internal.Protobuf.Address Caller {
+    public global::Loom.Client.Protobuf.Address Caller {
       get { return caller_; }
       set {
         caller_ = value;
@@ -752,9 +752,9 @@ namespace Loom.Client.Internal.Protobuf {
 
     /// <summary>Field number for the "address" field.</summary>
     public const int AddressFieldNumber = 3;
-    private global::Loom.Client.Internal.Protobuf.Address address_;
+    private global::Loom.Client.Protobuf.Address address_;
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
-    public global::Loom.Client.Internal.Protobuf.Address Address {
+    public global::Loom.Client.Protobuf.Address Address {
       get { return address_; }
       set {
         address_ = value;
@@ -937,13 +937,13 @@ namespace Loom.Client.Internal.Protobuf {
       topics_.Add(other.topics_);
       if (other.caller_ != null) {
         if (caller_ == null) {
-          caller_ = new global::Loom.Client.Internal.Protobuf.Address();
+          caller_ = new global::Loom.Client.Protobuf.Address();
         }
         Caller.MergeFrom(other.Caller);
       }
       if (other.address_ != null) {
         if (address_ == null) {
-          address_ = new global::Loom.Client.Internal.Protobuf.Address();
+          address_ = new global::Loom.Client.Protobuf.Address();
         }
         Address.MergeFrom(other.Address);
       }
@@ -979,14 +979,14 @@ namespace Loom.Client.Internal.Protobuf {
           }
           case 18: {
             if (caller_ == null) {
-              caller_ = new global::Loom.Client.Internal.Protobuf.Address();
+              caller_ = new global::Loom.Client.Protobuf.Address();
             }
             input.ReadMessage(caller_);
             break;
           }
           case 26: {
             if (address_ == null) {
-              address_ = new global::Loom.Client.Internal.Protobuf.Address();
+              address_ = new global::Loom.Client.Protobuf.Address();
             }
             input.ReadMessage(address_);
             break;
@@ -1017,7 +1017,7 @@ namespace Loom.Client.Internal.Protobuf {
 
   }
 
-  internal sealed partial class TxReceiptList : pb::IMessage<TxReceiptList> {
+  public sealed partial class TxReceiptList : pb::IMessage<TxReceiptList> {
     private static readonly pb::MessageParser<TxReceiptList> _parser = new pb::MessageParser<TxReceiptList>(() => new TxReceiptList());
     private pb::UnknownFieldSet _unknownFields;
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
@@ -1025,7 +1025,7 @@ namespace Loom.Client.Internal.Protobuf {
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     public static pbr::MessageDescriptor Descriptor {
-      get { return global::Loom.Client.Internal.Protobuf.EvmReflection.Descriptor.MessageTypes[5]; }
+      get { return global::Loom.Client.Protobuf.EvmReflection.Descriptor.MessageTypes[5]; }
     }
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
@@ -1053,11 +1053,11 @@ namespace Loom.Client.Internal.Protobuf {
 
     /// <summary>Field number for the "tx_receipts" field.</summary>
     public const int TxReceiptsFieldNumber = 1;
-    private static readonly pb::FieldCodec<global::Loom.Client.Internal.Protobuf.EvmTxReceipt> _repeated_txReceipts_codec
-        = pb::FieldCodec.ForMessage(10, global::Loom.Client.Internal.Protobuf.EvmTxReceipt.Parser);
-    private readonly pbc::RepeatedField<global::Loom.Client.Internal.Protobuf.EvmTxReceipt> txReceipts_ = new pbc::RepeatedField<global::Loom.Client.Internal.Protobuf.EvmTxReceipt>();
+    private static readonly pb::FieldCodec<global::Loom.Client.Protobuf.EvmTxReceipt> _repeated_txReceipts_codec
+        = pb::FieldCodec.ForMessage(10, global::Loom.Client.Protobuf.EvmTxReceipt.Parser);
+    private readonly pbc::RepeatedField<global::Loom.Client.Protobuf.EvmTxReceipt> txReceipts_ = new pbc::RepeatedField<global::Loom.Client.Protobuf.EvmTxReceipt>();
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
-    public pbc::RepeatedField<global::Loom.Client.Internal.Protobuf.EvmTxReceipt> TxReceipts {
+    public pbc::RepeatedField<global::Loom.Client.Protobuf.EvmTxReceipt> TxReceipts {
       get { return txReceipts_; }
     }
 
@@ -1138,7 +1138,7 @@ namespace Loom.Client.Internal.Protobuf {
 
   }
 
-  internal sealed partial class EvmTxReceipt : pb::IMessage<EvmTxReceipt> {
+  public sealed partial class EvmTxReceipt : pb::IMessage<EvmTxReceipt> {
     private static readonly pb::MessageParser<EvmTxReceipt> _parser = new pb::MessageParser<EvmTxReceipt>(() => new EvmTxReceipt());
     private pb::UnknownFieldSet _unknownFields;
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
@@ -1146,7 +1146,7 @@ namespace Loom.Client.Internal.Protobuf {
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     public static pbr::MessageDescriptor Descriptor {
-      get { return global::Loom.Client.Internal.Protobuf.EvmReflection.Descriptor.MessageTypes[6]; }
+      get { return global::Loom.Client.Protobuf.EvmReflection.Descriptor.MessageTypes[6]; }
     }
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
@@ -1249,11 +1249,11 @@ namespace Loom.Client.Internal.Protobuf {
 
     /// <summary>Field number for the "logs" field.</summary>
     public const int LogsFieldNumber = 7;
-    private static readonly pb::FieldCodec<global::Loom.Client.Internal.Protobuf.EventData> _repeated_logs_codec
-        = pb::FieldCodec.ForMessage(58, global::Loom.Client.Internal.Protobuf.EventData.Parser);
-    private readonly pbc::RepeatedField<global::Loom.Client.Internal.Protobuf.EventData> logs_ = new pbc::RepeatedField<global::Loom.Client.Internal.Protobuf.EventData>();
+    private static readonly pb::FieldCodec<global::Loom.Client.Protobuf.EventData> _repeated_logs_codec
+        = pb::FieldCodec.ForMessage(58, global::Loom.Client.Protobuf.EventData.Parser);
+    private readonly pbc::RepeatedField<global::Loom.Client.Protobuf.EventData> logs_ = new pbc::RepeatedField<global::Loom.Client.Protobuf.EventData>();
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
-    public pbc::RepeatedField<global::Loom.Client.Internal.Protobuf.EventData> Logs {
+    public pbc::RepeatedField<global::Loom.Client.Protobuf.EventData> Logs {
       get { return logs_; }
     }
 
@@ -1511,7 +1511,7 @@ namespace Loom.Client.Internal.Protobuf {
 
   }
 
-  internal sealed partial class EvmTxObject : pb::IMessage<EvmTxObject> {
+  public sealed partial class EvmTxObject : pb::IMessage<EvmTxObject> {
     private static readonly pb::MessageParser<EvmTxObject> _parser = new pb::MessageParser<EvmTxObject>(() => new EvmTxObject());
     private pb::UnknownFieldSet _unknownFields;
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
@@ -1519,7 +1519,7 @@ namespace Loom.Client.Internal.Protobuf {
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     public static pbr::MessageDescriptor Descriptor {
-      get { return global::Loom.Client.Internal.Protobuf.EvmReflection.Descriptor.MessageTypes[7]; }
+      get { return global::Loom.Client.Protobuf.EvmReflection.Descriptor.MessageTypes[7]; }
     }
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
@@ -1953,7 +1953,7 @@ namespace Loom.Client.Internal.Protobuf {
 
   }
 
-  internal sealed partial class EthBlockInfo : pb::IMessage<EthBlockInfo> {
+  public sealed partial class EthBlockInfo : pb::IMessage<EthBlockInfo> {
     private static readonly pb::MessageParser<EthBlockInfo> _parser = new pb::MessageParser<EthBlockInfo>(() => new EthBlockInfo());
     private pb::UnknownFieldSet _unknownFields;
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
@@ -1961,7 +1961,7 @@ namespace Loom.Client.Internal.Protobuf {
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     public static pbr::MessageDescriptor Descriptor {
-      get { return global::Loom.Client.Internal.Protobuf.EvmReflection.Descriptor.MessageTypes[8]; }
+      get { return global::Loom.Client.Protobuf.EvmReflection.Descriptor.MessageTypes[8]; }
     }
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
@@ -2627,7 +2627,7 @@ namespace Loom.Client.Internal.Protobuf {
 
   }
 
-  internal sealed partial class EthFilterLogList : pb::IMessage<EthFilterLogList> {
+  public sealed partial class EthFilterLogList : pb::IMessage<EthFilterLogList> {
     private static readonly pb::MessageParser<EthFilterLogList> _parser = new pb::MessageParser<EthFilterLogList>(() => new EthFilterLogList());
     private pb::UnknownFieldSet _unknownFields;
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
@@ -2635,7 +2635,7 @@ namespace Loom.Client.Internal.Protobuf {
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     public static pbr::MessageDescriptor Descriptor {
-      get { return global::Loom.Client.Internal.Protobuf.EvmReflection.Descriptor.MessageTypes[9]; }
+      get { return global::Loom.Client.Protobuf.EvmReflection.Descriptor.MessageTypes[9]; }
     }
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
@@ -2663,11 +2663,11 @@ namespace Loom.Client.Internal.Protobuf {
 
     /// <summary>Field number for the "eth_block_logs" field.</summary>
     public const int EthBlockLogsFieldNumber = 1;
-    private static readonly pb::FieldCodec<global::Loom.Client.Internal.Protobuf.EthFilterLog> _repeated_ethBlockLogs_codec
-        = pb::FieldCodec.ForMessage(10, global::Loom.Client.Internal.Protobuf.EthFilterLog.Parser);
-    private readonly pbc::RepeatedField<global::Loom.Client.Internal.Protobuf.EthFilterLog> ethBlockLogs_ = new pbc::RepeatedField<global::Loom.Client.Internal.Protobuf.EthFilterLog>();
+    private static readonly pb::FieldCodec<global::Loom.Client.Protobuf.EthFilterLog> _repeated_ethBlockLogs_codec
+        = pb::FieldCodec.ForMessage(10, global::Loom.Client.Protobuf.EthFilterLog.Parser);
+    private readonly pbc::RepeatedField<global::Loom.Client.Protobuf.EthFilterLog> ethBlockLogs_ = new pbc::RepeatedField<global::Loom.Client.Protobuf.EthFilterLog>();
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
-    public pbc::RepeatedField<global::Loom.Client.Internal.Protobuf.EthFilterLog> EthBlockLogs {
+    public pbc::RepeatedField<global::Loom.Client.Protobuf.EthFilterLog> EthBlockLogs {
       get { return ethBlockLogs_; }
     }
 
@@ -2748,7 +2748,7 @@ namespace Loom.Client.Internal.Protobuf {
 
   }
 
-  internal sealed partial class EthFilterLog : pb::IMessage<EthFilterLog> {
+  public sealed partial class EthFilterLog : pb::IMessage<EthFilterLog> {
     private static readonly pb::MessageParser<EthFilterLog> _parser = new pb::MessageParser<EthFilterLog>(() => new EthFilterLog());
     private pb::UnknownFieldSet _unknownFields;
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
@@ -2756,7 +2756,7 @@ namespace Loom.Client.Internal.Protobuf {
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     public static pbr::MessageDescriptor Descriptor {
-      get { return global::Loom.Client.Internal.Protobuf.EvmReflection.Descriptor.MessageTypes[10]; }
+      get { return global::Loom.Client.Protobuf.EvmReflection.Descriptor.MessageTypes[10]; }
     }
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]

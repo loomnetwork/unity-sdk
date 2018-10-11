@@ -4,14 +4,34 @@
 
 using UnityEditor;
 using UnityEditor.Build;
+#if UNITY_2018_1_OR_NEWER
+using UnityEditor.Build.Reporting;
+#endif
 
 namespace Loom.Client.Unity.Editor.Internal
 {
-    internal class CheckProject : IPreprocessBuild
+    internal class CheckProject :
+#if UNITY_2018_1_OR_NEWER
+        IPreprocessBuildWithReport
+#else
+        IPreprocessBuild
+#endif
     {
         public int callbackOrder { get; }
 
+#if UNITY_2018_1_OR_NEWER
+        public void OnPreprocessBuild(BuildReport report)
+        {
+            CheckForBuildTarget(report.summary.platform);
+        }
+#else
         public void OnPreprocessBuild(BuildTarget target, string path)
+        {
+            CheckForBuildTarget(target);
+        }
+#endif
+
+        private void CheckForBuildTarget(BuildTarget target)
         {
             if (target == BuildTarget.WebGL)
             {

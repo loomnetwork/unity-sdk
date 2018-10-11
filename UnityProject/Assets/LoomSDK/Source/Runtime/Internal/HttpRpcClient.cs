@@ -1,5 +1,6 @@
 ﻿using System.Threading.Tasks;
 using System;
+using System.Collections.Generic;
 using Loom.Newtonsoft.Json;
 using System.Text;
 using Loom.Client.Unity.Internal.UnityAsyncAwaitUtil;
@@ -27,7 +28,7 @@ namespace Loom.Client.Internal
             this.url = new Uri(url);
         }
 
-        public override Task SubscribeAsync(EventHandler<JsonRpcEventData> handler)
+        public override Task SubscribeAsync(EventHandler<JsonRpcEventData> handler, ICollection<string> topics = null)
         {
             throw new NotImplementedException();
         }

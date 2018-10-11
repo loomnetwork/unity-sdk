@@ -2,6 +2,7 @@
 
 using Loom.Newtonsoft.Json;
 using System;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 using System.ComponentModel;
 using Loom.Client.Internal;
@@ -107,7 +108,7 @@ namespace Loom.Client.Unity.WebGL.Internal
             await tcs.Task;
         }
 
-        public override async Task SubscribeAsync(EventHandler<JsonRpcEventData> handler)
+        public override async Task SubscribeAsync(EventHandler<JsonRpcEventData> handler, ICollection<string> topics)
         {
             var isFirstSub = this.eventReceived == null;
             this.eventReceived += handler;
@@ -115,9 +116,17 @@ namespace Loom.Client.Unity.WebGL.Internal
             {
                 this.webSocket.MessageReceived += WSRPCClient_MessageReceived;
             }
+
             // TODO: once re-sub on reconnect is implemented this should only
             // be done on first sub
-            await SendAsync<object, object>("subevents", new object());
+            Dictionary<string, ICollection<string>> result = null;
+            if (topics != null)
+            {
+                result = new Dictionary<string, ICollection<string>>();
+                result.Add("topics", topics);
+            }
+
+            await SendAsync<string, Dictionary<string, ICollection<string>>>("subevents", result);
         }
 
         public override async Task UnsubscribeAsync(EventHandler<JsonRpcEventData> handler)
@@ -126,7 +135,7 @@ namespace Loom.Client.Unity.WebGL.Internal
             if (this.eventReceived == null)
             {
                 this.webSocket.MessageReceived -= WSRPCClient_MessageReceived;
-                await SendAsync<object, object>("unsubevents", new object());
+                await SendAsync<string, object>("unsubevents", null);
             }
         }
 

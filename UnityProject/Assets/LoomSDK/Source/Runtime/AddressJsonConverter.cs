@@ -20,7 +20,7 @@ namespace Loom.Client.Internal
         public override object ReadJson(JsonReader reader, Type objectType, object existingValue, JsonSerializer serializer)
         {
             AddressJsonModel jsonModel = serializer.Deserialize<AddressJsonModel>(reader);
-            return new Address(CryptoUtils.BytesToHexString(jsonModel.Local), String.IsNullOrEmpty(jsonModel.ChainId) ? Address.kDefaultChainId : jsonModel.ChainId);
+            return new Address(CryptoUtils.BytesToHexString(jsonModel.Local), String.IsNullOrEmpty(jsonModel.ChainId) ? Address.DefaultChainId : jsonModel.ChainId);
         }
 
         public override bool CanConvert(Type objectType)

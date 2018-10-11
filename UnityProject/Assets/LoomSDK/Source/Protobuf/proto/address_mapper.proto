@@ -1,7 +1,7 @@
 syntax = "proto3";
-option csharp_namespace = "Loom.Client.Internal.Protobuf";
+option csharp_namespace = "Loom.Client.Protobuf";
 
-import "proto/loom.proto";
+import "proto/types.proto";
 
 // Bidirectional mapping between addresses (contracts or accounts) on two different blockchains.
 // One of the address fields must contain a local address (same chain ID as the contract), while the

@@ -1,6 +1,6 @@
 ﻿using Loom.Google.Protobuf;
 using System.Threading.Tasks;
-using Loom.Client.Internal.Protobuf;
+using Loom.Client.Protobuf;
 
 namespace Loom.Client
 {

@@ -9,10 +9,10 @@ using pb = global::Loom.Google.Protobuf;
 using pbc = global::Loom.Google.Protobuf.Collections;
 using pbr = global::Loom.Google.Protobuf.Reflection;
 using scg = global::System.Collections.Generic;
-namespace Loom.Client.Internal.Protobuf {
+namespace Loom.Client.Protobuf {
 
   /// <summary>Holder for reflection information generated from proto/address_mapper.proto</summary>
-  internal static partial class AddressMapperReflection {
+  public static partial class AddressMapperReflection {
 
     #region Descriptor
     /// <summary>File descriptor for proto/address_mapper.proto</summary>
@@ -24,29 +24,29 @@ namespace Loom.Client.Internal.Protobuf {
     static AddressMapperReflection() {
       byte[] descriptorData = global::System.Convert.FromBase64String(
           string.Concat(
-            "Chpwcm90by9hZGRyZXNzX21hcHBlci5wcm90bxoQcHJvdG8vbG9vbS5wcm90",
-            "byJEChRBZGRyZXNzTWFwcGVyTWFwcGluZxIWCgRmcm9tGAEgASgLMgguQWRk",
-            "cmVzcxIUCgJ0bxgCIAEoCzIILkFkZHJlc3MiGgoYQWRkcmVzc01hcHBlcklu",
-            "aXRSZXF1ZXN0ImkKJkFkZHJlc3NNYXBwZXJBZGRJZGVudGl0eU1hcHBpbmdS",
-            "ZXF1ZXN0EhYKBGZyb20YASABKAsyCC5BZGRyZXNzEhQKAnRvGAIgASgLMggu",
-            "QWRkcmVzcxIRCglzaWduYXR1cmUYAyABKAwiVgomQWRkcmVzc01hcHBlckFk",
-            "ZENvbnRyYWN0TWFwcGluZ1JlcXVlc3QSFgoEZnJvbRgBIAEoCzIILkFkZHJl",
-            "c3MSFAoCdG8YAiABKAsyCC5BZGRyZXNzIiMKIUFkZHJlc3NNYXBwZXJSZW1v",
-            "dmVNYXBwaW5nUmVxdWVzdCI4Ch5BZGRyZXNzTWFwcGVyR2V0TWFwcGluZ1Jl",
-            "cXVlc3QSFgoEZnJvbRgBIAEoCzIILkFkZHJlc3MiTwofQWRkcmVzc01hcHBl",
-            "ckdldE1hcHBpbmdSZXNwb25zZRIWCgRmcm9tGAEgASgLMgguQWRkcmVzcxIU",
-            "CgJ0bxgCIAEoCzIILkFkZHJlc3NCIKoCHUxvb20uQ2xpZW50LkludGVybmFs",
-            "LlByb3RvYnVmYgZwcm90bzM="));
+            "Chpwcm90by9hZGRyZXNzX21hcHBlci5wcm90bxoRcHJvdG8vdHlwZXMucHJv",
+            "dG8iRAoUQWRkcmVzc01hcHBlck1hcHBpbmcSFgoEZnJvbRgBIAEoCzIILkFk",
+            "ZHJlc3MSFAoCdG8YAiABKAsyCC5BZGRyZXNzIhoKGEFkZHJlc3NNYXBwZXJJ",
+            "bml0UmVxdWVzdCJpCiZBZGRyZXNzTWFwcGVyQWRkSWRlbnRpdHlNYXBwaW5n",
+            "UmVxdWVzdBIWCgRmcm9tGAEgASgLMgguQWRkcmVzcxIUCgJ0bxgCIAEoCzII",
+            "LkFkZHJlc3MSEQoJc2lnbmF0dXJlGAMgASgMIlYKJkFkZHJlc3NNYXBwZXJB",
+            "ZGRDb250cmFjdE1hcHBpbmdSZXF1ZXN0EhYKBGZyb20YASABKAsyCC5BZGRy",
+            "ZXNzEhQKAnRvGAIgASgLMgguQWRkcmVzcyIjCiFBZGRyZXNzTWFwcGVyUmVt",
+            "b3ZlTWFwcGluZ1JlcXVlc3QiOAoeQWRkcmVzc01hcHBlckdldE1hcHBpbmdS",
+            "ZXF1ZXN0EhYKBGZyb20YASABKAsyCC5BZGRyZXNzIk8KH0FkZHJlc3NNYXBw",
+            "ZXJHZXRNYXBwaW5nUmVzcG9uc2USFgoEZnJvbRgBIAEoCzIILkFkZHJlc3MS",
+            "FAoCdG8YAiABKAsyCC5BZGRyZXNzQheqAhRMb29tLkNsaWVudC5Qcm90b2J1",
+            "ZmIGcHJvdG8z"));
       descriptor = pbr::FileDescriptor.FromGeneratedCode(descriptorData,
-          new pbr::FileDescriptor[] { global::Loom.Client.Internal.Protobuf.LoomReflection.Descriptor, },
+          new pbr::FileDescriptor[] { global::Loom.Client.Protobuf.TypesReflection.Descriptor, },
           new pbr::GeneratedClrTypeInfo(null, new pbr::GeneratedClrTypeInfo[] {
-            new pbr::GeneratedClrTypeInfo(typeof(global::Loom.Client.Internal.Protobuf.AddressMapperMapping), global::Loom.Client.Internal.Protobuf.AddressMapperMapping.Parser, new[]{ "From", "To" }, null, null, null),
-            new pbr::GeneratedClrTypeInfo(typeof(global::Loom.Client.Internal.Protobuf.AddressMapperInitRequest), global::Loom.Client.Internal.Protobuf.AddressMapperInitRequest.Parser, null, null, null, null),
-            new pbr::GeneratedClrTypeInfo(typeof(global::Loom.Client.Internal.Protobuf.AddressMapperAddIdentityMappingRequest), global::Loom.Client.Internal.Protobuf.AddressMapperAddIdentityMappingRequest.Parser, new[]{ "From", "To", "Signature" }, null, null, null),
-            new pbr::GeneratedClrTypeInfo(typeof(global::Loom.Client.Internal.Protobuf.AddressMapperAddContractMappingRequest), global::Loom.Client.Internal.Protobuf.AddressMapperAddContractMappingRequest.Parser, new[]{ "From", "To" }, null, null, null),
-            new pbr::GeneratedClrTypeInfo(typeof(global::Loom.Client.Internal.Protobuf.AddressMapperRemoveMappingRequest), global::Loom.Client.Internal.Protobuf.AddressMapperRemoveMappingRequest.Parser, null, null, null, null),
-            new pbr::GeneratedClrTypeInfo(typeof(global::Loom.Client.Internal.Protobuf.AddressMapperGetMappingRequest), global::Loom.Client.Internal.Protobuf.AddressMapperGetMappingRequest.Parser, new[]{ "From" }, null, null, null),
-            new pbr::GeneratedClrTypeInfo(typeof(global::Loom.Client.Internal.Protobuf.AddressMapperGetMappingResponse), global::Loom.Client.Internal.Protobuf.AddressMapperGetMappingResponse.Parser, new[]{ "From", "To" }, null, null, null)
+            new pbr::GeneratedClrTypeInfo(typeof(global::Loom.Client.Protobuf.AddressMapperMapping), global::Loom.Client.Protobuf.AddressMapperMapping.Parser, new[]{ "From", "To" }, null, null, null),
+            new pbr::GeneratedClrTypeInfo(typeof(global::Loom.Client.Protobuf.AddressMapperInitRequest), global::Loom.Client.Protobuf.AddressMapperInitRequest.Parser, null, null, null, null),
+            new pbr::GeneratedClrTypeInfo(typeof(global::Loom.Client.Protobuf.AddressMapperAddIdentityMappingRequest), global::Loom.Client.Protobuf.AddressMapperAddIdentityMappingRequest.Parser, new[]{ "From", "To", "Signature" }, null, null, null),
+            new pbr::GeneratedClrTypeInfo(typeof(global::Loom.Client.Protobuf.AddressMapperAddContractMappingRequest), global::Loom.Client.Protobuf.AddressMapperAddContractMappingRequest.Parser, new[]{ "From", "To" }, null, null, null),
+            new pbr::GeneratedClrTypeInfo(typeof(global::Loom.Client.Protobuf.AddressMapperRemoveMappingRequest), global::Loom.Client.Protobuf.AddressMapperRemoveMappingRequest.Parser, null, null, null, null),
+            new pbr::GeneratedClrTypeInfo(typeof(global::Loom.Client.Protobuf.AddressMapperGetMappingRequest), global::Loom.Client.Protobuf.AddressMapperGetMappingRequest.Parser, new[]{ "From" }, null, null, null),
+            new pbr::GeneratedClrTypeInfo(typeof(global::Loom.Client.Protobuf.AddressMapperGetMappingResponse), global::Loom.Client.Protobuf.AddressMapperGetMappingResponse.Parser, new[]{ "From", "To" }, null, null, null)
           }));
     }
     #endregion
@@ -58,7 +58,7 @@ namespace Loom.Client.Internal.Protobuf {
   /// One of the address fields must contain a local address (same chain ID as the contract), while the
   /// other must contain a foreign address.
   /// </summary>
-  internal sealed partial class AddressMapperMapping : pb::IMessage<AddressMapperMapping> {
+  public sealed partial class AddressMapperMapping : pb::IMessage<AddressMapperMapping> {
     private static readonly pb::MessageParser<AddressMapperMapping> _parser = new pb::MessageParser<AddressMapperMapping>(() => new AddressMapperMapping());
     private pb::UnknownFieldSet _unknownFields;
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
@@ -66,7 +66,7 @@ namespace Loom.Client.Internal.Protobuf {
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     public static pbr::MessageDescriptor Descriptor {
-      get { return global::Loom.Client.Internal.Protobuf.AddressMapperReflection.Descriptor.MessageTypes[0]; }
+      get { return global::Loom.Client.Protobuf.AddressMapperReflection.Descriptor.MessageTypes[0]; }
     }
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
@@ -95,12 +95,12 @@ namespace Loom.Client.Internal.Protobuf {
 
     /// <summary>Field number for the "from" field.</summary>
     public const int FromFieldNumber = 1;
-    private global::Loom.Client.Internal.Protobuf.Address from_;
+    private global::Loom.Client.Protobuf.Address from_;
     /// <summary>
     /// Address on a blockchain
     /// </summary>
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
-    public global::Loom.Client.Internal.Protobuf.Address From {
+    public global::Loom.Client.Protobuf.Address From {
       get { return from_; }
       set {
         from_ = value;
@@ -109,12 +109,12 @@ namespace Loom.Client.Internal.Protobuf {
 
     /// <summary>Field number for the "to" field.</summary>
     public const int ToFieldNumber = 2;
-    private global::Loom.Client.Internal.Protobuf.Address to_;
+    private global::Loom.Client.Protobuf.Address to_;
     /// <summary>
     /// Corresponding address on another blockchain
     /// </summary>
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
-    public global::Loom.Client.Internal.Protobuf.Address To {
+    public global::Loom.Client.Protobuf.Address To {
       get { return to_; }
       set {
         to_ = value;
@@ -192,13 +192,13 @@ namespace Loom.Client.Internal.Protobuf {
       }
       if (other.from_ != null) {
         if (from_ == null) {
-          from_ = new global::Loom.Client.Internal.Protobuf.Address();
+          from_ = new global::Loom.Client.Protobuf.Address();
         }
         From.MergeFrom(other.From);
       }
       if (other.to_ != null) {
         if (to_ == null) {
-          to_ = new global::Loom.Client.Internal.Protobuf.Address();
+          to_ = new global::Loom.Client.Protobuf.Address();
         }
         To.MergeFrom(other.To);
       }
@@ -215,14 +215,14 @@ namespace Loom.Client.Internal.Protobuf {
             break;
           case 10: {
             if (from_ == null) {
-              from_ = new global::Loom.Client.Internal.Protobuf.Address();
+              from_ = new global::Loom.Client.Protobuf.Address();
             }
             input.ReadMessage(from_);
             break;
           }
           case 18: {
             if (to_ == null) {
-              to_ = new global::Loom.Client.Internal.Protobuf.Address();
+              to_ = new global::Loom.Client.Protobuf.Address();
             }
             input.ReadMessage(to_);
             break;
@@ -233,7 +233,7 @@ namespace Loom.Client.Internal.Protobuf {
 
   }
 
-  internal sealed partial class AddressMapperInitRequest : pb::IMessage<AddressMapperInitRequest> {
+  public sealed partial class AddressMapperInitRequest : pb::IMessage<AddressMapperInitRequest> {
     private static readonly pb::MessageParser<AddressMapperInitRequest> _parser = new pb::MessageParser<AddressMapperInitRequest>(() => new AddressMapperInitRequest());
     private pb::UnknownFieldSet _unknownFields;
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
@@ -241,7 +241,7 @@ namespace Loom.Client.Internal.Protobuf {
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     public static pbr::MessageDescriptor Descriptor {
-      get { return global::Loom.Client.Internal.Protobuf.AddressMapperReflection.Descriptor.MessageTypes[1]; }
+      get { return global::Loom.Client.Protobuf.AddressMapperReflection.Descriptor.MessageTypes[1]; }
     }
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
@@ -334,7 +334,7 @@ namespace Loom.Client.Internal.Protobuf {
 
   }
 
-  internal sealed partial class AddressMapperAddIdentityMappingRequest : pb::IMessage<AddressMapperAddIdentityMappingRequest> {
+  public sealed partial class AddressMapperAddIdentityMappingRequest : pb::IMessage<AddressMapperAddIdentityMappingRequest> {
     private static readonly pb::MessageParser<AddressMapperAddIdentityMappingRequest> _parser = new pb::MessageParser<AddressMapperAddIdentityMappingRequest>(() => new AddressMapperAddIdentityMappingRequest());
     private pb::UnknownFieldSet _unknownFields;
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
@@ -342,7 +342,7 @@ namespace Loom.Client.Internal.Protobuf {
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     public static pbr::MessageDescriptor Descriptor {
-      get { return global::Loom.Client.Internal.Protobuf.AddressMapperReflection.Descriptor.MessageTypes[2]; }
+      get { return global::Loom.Client.Protobuf.AddressMapperReflection.Descriptor.MessageTypes[2]; }
     }
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
@@ -372,12 +372,12 @@ namespace Loom.Client.Internal.Protobuf {
 
     /// <summary>Field number for the "from" field.</summary>
     public const int FromFieldNumber = 1;
-    private global::Loom.Client.Internal.Protobuf.Address from_;
+    private global::Loom.Client.Protobuf.Address from_;
     /// <summary>
     /// Address on a blockchain
     /// </summary>
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
-    public global::Loom.Client.Internal.Protobuf.Address From {
+    public global::Loom.Client.Protobuf.Address From {
       get { return from_; }
       set {
         from_ = value;
@@ -386,12 +386,12 @@ namespace Loom.Client.Internal.Protobuf {
 
     /// <summary>Field number for the "to" field.</summary>
     public const int ToFieldNumber = 2;
-    private global::Loom.Client.Internal.Protobuf.Address to_;
+    private global::Loom.Client.Protobuf.Address to_;
     /// <summary>
     /// Corresponding address on another blockchain
     /// </summary>
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
-    public global::Loom.Client.Internal.Protobuf.Address To {
+    public global::Loom.Client.Protobuf.Address To {
       get { return to_; }
       set {
         to_ = value;
@@ -492,13 +492,13 @@ namespace Loom.Client.Internal.Protobuf {
       }
       if (other.from_ != null) {
         if (from_ == null) {
-          from_ = new global::Loom.Client.Internal.Protobuf.Address();
+          from_ = new global::Loom.Client.Protobuf.Address();
         }
         From.MergeFrom(other.From);
       }
       if (other.to_ != null) {
         if (to_ == null) {
-          to_ = new global::Loom.Client.Internal.Protobuf.Address();
+          to_ = new global::Loom.Client.Protobuf.Address();
         }
         To.MergeFrom(other.To);
       }
@@ -518,14 +518,14 @@ namespace Loom.Client.Internal.Protobuf {
             break;
           case 10: {
             if (from_ == null) {
-              from_ = new global::Loom.Client.Internal.Protobuf.Address();
+              from_ = new global::Loom.Client.Protobuf.Address();
             }
             input.ReadMessage(from_);
             break;
           }
           case 18: {
             if (to_ == null) {
-              to_ = new global::Loom.Client.Internal.Protobuf.Address();
+              to_ = new global::Loom.Client.Protobuf.Address();
             }
             input.ReadMessage(to_);
             break;
@@ -540,7 +540,7 @@ namespace Loom.Client.Internal.Protobuf {
 
   }
 
-  internal sealed partial class AddressMapperAddContractMappingRequest : pb::IMessage<AddressMapperAddContractMappingRequest> {
+  public sealed partial class AddressMapperAddContractMappingRequest : pb::IMessage<AddressMapperAddContractMappingRequest> {
     private static readonly pb::MessageParser<AddressMapperAddContractMappingRequest> _parser = new pb::MessageParser<AddressMapperAddContractMappingRequest>(() => new AddressMapperAddContractMappingRequest());
     private pb::UnknownFieldSet _unknownFields;
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
@@ -548,7 +548,7 @@ namespace Loom.Client.Internal.Protobuf {
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     public static pbr::MessageDescriptor Descriptor {
-      get { return global::Loom.Client.Internal.Protobuf.AddressMapperReflection.Descriptor.MessageTypes[3]; }
+      get { return global::Loom.Client.Protobuf.AddressMapperReflection.Descriptor.MessageTypes[3]; }
     }
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
@@ -577,12 +577,12 @@ namespace Loom.Client.Internal.Protobuf {
 
     /// <summary>Field number for the "from" field.</summary>
     public const int FromFieldNumber = 1;
-    private global::Loom.Client.Internal.Protobuf.Address from_;
+    private global::Loom.Client.Protobuf.Address from_;
     /// <summary>
     /// Address on a blockchain
     /// </summary>
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
-    public global::Loom.Client.Internal.Protobuf.Address From {
+    public global::Loom.Client.Protobuf.Address From {
       get { return from_; }
       set {
         from_ = value;
@@ -591,12 +591,12 @@ namespace Loom.Client.Internal.Protobuf {
 
     /// <summary>Field number for the "to" field.</summary>
     public const int ToFieldNumber = 2;
-    private global::Loom.Client.Internal.Protobuf.Address to_;
+    private global::Loom.Client.Protobuf.Address to_;
     /// <summary>
     /// Corresponding address on another blockchain
     /// </summary>
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
-    public global::Loom.Client.Internal.Protobuf.Address To {
+    public global::Loom.Client.Protobuf.Address To {
       get { return to_; }
       set {
         to_ = value;
@@ -674,13 +674,13 @@ namespace Loom.Client.Internal.Protobuf {
       }
       if (other.from_ != null) {
         if (from_ == null) {
-          from_ = new global::Loom.Client.Internal.Protobuf.Address();
+          from_ = new global::Loom.Client.Protobuf.Address();
         }
         From.MergeFrom(other.From);
       }
       if (other.to_ != null) {
         if (to_ == null) {
-          to_ = new global::Loom.Client.Internal.Protobuf.Address();
+          to_ = new global::Loom.Client.Protobuf.Address();
         }
         To.MergeFrom(other.To);
       }
@@ -697,14 +697,14 @@ namespace Loom.Client.Internal.Protobuf {
             break;
           case 10: {
             if (from_ == null) {
-              from_ = new global::Loom.Client.Internal.Protobuf.Address();
+              from_ = new global::Loom.Client.Protobuf.Address();
             }
             input.ReadMessage(from_);
             break;
           }
           case 18: {
             if (to_ == null) {
-              to_ = new global::Loom.Client.Internal.Protobuf.Address();
+              to_ = new global::Loom.Client.Protobuf.Address();
             }
             input.ReadMessage(to_);
             break;
@@ -718,7 +718,7 @@ namespace Loom.Client.Internal.Protobuf {
   /// <summary>
   /// TODO
   /// </summary>
-  internal sealed partial class AddressMapperRemoveMappingRequest : pb::IMessage<AddressMapperRemoveMappingRequest> {
+  public sealed partial class AddressMapperRemoveMappingRequest : pb::IMessage<AddressMapperRemoveMappingRequest> {
     private static readonly pb::MessageParser<AddressMapperRemoveMappingRequest> _parser = new pb::MessageParser<AddressMapperRemoveMappingRequest>(() => new AddressMapperRemoveMappingRequest());
     private pb::UnknownFieldSet _unknownFields;
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
@@ -726,7 +726,7 @@ namespace Loom.Client.Internal.Protobuf {
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     public static pbr::MessageDescriptor Descriptor {
-      get { return global::Loom.Client.Internal.Protobuf.AddressMapperReflection.Descriptor.MessageTypes[4]; }
+      get { return global::Loom.Client.Protobuf.AddressMapperReflection.Descriptor.MessageTypes[4]; }
     }
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
@@ -819,7 +819,7 @@ namespace Loom.Client.Internal.Protobuf {
 
   }
 
-  internal sealed partial class AddressMapperGetMappingRequest : pb::IMessage<AddressMapperGetMappingRequest> {
+  public sealed partial class AddressMapperGetMappingRequest : pb::IMessage<AddressMapperGetMappingRequest> {
     private static readonly pb::MessageParser<AddressMapperGetMappingRequest> _parser = new pb::MessageParser<AddressMapperGetMappingRequest>(() => new AddressMapperGetMappingRequest());
     private pb::UnknownFieldSet _unknownFields;
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
@@ -827,7 +827,7 @@ namespace Loom.Client.Internal.Protobuf {
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     public static pbr::MessageDescriptor Descriptor {
-      get { return global::Loom.Client.Internal.Protobuf.AddressMapperReflection.Descriptor.MessageTypes[5]; }
+      get { return global::Loom.Client.Protobuf.AddressMapperReflection.Descriptor.MessageTypes[5]; }
     }
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
@@ -855,9 +855,9 @@ namespace Loom.Client.Internal.Protobuf {
 
     /// <summary>Field number for the "from" field.</summary>
     public const int FromFieldNumber = 1;
-    private global::Loom.Client.Internal.Protobuf.Address from_;
+    private global::Loom.Client.Protobuf.Address from_;
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
-    public global::Loom.Client.Internal.Protobuf.Address From {
+    public global::Loom.Client.Protobuf.Address From {
       get { return from_; }
       set {
         from_ = value;
@@ -926,7 +926,7 @@ namespace Loom.Client.Internal.Protobuf {
       }
       if (other.from_ != null) {
         if (from_ == null) {
-          from_ = new global::Loom.Client.Internal.Protobuf.Address();
+          from_ = new global::Loom.Client.Protobuf.Address();
         }
         From.MergeFrom(other.From);
       }
@@ -943,7 +943,7 @@ namespace Loom.Client.Internal.Protobuf {
             break;
           case 10: {
             if (from_ == null) {
-              from_ = new global::Loom.Client.Internal.Protobuf.Address();
+              from_ = new global::Loom.Client.Protobuf.Address();
             }
             input.ReadMessage(from_);
             break;
@@ -954,7 +954,7 @@ namespace Loom.Client.Internal.Protobuf {
 
   }
 
-  internal sealed partial class AddressMapperGetMappingResponse : pb::IMessage<AddressMapperGetMappingResponse> {
+  public sealed partial class AddressMapperGetMappingResponse : pb::IMessage<AddressMapperGetMappingResponse> {
     private static readonly pb::MessageParser<AddressMapperGetMappingResponse> _parser = new pb::MessageParser<AddressMapperGetMappingResponse>(() => new AddressMapperGetMappingResponse());
     private pb::UnknownFieldSet _unknownFields;
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
@@ -962,7 +962,7 @@ namespace Loom.Client.Internal.Protobuf {
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     public static pbr::MessageDescriptor Descriptor {
-      get { return global::Loom.Client.Internal.Protobuf.AddressMapperReflection.Descriptor.MessageTypes[6]; }
+      get { return global::Loom.Client.Protobuf.AddressMapperReflection.Descriptor.MessageTypes[6]; }
     }
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
@@ -991,12 +991,12 @@ namespace Loom.Client.Internal.Protobuf {
 
     /// <summary>Field number for the "from" field.</summary>
     public const int FromFieldNumber = 1;
-    private global::Loom.Client.Internal.Protobuf.Address from_;
+    private global::Loom.Client.Protobuf.Address from_;
     /// <summary>
     /// Address that was provided in the request
     /// </summary>
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
-    public global::Loom.Client.Internal.Protobuf.Address From {
+    public global::Loom.Client.Protobuf.Address From {
       get { return from_; }
       set {
         from_ = value;
@@ -1005,9 +1005,9 @@ namespace Loom.Client.Internal.Protobuf {
 
     /// <summary>Field number for the "to" field.</summary>
     public const int ToFieldNumber = 2;
-    private global::Loom.Client.Internal.Protobuf.Address to_;
+    private global::Loom.Client.Protobuf.Address to_;
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
-    public global::Loom.Client.Internal.Protobuf.Address To {
+    public global::Loom.Client.Protobuf.Address To {
       get { return to_; }
       set {
         to_ = value;
@@ -1085,13 +1085,13 @@ namespace Loom.Client.Internal.Protobuf {
       }
       if (other.from_ != null) {
         if (from_ == null) {
-          from_ = new global::Loom.Client.Internal.Protobuf.Address();
+          from_ = new global::Loom.Client.Protobuf.Address();
         }
         From.MergeFrom(other.From);
       }
       if (other.to_ != null) {
         if (to_ == null) {
-          to_ = new global::Loom.Client.Internal.Protobuf.Address();
+          to_ = new global::Loom.Client.Protobuf.Address();
         }
         To.MergeFrom(other.To);
       }
@@ -1108,14 +1108,14 @@ namespace Loom.Client.Internal.Protobuf {
             break;
           case 10: {
             if (from_ == null) {
-              from_ = new global::Loom.Client.Internal.Protobuf.Address();
+              from_ = new global::Loom.Client.Protobuf.Address();
             }
             input.ReadMessage(from_);
             break;
           }
           case 18: {
             if (to_ == null) {
-              to_ = new global::Loom.Client.Internal.Protobuf.Address();
+              to_ = new global::Loom.Client.Protobuf.Address();
             }
             input.ReadMessage(to_);
             break;

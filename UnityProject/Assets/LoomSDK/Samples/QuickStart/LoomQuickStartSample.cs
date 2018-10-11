@@ -10,13 +10,13 @@ public class LoomQuickStartSample : MonoBehaviour {
     {
         var writer = RpcClientFactory.Configure()
             .WithLogger(Debug.unityLogger)
-            .WithHTTP("http://127.0.0.1:46658/rpc")
+            .WithHttp("http://127.0.0.1:46658/rpc")
             //.WithWebSocket("ws://127.0.0.1:46657/websocket")
             .Create();
 
         var reader = RpcClientFactory.Configure()
             .WithLogger(Debug.unityLogger)
-            .WithHTTP("http://127.0.0.1:46658/query")
+            .WithHttp("http://127.0.0.1:46658/query")
             //.WithWebSocket("ws://127.0.0.1:9999/queryws")
             .Create();
 
