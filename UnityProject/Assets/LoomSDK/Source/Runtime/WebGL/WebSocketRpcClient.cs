@@ -2,6 +2,7 @@
 
 using Loom.Newtonsoft.Json;
 using System;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 using System.ComponentModel;
 using Loom.Client.Internal;
@@ -107,7 +108,7 @@ namespace Loom.Client.Unity.WebGL.Internal
             await tcs.Task;
         }
 
-        public override async Task SubscribeAsync(EventHandler<JsonRpcEventData> handler)
+        public override async Task SubscribeAsync(EventHandler<JsonRpcEventData> handler, ICollection<string> topics)
         {
             var isFirstSub = this.eventReceived == null;
             this.eventReceived += handler;
@@ -125,7 +126,7 @@ namespace Loom.Client.Unity.WebGL.Internal
                 result.Add("topics", topics);
             }
 
-            return SendAsync<string, Dictionary<string, ICollection<string>>>("subevents", result);
+            await SendAsync<string, Dictionary<string, ICollection<string>>>("subevents", result);
         }
 
         public override async Task UnsubscribeAsync(EventHandler<JsonRpcEventData> handler)
