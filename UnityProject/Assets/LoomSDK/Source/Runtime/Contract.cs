@@ -1,7 +1,7 @@
 ﻿using System.Text;
 using System.Threading.Tasks;
 using Loom.Client.Internal;
-using Loom.Client.Internal.Protobuf;
+using Loom.Client.Protobuf;
 using Loom.Google.Protobuf;
 using Loom.Newtonsoft.Json;
 
@@ -17,9 +17,9 @@ namespace Loom.Client
         /// Constructor.
         /// </summary>
         /// <param name="client">Client to use to communicate with the contract.</param>
-        /// <param name="contractAddr">Address of a contract on the Loom DAppChain.</param>
-        /// <param name="callerAddr">Address of the caller, generated from the public key of the transaction signer.</param>
-        public Contract(DAppChainClient client, Address contractAddr, Address callerAddr) : base(client, contractAddr, callerAddr) {
+        /// <param name="contractAddress">Address of a contract on the Loom DAppChain.</param>
+        /// <param name="callerAddress">Address of the caller, generated from the public key of the transaction signer.</param>
+        public Contract(DAppChainClient client, Address contractAddress, Address callerAddress) : base(client, contractAddress, callerAddress) {
         }
 
         /// <summary>
@@ -28,11 +28,12 @@ namespace Loom.Client
         /// </summary>
         /// <param name="method">Smart contract method name.</param>
         /// <param name="args">Arguments object for the smart contract method.</param>
+        /// <param name="timeout">Specifies the amount of time after which a call will time out.</param>
         /// <returns>Nothing.</returns>
-        public async Task CallAsync(string method, IMessage args)
+        public async Task CallAsync(string method, IMessage args, int timeout = 5000)
         {
-            var tx = this.CreateContractMethodCallTx(method, args);
-            await CallAsync(tx);
+            Transaction tx = this.CreateContractMethodCallTx(method, args);
+            await CallAsync(tx, timeout);
         }
 
         /// <summary>
@@ -42,11 +43,12 @@ namespace Loom.Client
         /// <typeparam name="T">Smart contract method return type.</typeparam>
         /// <param name="method">Smart contract method name.</param>
         /// <param name="args">Arguments object for the smart contract method.</param>
+        /// <param name="timeout">Specifies the amount of time after which a call will time out.</param>
         /// <returns>The return value of the smart contract method.</returns>
-        public async Task<T> CallAsync<T>(string method, IMessage args) where T : IMessage, new()
+        public async Task<T> CallAsync<T>(string method, IMessage args, int timeout = 5000) where T : IMessage, new()
         {
             var tx = this.CreateContractMethodCallTx(method, args);
-            return await CallAsync<T>(tx);
+            return await CallAsync<T>(tx, timeout);
         }
 
         /// <summary>
@@ -94,10 +96,11 @@ namespace Loom.Client
         /// </summary>
         /// <typeparam name="T">Smart contract method return type.</typeparam>
         /// <param name="tx">Transaction message.</param>
+        /// <param name="timeout">Specifies the amount of time after which a call will time out.</param>
         /// <returns>The return value of the smart contract method.</returns>
-        private async Task<T> CallAsync<T>(Transaction tx) where T : IMessage, new()
+        private async Task<T> CallAsync<T>(Transaction tx, int timeout) where T : IMessage, new()
         {
-            var result = await this.Client.CommitTxAsync(tx);
+            var result = await this.Client.CommitTxAsync(tx, timeout);
             if (result != null && result.DeliverTx.Data != null && result.DeliverTx.Data.Length != 0)
             {
                 var resp = new Response();

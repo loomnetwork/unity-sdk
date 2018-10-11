@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Threading.Tasks;
 using Loom.Client.Internal;
-using Loom.Client.Internal.Protobuf;
+using Loom.Client.Protobuf;
 using Loom.Google.Protobuf;
 
 namespace Loom.Client {
@@ -11,7 +11,7 @@ namespace Loom.Client {
     /// into and querying that contract.
     /// </summary>
     public abstract class ContractBase<TChainEvent> {
-        protected event EventHandler<TChainEvent> eventReceived;
+        protected event EventHandler<TChainEvent> ContractEventReceived;
 
         /// <summary>
         /// Client that writes to and reads from a Loom DAppChain.
@@ -32,13 +32,13 @@ namespace Loom.Client {
         /// Constructor.
         /// </summary>
         /// <param name="client">Client to use to communicate with the contract.</param>
-        /// <param name="contractAddr">Address of a contract on the Loom DAppChain.</param>
-        /// <param name="callerAddr">Address of the caller, generated from the public key of the transaction signer.</param>
-        protected ContractBase(DAppChainClient client, Address contractAddr, Address callerAddr)
+        /// <param name="contractAddress">Address of a contract on the Loom DAppChain.</param>
+        /// <param name="callerAddress">Address of the caller, generated from the public key of the transaction signer.</param>
+        protected ContractBase(DAppChainClient client, Address contractAddress, Address callerAddress)
         {
             this.Client = client;
-            this.Address = contractAddr;
-            this.Caller = callerAddr;
+            this.Address = contractAddress;
+            this.Caller = callerAddress;
         }
 
         /// <summary>
@@ -48,8 +48,8 @@ namespace Loom.Client {
         {
             add
             {
-                var isFirstSub = this.eventReceived == null;
-                this.eventReceived += value;
+                var isFirstSub = this.ContractEventReceived == null;
+                this.ContractEventReceived += value;
                 if (isFirstSub)
                 {
                     this.Client.ChainEventReceived += NotifyContractEventReceived;
@@ -57,8 +57,8 @@ namespace Loom.Client {
             }
             remove
             {
-                this.eventReceived -= value;
-                if (this.eventReceived == null)
+                this.ContractEventReceived -= value;
+                if (this.ContractEventReceived == null)
                 {
                     this.Client.ChainEventReceived -= NotifyContractEventReceived;
                 }
@@ -66,7 +66,7 @@ namespace Loom.Client {
         }
 
         protected void InvokeChainEvent(object sender, RawChainEventArgs e) {
-            this.eventReceived?.Invoke(this, TransformChainEvent(e));
+            this.ContractEventReceived?.Invoke(this, TransformChainEvent(e));
         }
 
         protected abstract TChainEvent TransformChainEvent(RawChainEventArgs e);
@@ -85,9 +85,9 @@ namespace Loom.Client {
         /// </summary>
         /// <param name="tx">Transaction message.</param>
         /// <returns>Nothing.</returns>
-        internal async Task CallAsync(Transaction tx)
+        internal async Task CallAsync(Transaction tx, int timeout = 5000)
         {
-            await this.Client.CommitTxAsync(tx);
+            await this.Client.CommitTxAsync(tx, timeout);
         }
 
         internal Transaction CreateContractMethodCallTx(string hexData, VMType vmType) {
@@ -103,8 +103,8 @@ namespace Loom.Client {
 
             var msgTxBytes = new MessageTx
             {
-                From = AddressToProtobufAddress(this.Caller),
-                To = AddressToProtobufAddress(this.Address),
+                From = this.Caller.ToProtobufAddress(),
+                To = this.Address.ToProtobufAddress(),
                 Data = callTxBytes
             }.ToByteString();
 
@@ -112,14 +112,6 @@ namespace Loom.Client {
             {
                 Id = 2,
                 Data = msgTxBytes
-            };
-        }
-
-        private static Internal.Protobuf.Address AddressToProtobufAddress(Address address) {
-            return new Internal.Protobuf.Address
-            {
-                ChainId = address.ChainId,
-                Local = ByteString.CopyFrom(CryptoUtils.HexStringToBytes(address.LocalAddress))
             };
         }
     }

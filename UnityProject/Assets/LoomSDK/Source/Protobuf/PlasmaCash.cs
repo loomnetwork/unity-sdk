@@ -9,10 +9,10 @@ using pb = global::Loom.Google.Protobuf;
 using pbc = global::Loom.Google.Protobuf.Collections;
 using pbr = global::Loom.Google.Protobuf.Reflection;
 using scg = global::System.Collections.Generic;
-namespace Loom.Client.Internal.Protobuf {
+namespace Loom.Client.Protobuf {
 
   /// <summary>Holder for reflection information generated from proto/plasma_cash.proto</summary>
-  internal static partial class PlasmaCashReflection {
+  public static partial class PlasmaCashReflection {
 
     #region Descriptor
     /// <summary>File descriptor for proto/plasma_cash.proto</summary>
@@ -24,48 +24,48 @@ namespace Loom.Client.Internal.Protobuf {
     static PlasmaCashReflection() {
       byte[] descriptorData = global::System.Convert.FromBase64String(
           string.Concat(
-            "Chdwcm90by9wbGFzbWFfY2FzaC5wcm90bxoQcHJvdG8vbG9vbS5wcm90byKK",
-            "AQoLUGxhc21hQmxvY2sSFQoDdWlkGAEgASgLMgguQmlnVUludBIfCgx0cmFu",
-            "c2FjdGlvbnMYAiADKAsyCS5QbGFzbWFUeBIRCglzaWduYXR1cmUYAyABKAwS",
-            "EwoLbWVya2xlX2hhc2gYBCABKAwSDAoEaGFzaBgFIAEoDBINCgVwcm9vZhgG",
-            "IAEoDCLaAQoIUGxhc21hVHgSEAoEc2xvdBgBIAEoBEICMAESIAoOcHJldmlv",
-            "dXNfYmxvY2sYAiABKAsyCC5CaWdVSW50Eh4KDGRlbm9taW5hdGlvbhgDIAEo",
-            "CzIILkJpZ1VJbnQSGwoJbmV3X293bmVyGAQgASgLMgguQWRkcmVzcxIRCglz",
-            "aWduYXR1cmUYBSABKAwSDAoEaGFzaBgGIAEoDBITCgttZXJrbGVfaGFzaBgH",
-            "IAEoDBIYCgZzZW5kZXIYCCABKAsyCC5BZGRyZXNzEg0KBXByb29mGAkgASgM",
-            "IhgKFkdldEN1cnJlbnRCbG9ja1JlcXVlc3QiOQoXR2V0Q3VycmVudEJsb2Nr",
-            "UmVzcG9uc2USHgoMYmxvY2tfaGVpZ2h0GAEgASgLMgguQmlnVUludCIxCg9H",
-            "ZXRCbG9ja1JlcXVlc3QSHgoMYmxvY2tfaGVpZ2h0GAEgASgLMgguQmlnVUlu",
-            "dCIvChBHZXRCbG9ja1Jlc3BvbnNlEhsKBWJsb2NrGAEgASgLMgwuUGxhc21h",
-            "QmxvY2siHQobU3VibWl0QmxvY2tUb01haW5uZXRSZXF1ZXN0IjMKHFN1Ym1p",
-            "dEJsb2NrVG9NYWlubmV0UmVzcG9uc2USEwoLbWVya2xlX2hhc2gYASABKAwi",
-            "LgoPUGxhc21hVHhSZXF1ZXN0EhsKCHBsYXNtYXR4GAEgASgLMgkuUGxhc21h",
-            "VHgiEgoQUGxhc21hVHhSZXNwb25zZSKXAQoORGVwb3NpdFJlcXVlc3QSEAoE",
-            "c2xvdBgBIAEoBEICMAESHwoNZGVwb3NpdF9ibG9jaxgCIAEoCzIILkJpZ1VJ",
-            "bnQSHgoMZGVub21pbmF0aW9uGAMgASgLMgguQmlnVUludBIWCgRmcm9tGAQg",
-            "ASgLMgguQWRkcmVzcxIaCghjb250cmFjdBgFIAEoCzIILkFkZHJlc3NCIKoC",
-            "HUxvb20uQ2xpZW50LkludGVybmFsLlByb3RvYnVmYgZwcm90bzM="));
+            "Chdwcm90by9wbGFzbWFfY2FzaC5wcm90bxoRcHJvdG8vdHlwZXMucHJvdG8i",
+            "igEKC1BsYXNtYUJsb2NrEhUKA3VpZBgBIAEoCzIILkJpZ1VJbnQSHwoMdHJh",
+            "bnNhY3Rpb25zGAIgAygLMgkuUGxhc21hVHgSEQoJc2lnbmF0dXJlGAMgASgM",
+            "EhMKC21lcmtsZV9oYXNoGAQgASgMEgwKBGhhc2gYBSABKAwSDQoFcHJvb2YY",
+            "BiABKAwi2gEKCFBsYXNtYVR4EhAKBHNsb3QYASABKARCAjABEiAKDnByZXZp",
+            "b3VzX2Jsb2NrGAIgASgLMgguQmlnVUludBIeCgxkZW5vbWluYXRpb24YAyAB",
+            "KAsyCC5CaWdVSW50EhsKCW5ld19vd25lchgEIAEoCzIILkFkZHJlc3MSEQoJ",
+            "c2lnbmF0dXJlGAUgASgMEgwKBGhhc2gYBiABKAwSEwoLbWVya2xlX2hhc2gY",
+            "ByABKAwSGAoGc2VuZGVyGAggASgLMgguQWRkcmVzcxINCgVwcm9vZhgJIAEo",
+            "DCIYChZHZXRDdXJyZW50QmxvY2tSZXF1ZXN0IjkKF0dldEN1cnJlbnRCbG9j",
+            "a1Jlc3BvbnNlEh4KDGJsb2NrX2hlaWdodBgBIAEoCzIILkJpZ1VJbnQiMQoP",
+            "R2V0QmxvY2tSZXF1ZXN0Eh4KDGJsb2NrX2hlaWdodBgBIAEoCzIILkJpZ1VJ",
+            "bnQiLwoQR2V0QmxvY2tSZXNwb25zZRIbCgVibG9jaxgBIAEoCzIMLlBsYXNt",
+            "YUJsb2NrIh0KG1N1Ym1pdEJsb2NrVG9NYWlubmV0UmVxdWVzdCIzChxTdWJt",
+            "aXRCbG9ja1RvTWFpbm5ldFJlc3BvbnNlEhMKC21lcmtsZV9oYXNoGAEgASgM",
+            "Ii4KD1BsYXNtYVR4UmVxdWVzdBIbCghwbGFzbWF0eBgBIAEoCzIJLlBsYXNt",
+            "YVR4IhIKEFBsYXNtYVR4UmVzcG9uc2UilwEKDkRlcG9zaXRSZXF1ZXN0EhAK",
+            "BHNsb3QYASABKARCAjABEh8KDWRlcG9zaXRfYmxvY2sYAiABKAsyCC5CaWdV",
+            "SW50Eh4KDGRlbm9taW5hdGlvbhgDIAEoCzIILkJpZ1VJbnQSFgoEZnJvbRgE",
+            "IAEoCzIILkFkZHJlc3MSGgoIY29udHJhY3QYBSABKAsyCC5BZGRyZXNzQheq",
+            "AhRMb29tLkNsaWVudC5Qcm90b2J1ZmIGcHJvdG8z"));
       descriptor = pbr::FileDescriptor.FromGeneratedCode(descriptorData,
-          new pbr::FileDescriptor[] { global::Loom.Client.Internal.Protobuf.LoomReflection.Descriptor, },
+          new pbr::FileDescriptor[] { global::Loom.Client.Protobuf.TypesReflection.Descriptor, },
           new pbr::GeneratedClrTypeInfo(null, new pbr::GeneratedClrTypeInfo[] {
-            new pbr::GeneratedClrTypeInfo(typeof(global::Loom.Client.Internal.Protobuf.PlasmaBlock), global::Loom.Client.Internal.Protobuf.PlasmaBlock.Parser, new[]{ "Uid", "Transactions", "Signature", "MerkleHash", "Hash", "Proof" }, null, null, null),
-            new pbr::GeneratedClrTypeInfo(typeof(global::Loom.Client.Internal.Protobuf.PlasmaTx), global::Loom.Client.Internal.Protobuf.PlasmaTx.Parser, new[]{ "Slot", "PreviousBlock", "Denomination", "NewOwner", "Signature", "Hash", "MerkleHash", "Sender", "Proof" }, null, null, null),
-            new pbr::GeneratedClrTypeInfo(typeof(global::Loom.Client.Internal.Protobuf.GetCurrentBlockRequest), global::Loom.Client.Internal.Protobuf.GetCurrentBlockRequest.Parser, null, null, null, null),
-            new pbr::GeneratedClrTypeInfo(typeof(global::Loom.Client.Internal.Protobuf.GetCurrentBlockResponse), global::Loom.Client.Internal.Protobuf.GetCurrentBlockResponse.Parser, new[]{ "BlockHeight" }, null, null, null),
-            new pbr::GeneratedClrTypeInfo(typeof(global::Loom.Client.Internal.Protobuf.GetBlockRequest), global::Loom.Client.Internal.Protobuf.GetBlockRequest.Parser, new[]{ "BlockHeight" }, null, null, null),
-            new pbr::GeneratedClrTypeInfo(typeof(global::Loom.Client.Internal.Protobuf.GetBlockResponse), global::Loom.Client.Internal.Protobuf.GetBlockResponse.Parser, new[]{ "Block" }, null, null, null),
-            new pbr::GeneratedClrTypeInfo(typeof(global::Loom.Client.Internal.Protobuf.SubmitBlockToMainnetRequest), global::Loom.Client.Internal.Protobuf.SubmitBlockToMainnetRequest.Parser, null, null, null, null),
-            new pbr::GeneratedClrTypeInfo(typeof(global::Loom.Client.Internal.Protobuf.SubmitBlockToMainnetResponse), global::Loom.Client.Internal.Protobuf.SubmitBlockToMainnetResponse.Parser, new[]{ "MerkleHash" }, null, null, null),
-            new pbr::GeneratedClrTypeInfo(typeof(global::Loom.Client.Internal.Protobuf.PlasmaTxRequest), global::Loom.Client.Internal.Protobuf.PlasmaTxRequest.Parser, new[]{ "Plasmatx" }, null, null, null),
-            new pbr::GeneratedClrTypeInfo(typeof(global::Loom.Client.Internal.Protobuf.PlasmaTxResponse), global::Loom.Client.Internal.Protobuf.PlasmaTxResponse.Parser, null, null, null, null),
-            new pbr::GeneratedClrTypeInfo(typeof(global::Loom.Client.Internal.Protobuf.DepositRequest), global::Loom.Client.Internal.Protobuf.DepositRequest.Parser, new[]{ "Slot", "DepositBlock", "Denomination", "From", "Contract" }, null, null, null)
+            new pbr::GeneratedClrTypeInfo(typeof(global::Loom.Client.Protobuf.PlasmaBlock), global::Loom.Client.Protobuf.PlasmaBlock.Parser, new[]{ "Uid", "Transactions", "Signature", "MerkleHash", "Hash", "Proof" }, null, null, null),
+            new pbr::GeneratedClrTypeInfo(typeof(global::Loom.Client.Protobuf.PlasmaTx), global::Loom.Client.Protobuf.PlasmaTx.Parser, new[]{ "Slot", "PreviousBlock", "Denomination", "NewOwner", "Signature", "Hash", "MerkleHash", "Sender", "Proof" }, null, null, null),
+            new pbr::GeneratedClrTypeInfo(typeof(global::Loom.Client.Protobuf.GetCurrentBlockRequest), global::Loom.Client.Protobuf.GetCurrentBlockRequest.Parser, null, null, null, null),
+            new pbr::GeneratedClrTypeInfo(typeof(global::Loom.Client.Protobuf.GetCurrentBlockResponse), global::Loom.Client.Protobuf.GetCurrentBlockResponse.Parser, new[]{ "BlockHeight" }, null, null, null),
+            new pbr::GeneratedClrTypeInfo(typeof(global::Loom.Client.Protobuf.GetBlockRequest), global::Loom.Client.Protobuf.GetBlockRequest.Parser, new[]{ "BlockHeight" }, null, null, null),
+            new pbr::GeneratedClrTypeInfo(typeof(global::Loom.Client.Protobuf.GetBlockResponse), global::Loom.Client.Protobuf.GetBlockResponse.Parser, new[]{ "Block" }, null, null, null),
+            new pbr::GeneratedClrTypeInfo(typeof(global::Loom.Client.Protobuf.SubmitBlockToMainnetRequest), global::Loom.Client.Protobuf.SubmitBlockToMainnetRequest.Parser, null, null, null, null),
+            new pbr::GeneratedClrTypeInfo(typeof(global::Loom.Client.Protobuf.SubmitBlockToMainnetResponse), global::Loom.Client.Protobuf.SubmitBlockToMainnetResponse.Parser, new[]{ "MerkleHash" }, null, null, null),
+            new pbr::GeneratedClrTypeInfo(typeof(global::Loom.Client.Protobuf.PlasmaTxRequest), global::Loom.Client.Protobuf.PlasmaTxRequest.Parser, new[]{ "Plasmatx" }, null, null, null),
+            new pbr::GeneratedClrTypeInfo(typeof(global::Loom.Client.Protobuf.PlasmaTxResponse), global::Loom.Client.Protobuf.PlasmaTxResponse.Parser, null, null, null, null),
+            new pbr::GeneratedClrTypeInfo(typeof(global::Loom.Client.Protobuf.DepositRequest), global::Loom.Client.Protobuf.DepositRequest.Parser, new[]{ "Slot", "DepositBlock", "Denomination", "From", "Contract" }, null, null, null)
           }));
     }
     #endregion
 
   }
   #region Messages
-  internal sealed partial class PlasmaBlock : pb::IMessage<PlasmaBlock> {
+  public sealed partial class PlasmaBlock : pb::IMessage<PlasmaBlock> {
     private static readonly pb::MessageParser<PlasmaBlock> _parser = new pb::MessageParser<PlasmaBlock>(() => new PlasmaBlock());
     private pb::UnknownFieldSet _unknownFields;
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
@@ -73,7 +73,7 @@ namespace Loom.Client.Internal.Protobuf {
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     public static pbr::MessageDescriptor Descriptor {
-      get { return global::Loom.Client.Internal.Protobuf.PlasmaCashReflection.Descriptor.MessageTypes[0]; }
+      get { return global::Loom.Client.Protobuf.PlasmaCashReflection.Descriptor.MessageTypes[0]; }
     }
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
@@ -106,12 +106,12 @@ namespace Loom.Client.Internal.Protobuf {
 
     /// <summary>Field number for the "uid" field.</summary>
     public const int UidFieldNumber = 1;
-    private global::Loom.Client.Internal.Protobuf.BigUInt uid_;
+    private global::Loom.Client.Protobuf.BigUInt uid_;
     /// <summary>
     /// Plasma block height/number
     /// </summary>
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
-    public global::Loom.Client.Internal.Protobuf.BigUInt Uid {
+    public global::Loom.Client.Protobuf.BigUInt Uid {
       get { return uid_; }
       set {
         uid_ = value;
@@ -120,14 +120,14 @@ namespace Loom.Client.Internal.Protobuf {
 
     /// <summary>Field number for the "transactions" field.</summary>
     public const int TransactionsFieldNumber = 2;
-    private static readonly pb::FieldCodec<global::Loom.Client.Internal.Protobuf.PlasmaTx> _repeated_transactions_codec
-        = pb::FieldCodec.ForMessage(18, global::Loom.Client.Internal.Protobuf.PlasmaTx.Parser);
-    private readonly pbc::RepeatedField<global::Loom.Client.Internal.Protobuf.PlasmaTx> transactions_ = new pbc::RepeatedField<global::Loom.Client.Internal.Protobuf.PlasmaTx>();
+    private static readonly pb::FieldCodec<global::Loom.Client.Protobuf.PlasmaTx> _repeated_transactions_codec
+        = pb::FieldCodec.ForMessage(18, global::Loom.Client.Protobuf.PlasmaTx.Parser);
+    private readonly pbc::RepeatedField<global::Loom.Client.Protobuf.PlasmaTx> transactions_ = new pbc::RepeatedField<global::Loom.Client.Protobuf.PlasmaTx>();
     /// <summary>
     /// Transactions included in the block
     /// </summary>
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
-    public pbc::RepeatedField<global::Loom.Client.Internal.Protobuf.PlasmaTx> Transactions {
+    public pbc::RepeatedField<global::Loom.Client.Protobuf.PlasmaTx> Transactions {
       get { return transactions_; }
     }
 
@@ -289,7 +289,7 @@ namespace Loom.Client.Internal.Protobuf {
       }
       if (other.uid_ != null) {
         if (uid_ == null) {
-          uid_ = new global::Loom.Client.Internal.Protobuf.BigUInt();
+          uid_ = new global::Loom.Client.Protobuf.BigUInt();
         }
         Uid.MergeFrom(other.Uid);
       }
@@ -319,7 +319,7 @@ namespace Loom.Client.Internal.Protobuf {
             break;
           case 10: {
             if (uid_ == null) {
-              uid_ = new global::Loom.Client.Internal.Protobuf.BigUInt();
+              uid_ = new global::Loom.Client.Protobuf.BigUInt();
             }
             input.ReadMessage(uid_);
             break;
@@ -350,7 +350,7 @@ namespace Loom.Client.Internal.Protobuf {
 
   }
 
-  internal sealed partial class PlasmaTx : pb::IMessage<PlasmaTx> {
+  public sealed partial class PlasmaTx : pb::IMessage<PlasmaTx> {
     private static readonly pb::MessageParser<PlasmaTx> _parser = new pb::MessageParser<PlasmaTx>(() => new PlasmaTx());
     private pb::UnknownFieldSet _unknownFields;
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
@@ -358,7 +358,7 @@ namespace Loom.Client.Internal.Protobuf {
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     public static pbr::MessageDescriptor Descriptor {
-      get { return global::Loom.Client.Internal.Protobuf.PlasmaCashReflection.Descriptor.MessageTypes[1]; }
+      get { return global::Loom.Client.Protobuf.PlasmaCashReflection.Descriptor.MessageTypes[1]; }
     }
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
@@ -408,12 +408,12 @@ namespace Loom.Client.Internal.Protobuf {
 
     /// <summary>Field number for the "previous_block" field.</summary>
     public const int PreviousBlockFieldNumber = 2;
-    private global::Loom.Client.Internal.Protobuf.BigUInt previousBlock_;
+    private global::Loom.Client.Protobuf.BigUInt previousBlock_;
     /// <summary>
     /// BigUInt //Each time a transaction is created, it MUST refer to a previous block which also included that transaction. A transaction is considered a “deposit transaction”, if it’s the first UTXO after a user deposits their coin in the Plasma Chain. This transaction mints coins from nowhere in the Plasma Chain and as a result its previous block is 0.
     /// </summary>
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
-    public global::Loom.Client.Internal.Protobuf.BigUInt PreviousBlock {
+    public global::Loom.Client.Protobuf.BigUInt PreviousBlock {
       get { return previousBlock_; }
       set {
         previousBlock_ = value;
@@ -422,12 +422,12 @@ namespace Loom.Client.Internal.Protobuf {
 
     /// <summary>Field number for the "denomination" field.</summary>
     public const int DenominationFieldNumber = 3;
-    private global::Loom.Client.Internal.Protobuf.BigUInt denomination_;
+    private global::Loom.Client.Protobuf.BigUInt denomination_;
     /// <summary>
     /// BigUInt // How many coins are included in that UTXO. Currently this is always 1 since we’re using ERC721 tokens which are unique, however in future iterations this can be any number.
     /// </summary>
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
-    public global::Loom.Client.Internal.Protobuf.BigUInt Denomination {
+    public global::Loom.Client.Protobuf.BigUInt Denomination {
       get { return denomination_; }
       set {
         denomination_ = value;
@@ -436,12 +436,12 @@ namespace Loom.Client.Internal.Protobuf {
 
     /// <summary>Field number for the "new_owner" field.</summary>
     public const int NewOwnerFieldNumber = 4;
-    private global::Loom.Client.Internal.Protobuf.Address newOwner_;
+    private global::Loom.Client.Protobuf.Address newOwner_;
     /// <summary>
     ///  The new owner of the transaction.
     /// </summary>
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
-    public global::Loom.Client.Internal.Protobuf.Address NewOwner {
+    public global::Loom.Client.Protobuf.Address NewOwner {
       get { return newOwner_; }
       set {
         newOwner_ = value;
@@ -492,12 +492,12 @@ namespace Loom.Client.Internal.Protobuf {
 
     /// <summary>Field number for the "sender" field.</summary>
     public const int SenderFieldNumber = 8;
-    private global::Loom.Client.Internal.Protobuf.Address sender_;
+    private global::Loom.Client.Protobuf.Address sender_;
     /// <summary>
     /// TODO: seems redundant, remove?
     /// </summary>
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
-    public global::Loom.Client.Internal.Protobuf.Address Sender {
+    public global::Loom.Client.Protobuf.Address Sender {
       get { return sender_; }
       set {
         sender_ = value;
@@ -655,19 +655,19 @@ namespace Loom.Client.Internal.Protobuf {
       }
       if (other.previousBlock_ != null) {
         if (previousBlock_ == null) {
-          previousBlock_ = new global::Loom.Client.Internal.Protobuf.BigUInt();
+          previousBlock_ = new global::Loom.Client.Protobuf.BigUInt();
         }
         PreviousBlock.MergeFrom(other.PreviousBlock);
       }
       if (other.denomination_ != null) {
         if (denomination_ == null) {
-          denomination_ = new global::Loom.Client.Internal.Protobuf.BigUInt();
+          denomination_ = new global::Loom.Client.Protobuf.BigUInt();
         }
         Denomination.MergeFrom(other.Denomination);
       }
       if (other.newOwner_ != null) {
         if (newOwner_ == null) {
-          newOwner_ = new global::Loom.Client.Internal.Protobuf.Address();
+          newOwner_ = new global::Loom.Client.Protobuf.Address();
         }
         NewOwner.MergeFrom(other.NewOwner);
       }
@@ -682,7 +682,7 @@ namespace Loom.Client.Internal.Protobuf {
       }
       if (other.sender_ != null) {
         if (sender_ == null) {
-          sender_ = new global::Loom.Client.Internal.Protobuf.Address();
+          sender_ = new global::Loom.Client.Protobuf.Address();
         }
         Sender.MergeFrom(other.Sender);
       }
@@ -706,21 +706,21 @@ namespace Loom.Client.Internal.Protobuf {
           }
           case 18: {
             if (previousBlock_ == null) {
-              previousBlock_ = new global::Loom.Client.Internal.Protobuf.BigUInt();
+              previousBlock_ = new global::Loom.Client.Protobuf.BigUInt();
             }
             input.ReadMessage(previousBlock_);
             break;
           }
           case 26: {
             if (denomination_ == null) {
-              denomination_ = new global::Loom.Client.Internal.Protobuf.BigUInt();
+              denomination_ = new global::Loom.Client.Protobuf.BigUInt();
             }
             input.ReadMessage(denomination_);
             break;
           }
           case 34: {
             if (newOwner_ == null) {
-              newOwner_ = new global::Loom.Client.Internal.Protobuf.Address();
+              newOwner_ = new global::Loom.Client.Protobuf.Address();
             }
             input.ReadMessage(newOwner_);
             break;
@@ -739,7 +739,7 @@ namespace Loom.Client.Internal.Protobuf {
           }
           case 66: {
             if (sender_ == null) {
-              sender_ = new global::Loom.Client.Internal.Protobuf.Address();
+              sender_ = new global::Loom.Client.Protobuf.Address();
             }
             input.ReadMessage(sender_);
             break;
@@ -754,7 +754,7 @@ namespace Loom.Client.Internal.Protobuf {
 
   }
 
-  internal sealed partial class GetCurrentBlockRequest : pb::IMessage<GetCurrentBlockRequest> {
+  public sealed partial class GetCurrentBlockRequest : pb::IMessage<GetCurrentBlockRequest> {
     private static readonly pb::MessageParser<GetCurrentBlockRequest> _parser = new pb::MessageParser<GetCurrentBlockRequest>(() => new GetCurrentBlockRequest());
     private pb::UnknownFieldSet _unknownFields;
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
@@ -762,7 +762,7 @@ namespace Loom.Client.Internal.Protobuf {
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     public static pbr::MessageDescriptor Descriptor {
-      get { return global::Loom.Client.Internal.Protobuf.PlasmaCashReflection.Descriptor.MessageTypes[2]; }
+      get { return global::Loom.Client.Protobuf.PlasmaCashReflection.Descriptor.MessageTypes[2]; }
     }
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
@@ -855,7 +855,7 @@ namespace Loom.Client.Internal.Protobuf {
 
   }
 
-  internal sealed partial class GetCurrentBlockResponse : pb::IMessage<GetCurrentBlockResponse> {
+  public sealed partial class GetCurrentBlockResponse : pb::IMessage<GetCurrentBlockResponse> {
     private static readonly pb::MessageParser<GetCurrentBlockResponse> _parser = new pb::MessageParser<GetCurrentBlockResponse>(() => new GetCurrentBlockResponse());
     private pb::UnknownFieldSet _unknownFields;
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
@@ -863,7 +863,7 @@ namespace Loom.Client.Internal.Protobuf {
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     public static pbr::MessageDescriptor Descriptor {
-      get { return global::Loom.Client.Internal.Protobuf.PlasmaCashReflection.Descriptor.MessageTypes[3]; }
+      get { return global::Loom.Client.Protobuf.PlasmaCashReflection.Descriptor.MessageTypes[3]; }
     }
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
@@ -891,9 +891,9 @@ namespace Loom.Client.Internal.Protobuf {
 
     /// <summary>Field number for the "block_height" field.</summary>
     public const int BlockHeightFieldNumber = 1;
-    private global::Loom.Client.Internal.Protobuf.BigUInt blockHeight_;
+    private global::Loom.Client.Protobuf.BigUInt blockHeight_;
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
-    public global::Loom.Client.Internal.Protobuf.BigUInt BlockHeight {
+    public global::Loom.Client.Protobuf.BigUInt BlockHeight {
       get { return blockHeight_; }
       set {
         blockHeight_ = value;
@@ -962,7 +962,7 @@ namespace Loom.Client.Internal.Protobuf {
       }
       if (other.blockHeight_ != null) {
         if (blockHeight_ == null) {
-          blockHeight_ = new global::Loom.Client.Internal.Protobuf.BigUInt();
+          blockHeight_ = new global::Loom.Client.Protobuf.BigUInt();
         }
         BlockHeight.MergeFrom(other.BlockHeight);
       }
@@ -979,7 +979,7 @@ namespace Loom.Client.Internal.Protobuf {
             break;
           case 10: {
             if (blockHeight_ == null) {
-              blockHeight_ = new global::Loom.Client.Internal.Protobuf.BigUInt();
+              blockHeight_ = new global::Loom.Client.Protobuf.BigUInt();
             }
             input.ReadMessage(blockHeight_);
             break;
@@ -990,7 +990,7 @@ namespace Loom.Client.Internal.Protobuf {
 
   }
 
-  internal sealed partial class GetBlockRequest : pb::IMessage<GetBlockRequest> {
+  public sealed partial class GetBlockRequest : pb::IMessage<GetBlockRequest> {
     private static readonly pb::MessageParser<GetBlockRequest> _parser = new pb::MessageParser<GetBlockRequest>(() => new GetBlockRequest());
     private pb::UnknownFieldSet _unknownFields;
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
@@ -998,7 +998,7 @@ namespace Loom.Client.Internal.Protobuf {
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     public static pbr::MessageDescriptor Descriptor {
-      get { return global::Loom.Client.Internal.Protobuf.PlasmaCashReflection.Descriptor.MessageTypes[4]; }
+      get { return global::Loom.Client.Protobuf.PlasmaCashReflection.Descriptor.MessageTypes[4]; }
     }
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
@@ -1026,9 +1026,9 @@ namespace Loom.Client.Internal.Protobuf {
 
     /// <summary>Field number for the "block_height" field.</summary>
     public const int BlockHeightFieldNumber = 1;
-    private global::Loom.Client.Internal.Protobuf.BigUInt blockHeight_;
+    private global::Loom.Client.Protobuf.BigUInt blockHeight_;
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
-    public global::Loom.Client.Internal.Protobuf.BigUInt BlockHeight {
+    public global::Loom.Client.Protobuf.BigUInt BlockHeight {
       get { return blockHeight_; }
       set {
         blockHeight_ = value;
@@ -1097,7 +1097,7 @@ namespace Loom.Client.Internal.Protobuf {
       }
       if (other.blockHeight_ != null) {
         if (blockHeight_ == null) {
-          blockHeight_ = new global::Loom.Client.Internal.Protobuf.BigUInt();
+          blockHeight_ = new global::Loom.Client.Protobuf.BigUInt();
         }
         BlockHeight.MergeFrom(other.BlockHeight);
       }
@@ -1114,7 +1114,7 @@ namespace Loom.Client.Internal.Protobuf {
             break;
           case 10: {
             if (blockHeight_ == null) {
-              blockHeight_ = new global::Loom.Client.Internal.Protobuf.BigUInt();
+              blockHeight_ = new global::Loom.Client.Protobuf.BigUInt();
             }
             input.ReadMessage(blockHeight_);
             break;
@@ -1125,7 +1125,7 @@ namespace Loom.Client.Internal.Protobuf {
 
   }
 
-  internal sealed partial class GetBlockResponse : pb::IMessage<GetBlockResponse> {
+  public sealed partial class GetBlockResponse : pb::IMessage<GetBlockResponse> {
     private static readonly pb::MessageParser<GetBlockResponse> _parser = new pb::MessageParser<GetBlockResponse>(() => new GetBlockResponse());
     private pb::UnknownFieldSet _unknownFields;
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
@@ -1133,7 +1133,7 @@ namespace Loom.Client.Internal.Protobuf {
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     public static pbr::MessageDescriptor Descriptor {
-      get { return global::Loom.Client.Internal.Protobuf.PlasmaCashReflection.Descriptor.MessageTypes[5]; }
+      get { return global::Loom.Client.Protobuf.PlasmaCashReflection.Descriptor.MessageTypes[5]; }
     }
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
@@ -1161,9 +1161,9 @@ namespace Loom.Client.Internal.Protobuf {
 
     /// <summary>Field number for the "block" field.</summary>
     public const int BlockFieldNumber = 1;
-    private global::Loom.Client.Internal.Protobuf.PlasmaBlock block_;
+    private global::Loom.Client.Protobuf.PlasmaBlock block_;
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
-    public global::Loom.Client.Internal.Protobuf.PlasmaBlock Block {
+    public global::Loom.Client.Protobuf.PlasmaBlock Block {
       get { return block_; }
       set {
         block_ = value;
@@ -1232,7 +1232,7 @@ namespace Loom.Client.Internal.Protobuf {
       }
       if (other.block_ != null) {
         if (block_ == null) {
-          block_ = new global::Loom.Client.Internal.Protobuf.PlasmaBlock();
+          block_ = new global::Loom.Client.Protobuf.PlasmaBlock();
         }
         Block.MergeFrom(other.Block);
       }
@@ -1249,7 +1249,7 @@ namespace Loom.Client.Internal.Protobuf {
             break;
           case 10: {
             if (block_ == null) {
-              block_ = new global::Loom.Client.Internal.Protobuf.PlasmaBlock();
+              block_ = new global::Loom.Client.Protobuf.PlasmaBlock();
             }
             input.ReadMessage(block_);
             break;
@@ -1263,7 +1263,7 @@ namespace Loom.Client.Internal.Protobuf {
   /// <summary>
   /// This only originates from the validator
   /// </summary>
-  internal sealed partial class SubmitBlockToMainnetRequest : pb::IMessage<SubmitBlockToMainnetRequest> {
+  public sealed partial class SubmitBlockToMainnetRequest : pb::IMessage<SubmitBlockToMainnetRequest> {
     private static readonly pb::MessageParser<SubmitBlockToMainnetRequest> _parser = new pb::MessageParser<SubmitBlockToMainnetRequest>(() => new SubmitBlockToMainnetRequest());
     private pb::UnknownFieldSet _unknownFields;
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
@@ -1271,7 +1271,7 @@ namespace Loom.Client.Internal.Protobuf {
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     public static pbr::MessageDescriptor Descriptor {
-      get { return global::Loom.Client.Internal.Protobuf.PlasmaCashReflection.Descriptor.MessageTypes[6]; }
+      get { return global::Loom.Client.Protobuf.PlasmaCashReflection.Descriptor.MessageTypes[6]; }
     }
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
@@ -1364,7 +1364,7 @@ namespace Loom.Client.Internal.Protobuf {
 
   }
 
-  internal sealed partial class SubmitBlockToMainnetResponse : pb::IMessage<SubmitBlockToMainnetResponse> {
+  public sealed partial class SubmitBlockToMainnetResponse : pb::IMessage<SubmitBlockToMainnetResponse> {
     private static readonly pb::MessageParser<SubmitBlockToMainnetResponse> _parser = new pb::MessageParser<SubmitBlockToMainnetResponse>(() => new SubmitBlockToMainnetResponse());
     private pb::UnknownFieldSet _unknownFields;
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
@@ -1372,7 +1372,7 @@ namespace Loom.Client.Internal.Protobuf {
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     public static pbr::MessageDescriptor Descriptor {
-      get { return global::Loom.Client.Internal.Protobuf.PlasmaCashReflection.Descriptor.MessageTypes[7]; }
+      get { return global::Loom.Client.Protobuf.PlasmaCashReflection.Descriptor.MessageTypes[7]; }
     }
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
@@ -1496,7 +1496,7 @@ namespace Loom.Client.Internal.Protobuf {
 
   }
 
-  internal sealed partial class PlasmaTxRequest : pb::IMessage<PlasmaTxRequest> {
+  public sealed partial class PlasmaTxRequest : pb::IMessage<PlasmaTxRequest> {
     private static readonly pb::MessageParser<PlasmaTxRequest> _parser = new pb::MessageParser<PlasmaTxRequest>(() => new PlasmaTxRequest());
     private pb::UnknownFieldSet _unknownFields;
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
@@ -1504,7 +1504,7 @@ namespace Loom.Client.Internal.Protobuf {
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     public static pbr::MessageDescriptor Descriptor {
-      get { return global::Loom.Client.Internal.Protobuf.PlasmaCashReflection.Descriptor.MessageTypes[8]; }
+      get { return global::Loom.Client.Protobuf.PlasmaCashReflection.Descriptor.MessageTypes[8]; }
     }
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
@@ -1532,9 +1532,9 @@ namespace Loom.Client.Internal.Protobuf {
 
     /// <summary>Field number for the "plasmatx" field.</summary>
     public const int PlasmatxFieldNumber = 1;
-    private global::Loom.Client.Internal.Protobuf.PlasmaTx plasmatx_;
+    private global::Loom.Client.Protobuf.PlasmaTx plasmatx_;
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
-    public global::Loom.Client.Internal.Protobuf.PlasmaTx Plasmatx {
+    public global::Loom.Client.Protobuf.PlasmaTx Plasmatx {
       get { return plasmatx_; }
       set {
         plasmatx_ = value;
@@ -1603,7 +1603,7 @@ namespace Loom.Client.Internal.Protobuf {
       }
       if (other.plasmatx_ != null) {
         if (plasmatx_ == null) {
-          plasmatx_ = new global::Loom.Client.Internal.Protobuf.PlasmaTx();
+          plasmatx_ = new global::Loom.Client.Protobuf.PlasmaTx();
         }
         Plasmatx.MergeFrom(other.Plasmatx);
       }
@@ -1620,7 +1620,7 @@ namespace Loom.Client.Internal.Protobuf {
             break;
           case 10: {
             if (plasmatx_ == null) {
-              plasmatx_ = new global::Loom.Client.Internal.Protobuf.PlasmaTx();
+              plasmatx_ = new global::Loom.Client.Protobuf.PlasmaTx();
             }
             input.ReadMessage(plasmatx_);
             break;
@@ -1631,7 +1631,7 @@ namespace Loom.Client.Internal.Protobuf {
 
   }
 
-  internal sealed partial class PlasmaTxResponse : pb::IMessage<PlasmaTxResponse> {
+  public sealed partial class PlasmaTxResponse : pb::IMessage<PlasmaTxResponse> {
     private static readonly pb::MessageParser<PlasmaTxResponse> _parser = new pb::MessageParser<PlasmaTxResponse>(() => new PlasmaTxResponse());
     private pb::UnknownFieldSet _unknownFields;
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
@@ -1639,7 +1639,7 @@ namespace Loom.Client.Internal.Protobuf {
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     public static pbr::MessageDescriptor Descriptor {
-      get { return global::Loom.Client.Internal.Protobuf.PlasmaCashReflection.Descriptor.MessageTypes[9]; }
+      get { return global::Loom.Client.Protobuf.PlasmaCashReflection.Descriptor.MessageTypes[9]; }
     }
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
@@ -1732,7 +1732,7 @@ namespace Loom.Client.Internal.Protobuf {
 
   }
 
-  internal sealed partial class DepositRequest : pb::IMessage<DepositRequest> {
+  public sealed partial class DepositRequest : pb::IMessage<DepositRequest> {
     private static readonly pb::MessageParser<DepositRequest> _parser = new pb::MessageParser<DepositRequest>(() => new DepositRequest());
     private pb::UnknownFieldSet _unknownFields;
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
@@ -1740,7 +1740,7 @@ namespace Loom.Client.Internal.Protobuf {
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     public static pbr::MessageDescriptor Descriptor {
-      get { return global::Loom.Client.Internal.Protobuf.PlasmaCashReflection.Descriptor.MessageTypes[10]; }
+      get { return global::Loom.Client.Protobuf.PlasmaCashReflection.Descriptor.MessageTypes[10]; }
     }
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
@@ -1786,9 +1786,9 @@ namespace Loom.Client.Internal.Protobuf {
 
     /// <summary>Field number for the "deposit_block" field.</summary>
     public const int DepositBlockFieldNumber = 2;
-    private global::Loom.Client.Internal.Protobuf.BigUInt depositBlock_;
+    private global::Loom.Client.Protobuf.BigUInt depositBlock_;
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
-    public global::Loom.Client.Internal.Protobuf.BigUInt DepositBlock {
+    public global::Loom.Client.Protobuf.BigUInt DepositBlock {
       get { return depositBlock_; }
       set {
         depositBlock_ = value;
@@ -1797,12 +1797,12 @@ namespace Loom.Client.Internal.Protobuf {
 
     /// <summary>Field number for the "denomination" field.</summary>
     public const int DenominationFieldNumber = 3;
-    private global::Loom.Client.Internal.Protobuf.BigUInt denomination_;
+    private global::Loom.Client.Protobuf.BigUInt denomination_;
     /// <summary>
     /// For ERC20 this is the number of coins deposited, for ERC721 this is a token ID.
     /// </summary>
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
-    public global::Loom.Client.Internal.Protobuf.BigUInt Denomination {
+    public global::Loom.Client.Protobuf.BigUInt Denomination {
       get { return denomination_; }
       set {
         denomination_ = value;
@@ -1811,12 +1811,12 @@ namespace Loom.Client.Internal.Protobuf {
 
     /// <summary>Field number for the "from" field.</summary>
     public const int FromFieldNumber = 4;
-    private global::Loom.Client.Internal.Protobuf.Address from_;
+    private global::Loom.Client.Protobuf.Address from_;
     /// <summary>
     /// Entity that made the deposit
     /// </summary>
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
-    public global::Loom.Client.Internal.Protobuf.Address From {
+    public global::Loom.Client.Protobuf.Address From {
       get { return from_; }
       set {
         from_ = value;
@@ -1825,12 +1825,12 @@ namespace Loom.Client.Internal.Protobuf {
 
     /// <summary>Field number for the "contract" field.</summary>
     public const int ContractFieldNumber = 5;
-    private global::Loom.Client.Internal.Protobuf.Address contract_;
+    private global::Loom.Client.Protobuf.Address contract_;
     /// <summary>
     /// Contract from which the coins originated (i.e. the currency of the coins)
     /// </summary>
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
-    public global::Loom.Client.Internal.Protobuf.Address Contract {
+    public global::Loom.Client.Protobuf.Address Contract {
       get { return contract_; }
       set {
         contract_ = value;
@@ -1938,25 +1938,25 @@ namespace Loom.Client.Internal.Protobuf {
       }
       if (other.depositBlock_ != null) {
         if (depositBlock_ == null) {
-          depositBlock_ = new global::Loom.Client.Internal.Protobuf.BigUInt();
+          depositBlock_ = new global::Loom.Client.Protobuf.BigUInt();
         }
         DepositBlock.MergeFrom(other.DepositBlock);
       }
       if (other.denomination_ != null) {
         if (denomination_ == null) {
-          denomination_ = new global::Loom.Client.Internal.Protobuf.BigUInt();
+          denomination_ = new global::Loom.Client.Protobuf.BigUInt();
         }
         Denomination.MergeFrom(other.Denomination);
       }
       if (other.from_ != null) {
         if (from_ == null) {
-          from_ = new global::Loom.Client.Internal.Protobuf.Address();
+          from_ = new global::Loom.Client.Protobuf.Address();
         }
         From.MergeFrom(other.From);
       }
       if (other.contract_ != null) {
         if (contract_ == null) {
-          contract_ = new global::Loom.Client.Internal.Protobuf.Address();
+          contract_ = new global::Loom.Client.Protobuf.Address();
         }
         Contract.MergeFrom(other.Contract);
       }
@@ -1977,28 +1977,28 @@ namespace Loom.Client.Internal.Protobuf {
           }
           case 18: {
             if (depositBlock_ == null) {
-              depositBlock_ = new global::Loom.Client.Internal.Protobuf.BigUInt();
+              depositBlock_ = new global::Loom.Client.Protobuf.BigUInt();
             }
             input.ReadMessage(depositBlock_);
             break;
           }
           case 26: {
             if (denomination_ == null) {
-              denomination_ = new global::Loom.Client.Internal.Protobuf.BigUInt();
+              denomination_ = new global::Loom.Client.Protobuf.BigUInt();
             }
             input.ReadMessage(denomination_);
             break;
           }
           case 34: {
             if (from_ == null) {
-              from_ = new global::Loom.Client.Internal.Protobuf.Address();
+              from_ = new global::Loom.Client.Protobuf.Address();
             }
             input.ReadMessage(from_);
             break;
           }
           case 42: {
             if (contract_ == null) {
-              contract_ = new global::Loom.Client.Internal.Protobuf.Address();
+              contract_ = new global::Loom.Client.Protobuf.Address();
             }
             input.ReadMessage(contract_);
             break;

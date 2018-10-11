@@ -1,7 +1,7 @@
 syntax = "proto3";
-option csharp_namespace = "Loom.Client.Internal.Protobuf";
+option csharp_namespace = "Loom.Client.Protobuf";
 
-import "proto/loom.proto";
+import "proto/types.proto";
 
 message PlasmaBlock {
     BigUInt uid = 1; // Plasma block height/number

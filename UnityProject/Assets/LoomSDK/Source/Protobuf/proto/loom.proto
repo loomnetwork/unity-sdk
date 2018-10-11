@@ -1,5 +1,8 @@
 syntax = "proto3";
-option csharp_namespace = "Loom.Client.Internal.Protobuf";
+
+option csharp_namespace = "Loom.Client.Protobuf";
+
+import "proto/types.proto";
 
 message SignedTx {
     bytes inner = 1;
@@ -10,20 +13,6 @@ message SignedTx {
 message NonceTx {
     bytes inner = 1;
     uint64 sequence = 2;
-}
-
-message BigUInt {
-    bytes value = 1;
-}
-
-message Address {
-    string chain_id = 1;
-    bytes local = 2;
-}
-
-message Transaction {
-    uint32 id = 1;
-    bytes data = 2;
 }
 
 enum VMType {

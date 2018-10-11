@@ -2,6 +2,7 @@
 
 using System.Threading.Tasks;
 using System;
+using System.Collections.Generic;
 using System.ComponentModel;
 using Loom.Newtonsoft.Json;
 using Loom.WebSocketSharp;
@@ -115,7 +116,7 @@ namespace Loom.Client.Internal
             {
                 this.webSocket.ConnectAsync();
             }
-            catch (Exception)
+            catch
             {
                 this.webSocket.OnOpen -= openHandler;
                 this.webSocket.OnClose -= closeHandler;
@@ -140,7 +141,7 @@ namespace Loom.Client.Internal
             {
                 this.webSocket.CloseAsync(CloseStatusCode.Normal, "Client disconnected.");
             }
-            catch (Exception)
+            catch
             {
                 this.webSocket.OnClose -= handler;
                 throw;
@@ -148,7 +149,7 @@ namespace Loom.Client.Internal
             return tcs.Task;
         }
 
-        public override Task SubscribeAsync(EventHandler<JsonRpcEventData> handler)
+        public override Task SubscribeAsync(EventHandler<JsonRpcEventData> handler, ICollection<string> topics = null)
         {
             var isFirstSub = this.eventReceived == null;
             this.eventReceived += handler;
@@ -158,7 +159,14 @@ namespace Loom.Client.Internal
             }
             // TODO: once re-sub on reconnect is implemented this should only
             // be done on first sub
-            return SendAsync<object, object>("subevents", new object());
+            Dictionary<string, ICollection<string>> result = null;
+            if (topics != null)
+            {
+                result = new Dictionary<string, ICollection<string>>();
+                result.Add("topics", topics);
+            }
+
+            return SendAsync<string, Dictionary<string, ICollection<string>>>("subevents", result);
         }
 
         public override Task UnsubscribeAsync(EventHandler<JsonRpcEventData> handler)
@@ -167,7 +175,7 @@ namespace Loom.Client.Internal
             if (this.eventReceived == null)
             {
                 this.webSocket.OnMessage -= WSSharpRPCClient_OnMessage;
-                return SendAsync<object, object>("unsubevents", new object());
+                return SendAsync<string, object>("unsubevents", null);
             }
             return Task.CompletedTask;
         }
@@ -176,18 +184,28 @@ namespace Loom.Client.Internal
         {
             var tcs = new TaskCompletionSource<T>();
             var msgId = Guid.NewGuid().ToString();
-            EventHandler<MessageEventArgs> handler = null;
-            handler = (sender, e) =>
+            EventHandler<CloseEventArgs> closeHandler = null;
+            EventHandler<MessageEventArgs> messageHandler = null;
+            closeHandler = (sender, e) =>
             {
+                tcs.TrySetException(new RpcClientException($"WebSocket closed unexpectedly with error {e.Code}: {e.Reason}"));
+            };
+            
+            messageHandler = (sender, e) =>
+            {
+                this.webSocket.OnClose -= closeHandler;
+                this.webSocket.OnMessage -= messageHandler;
+                
                 try
                 {
                     // TODO: set a timeout and throw exception when it's exceeded
                     if (e.IsText && !string.IsNullOrEmpty(e.Data))
                     {
+                        this.Logger.Log("[Response Data] " + e.Data);
                         var partialMsg = JsonConvert.DeserializeObject<JsonRpcResponse>(e.Data);
                         if (partialMsg.Id == msgId)
                         {
-                            this.webSocket.OnMessage -= handler;
+                            this.webSocket.OnMessage -= messageHandler;
                             if (partialMsg.Error != null)
                             {
                                 throw new RpcClientException(String.Format(
@@ -195,11 +213,9 @@ namespace Loom.Client.Internal
                                     partialMsg.Error.Code, partialMsg.Error.Message, partialMsg.Error.Data
                                 ));
                             }
-                            else
-                            {
-                                var fullMsg = JsonConvert.DeserializeObject<JsonRpcResponse<T>>(e.Data);
-                                tcs.TrySetResult(fullMsg.Result);
-                            }
+
+                            var fullMsg = JsonConvert.DeserializeObject<JsonRpcResponse<T>>(e.Data);
+                            tcs.TrySetResult(fullMsg.Result);
                         }
                     }
                     else
@@ -212,14 +228,17 @@ namespace Loom.Client.Internal
                     tcs.TrySetException(ex);
                 }
             };
-            this.webSocket.OnMessage += handler;
+  
+            this.webSocket.OnClose += closeHandler;
+            this.webSocket.OnMessage += messageHandler;
             try
             {
-                await SendAsync<U>(method, args, msgId);
+                await SendAsync(method, args, msgId);
             }
-            catch (Exception)
+            catch
             {
-                this.webSocket.OnMessage -= handler;
+                this.webSocket.OnClose -= closeHandler;
+                this.webSocket.OnMessage -= messageHandler;
                 throw;
             }
             return await tcs.Task;
