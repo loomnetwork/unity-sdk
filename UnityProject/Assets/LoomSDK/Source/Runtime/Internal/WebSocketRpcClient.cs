@@ -166,7 +166,7 @@ namespace Loom.Client.Internal
                 result.Add("topics", topics);
             }
 
-            return SendAsync<string, Dictionary<string, ICollection<string>>>("subevents", result);
+            return SendAsync<object, Dictionary<string, ICollection<string>>>("subevents", result);
         }
 
         public override Task UnsubscribeAsync(EventHandler<JsonRpcEventData> handler)
@@ -175,7 +175,7 @@ namespace Loom.Client.Internal
             if (this.eventReceived == null)
             {
                 this.webSocket.OnMessage -= WSSharpRPCClient_OnMessage;
-                return SendAsync<string, object>("unsubevents", null);
+                return SendAsync<object, object>("unsubevents", null);
             }
             return Task.CompletedTask;
         }
