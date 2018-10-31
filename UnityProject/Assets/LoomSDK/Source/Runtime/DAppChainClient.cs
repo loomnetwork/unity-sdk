@@ -38,17 +38,13 @@ namespace Loom.Client
         /// RPC client to use for querying DAppChain state.
         /// </summary>
         public IRpcClient ReadClient => this.readClient;
-        
+
         /// <summary>
         /// Middleware to apply when committing transactions.
         /// </summary>
         public TxMiddleware TxMiddleware { get; set; }
 
-        /// <summary>
-        /// Whether clients will attempt to connect automatically when in Disconnected state
-        /// before communicating.
-        /// </summary>
-        public bool AutoReconnect { get; set; } = true;
+        public DAppChainClientConfiguration Configuration { get; }
 
         /// <summary>
         /// Logger to be used for logging, defaults to <see cref="NullLogger"/>.
@@ -93,10 +89,12 @@ namespace Loom.Client
         /// </summary>
         /// <param name="writeClient">RPC client to use for submitting transactions.</param>
         /// <param name="readClient">RPC client to use for querying DAppChain state.</param>
-        public DAppChainClient(IRpcClient writeClient, IRpcClient readClient)
+        /// <param name="configuration">Client configuration structure.</param>
+        public DAppChainClient(IRpcClient writeClient, IRpcClient readClient, DAppChainClientConfiguration configuration = null)
         {
             this.writeClient = writeClient;
             this.readClient = readClient;
+            Configuration = configuration ?? new DAppChainClientConfiguration();
         }
 
         public void Dispose()
@@ -127,7 +125,7 @@ namespace Loom.Client
             string nonce = await this.readClient.SendAsync<string, NonceParams>(
                 "nonce", new NonceParams { Key = key }
             );
-            return UInt64.Parse(nonce); 
+            return UInt64.Parse(nonce);
         }
 
         /// <summary>
@@ -155,31 +153,16 @@ namespace Loom.Client
         /// Commits a transaction to the DAppChain.
         /// </summary>
         /// <param name="tx">Transaction to commit.</param>
-        /// <param name="timeout">Specifies the amount of time after which a call will time out.</param>
         /// <returns>Commit metadata.</returns>
         /// <exception cref="InvalidTxNonceException">Thrown if transaction is rejected due to a bad nonce after <see cref="NonceRetries"/> attempts.</exception>
-        internal async Task<BroadcastTxResult> CommitTxAsync(IMessage tx, int timeout = 5000)
+        internal async Task<BroadcastTxResult> CommitTxAsync(IMessage tx)
         {
             int badNonceCount = 0;
             do
             {
                 try
                 {
-                    try
-                    {
-                        Task<BroadcastTxResult> function = this.TryCommitTxAsync(tx);
-                        Task result = await Task.WhenAny(function, Task.Delay(timeout));
-                        if (result == function)
-                        {
-                            return function.Result;
-                        }
-                    }
-                    catch (AggregateException e)
-                    {
-                        ExceptionDispatchInfo.Capture(e.InnerException).Throw();
-                    }
-
-                    throw new TimeoutException();
+                    return await ExecuteTaskWithTimeout(this.TryCommitTxAsync(tx), Configuration.CallTimeout);
                 }
                 catch (InvalidTxNonceException)
                 {
@@ -208,7 +191,7 @@ namespace Loom.Client
         /// <param name="caller">Optional caller address.</param>
         /// <param name="vmType">Virtual machine type.</param>
         /// <returns>Deserialized response.</returns>
-        internal async Task<T> QueryAsync<T>(Address contract, IMessage query, Address caller = default(Address), VMType vmType = VMType.Plugin)
+        internal async Task<T> QueryAsync<T>(Address contract, IMessage query, Address caller, VMType vmType)
         {
             return await QueryAsync<T>(contract, query.ToByteArray(), caller, vmType);
         }
@@ -222,11 +205,11 @@ namespace Loom.Client
         /// <param name="caller">Optional caller address.</param>
         /// <param name="vmType">Virtual machine type.</param>
         /// <returns>Deserialized response.</returns>
-        internal async Task<T> QueryAsync<T>(Address contract, byte[] query, Address caller = default(Address), VMType vmType = VMType.Plugin)
+        internal async Task<T> QueryAsync<T>(Address contract, byte[] query, Address caller, VMType vmType = VMType.Plugin)
         {
             if (this.readClient == null)
                 throw new InvalidOperationException("Read client is not set");
-            
+
             var queryParams = new QueryParams
             {
                 ContractAddress = contract.LocalAddress,
@@ -237,8 +220,12 @@ namespace Loom.Client
             {
                 queryParams.CallerAddress = caller.QualifiedAddress;
             }
+
             await EnsureConnected();
-            return await this.readClient.SendAsync<T, QueryParams>("query", queryParams);
+            return await ExecuteTaskWithTimeout(
+                this.readClient.SendAsync<T, QueryParams>("query", queryParams),
+                Configuration.StaticCallTimeout
+                );
         }
 
         /// <summary>
@@ -251,7 +238,7 @@ namespace Loom.Client
         {
             if (this.writeClient == null)
                 throw new InvalidOperationException("Write client was not set");
-            
+
             await EnsureConnected();
             byte[] txBytes = tx.ToByteArray();
             if (this.TxMiddleware != null)
@@ -259,7 +246,7 @@ namespace Loom.Client
                 txBytes = await this.TxMiddleware.Handle(txBytes);
             }
             string payload = CryptoBytes.ToBase64String(txBytes);
-            var result = await this.writeClient.SendAsync<BroadcastTxResult, string[]>("broadcast_tx_commit", new string[] { payload });
+            var result = await this.writeClient.SendAsync<BroadcastTxResult, string[]>("broadcast_tx_commit", new[] { payload });
             if (result != null)
             {
                 if (result.CheckTx.Code != 0)
@@ -292,7 +279,7 @@ namespace Loom.Client
                     (
                         e.ContractAddress,
                         e.CallerAddress,
-                        UInt64.Parse(e.BlockHeight), 
+                        UInt64.Parse(e.BlockHeight),
                         e.Data,
                         e.Topics
                     ));
@@ -321,10 +308,10 @@ namespace Loom.Client
                 Logger.Log(LogTag, e.Message);
             }
         }
-        
+
         private async Task EnsureConnected()
         {
-            if (!this.AutoReconnect)
+            if (!Configuration.AutoReconnect)
                 return;
 
             if (this.readClient != null)
@@ -344,6 +331,30 @@ namespace Loom.Client
             {
                 await rpcClient.ConnectAsync();
             }
+        }
+
+        private static async Task<T> ExecuteTaskWithTimeout<T>(Task<T> task, int timeoutMs)
+        {
+#if UNITY_WEBGL
+            // TODO: support timeout for WebGL
+            return await task;
+#else
+            try
+            {
+                Task timeoutTask = Task.Delay(timeoutMs);
+                Task result = await Task.WhenAny(task, timeoutTask);
+                if (result == task)
+                {
+                    return await task;
+                }
+            }
+            catch (AggregateException e)
+            {
+                ExceptionDispatchInfo.Capture(e.InnerException).Throw();
+            }
+
+            throw new TimeoutException();
+#endif
         }
 
         private struct NonceParams
