@@ -371,7 +371,7 @@
             <remarks>
             This limit is applied when reading from the underlying stream, as a sanity check. It is
             not applied when reading from a byte array data source without an underlying stream.
-            The default value is 64MB.
+            The default value is Int32.MaxValue.
             </remarks>
             <value>
             The size limit.
@@ -388,6 +388,11 @@
             <value>
             The recursion limit for this stream.
             </value>
+        </member>
+        <member name="P:Loom.Google.Protobuf.CodedInputStream.DiscardUnknownFields">
+            <summary>
+            Internal-only property; when set to true, unknown fields will be discarded while parsing.
+            </summary>
         </member>
         <member name="M:Loom.Google.Protobuf.CodedInputStream.Dispose">
             <summary>
@@ -2722,6 +2727,13 @@
             <exception cref="T:Loom.Google.Protobuf.InvalidJsonException">The JSON does not comply with RFC 7159</exception>
             <exception cref="T:Loom.Google.Protobuf.InvalidProtocolBufferException">The JSON does not represent a Protocol Buffers message correctly</exception>
         </member>
+        <member name="M:Loom.Google.Protobuf.MessageParser.WithDiscardUnknownFields(System.Boolean)">
+            <summary>
+            Creates a new message parser which optionally discards unknown fields when parsing.
+            </summary>
+            <param name="discardUnknownFields">Whether or not to discard unknown fields when parsing.</param>
+            <returns>A newly configured message parser.</returns>
+        </member>
         <member name="T:Loom.Google.Protobuf.MessageParser`1">
             <summary>
             A parser for a specific message type.
@@ -2812,6 +2824,13 @@
             <returns>The parsed message.</returns>
             <exception cref="T:Loom.Google.Protobuf.InvalidJsonException">The JSON does not comply with RFC 7159</exception>
             <exception cref="T:Loom.Google.Protobuf.InvalidProtocolBufferException">The JSON does not represent a Protocol Buffers message correctly</exception>
+        </member>
+        <member name="M:Loom.Google.Protobuf.MessageParser`1.WithDiscardUnknownFields(System.Boolean)">
+            <summary>
+            Creates a new message parser which optionally discards unknown fields when parsing.
+            </summary>
+            <param name="discardUnknownFields">Whether or not to discard unknown fields when parsing.</param>
+            <returns>A newly configured message parser.</returns>
         </member>
         <member name="T:Loom.Google.Protobuf.ProtoPreconditions">
             <summary>
@@ -3650,6 +3669,26 @@
             Use this option to change the namespace of php generated classes. Default
             is empty. When this option is empty, the package name will be used for
             determining the namespace.
+            </summary>
+        </member>
+        <member name="F:Loom.Google.Protobuf.Reflection.FileOptions.PhpMetadataNamespaceFieldNumber">
+            <summary>Field number for the "php_metadata_namespace" field.</summary>
+        </member>
+        <member name="P:Loom.Google.Protobuf.Reflection.FileOptions.PhpMetadataNamespace">
+            <summary>
+            Use this option to change the namespace of php generated metadata classes.
+            Default is empty. When this option is empty, the proto file name will be used
+            for determining the namespace.
+            </summary>
+        </member>
+        <member name="F:Loom.Google.Protobuf.Reflection.FileOptions.RubyPackageFieldNumber">
+            <summary>Field number for the "ruby_package" field.</summary>
+        </member>
+        <member name="P:Loom.Google.Protobuf.Reflection.FileOptions.RubyPackage">
+            <summary>
+            Use this option to change the package of ruby generated classes. Default
+            is empty. When this option is not set, the package name will be used for
+            determining the ruby package.
             </summary>
         </member>
         <member name="F:Loom.Google.Protobuf.Reflection.FileOptions.UninterpretedOptionFieldNumber">
@@ -4830,6 +4869,19 @@
             The (possibly empty) set of custom options for this file.
             </summary>
         </member>
+        <member name="M:Loom.Google.Protobuf.Reflection.FileDescriptor.ForceReflectionInitialization``1">
+            <summary>
+            Performs initialization for the given generic type argument.
+            </summary>
+            <remarks>
+            This method is present for the sake of AOT compilers. It allows code (whether handwritten or generated)
+            to make calls into the reflection machinery of this library to express an intention to use that type
+            reflectively (e.g. for JSON parsing and formatting). The call itself does almost nothing, but AOT compilers
+            attempting to determine which generic type arguments need to be handled will spot the code path and act
+            accordingly.
+            </remarks>
+            <typeparam name="T">The type to force initialization for.</typeparam>
+        </member>
         <member name="T:Loom.Google.Protobuf.Reflection.GeneratedClrTypeInfo">
             <summary>
             Extra information provided by generated code when initializing a message or file descriptor.
@@ -5256,26 +5308,44 @@
         </member>
         <member name="M:Loom.Google.Protobuf.Reflection.ReflectionUtil.CreateFuncIMessageObject(System.Reflection.MethodInfo)">
             <summary>
-            Creates a delegate which will cast the argument to the appropriate method target type,
+            Creates a delegate which will cast the argument to the type that declares the method,
             call the method on it, then convert the result to object.
             </summary>
+            <param name="method">The method to create a delegate for, which must be declared in an IMessage
+            implementation.</param>
         </member>
-        <member name="M:Loom.Google.Protobuf.Reflection.ReflectionUtil.CreateFuncIMessageT``1(System.Reflection.MethodInfo)">
+        <member name="M:Loom.Google.Protobuf.Reflection.ReflectionUtil.CreateFuncIMessageInt32(System.Reflection.MethodInfo)">
             <summary>
-            Creates a delegate which will cast the argument to the appropriate method target type,
-            call the method on it, then convert the result to the specified type.
+            Creates a delegate which will cast the argument to the type that declares the method,
+            call the method on it, then convert the result to the specified type. The method is expected
+            to actually return an enum (because of where we're calling it - for oneof cases). Sometimes that
+            means we need some extra work to perform conversions.
             </summary>
+            <param name="method">The method to create a delegate for, which must be declared in an IMessage
+            implementation.</param>
         </member>
         <member name="M:Loom.Google.Protobuf.Reflection.ReflectionUtil.CreateActionIMessageObject(System.Reflection.MethodInfo)">
             <summary>
             Creates a delegate which will execute the given method after casting the first argument to
-            the target type of the method, and the second argument to the first parameter type of the method.
+            the type that declares the method, and the second argument to the first parameter type of the method.
             </summary>
+            <param name="method">The method to create a delegate for, which must be declared in an IMessage
+            implementation.</param>
         </member>
         <member name="M:Loom.Google.Protobuf.Reflection.ReflectionUtil.CreateActionIMessage(System.Reflection.MethodInfo)">
             <summary>
             Creates a delegate which will execute the given method after casting the first argument to
-            the target type of the method.
+            type that declares the method.
+            </summary>
+            <param name="method">The method to create a delegate for, which must be declared in an IMessage
+            implementation.</param>
+        </member>
+        <member name="M:Loom.Google.Protobuf.Reflection.ReflectionUtil.GetReflectionHelper(System.Type,System.Type)">
+            <summary>
+            Creates a reflection helper for the given type arguments. Currently these are created on demand
+            rather than cached; this will be "busy" when initially loading a message's descriptor, but after that
+            they can be garbage collected. We could cache them by type if that proves to be important, but creating
+            an object is pretty cheap.
             </summary>
         </member>
         <member name="T:Loom.Google.Protobuf.Reflection.RepeatedFieldAccessor">
@@ -5531,7 +5601,8 @@
             <summary>
             Create a new UnknownFieldSet if unknownFields is null.
             Parse a single field from <paramref name="input"/> and merge it
-            into unknownFields.
+            into unknownFields. If <paramref name="input"/> is configured to discard unknown fields,
+            <paramref name="unknownFields"/> will be returned as-is and the field will be skipped.
             </summary>
             <param name="unknownFields">The UnknownFieldSet which need to be merged</param>
             <param name="input">The coded input stream containing the field</param>
@@ -5656,17 +5727,18 @@
         </member>
         <member name="P:Loom.Google.Protobuf.WellKnownTypes.Any.TypeUrl">
              <summary>
-             A URL/resource name whose content describes the type of the
-             serialized protocol buffer message.
+             A URL/resource name that uniquely identifies the type of the serialized
+             protocol buffer message. The last segment of the URL's path must represent
+             the fully qualified name of the type (as in
+             `path/Loom.Google.Protobuf.Duration`). The name should be in a canonical form
+             (e.g., leading "." is not accepted).
             
-             For URLs which use the scheme `http`, `https`, or no scheme, the
-             following restrictions and interpretations apply:
+             In practice, teams usually precompile into the binary all types that they
+             expect it to use in the context of Any. However, for URLs which use the
+             scheme `http`, `https`, or no scheme, one can optionally set up a type
+             server that maps type URLs to message definitions as follows:
             
              * If no scheme is provided, `https` is assumed.
-             * The last segment of the URL's path must represent the fully
-               qualified name of the type (as in `path/Loom.Google.Protobuf.Duration`).
-               The name should be in a canonical form (e.g., leading "." is
-               not accepted).
              * An HTTP GET on the URL must yield a [Loom.Google.Protobuf.Type][]
                value in binary format, or produce an error.
              * Applications are allowed to cache lookup results based on the
@@ -5674,6 +5746,10 @@
                lookup. Therefore, binary compatibility needs to be preserved
                on changes to types. (Use versioned type names to manage
                breaking changes.)
+            
+             Note: this functionality is not currently available in the official
+             protobuf release, and it is not used for type URLs beginning with
+             type.googleapis.com.
             
              Schemes other than `http`, `https` (or the empty scheme) might be
              used with implementation specific semantics.
@@ -6413,8 +6489,8 @@
             
              ## Field Mask Verification
             
-             The implementation of the all the API methods, which have any FieldMask type
-             field in the request, should verify the included field paths, and return
+             The implementation of any API method which has a FieldMask type field in the
+             request should verify the included field paths, and return an
              `INVALID_ARGUMENT` error if any path is duplicated or unmappable.
              </summary>
         </member>
@@ -6735,7 +6811,9 @@
              {hour}, {min}, and {sec} are zero-padded to two digits each. The fractional
              seconds, which can go up to 9 digits (i.e. up to 1 nanosecond resolution),
              are optional. The "Z" suffix indicates the timezone ("UTC"); the timezone
-             is required, though only UTC (as indicated by "Z") is presently supported.
+             is required. A proto3 JSON serializer should always use UTC (as indicated by
+             "Z") when printing the Timestamp type and a proto3 JSON parser should be
+             able to accept both UTC and other timezones (as indicated by an offset).
             
              For example, "2017-01-15T01:30:15.01Z" encodes 15.01 seconds past
              01:30 UTC on January 15, 2017.
@@ -6746,8 +6824,8 @@
              to this format using [`strftime`](https://docs.python.org/2/library/time.html#time.strftime)
              with the time format spec '%Y-%m-%dT%H:%M:%S.%fZ'. Likewise, in Java, one
              can use the Joda Time's [`ISODateTimeFormat.dateTime()`](
-             http://www.joda.org/joda-time/apidocs/org/joda/time/format/ISODateTimeFormat.html#dateTime--)
-             to obtain a formatter capable of generating timestamps in this format.
+             http://www.joda.org/joda-time/apidocs/org/joda/time/format/ISODateTimeFormat.html#dateTime--
+             ) to obtain a formatter capable of generating timestamps in this format.
              </summary>
         </member>
         <member name="F:Loom.Google.Protobuf.WellKnownTypes.Timestamp.SecondsFieldNumber">
