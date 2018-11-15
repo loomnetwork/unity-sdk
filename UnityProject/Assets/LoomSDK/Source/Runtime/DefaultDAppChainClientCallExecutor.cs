@@ -9,7 +9,8 @@ namespace Loom.Client
     /// <summary>
     /// Default call executor provides handling for general blockchain situations.
     /// 1. Calls throw a <see cref="TimeoutException"/> if the calls receives no response for too long.
-    /// 2. If the blockchain
+    /// 2. Calls are queued, there can be only one active call at any given moment.
+    /// 3. If the blockchain reports an invalid nonce, the call will be retried a number of times.
     /// </summary>
     public class DefaultDAppChainClientCallExecutor : IDAppChainClientCallExecutor
     {
