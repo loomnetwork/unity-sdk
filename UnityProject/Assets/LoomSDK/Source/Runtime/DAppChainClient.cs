@@ -19,7 +19,7 @@ namespace Loom.Client
     /// <summary>
     /// Writes to & reads from a Loom DAppChain.
     /// </summary>
-    public class DAppChainClient : IDisposable
+    public class DAppChainClient : IDAppChainClientConfigurationProvider, IDisposable
     {
         private const string LogTag = "Loom.DAppChainClient";
 
@@ -46,6 +46,9 @@ namespace Loom.Client
         /// </summary>
         public TxMiddleware TxMiddleware { get; set; }
 
+        /// <summary>
+        /// Client options container.
+        /// </summary>
         public DAppChainClientConfiguration Configuration { get; }
 
         public IDAppChainClientCallExecutor CallExecutor { get; }
@@ -91,12 +94,14 @@ namespace Loom.Client
         /// <param name="writeClient">RPC client to use for submitting transactions.</param>
         /// <param name="readClient">RPC client to use for querying DAppChain state.</param>
         /// <param name="configuration">Client configuration structure.</param>
-        public DAppChainClient(IRpcClient writeClient, IRpcClient readClient, DAppChainClientConfiguration configuration = null)
+        /// <param name="callExecutor">Blockchain call execution flow controller.</param>
+        public DAppChainClient(IRpcClient writeClient, IRpcClient readClient, DAppChainClientConfiguration configuration = null, IDAppChainClientCallExecutor callExecutor = null)
         {
             this.writeClient = writeClient;
             this.readClient = readClient;
-            Configuration = configuration ?? new DAppChainClientConfiguration();
-            this.CallExecutor = new DefaultDAppChainClientCallExecutor(Configuration);
+
+            this.Configuration = configuration ?? new DAppChainClientConfiguration();
+            this.CallExecutor = callExecutor ?? new DefaultDAppChainClientCallExecutor(this);
         }
 
         public void Dispose()

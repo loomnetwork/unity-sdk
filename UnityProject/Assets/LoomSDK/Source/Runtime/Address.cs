@@ -61,7 +61,7 @@ namespace Loom.Client
         }
 
         /// <summary>
-        /// Returns binary 20-byte array representing of the address.
+        /// Returns binary 20-byte array representation of the address.
         /// </summary>
         /// <returns>20-byte array containing the address.</returns>
         public byte[] ToByteArray()
@@ -116,6 +116,12 @@ namespace Loom.Client
                 String.IsNullOrWhiteSpace(protobufAddress.ChainId) ? DefaultChainId : protobufAddress.ChainId);
         }
 
+        /// <summary>
+        /// Creates an Address instance from a byte array.
+        /// </summary>
+        /// <param name="address">binary 20-byte array representation of the address</param>
+        /// <param name="chainId">Identifier of a DAppChain.</param>
+        /// <returns>An address</returns>
         public static Address FromBytes(byte[] address, string chainId = DefaultChainId)
         {
             if (address == null)

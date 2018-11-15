@@ -36,11 +36,30 @@ namespace Loom.Client
             }
         }
 
+        /// <summary>
+        /// Gets an instance of <see cref="EvmEvent"/> set up for working with Solidity event named <paramref name="name"/>.
+        /// </summary>
+        /// <param name="name">Solidity event name.</param>
         public EvmEvent GetEvent(string name)
         {
             return new EvmEvent(this, this.contractBuilder.GetEventBuilder(name));
         }
 
+        /// <summary>
+        /// Gets an instance of <see cref="EvmEvent{T}"/> set up for working with Solidity event named <paramref name="name"/>.
+        /// </summary>
+        /// <param name="name">Solidity event name.</param>
+        /// <typeparam name="T">Event DTO type.</typeparam>
+        /// <see href="https://nethereum.readthedocs.io/en/latest/contracts/calling-transactions-events/"/>
+        public EvmEvent<T> GetEvent<T>(string name) where T : new()
+        {
+            return new EvmEvent<T>(this, this.contractBuilder.GetEventBuilder(name));
+        }
+
+        /// <summary>
+        /// Retrieves the current block height.
+        /// </summary>
+        /// <returns></returns>
         public async Task<BigInteger> GetBlockHeight()
         {
             return await this.Client.CallExecutor.StaticCall(

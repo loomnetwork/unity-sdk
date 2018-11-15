@@ -13,6 +13,9 @@ using Loom.Newtonsoft.Json.Linq;
 
 namespace Loom.Client
 {
+    /// <summary>
+    /// Represent a Solidity event.
+    /// </summary>
     public class EvmEvent
     {
         protected EvmContract Contract { get; }
@@ -26,25 +29,34 @@ namespace Loom.Client
 
         public NewFilterInput CreateFilterInput(BlockParameter fromBlock = null, BlockParameter toBlock = null)
         {
-            return EventBuilder.CreateFilterInput(fromBlock, toBlock);
+            return this.EventBuilder.CreateFilterInput(fromBlock, toBlock);
         }
 
-        public NewFilterInput CreateFilterInput(object[] filterTopic1, BlockParameter fromBlock = null,
+        public NewFilterInput CreateFilterInput(
+            object[] filterTopic1,
+            BlockParameter fromBlock = null,
             BlockParameter toBlock = null)
         {
-            return EventBuilder.CreateFilterInput(filterTopic1, fromBlock, toBlock);
+            return this.EventBuilder.CreateFilterInput(filterTopic1, fromBlock, toBlock);
         }
 
-        public NewFilterInput CreateFilterInput(object[] filterTopic1, object[] filterTopic2,
-            BlockParameter fromBlock = null, BlockParameter toBlock = null)
+        public NewFilterInput CreateFilterInput(
+            object[] filterTopic1,
+            object[] filterTopic2,
+            BlockParameter fromBlock = null,
+            BlockParameter toBlock = null)
         {
-            return EventBuilder.CreateFilterInput(filterTopic1, filterTopic2, fromBlock, toBlock);
+            return this.EventBuilder.CreateFilterInput(filterTopic1, filterTopic2, fromBlock, toBlock);
         }
 
-        public NewFilterInput CreateFilterInput(object[] filterTopic1, object[] filterTopic2, object[] filterTopic3,
-            BlockParameter fromBlock = null, BlockParameter toBlock = null)
+        public NewFilterInput CreateFilterInput(
+            object[] filterTopic1,
+            object[] filterTopic2,
+            object[] filterTopic3,
+            BlockParameter fromBlock = null,
+            BlockParameter toBlock = null)
         {
-            return EventBuilder.CreateFilterInput(filterTopic1, filterTopic2, filterTopic3, fromBlock, toBlock);
+            return this.EventBuilder.CreateFilterInput(filterTopic1, filterTopic2, filterTopic3, fromBlock, toBlock);
         }
 
         public static List<EventLog<T>> DecodeAllEvents<T>(FilterLog[] logs) where T : new()
@@ -61,35 +73,42 @@ namespace Loom.Client
                     .ToArray();
         }
 
+        public async Task<List<EventLog<T>>> GetAllChanges<T>(NewFilterInput filterInput) where T : new()
+        {
+            return DecodeAllEvents<T>(await GetAllChanges(filterInput));
+        }
+
         public bool IsLogForEvent(JToken log)
         {
-            return EventBuilder.IsLogForEvent(log);
+            return this.EventBuilder.IsLogForEvent(log);
         }
 
         public bool IsLogForEvent(FilterLog log)
         {
-            return EventBuilder.IsLogForEvent(log);
+            return this.EventBuilder.IsLogForEvent(log);
         }
 
         public List<EventLog<T>> DecodeAllEventsForEvent<T>(FilterLog[] logs) where T : new()
         {
-            return EventBuilder.DecodeAllEventsForEvent<T>(logs);
+            return this.EventBuilder.DecodeAllEventsForEvent<T>(logs);
         }
 
         public List<EventLog<T>> DecodeAllEventsForEvent<T>(JArray logs) where T : new()
         {
-            return EventBuilder.DecodeAllEventsForEvent<T>(logs);
+            return this.EventBuilder.DecodeAllEventsForEvent<T>(logs);
         }
 
         private async Task<EthFilterLogList> GetAllChangesInternal(NewFilterInput filterInput)
         {
             return await this.Contract.Client.CallExecutor.StaticCall(async () =>
             {
-                string base64 = await this.Contract.Client.ReadClient.SendAsync<string, FilterRpcModel>("getevmlogs",
+                string base64 = await this.Contract.Client.ReadClient.SendAsync<string, FilterRpcModel>(
+                    "getevmlogs",
                     new FilterRpcModel
                     {
                         Filter = JsonConvert.SerializeObject(filterInput)
-                    });
+                    }
+                );
 
                 byte[] bytes = CryptoBytes.FromBase64String(base64);
                 return EthFilterLogList.Parser.ParseFrom(bytes);
@@ -111,6 +130,33 @@ namespace Loom.Client
                 TransactionHash = CryptoBytes.ToHexStringLower(log.TransactionHash.ToByteArray()),
                 TransactionIndex = new HexBigInteger(log.TransactionIndex)
             };
+        }
+    }
+
+    public class EvmEvent<T> : EvmEvent where T : new()
+    {
+        public EvmEvent(EvmContract contract, EventBuilder eventBuilder) : base(contract, eventBuilder)
+        {
+        }
+
+        public List<EventLog<T>> DecodeAllEventsForEvent(JArray logs)
+        {
+            return DecodeAllEventsForEvent<T>(logs);
+        }
+
+        public List<EventLog<T>> DecodeAllEventsForEvent(FilterLog[] logs)
+        {
+            return DecodeAllEventsForEvent<T>(logs);
+        }
+
+        public static List<EventLog<T>> DecodeAllEvents(FilterLog[] logs)
+        {
+            return DecodeAllEvents<T>(logs);
+        }
+
+        public Task<List<EventLog<T>>> GetAllChanges(NewFilterInput filterInput)
+        {
+            return GetAllChanges<T>(filterInput);
         }
     }
 }

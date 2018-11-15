@@ -6,22 +6,29 @@ using Loom.Client.Internal;
 
 namespace Loom.Client
 {
+    /// <summary>
+    /// Default call executor provides handling for general blockchain situations.
+    /// 1. Calls throw a <see cref="TimeoutException"/> if the calls receives no response for too long.
+    /// 2. If the blockchain
+    /// </summary>
     public class DefaultDAppChainClientCallExecutor : IDAppChainClientCallExecutor
     {
         private readonly AsyncSemaphore callAsyncSemaphore = new AsyncSemaphore(1);
+        private readonly IDAppChainClientConfigurationProvider configurationProvider;
 
-        public DAppChainClientConfiguration Configuration { get; }
-
-        public DefaultDAppChainClientCallExecutor(DAppChainClientConfiguration configuration)
+        public DefaultDAppChainClientCallExecutor(IDAppChainClientConfigurationProvider configurationProvider)
         {
-            this.Configuration = configuration;
+            if (configurationProvider == null)
+                throw new ArgumentNullException(nameof(configurationProvider));
+
+            this.configurationProvider = configurationProvider;
         }
 
         public async Task<T> Call<T>(Func<Task<T>> taskProducer)
         {
             Task<T> task = (Task<T>) await ExecuteTaskWithRetryOnInvalidTxNonceException(
                 () => ExecuteTaskWaitForOtherTasks(
-                    () => ExecuteTaskWithTimeout(taskProducer, this.Configuration.CallTimeout)
+                    () => ExecuteTaskWithTimeout(taskProducer, this.configurationProvider.Configuration.CallTimeout)
                 ));
 
             return await task;
@@ -31,7 +38,7 @@ namespace Loom.Client
         {
             Task task = await ExecuteTaskWithRetryOnInvalidTxNonceException(
                 () => ExecuteTaskWaitForOtherTasks(
-                    () => ExecuteTaskWithTimeout(taskProducer, this.Configuration.CallTimeout)
+                    () => ExecuteTaskWithTimeout(taskProducer, this.configurationProvider.Configuration.CallTimeout)
                 ));
 
             await task;
@@ -40,7 +47,7 @@ namespace Loom.Client
         public async Task<T> StaticCall<T>(Func<Task<T>> taskProducer)
         {
             Task<T> task = (Task<T>) await ExecuteTaskWaitForOtherTasks(
-                () => ExecuteTaskWithTimeout(taskProducer, this.Configuration.StaticCallTimeout)
+                () => ExecuteTaskWithTimeout(taskProducer, this.configurationProvider.Configuration.StaticCallTimeout)
             );
 
             return await task;
@@ -49,7 +56,7 @@ namespace Loom.Client
         public async Task StaticCall(Func<Task> taskProducer)
         {
             Task task = await ExecuteTaskWaitForOtherTasks(
-                () => ExecuteTaskWithTimeout(taskProducer, this.Configuration.StaticCallTimeout)
+                () => ExecuteTaskWithTimeout(taskProducer, this.configurationProvider.Configuration.StaticCallTimeout)
             );
 
             await task;
@@ -57,13 +64,13 @@ namespace Loom.Client
 
         public async Task<T> NonBlockingStaticCall<T>(Func<Task<T>> taskProducer)
         {
-            Task<T> task = (Task<T>) await ExecuteTaskWithTimeout(taskProducer, this.Configuration.StaticCallTimeout);
+            Task<T> task = (Task<T>) await ExecuteTaskWithTimeout(taskProducer, this.configurationProvider.Configuration.StaticCallTimeout);
             return await task;
         }
 
         public async Task NonBlockingStaticCall(Func<Task> taskProducer)
         {
-            Task task = await ExecuteTaskWithTimeout(taskProducer, this.Configuration.StaticCallTimeout);
+            Task task = await ExecuteTaskWithTimeout(taskProducer, this.configurationProvider.Configuration.StaticCallTimeout);
             await task;
         }
 
@@ -136,7 +143,9 @@ namespace Loom.Client
 #else
                 await Task.Delay(TimeSpan.FromSeconds(delay));
 #endif
-            } while (this.Configuration.InvalidNonceTxRetries != 0 && badNonceCount <= this.Configuration.InvalidNonceTxRetries);
+            } while (
+                this.configurationProvider.Configuration.InvalidNonceTxRetries != 0 &&
+                badNonceCount <= this.configurationProvider.Configuration.InvalidNonceTxRetries);
 
             throw new InvalidTxNonceException(1, "sequence number does not match");
         }

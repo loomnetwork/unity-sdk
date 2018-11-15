@@ -42,9 +42,8 @@ namespace Loom.Client.Tests
                 await this.contract.CallAsync("emitTestIndexedEvent1", 1);
                 await this.contract.CallAsync("emitTestIndexedEvent1", 2);
                 await this.contract.CallAsync("emitTestIndexedEvent1", 3);
-                EvmEvent event1 = this.contract.GetEvent("TestIndexedEvent1");
-                FilterLog[] logs = await event1.GetAllChanges(event1.CreateFilterInput(BlockParameter.CreateEarliest(), BlockParameter.CreatePending()));
-                List<EventLog<TestIndexedEvent1>> decodedEvents = event1.DecodeAllEventsForEvent<TestIndexedEvent1>(logs);
+                EvmEvent<TestIndexedEvent1> event1 = this.contract.GetEvent<TestIndexedEvent1>("TestIndexedEvent1");
+                List<EventLog<TestIndexedEvent1>> decodedEvents = await event1.GetAllChanges(event1.CreateFilterInput(BlockParameter.CreateEarliest(), BlockParameter.CreatePending()));
 
                 Assert.AreEqual(1, decodedEvents[decodedEvents.Count - 3].Event.Number1);
                 Assert.AreEqual(2, decodedEvents[decodedEvents.Count - 2].Event.Number1);
@@ -59,11 +58,10 @@ namespace Loom.Client.Tests
                 await this.contract.CallAsync("emitTestIndexedEvent1", 1);
                 await this.contract.CallAsync("emitTestIndexedEvent1", 2);
                 await this.contract.CallAsync("emitTestIndexedEvent1", 3);
-                EvmEvent event1 = this.contract.GetEvent("TestIndexedEvent1");
-                NewFilterInput filterInput = event1.CreateFilterInput(new object[] { 2 }, BlockParameter.CreateEarliest(), BlockParameter.CreatePending());
+                EvmEvent<TestIndexedEvent1> event1 = this.contract.GetEvent<TestIndexedEvent1>("TestIndexedEvent1");
+                List<EventLog<TestIndexedEvent1>> decodedEvents =
+                    await event1.GetAllChanges(event1.CreateFilterInput(new object[] { 2 }, BlockParameter.CreateEarliest(), BlockParameter.CreatePending()));
 
-                FilterLog[] logs = await event1.GetAllChanges(filterInput);
-                List<EventLog<TestIndexedEvent1>> decodedEvents = event1.DecodeAllEventsForEvent<TestIndexedEvent1>(logs);
                 Assert.NotZero(decodedEvents.Count);
                 decodedEvents.ForEach(log => Assert.AreEqual(2, log.Event.Number1));
 

@@ -55,8 +55,8 @@ namespace Loom.Client.Tests
         [UnityTest]
         public IEnumerator CallsMustWaitForOtherCallToComplete()
         {
-            // If multiple calls are made at the same time, only one should be actually communicating with the backend,
-            // others must wait for completion
+            // If multiple calls are made at the same time, only one should be actually communicating
+            // with the backend at a given moment, others must wait for completion
             return AsyncEditorTestUtility.AsyncTest(async () =>
             {
                 byte[] privateKey = CryptoUtils.GeneratePrivateKey();
