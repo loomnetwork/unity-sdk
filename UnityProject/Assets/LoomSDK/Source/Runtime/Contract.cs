@@ -130,7 +130,7 @@ namespace Loom.Client
             return CreateContractMethodCallTx(requestBytes, VMType.Plugin);
         }
 
-        private class JsonRpcEvent
+        private struct JsonRpcEvent
         {
             [JsonProperty("Data")]
             public string Data;

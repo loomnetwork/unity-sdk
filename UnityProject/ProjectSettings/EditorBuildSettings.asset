@@ -6,5 +6,5 @@ EditorBuildSettings:
   serializedVersion: 2
   m_Scenes:
   - enabled: 1
-    path: Assets/Samples/Demo/Demo.unity
+    path: Assets/LoomSDK/Samples/Demo/Demo.unity
     guid: bb9636e0da82dac458521317a7211b8d

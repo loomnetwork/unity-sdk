@@ -11,6 +11,10 @@ using System.Threading;
 using System.Threading.Tasks;
 using Loom.Nethereum.ABI;
 using Loom.Nethereum.ABI.Decoders;
+using Loom.Nethereum.ABI.FunctionEncoding.Attributes;
+using Loom.Nethereum.Contracts;
+using Loom.Nethereum.RPC.Eth.DTOs;
+using Loom.Newtonsoft.Json;
 
 namespace Loom.Client.Tests
 {
@@ -18,11 +22,65 @@ namespace Loom.Client.Tests
     {
         private string testsAbi;
         private EvmContract contract;
-        byte[] bytes4 = { 1, 2, 3, 4 };
+        private readonly byte[] bytes4 = { 1, 2, 3, 4 };
 
         [SetUp]
         public void SetUp() {
             this.testsAbi = Resources.Load<TextAsset>("Tests.abi").text;
+        }
+
+        public class TestIndexedEvent1
+        {
+            [Parameter("uint", "number1", 1, true)]
+            public uint Number1 {get; set; }
+        }
+
+        [UnityTest]
+        public IEnumerator LogsGetAllChangesTest() {
+            return ContractTest(async () =>
+            {
+                await this.contract.CallAsync("emitTestIndexedEvent1", 1);
+                await this.contract.CallAsync("emitTestIndexedEvent1", 2);
+                await this.contract.CallAsync("emitTestIndexedEvent1", 3);
+                EvmEvent event1 = this.contract.GetEvent("TestIndexedEvent1");
+                FilterLog[] logs = await event1.GetAllChanges(event1.CreateFilterInput(BlockParameter.CreateEarliest(), BlockParameter.CreatePending()));
+                List<EventLog<TestIndexedEvent1>> decodedEvents = event1.DecodeAllEventsForEvent<TestIndexedEvent1>(logs);
+
+                Assert.AreEqual(1, decodedEvents[decodedEvents.Count - 3].Event.Number1);
+                Assert.AreEqual(2, decodedEvents[decodedEvents.Count - 2].Event.Number1);
+                Assert.AreEqual(3, decodedEvents[decodedEvents.Count - 1].Event.Number1);
+            });
+        }
+
+        [UnityTest]
+        public IEnumerator LogsGetAllChangesFilteredTest() {
+            return ContractTest(async () =>
+            {
+                await this.contract.CallAsync("emitTestIndexedEvent1", 1);
+                await this.contract.CallAsync("emitTestIndexedEvent1", 2);
+                await this.contract.CallAsync("emitTestIndexedEvent1", 3);
+                EvmEvent event1 = this.contract.GetEvent("TestIndexedEvent1");
+                NewFilterInput filterInput = event1.CreateFilterInput(new object[] { 2 }, BlockParameter.CreateEarliest(), BlockParameter.CreatePending());
+
+                FilterLog[] logs = await event1.GetAllChanges(filterInput);
+                List<EventLog<TestIndexedEvent1>> decodedEvents = event1.DecodeAllEventsForEvent<TestIndexedEvent1>(logs);
+                Assert.NotZero(decodedEvents.Count);
+                decodedEvents.ForEach(log => Assert.AreEqual(2, log.Event.Number1));
+
+                Debug.Log(JsonConvert.SerializeObject(decodedEvents, Formatting.Indented));
+            });
+        }
+
+        [UnityTest]
+        public IEnumerator GetBlockHeightTest() {
+            return ContractTest(async () =>
+            {
+                BigInteger height1 = await this.contract.GetBlockHeight();
+                await this.contract.CallAsync("setTestUint", new BigInteger(123456789));
+                BigInteger height2 = await this.contract.GetBlockHeight();
+
+                Assert.AreEqual(height1 + 1, height2);
+            });
         }
 
         [UnityTest]
@@ -101,10 +159,10 @@ namespace Loom.Client.Tests
         }
 
         [UnityTest]
-        public IEnumerator EventsSequentialityTest() {
+        public IEnumerator EventsAreSequentialTest() {
             return ContractTest(async () =>
             {
-
+                const int eventCount = 15;
                 AutoResetEvent waitForEvents = new AutoResetEvent(false);
                 List<int> testEventArguments = new List<int>();
                 EventHandler<EvmChainEventArgs> handler = (sender, args) =>
@@ -118,36 +176,24 @@ namespace Loom.Client.Tests
                     int val = new IntTypeDecoder(false).DecodeInt(args.Data);
                     testEventArguments.Add(val);
 
-                    if (testEventArguments.Count == 15)
+                    if (testEventArguments.Count == eventCount)
                     {
                         waitForEvents.Set();
                     }
-
-                    Debug.Log("TestEvent: " + val);
                 };
                 this.contract.EventReceived += handler;
                 await this.contract.CallAsync("emitTestEvents", 0);
                 waitForEvents.WaitOne(5000);
                 this.contract.EventReceived -= handler;
                 Debug.Log(String.Join(", ", testEventArguments.ToArray()));
-                Assert.AreEqual(15, testEventArguments.Count);
+                Assert.AreEqual(eventCount, testEventArguments.Count);
                 Assert.AreEqual(testEventArguments.OrderBy(i => i).ToList(), testEventArguments);
             });
         }
 
-        private IEnumerator ContractTest(Func<Task> action) {
-            return
-                TaskAsIEnumerator(Task.Run(() =>
-                {
-                    try
-                    {
-                        EnsureContract().Wait();
-                        action().Wait();
-                    } catch (AggregateException e)
-                    {
-                        ExceptionDispatchInfo.Capture(e.InnerException).Throw();
-                    }
-                }));
+        private IEnumerator ContractTest(Func<Task> action)
+        {
+            return AsyncEditorTestUtility.AsyncTest(action, EnsureContract);
         }
 
         private async Task EnsureContract() {
@@ -156,45 +202,7 @@ namespace Loom.Client.Tests
 
             byte[] privateKey = CryptoUtils.GeneratePrivateKey();
             byte[] publicKey = CryptoUtils.PublicKeyFromPrivateKey(privateKey);
-            this.contract = await GetContract(privateKey, publicKey, this.testsAbi);
-        }
-
-        private async Task<EvmContract> GetContract(byte[] privateKey, byte[] publicKey, string abi)
-        {
-            ILogger logger = NullLogger.Instance;
-            IRpcClient writer = RpcClientFactory.Configure()
-                .WithLogger(logger)
-                .WithWebSocket("ws://127.0.0.1:46657/websocket")
-                .Create();
-
-            IRpcClient reader = RpcClientFactory.Configure()
-                .WithLogger(logger)
-                .WithWebSocket("ws://127.0.0.1:9999/queryws")
-                .Create();
-
-            DAppChainClient client = new DAppChainClient(writer, reader)
-                { Logger = logger };
-
-            // required middleware
-            client.TxMiddleware = new TxMiddleware(new ITxMiddlewareHandler[]
-            {
-                new NonceTxMiddleware(publicKey, client),
-                new SignedTxMiddleware(privateKey)
-            });
-
-            Address contractAddr = await client.ResolveContractAddressAsync("Tests");
-            Address callerAddr = Address.FromPublicKey(publicKey);
-
-            return new EvmContract(client, contractAddr, callerAddr, abi);
-        }
-
-        private static IEnumerator TaskAsIEnumerator(Task task)
-        {
-            while (!task.IsCompleted)
-                yield return null;
-
-            if (task.IsFaulted)
-                throw task.Exception;
+            this.contract = await ContractTestUtility.GetEvmContract(privateKey, publicKey, this.testsAbi);
         }
     }
 }

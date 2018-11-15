@@ -28,7 +28,7 @@ namespace Loom.Client.Internal
             this.url = new Uri(url);
         }
 
-        public override Task SubscribeAsync(EventHandler<JsonRpcEventData> handler, ICollection<string> topics = null)
+        public override Task SubscribeAsync(EventHandler<JsonRpcEventData> handler, ICollection<string> topics)
         {
             throw new NotImplementedException();
         }

@@ -139,9 +139,9 @@ namespace Loom.Client.Unity.WebGL.Internal
             }
         }
 
-        public override async Task<T> SendAsync<T, U>(string method, U args)
+        public override async Task<TResult> SendAsync<TResult, TArgs>(string method, TArgs args)
         {
-            var tcs = new TaskCompletionSource<T>();
+            var tcs = new TaskCompletionSource<TResult>();
             var msgId = Guid.NewGuid().ToString();
             EventHandler<string> handler = null;
             handler = (sender, msgBody) =>
@@ -164,7 +164,7 @@ namespace Loom.Client.Unity.WebGL.Internal
                             }
                             else
                             {
-                                var fullMsg = JsonConvert.DeserializeObject<JsonRpcResponse<T>>(msgBody);
+                                var fullMsg = JsonConvert.DeserializeObject<JsonRpcResponse<TResult>>(msgBody);
                                 tcs.TrySetResult(fullMsg.Result);
                             }
                         }
@@ -184,7 +184,7 @@ namespace Loom.Client.Unity.WebGL.Internal
             this.webSocket.MessageReceived += handler;
             try
             {
-                await SendAsync<U>(method, args, msgId);
+                await SendAsync(method, args, msgId);
                 NotifyConnectionStateChanged();
             }
             catch (Exception)
