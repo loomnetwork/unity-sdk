@@ -111,15 +111,22 @@ namespace Loom.Client
             if (protobufAddress == null)
                 throw new ArgumentNullException(nameof(protobufAddress));
 
-            if (protobufAddress.Local == null)
-                throw new ArgumentNullException(nameof(protobufAddress.Local));
+            return FromBytes(
+                protobufAddress.Local.ToByteArray(),
+                String.IsNullOrWhiteSpace(protobufAddress.ChainId) ? DefaultChainId : protobufAddress.ChainId);
+        }
 
-            if (protobufAddress.Local.Length != AddressLengthBytes)
-                throw new ArgumentException("Local address must have a length of 20 bytes", nameof(protobufAddress.Local));
+        public static Address FromBytes(byte[] address, string chainId = DefaultChainId)
+        {
+            if (address == null)
+                throw new ArgumentNullException(nameof(address));
+
+            if (address.Length != AddressLengthBytes)
+                throw new ArgumentException("Local address must have a length of 20 bytes", nameof(address));
 
             return new Address(
-                CryptoUtils.BytesToHexString(protobufAddress.Local.ToByteArray()),
-                String.IsNullOrWhiteSpace(protobufAddress.ChainId) ? DefaultChainId : protobufAddress.ChainId
+                CryptoUtils.BytesToHexString(address),
+                chainId
             );
         }
 
