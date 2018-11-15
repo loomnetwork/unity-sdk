@@ -149,7 +149,7 @@ namespace Loom.Client.Internal
             return tcs.Task;
         }
 
-        public override Task SubscribeAsync(EventHandler<JsonRpcEventData> handler, ICollection<string> topics = null)
+        public override Task SubscribeAsync(EventHandler<JsonRpcEventData> handler, ICollection<string> topics)
         {
             var isFirstSub = this.eventReceived == null;
             this.eventReceived += handler;
@@ -159,14 +159,14 @@ namespace Loom.Client.Internal
             }
             // TODO: once re-sub on reconnect is implemented this should only
             // be done on first sub
-            Dictionary<string, ICollection<string>> result = null;
-            if (topics != null)
+            Dictionary<string, ICollection<string>> args = null;
+            if (topics != null && topics.Count > 0)
             {
-                result = new Dictionary<string, ICollection<string>>();
-                result.Add("topics", topics);
+                args = new Dictionary<string, ICollection<string>>();
+                args.Add("topics", topics);
             }
 
-            return SendAsync<object, Dictionary<string, ICollection<string>>>("subevents", result);
+            return SendAsync<object, Dictionary<string, ICollection<string>>>("subevents", args);
         }
 
         public override Task UnsubscribeAsync(EventHandler<JsonRpcEventData> handler)
@@ -180,9 +180,9 @@ namespace Loom.Client.Internal
             return Task.CompletedTask;
         }
 
-        public override async Task<T> SendAsync<T, U>(string method, U args)
+        public override async Task<TResult> SendAsync<TResult, TArgs>(string method, TArgs args)
         {
-            var tcs = new TaskCompletionSource<T>();
+            var tcs = new TaskCompletionSource<TResult>();
             var msgId = Guid.NewGuid().ToString();
             EventHandler<CloseEventArgs> closeHandler = null;
             EventHandler<MessageEventArgs> messageHandler = null;
@@ -190,21 +190,20 @@ namespace Loom.Client.Internal
             {
                 tcs.TrySetException(new RpcClientException($"WebSocket closed unexpectedly with error {e.Code}: {e.Reason}"));
             };
-            
+
             messageHandler = (sender, e) =>
             {
-                this.webSocket.OnClose -= closeHandler;
-                this.webSocket.OnMessage -= messageHandler;
-                
                 try
                 {
-                    // TODO: set a timeout and throw exception when it's exceeded
+                    // TODO: implement a more optimal way to handle data. Currently, each handler deserializes the payload independently,
+                    // which means that if 20 simultaneous calls are made, up to 20 * 20 = 400 total deserializations can be made
                     if (e.IsText && !string.IsNullOrEmpty(e.Data))
                     {
                         this.Logger.Log("[Response Data] " + e.Data);
                         var partialMsg = JsonConvert.DeserializeObject<JsonRpcResponse>(e.Data);
                         if (partialMsg.Id == msgId)
                         {
+                            this.webSocket.OnClose -= closeHandler;
                             this.webSocket.OnMessage -= messageHandler;
                             if (partialMsg.Error != null)
                             {
@@ -214,7 +213,7 @@ namespace Loom.Client.Internal
                                 ));
                             }
 
-                            var fullMsg = JsonConvert.DeserializeObject<JsonRpcResponse<T>>(e.Data);
+                            var fullMsg = JsonConvert.DeserializeObject<JsonRpcResponse<TResult>>(e.Data);
                             tcs.TrySetResult(fullMsg.Result);
                         }
                     }
