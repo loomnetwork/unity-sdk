@@ -102,4 +102,10 @@ namespace Loom.Client.Internal
             public byte[] Data { get; set; }
         }
     }
+
+    internal struct FilterRpcModel
+    {
+        [JsonProperty("filter")]
+        public string Filter { get; set; }
+    }
 }
