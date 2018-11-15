@@ -86,7 +86,7 @@ namespace Loom.Client.Tests
                     Assert.AreEqual(callCount, callEndOrderList.Count);
                     Assert.AreEqual(callEndOrderList.OrderBy(i => i).ToList(), callEndOrderList);
                 }
-            }, timeout: 10000);
+            });
         }
 
         [UnityTest]
@@ -112,10 +112,7 @@ namespace Loom.Client.Tests
                     await invalidNonceContract.CallAsync("setTestUint", new BigInteger(123456789));
                 } catch (InvalidTxNonceException e)
                 {
-                    Assert.Catch<InvalidTxNonceException>(() =>
-                    {
-                        throw e;
-                    });
+                    Assert.Catch<InvalidTxNonceException>(() => throw e);
                 }
             });
         }
