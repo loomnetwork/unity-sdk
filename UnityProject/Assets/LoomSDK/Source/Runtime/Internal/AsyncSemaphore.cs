@@ -3,7 +3,7 @@ using System.Diagnostics;
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace Loom.Client.Internal
+namespace Loom.Client.Internal.AsyncEx
 {
     /// <summary>
     ///     An async-compatible semaphore. Alternatively, you could use <c>SemaphoreSlim</c>.
@@ -123,6 +123,7 @@ namespace Loom.Client.Internal
                 checked
                 {
 #pragma warning disable 0219
+                    // Use dummy unused variable to force check the result for overflow
                     long test = this.count + releaseCount;
 #pragma warning restore 0219
                 }

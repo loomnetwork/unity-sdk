@@ -3,7 +3,7 @@ using System.Diagnostics;
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace Loom.Client.Internal
+namespace Loom.Client.Internal.AsyncEx
 {
     /// <summary>
     ///     A collection of cancelable <see cref="TaskCompletionSource{TResult}" /> instances. Implementations must assume the

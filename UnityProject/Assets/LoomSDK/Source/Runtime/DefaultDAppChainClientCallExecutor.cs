@@ -2,7 +2,7 @@ using System;
 using System.Runtime.ExceptionServices;
 using System.Threading;
 using System.Threading.Tasks;
-using Loom.Client.Internal;
+using Loom.Client.Internal.AsyncEx;
 
 namespace Loom.Client
 {

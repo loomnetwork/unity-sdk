@@ -154,7 +154,7 @@ namespace Loom.Client
             return DecodeAllEvents<T>(logs);
         }
 
-        public Task<List<EventLog<T>>> GetAllChanges(NewFilterInput filterInput)
+        public new Task<List<EventLog<T>>> GetAllChanges(NewFilterInput filterInput)
         {
             return GetAllChanges<T>(filterInput);
         }
