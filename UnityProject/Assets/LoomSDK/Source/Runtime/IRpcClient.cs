@@ -14,7 +14,7 @@ namespace Loom.Client
         Task<TResult> SendAsync<TResult, TArgs>(string method, TArgs args);
         Task ConnectAsync();
         Task DisconnectAsync();
-        Task SubscribeAsync(EventHandler<JsonRpcEventData> handler, ICollection<string> topics = null);
+        Task SubscribeAsync(EventHandler<JsonRpcEventData> handler, ICollection<string> topics);
         Task UnsubscribeAsync(EventHandler<JsonRpcEventData> handler);
     }
 

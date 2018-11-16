@@ -4,6 +4,9 @@ using Loom.Client.Internal;
 
 namespace Loom.Client
 {
+    /// <summary>
+    /// Builds an instance of <see cref="IRpcClient"/>.
+    /// </summary>
     public class RpcClientFactory
     {
         private ILogger logger = NullLogger.Instance;

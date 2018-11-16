@@ -2,6 +2,9 @@ pragma solidity ^0.4.24;
 
 contract Tests {
     event TestEvent(uint number);
+    event TestIndexedEvent1(uint indexed number1);
+    event TestIndexedEvent2(uint number1, uint indexed number2);
+    event TestIndexedEvent3(uint indexed number1, uint indexed number2);
 
     address testAddress;
     int testInt;
@@ -39,6 +42,18 @@ contract Tests {
         emit TestEvent(base + 13);
         emit TestEvent(base + 14);
         emit TestEvent(base + 15);
+    }
+
+    function emitTestIndexedEvent1(uint number1) public {
+        emit TestIndexedEvent1(number1);
+    }
+
+    function emitTestIndexedEvent2(uint number1, uint number2) public {
+        emit TestIndexedEvent2(number1, number2);
+    }
+
+    function emitTestIndexedEvent3(uint number1, uint number2) public {
+        emit TestIndexedEvent3(number1, number2);
     }
 
     // address

@@ -1,0 +1,8 @@
+{
+    "name": "LoomSDK.RuntimeTests",
+    "references": [
+        "LoomSDK"
+    ],
+    "includePlatforms": [],
+    "excludePlatforms": []
+}

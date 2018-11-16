@@ -1,0 +1,10 @@
+{
+    "name": "LoomSDK.EditorTests",
+    "references": [
+        "LoomSDK"
+    ],
+    "includePlatforms": [
+        "Editor"
+    ],
+    "excludePlatforms": []
+}

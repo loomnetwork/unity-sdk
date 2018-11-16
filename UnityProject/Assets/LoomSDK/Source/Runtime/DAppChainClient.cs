@@ -6,6 +6,7 @@ using System;
 using Loom.Newtonsoft.Json;
 using System.Collections.Generic;
 using System.Runtime.ExceptionServices;
+using System.Threading;
 using Loom.Client.Internal;
 using Loom.Client.Protobuf;
 
@@ -18,15 +19,16 @@ namespace Loom.Client
     /// <summary>
     /// Writes to & reads from a Loom DAppChain.
     /// </summary>
-    public class DAppChainClient : IDisposable
+    public class DAppChainClient : IDAppChainClientConfigurationProvider, IDisposable
     {
         private const string LogTag = "Loom.DAppChainClient";
 
         private readonly Dictionary<EventHandler<RawChainEventArgs>, EventHandler<JsonRpcEventData>> eventSubs =
             new Dictionary<EventHandler<RawChainEventArgs>, EventHandler<JsonRpcEventData>>();
 
-        private IRpcClient writeClient;
-        private IRpcClient readClient;
+        private readonly IRpcClient writeClient;
+        private readonly IRpcClient readClient;
+
         private ILogger logger = NullLogger.Instance;
 
         /// <summary>
@@ -38,26 +40,30 @@ namespace Loom.Client
         /// RPC client to use for querying DAppChain state.
         /// </summary>
         public IRpcClient ReadClient => this.readClient;
-        
+
         /// <summary>
         /// Middleware to apply when committing transactions.
         /// </summary>
         public TxMiddleware TxMiddleware { get; set; }
 
         /// <summary>
-        /// Whether clients will attempt to connect automatically when in Disconnected state
-        /// before communicating.
+        /// Client options container.
         /// </summary>
-        public bool AutoReconnect { get; set; } = true;
+        public DAppChainClientConfiguration Configuration { get; }
+
+        public IDAppChainClientCallExecutor CallExecutor { get; }
 
         /// <summary>
         /// Logger to be used for logging, defaults to <see cref="NullLogger"/>.
         /// </summary>
-        public ILogger Logger {
-            get {
+        public ILogger Logger
+        {
+            get
+            {
                 return this.logger;
             }
-            set {
+            set
+            {
                 if (value == null)
                 {
                     value = NullLogger.Instance;
@@ -66,12 +72,6 @@ namespace Loom.Client
                 this.logger = value;
             }
         }
-
-        /// <summary>
-        /// Maximum number of times a tx should be resent after being rejected because of a bad nonce.
-        /// Defaults to 5.
-        /// </summary>
-        public int NonceRetries { get; set; } = 5;
 
         /// <summary>
         /// Events emitted by the DAppChain.
@@ -93,24 +93,21 @@ namespace Loom.Client
         /// </summary>
         /// <param name="writeClient">RPC client to use for submitting transactions.</param>
         /// <param name="readClient">RPC client to use for querying DAppChain state.</param>
-        public DAppChainClient(IRpcClient writeClient, IRpcClient readClient)
+        /// <param name="configuration">Client configuration structure.</param>
+        /// <param name="callExecutor">Blockchain call execution flow controller.</param>
+        public DAppChainClient(IRpcClient writeClient, IRpcClient readClient, DAppChainClientConfiguration configuration = null, IDAppChainClientCallExecutor callExecutor = null)
         {
             this.writeClient = writeClient;
             this.readClient = readClient;
+
+            this.Configuration = configuration ?? new DAppChainClientConfiguration();
+            this.CallExecutor = callExecutor ?? new DefaultDAppChainClientCallExecutor(this);
         }
 
         public void Dispose()
         {
-            if (this.writeClient != null)
-            {
-                this.writeClient.Dispose();
-                this.writeClient = null;
-            }
-            if (this.readClient != null)
-            {
-                this.readClient.Dispose();
-                this.readClient = null;
-            }
+            this.writeClient?.Dispose();
+            this.readClient?.Dispose();
         }
 
         /// <summary>
@@ -123,11 +120,15 @@ namespace Loom.Client
             if (this.readClient == null)
                 throw new InvalidOperationException("Read client is not set");
 
-            await EnsureConnected();
-            string nonce = await this.readClient.SendAsync<string, NonceParams>(
-                "nonce", new NonceParams { Key = key }
-            );
-            return UInt64.Parse(nonce); 
+            return await this.CallExecutor.StaticCall(async () => await GetNonceAsyncRaw(key));
+        }
+
+        public async Task<ulong> GetNonceAsyncNonBlocking(string key)
+        {
+            if (this.readClient == null)
+                throw new InvalidOperationException("Read client is not set");
+
+            return await this.CallExecutor.NonBlockingStaticCall(async () => await GetNonceAsyncRaw(key));
         }
 
         /// <summary>
@@ -140,63 +141,64 @@ namespace Loom.Client
             if (this.readClient == null)
                 throw new InvalidOperationException("Read client is not set");
 
-            await EnsureConnected();
-            var addrStr = await this.readClient.SendAsync<string, ResolveParams>(
-                "resolve", new ResolveParams { ContractName = contractName }
-            );
+            return await this.CallExecutor.StaticCall(async () =>
+            {
+                await EnsureConnected();
+                var addressStr = await this.readClient.SendAsync<string, ResolveParams>(
+                    "resolve",
+                    new ResolveParams { ContractName = contractName }
+                );
 
-            if (String.IsNullOrEmpty(addrStr))
-                throw new LoomException("Unable to find a contract with a matching name");
+                if (String.IsNullOrEmpty(addressStr))
+                    throw new LoomException("Unable to find a contract with a matching name");
 
-            return Address.FromString(addrStr);
+                return Address.FromString(addressStr);
+            });
         }
 
         /// <summary>
         /// Commits a transaction to the DAppChain.
         /// </summary>
         /// <param name="tx">Transaction to commit.</param>
-        /// <param name="timeout">Specifies the amount of time after which a call will time out.</param>
         /// <returns>Commit metadata.</returns>
-        /// <exception cref="InvalidTxNonceException">Thrown if transaction is rejected due to a bad nonce after <see cref="NonceRetries"/> attempts.</exception>
-        internal async Task<BroadcastTxResult> CommitTxAsync(IMessage tx, int timeout = 5000)
+        /// <exception cref="InvalidTxNonceException">Thrown when transaction is rejected by the DAppChain due to a bad nonce.</exception>
+        internal async Task<BroadcastTxResult> CommitTxAsync(IMessage tx)
         {
-            int badNonceCount = 0;
-            do
+            if (this.writeClient == null)
+                throw new InvalidOperationException("Write client was not set");
+
+            return await this.CallExecutor.Call(async () =>
             {
-                try
-                {
-                    try
-                    {
-                        Task<BroadcastTxResult> function = this.TryCommitTxAsync(tx);
-                        Task result = await Task.WhenAny(function, Task.Delay(timeout));
-                        if (result == function)
-                        {
-                            return function.Result;
-                        }
-                    }
-                    catch (AggregateException e)
-                    {
-                        ExceptionDispatchInfo.Capture(e.InnerException).Throw();
-                    }
+                await EnsureConnected();
 
-                    throw new TimeoutException();
-                }
-                catch (InvalidTxNonceException)
+                byte[] txBytes = tx.ToByteArray();
+                if (this.TxMiddleware != null)
                 {
-                    ++badNonceCount;
+                    txBytes = await this.TxMiddleware.Handle(txBytes);
                 }
 
-                // WaitForSecondsRealtime can throw a "get_realtimeSinceStartup can only be called from the main thread." error.
-                // WebGL doesn't have threads, so use WaitForSecondsRealtime for WebGL anyway
-                const float delay = 0.5f;
-#if UNITY_WEBGL && !UNITY_EDITOR
-                await new WaitForSecondsRealtime(delay);
-#else
-                await Task.Delay(TimeSpan.FromSeconds(delay));
-#endif
-            } while (this.NonceRetries != 0 && badNonceCount <= this.NonceRetries);
+                string payload = CryptoBytes.ToBase64String(txBytes);
+                var result = await this.writeClient.SendAsync<BroadcastTxResult, string[]>("broadcast_tx_commit", new[] { payload });
+                if (result == null)
+                    return null;
 
-            throw new InvalidTxNonceException(1, "sequence number does not match");
+                if (result.CheckTx.Code != 0)
+                {
+                    if ((result.CheckTx.Code == 1) && (result.CheckTx.Error == "sequence number does not match"))
+                    {
+                        throw new InvalidTxNonceException(result.CheckTx.Code, result.CheckTx.Error);
+                    }
+
+                    throw new TxCommitException(result.CheckTx.Code, result.CheckTx.Error);
+                }
+
+                if (result.DeliverTx.Code != 0)
+                {
+                    throw new TxCommitException(result.DeliverTx.Code, result.DeliverTx.Error);
+                }
+
+                return result;
+            });
         }
 
         /// <summary>
@@ -208,7 +210,7 @@ namespace Loom.Client
         /// <param name="caller">Optional caller address.</param>
         /// <param name="vmType">Virtual machine type.</param>
         /// <returns>Deserialized response.</returns>
-        internal async Task<T> QueryAsync<T>(Address contract, IMessage query, Address caller = default(Address), VMType vmType = VMType.Plugin)
+        internal async Task<T> QueryAsync<T>(Address contract, IMessage query, Address caller, VMType vmType)
         {
             return await QueryAsync<T>(contract, query.ToByteArray(), caller, vmType);
         }
@@ -222,60 +224,41 @@ namespace Loom.Client
         /// <param name="caller">Optional caller address.</param>
         /// <param name="vmType">Virtual machine type.</param>
         /// <returns>Deserialized response.</returns>
-        internal async Task<T> QueryAsync<T>(Address contract, byte[] query, Address caller = default(Address), VMType vmType = VMType.Plugin)
+        internal async Task<T> QueryAsync<T>(Address contract, byte[] query, Address caller, VMType vmType = VMType.Plugin)
         {
             if (this.readClient == null)
                 throw new InvalidOperationException("Read client is not set");
-            
+
             var queryParams = new QueryParams
             {
                 ContractAddress = contract.LocalAddress,
                 Params = query,
                 VmType = vmType
             };
+
             if (caller.LocalAddress != null && caller.ChainId != null)
             {
                 queryParams.CallerAddress = caller.QualifiedAddress;
             }
-            await EnsureConnected();
-            return await this.readClient.SendAsync<T, QueryParams>("query", queryParams);
+
+            return await this.CallExecutor.StaticCall(async () =>
+            {
+                await EnsureConnected();
+                return await this.readClient.SendAsync<T, QueryParams>("query", queryParams);
+            });
         }
 
-        /// <summary>
-        /// Tries to commit a transaction to the DAppChain.
-        /// </summary>
-        /// <param name="tx">Transaction to commit.</param>
-        /// <returns>Commit metadata.</returns>
-        /// <exception cref="InvalidTxNonceException">Thrown when transaction is rejected by the DAppChain due to a bad nonce.</exception>
-        private async Task<BroadcastTxResult> TryCommitTxAsync(IMessage tx)
+        private async Task<ulong> GetNonceAsyncRaw(string key)
         {
-            if (this.writeClient == null)
-                throw new InvalidOperationException("Write client was not set");
-            
+            if (this.readClient == null)
+                throw new InvalidOperationException("Read client is not set");
+
             await EnsureConnected();
-            byte[] txBytes = tx.ToByteArray();
-            if (this.TxMiddleware != null)
-            {
-                txBytes = await this.TxMiddleware.Handle(txBytes);
-            }
-            string payload = CryptoBytes.ToBase64String(txBytes);
-            var result = await this.writeClient.SendAsync<BroadcastTxResult, string[]>("broadcast_tx_commit", new string[] { payload });
-            if (result != null)
-            {
-                if (result.CheckTx.Code != 0)
-                {
-                    if ((result.CheckTx.Code == 1) && (result.CheckTx.Error == "sequence number does not match"))
-                    {
-                        throw new InvalidTxNonceException(result.CheckTx.Code, result.CheckTx.Error);
-                    }
-                    throw new TxCommitException(result.CheckTx.Code, result.CheckTx.Error);
-                }
-                if (result.DeliverTx.Code != 0)
-                {
-                    throw new TxCommitException(result.DeliverTx.Code, result.DeliverTx.Error);
-                }
-            }
-            return result;
+            string nonce = await this.readClient.SendAsync<string, NonceParams>(
+                "nonce",
+                new NonceParams { Key = key }
+            );
+            return UInt64.Parse(nonce);
         }
 
         private async void SubReadClient(EventHandler<RawChainEventArgs> handler)
@@ -283,27 +266,24 @@ namespace Loom.Client
             if (this.readClient == null)
                 throw new InvalidOperationException("Read client is not set");
 
-            try
+            await this.CallExecutor.Call(async () =>
             {
                 await EnsureConnected();
                 EventHandler<JsonRpcEventData> wrapper = (sender, e) =>
                 {
-                    handler(this, new RawChainEventArgs
-                    (
-                        e.ContractAddress,
-                        e.CallerAddress,
-                        UInt64.Parse(e.BlockHeight), 
-                        e.Data,
-                        e.Topics
-                    ));
+                    handler(this,
+                        new RawChainEventArgs(
+                            e.ContractAddress,
+                            e.CallerAddress,
+                            UInt64.Parse(e.BlockHeight),
+                            e.Data,
+                            e.Topics
+                        ));
                 };
                 this.eventSubs.Add(handler, wrapper);
-                await this.readClient.SubscribeAsync(wrapper);
-            }
-            catch (Exception e)
-            {
-                Logger.Log(LogTag, e.Message);
-            }
+                // FIXME: supports topics
+                await this.readClient.SubscribeAsync(wrapper, null);
+            });
         }
 
         private async void UnsubReadClient(EventHandler<RawChainEventArgs> handler)
@@ -311,20 +291,16 @@ namespace Loom.Client
             if (this.readClient == null)
                 throw new InvalidOperationException("Read client is not set");
 
-            try
+            await this.CallExecutor.Call(async () =>
             {
                 EventHandler<JsonRpcEventData> wrapper = this.eventSubs[handler];
                 await this.readClient.UnsubscribeAsync(wrapper);
-            }
-            catch (Exception e)
-            {
-                Logger.Log(LogTag, e.Message);
-            }
+            });
         }
-        
+
         private async Task EnsureConnected()
         {
-            if (!this.AutoReconnect)
+            if (!Configuration.AutoReconnect)
                 return;
 
             if (this.readClient != null)
@@ -338,7 +314,8 @@ namespace Loom.Client
             }
         }
 
-        private async Task EnsureConnected(IRpcClient rpcClient) {
+        private async Task EnsureConnected(IRpcClient rpcClient)
+        {
             // TODO: handle edge-case when ConnectionState == RpcConnectionState.Connecting
             if (rpcClient.ConnectionState != RpcConnectionState.Connected)
             {
@@ -358,7 +335,7 @@ namespace Loom.Client
             public string ContractName;
         }
 
-        private class QueryParams
+        private struct QueryParams
         {
             /// <summary>
             /// Contract address

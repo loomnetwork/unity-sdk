@@ -28,12 +28,11 @@ namespace Loom.Client
         /// </summary>
         /// <param name="method">Smart contract method name.</param>
         /// <param name="args">Arguments object for the smart contract method.</param>
-        /// <param name="timeout">Specifies the amount of time after which a call will time out.</param>
         /// <returns>Nothing.</returns>
-        public async Task CallAsync(string method, IMessage args, int timeout = 5000)
+        public async Task CallAsync(string method, IMessage args)
         {
             Transaction tx = this.CreateContractMethodCallTx(method, args);
-            await CallAsync(tx, timeout);
+            await CallAsync(tx);
         }
 
         /// <summary>
@@ -43,12 +42,11 @@ namespace Loom.Client
         /// <typeparam name="T">Smart contract method return type.</typeparam>
         /// <param name="method">Smart contract method name.</param>
         /// <param name="args">Arguments object for the smart contract method.</param>
-        /// <param name="timeout">Specifies the amount of time after which a call will time out.</param>
         /// <returns>The return value of the smart contract method.</returns>
-        public async Task<T> CallAsync<T>(string method, IMessage args, int timeout = 5000) where T : IMessage, new()
+        public async Task<T> CallAsync<T>(string method, IMessage args) where T : IMessage, new()
         {
             var tx = this.CreateContractMethodCallTx(method, args);
-            return await CallAsync<T>(tx, timeout);
+            return await CallAsync<T>(tx);
         }
 
         /// <summary>
@@ -96,11 +94,10 @@ namespace Loom.Client
         /// </summary>
         /// <typeparam name="T">Smart contract method return type.</typeparam>
         /// <param name="tx">Transaction message.</param>
-        /// <param name="timeout">Specifies the amount of time after which a call will time out.</param>
         /// <returns>The return value of the smart contract method.</returns>
-        private async Task<T> CallAsync<T>(Transaction tx, int timeout) where T : IMessage, new()
+        private async Task<T> CallAsync<T>(Transaction tx) where T : IMessage, new()
         {
-            var result = await this.Client.CommitTxAsync(tx, timeout);
+            var result = await this.Client.CommitTxAsync(tx);
             if (result != null && result.DeliverTx.Data != null && result.DeliverTx.Data.Length != 0)
             {
                 var resp = new Response();
@@ -133,7 +130,7 @@ namespace Loom.Client
             return CreateContractMethodCallTx(requestBytes, VMType.Plugin);
         }
 
-        private class JsonRpcEvent
+        private struct JsonRpcEvent
         {
             [JsonProperty("Data")]
             public string Data;

@@ -85,9 +85,9 @@ namespace Loom.Client {
         /// </summary>
         /// <param name="tx">Transaction message.</param>
         /// <returns>Nothing.</returns>
-        internal async Task CallAsync(Transaction tx, int timeout = 5000)
+        internal async Task CallAsync(Transaction tx)
         {
-            await this.Client.CommitTxAsync(tx, timeout);
+            await this.Client.CommitTxAsync(tx);
         }
 
         internal Transaction CreateContractMethodCallTx(string hexData, VMType vmType) {

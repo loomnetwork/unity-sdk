@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Numerics;
 using System.Threading.Tasks;
 using Loom.Client.Internal;
 using Loom.Nethereum.ABI.Model;
@@ -33,6 +34,40 @@ namespace Loom.Client
             {
                 this.topicToEventName.Add("0x" + eventAbi.Sha33Signature, eventAbi.Name);
             }
+        }
+
+        /// <summary>
+        /// Gets an instance of <see cref="EvmEvent"/> set up for working with Solidity event named <paramref name="name"/>.
+        /// </summary>
+        /// <param name="name">Solidity event name.</param>
+        public EvmEvent GetEvent(string name)
+        {
+            return new EvmEvent(this, this.contractBuilder.GetEventBuilder(name));
+        }
+
+        /// <summary>
+        /// Gets an instance of <see cref="EvmEvent{T}"/> set up for working with Solidity event named <paramref name="name"/>.
+        /// </summary>
+        /// <param name="name">Solidity event name.</param>
+        /// <typeparam name="T">Event DTO type.</typeparam>
+        /// <see href="https://nethereum.readthedocs.io/en/latest/contracts/calling-transactions-events/"/>
+        public EvmEvent<T> GetEvent<T>(string name) where T : new()
+        {
+            return new EvmEvent<T>(this, this.contractBuilder.GetEventBuilder(name));
+        }
+
+        /// <summary>
+        /// Retrieves the current block height.
+        /// </summary>
+        /// <returns></returns>
+        public async Task<BigInteger> GetBlockHeight()
+        {
+            return await this.Client.CallExecutor.StaticCall(
+                async () =>
+                {
+                    string heightString = await this.Client.ReadClient.SendAsync<string, object>("getblockheight", null);
+                    return BigInteger.Parse(heightString);
+                });
         }
 
         #region CallAsync methods
@@ -415,7 +450,7 @@ namespace Loom.Client
             return validResult ? decodeFunc(functionBuilder, CryptoUtils.BytesToHexString(result)) : default(TReturn);
         }
 
-        private async Task<BroadcastTxResult> CallAsyncBrodcastTxResult(string callInput)
+        private async Task<BroadcastTxResult> CallAsyncBroadcastTxResult(string callInput)
         {
             var tx = this.CreateContractMethodCallTx(callInput, Protobuf.VMType.Evm);
             return await this.Client.CommitTxAsync(tx);
@@ -423,7 +458,7 @@ namespace Loom.Client
 
         private async Task CallAsync(string callInput)
         {
-            await this.CallAsyncBrodcastTxResult(callInput);
+            await this.CallAsyncBroadcastTxResult(callInput);
         }
 
         private async Task<TReturn> CallAsync<TReturn>(string callInput, FunctionBuilderBase functionBuilder, Func<FunctionBuilderBase, string, TReturn> decodeFunc)

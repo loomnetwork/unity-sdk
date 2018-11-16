@@ -23,7 +23,7 @@ namespace Loom.Client
             this.PrivateKey = privateKey;
         }
 
-        public Task<byte[]> Handle(byte[] txData)
+        public virtual Task<byte[]> Handle(byte[] txData)
         {
             var sig = CryptoUtils.Sign(txData, this.PrivateKey);
 

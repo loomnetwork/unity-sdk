@@ -61,7 +61,7 @@ namespace Loom.Client
         }
 
         /// <summary>
-        /// Returns binary 20-byte array representing of the address.
+        /// Returns binary 20-byte array representation of the address.
         /// </summary>
         /// <returns>20-byte array containing the address.</returns>
         public byte[] ToByteArray()
@@ -111,15 +111,28 @@ namespace Loom.Client
             if (protobufAddress == null)
                 throw new ArgumentNullException(nameof(protobufAddress));
 
-            if (protobufAddress.Local == null)
-                throw new ArgumentNullException(nameof(protobufAddress.Local));
+            return FromBytes(
+                protobufAddress.Local.ToByteArray(),
+                String.IsNullOrWhiteSpace(protobufAddress.ChainId) ? DefaultChainId : protobufAddress.ChainId);
+        }
 
-            if (protobufAddress.Local.Length != AddressLengthBytes)
-                throw new ArgumentException("Local address must have a length of 20 bytes", nameof(protobufAddress.Local));
+        /// <summary>
+        /// Creates an Address instance from a byte array.
+        /// </summary>
+        /// <param name="address">binary 20-byte array representation of the address</param>
+        /// <param name="chainId">Identifier of a DAppChain.</param>
+        /// <returns>An address</returns>
+        public static Address FromBytes(byte[] address, string chainId = DefaultChainId)
+        {
+            if (address == null)
+                throw new ArgumentNullException(nameof(address));
+
+            if (address.Length != AddressLengthBytes)
+                throw new ArgumentException("Local address must have a length of 20 bytes", nameof(address));
 
             return new Address(
-                CryptoUtils.BytesToHexString(protobufAddress.Local.ToByteArray()),
-                String.IsNullOrWhiteSpace(protobufAddress.ChainId) ? DefaultChainId : protobufAddress.ChainId
+                CryptoUtils.BytesToHexString(address),
+                chainId
             );
         }
 
