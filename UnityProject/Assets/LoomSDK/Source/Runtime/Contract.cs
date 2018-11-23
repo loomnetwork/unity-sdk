@@ -4,6 +4,7 @@ using Loom.Client.Internal;
 using Loom.Client.Protobuf;
 using Loom.Google.Protobuf;
 using Loom.Newtonsoft.Json;
+using UnityEngine;
 
 namespace Loom.Client
 {
@@ -31,6 +32,7 @@ namespace Loom.Client
         /// <returns>Nothing.</returns>
         public async Task CallAsync(string method, IMessage args)
         {
+            Debug.Log(method + " : " + args);
             Transaction tx = this.CreateContractMethodCallTx(method, args);
             await CallAsync(tx);
         }
@@ -45,6 +47,7 @@ namespace Loom.Client
         /// <returns>The return value of the smart contract method.</returns>
         public async Task<T> CallAsync<T>(string method, IMessage args) where T : IMessage, new()
         {
+            Debug.Log(method + " : " + args);
             var tx = this.CreateContractMethodCallTx(method, args);
             return await CallAsync<T>(tx);
         }
@@ -59,6 +62,7 @@ namespace Loom.Client
         /// <returns>The return value of the smart contract method.</returns>
         public async Task<T> StaticCallAsync<T>(string method, IMessage args) where T : IMessage, new()
         {
+            Debug.Log(method + " : " + args);
             var query = new ContractMethodCall
             {
                 Method = method,

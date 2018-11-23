@@ -258,6 +258,7 @@ namespace Loom.Client
                 "nonce",
                 new NonceParams { Key = key }
             );
+            Debug.Log("Requested Nonce :" + nonce);
             return UInt64.Parse(nonce);
         }
 

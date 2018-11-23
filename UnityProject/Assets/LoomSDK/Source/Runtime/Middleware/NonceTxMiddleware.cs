@@ -1,6 +1,7 @@
 ﻿using Loom.Google.Protobuf;
 using System.Threading.Tasks;
 using Loom.Client.Protobuf;
+using UnityEngine;
 
 namespace Loom.Client
 {
@@ -36,11 +37,13 @@ namespace Loom.Client
         public virtual async Task<byte[]> Handle(byte[] txData)
         {
             var nonce = await this.Client.GetNonceAsyncNonBlocking(this.publicKeyHex);
+            Debug.Log("Returned Nonce:" + nonce);
             var tx = new NonceTx
             {
                 Inner = ByteString.CopyFrom(txData),
                 Sequence = nonce + 1
             };
+            Debug.Log("NonceTx : " + tx);
             return tx.ToByteArray();
         }
     }
