@@ -7,16 +7,21 @@ namespace Loom.Client
     /// </summary>
     public class RpcClientException : LoomException
     {
-        public RpcClientException()
+        public long Code { get; }
+
+        public RpcClientException(int code)
         {
+            this.Code = code;
         }
 
-        public RpcClientException(string message) : base(message)
+        public RpcClientException(string message, long code) : base(message)
         {
+            this.Code = code;
         }
 
-        public RpcClientException(string message, Exception innerException) : base(message, innerException)
+        public RpcClientException(string message, int code, Exception innerException) : base(message, innerException)
         {
+            this.Code = code;
         }
     }
 }

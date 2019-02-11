@@ -18,11 +18,14 @@ namespace Loom.Client.Internal
         /// <summary>
         /// Logger to be used for logging, defaults to <see cref="NullLogger"/>.
         /// </summary>
-        public virtual ILogger Logger {
-            get {
+        public virtual ILogger Logger
+        {
+            get
+            {
                 return this.logger;
             }
-            set {
+            set
+            {
                 if (value == null)
                 {
                     value = NullLogger.Instance;
@@ -58,27 +61,49 @@ namespace Loom.Client.Internal
             ConnectionStateChanged?.Invoke(this, state);
         }
 
-        protected void AssertIsConnected() {
+        protected void HandleJsonRpcResponseError(JsonRpcResponse partialMsg)
+        {
+            if (partialMsg.Error.Data.EndsWith("Tx already exists in cache"))
+            {
+                throw new InvalidTxNonceException(int.Parse(partialMsg.Error.Code), partialMsg.Error.Data);
+            }
+
+            throw new RpcClientException(
+                String.Format(
+                    "JSON-RPC Error {0} ({1}): {2}",
+                    partialMsg.Error.Code,
+                    partialMsg.Error.Message,
+                    partialMsg.Error.Data
+                ),
+                long.Parse(partialMsg.Error.Code)
+            );
+        }
+
+        protected void AssertIsConnected()
+        {
             RpcConnectionState connectionState = this.ConnectionState;
             if (connectionState == RpcConnectionState.Connected)
                 return;
-            
+
             throw new RpcClientException(
                 $"Client must be in {nameof(RpcConnectionState.Connected)} state, " +
-                $"current state is {connectionState}");
+                $"current state is {connectionState}",
+                1
+            );
         }
         
-        protected void AssertNotAlreadyConnectedOrConnecting() {
+        protected void AssertNotAlreadyConnectedOrConnecting()
+        {
             RpcConnectionState connectionState = this.ConnectionState;
             
             if (connectionState == RpcConnectionState.Connecting)
             {
-                throw new RpcClientException("An attempt to connect while in process of connecting");
+                throw new RpcClientException("An attempt to connect while in process of connecting", 1);
             }
             
             if (connectionState == RpcConnectionState.Connected)
             {
-                throw new RpcClientException("An attempt to connect when already connected");
+                throw new RpcClientException("An attempt to connect when already connected", 1);
             }
         }
 

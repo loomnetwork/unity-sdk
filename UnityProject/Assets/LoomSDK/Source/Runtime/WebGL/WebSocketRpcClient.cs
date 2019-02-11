@@ -6,7 +6,6 @@ using System.Collections.Generic;
 using System.Threading.Tasks;
 using System.ComponentModel;
 using Loom.Client.Internal;
-using UnityEngine;
 
 namespace Loom.Client.Unity.WebGL.Internal
 {
@@ -90,7 +89,7 @@ namespace Loom.Client.Unity.WebGL.Internal
                     tcs.TrySetResult(null);
                 } else
                 {
-                    tcs.TrySetException(new RpcClientException(err));
+                    tcs.TrySetException(new RpcClientException(err, 1));
                 }
             };
 
@@ -157,10 +156,7 @@ namespace Loom.Client.Unity.WebGL.Internal
                             this.Logger.Log(LogTag, "RPC Resp Body: " + msgBody);
                             if (partialMsg.Error != null)
                             {
-                                throw new RpcClientException(String.Format(
-                                    "JSON-RPC Error {0} ({1}): {2}",
-                                    partialMsg.Error.Code, partialMsg.Error.Message, partialMsg.Error.Data
-                                ));
+                                HandleJsonRpcResponseError(partialMsg);
                             }
                             else
                             {
@@ -232,10 +228,7 @@ namespace Loom.Client.Unity.WebGL.Internal
                     {
                         if (partialMsg.Error != null)
                         {
-                            throw new RpcClientException(String.Format(
-                                "JSON-RPC Error {0} ({1}): {2}",
-                                partialMsg.Error.Code, partialMsg.Error.Message, partialMsg.Error.Data
-                            ));
+                            HandleJsonRpcResponseError(partialMsg);
                         }
                         else
                         {

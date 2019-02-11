@@ -330,7 +330,7 @@ namespace Loom.Client
         {
             if (result.Code != 0)
             {
-                if ((result.Code == 1) && (result.Error.StartsWith("sequence number does not match")))
+                if ((result.Code == 1) && result.Error.StartsWith("sequence number does not match"))
                 {
                     throw new InvalidTxNonceException(result.Code, result.Error);
                 }

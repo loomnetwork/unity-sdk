@@ -70,10 +70,7 @@ namespace Loom.Client.Internal
                     var respMsg = JsonConvert.DeserializeObject<JsonRpcResponse<T>>(r.downloadHandler.text);
                     if (respMsg.Error != null)
                     {
-                        throw new RpcClientException(String.Format(
-                            "JSON-RPC Error {0} ({1}): {2}",
-                            respMsg.Error.Code, respMsg.Error.Message, respMsg.Error.Data
-                        ));
+                        HandleJsonRpcResponseError(respMsg);
                     }
                     return respMsg.Result;
                 }
@@ -86,7 +83,7 @@ namespace Loom.Client.Internal
         {
             if (r.isNetworkError)
             {
-                throw new RpcClientException(String.Format("HTTP '{0}' request to '{1}' failed", r.method, r.url));
+                throw new RpcClientException(String.Format("HTTP '{0}' request to '{1}' failed", r.method, r.url), r.responseCode);
             }
             else if (r.isHttpError)
             {
@@ -94,7 +91,7 @@ namespace Loom.Client.Internal
                 {
                     // TODO: extract error message if any
                 }
-                throw new RpcClientException(String.Format("HTTP Error {0}", r.responseCode));
+                throw new RpcClientException(String.Format("HTTP Error {0}", r.responseCode), r.responseCode);
             }
         }
     }

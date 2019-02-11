@@ -206,7 +206,7 @@ namespace Loom.Client.Tests
         }
 
         [UnityTest]
-        public IEnumerator TxAlreadyExistsInCacheForceReproduceTest()
+        public IEnumerator TxAlreadyExistsInCacheRecoverTest()
         {
             return AsyncEditorTestUtility.AsyncTest(async () =>
             {
@@ -233,7 +233,10 @@ namespace Loom.Client.Tests
                                         break;
                                     case 1:
                                         Assert.AreEqual(1, nextNonce);
-                                        controllableNonceTxMiddleware.ForcedNextNonce = 1;
+                                        controllableNonceTxMiddleware.ForcedNextNonce = null;
+                                        break;
+                                    case 2:
+                                        Assert.AreEqual(2, nextNonce);
                                         break;
                                     default:
                                         Assert.Fail($"Unexpected call #{callCounter}");
@@ -247,19 +250,8 @@ namespace Loom.Client.Tests
                                 new SignedTxMiddleware(privateKey)
                             };
                         });
-
-
-                try
-                {
-                    await invalidNonceContract.CallAsync("setTestUint", new BigInteger(123456789));
-                    await invalidNonceContract.CallAsync("setTestUint", new BigInteger(123456789));
-                } catch (RpcClientException e)
-                {
-                    Assert.True(e.Message.Contains("Tx already exists in cache"));
-                    return;
-                }
-
-                Assert.Fail("expected an exception");
+                await invalidNonceContract.CallAsync("setTestUint", new BigInteger(123456789));
+                await invalidNonceContract.CallAsync("setTestUint", new BigInteger(123456789));
             }, timeout: 20000);
         }
 

@@ -108,7 +108,7 @@ namespace Loom.Client.Internal
             };
             closeHandler = (sender, e) =>
             {
-                tcs.SetException(new RpcClientException($"WebSocket closed unexpectedly with error {e.Code}: {e.Reason}"));
+                tcs.SetException(new RpcClientException($"WebSocket closed unexpectedly with error {e.Code}: {e.Reason}", e.Code));
             };
             this.webSocket.OnOpen += openHandler;
             this.webSocket.OnClose += closeHandler;
@@ -188,7 +188,7 @@ namespace Loom.Client.Internal
             EventHandler<MessageEventArgs> messageHandler = null;
             closeHandler = (sender, e) =>
             {
-                tcs.TrySetException(new RpcClientException($"WebSocket closed unexpectedly with error {e.Code}: {e.Reason}"));
+                tcs.TrySetException(new RpcClientException($"WebSocket closed unexpectedly with error {e.Code}: {e.Reason}", e.Code));
             };
 
             messageHandler = (sender, e) =>
@@ -207,10 +207,7 @@ namespace Loom.Client.Internal
                             this.webSocket.OnMessage -= messageHandler;
                             if (partialMsg.Error != null)
                             {
-                                throw new RpcClientException(String.Format(
-                                    "JSON-RPC Error {0} ({1}): {2}",
-                                    partialMsg.Error.Code, partialMsg.Error.Message, partialMsg.Error.Data
-                                ));
+                                HandleJsonRpcResponseError(partialMsg);
                             }
 
                             var fullMsg = JsonConvert.DeserializeObject<JsonRpcResponse<TResult>>(e.Data);
@@ -284,7 +281,7 @@ namespace Loom.Client.Internal
                 }
                 else
                 {
-                    tcs.TrySetException(new RpcClientException("Send error", errorEventArgs.Exception));
+                    tcs.TrySetException(new RpcClientException("Send error", 1, errorEventArgs.Exception));
                 }
             });
             this.webSocket.OnError -= errorHandler;
@@ -303,10 +300,7 @@ namespace Loom.Client.Internal
                     {
                         if (partialMsg.Error != null)
                         {
-                            throw new RpcClientException(String.Format(
-                                "JSON-RPC Error {0} ({1}): {2}",
-                                partialMsg.Error.Code, partialMsg.Error.Message, partialMsg.Error.Data
-                            ));
+                            HandleJsonRpcResponseError(partialMsg);
                         }
                         else
                         {
