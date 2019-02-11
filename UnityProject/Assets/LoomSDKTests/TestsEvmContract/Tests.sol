@@ -1,4 +1,4 @@
-pragma solidity ^0.4.24;
+pragma solidity ^0.5.2;
 
 contract Tests {
     event TestEvent(uint number);
@@ -15,10 +15,10 @@ contract Tests {
     bytes testStaticByteArray;
 
     constructor() public {
-        testStaticByteArray.push(1);
-        testStaticByteArray.push(2);
-        testStaticByteArray.push(3);
-        testStaticByteArray.push(4);
+        testStaticByteArray.push(hex"01");
+        testStaticByteArray.push(hex"02");
+        testStaticByteArray.push(hex"03");
+        testStaticByteArray.push(hex"04");
     }
 
     function emitTestEvent(uint number) public {
@@ -116,15 +116,15 @@ contract Tests {
 
     // bytes
 
-    function setTestByteArray(bytes _testByteArray) public {
+    function setTestByteArray(bytes memory _testByteArray) public {
     	testByteArray = _testByteArray;
     }
 
-    function getTestByteArray() public view returns (bytes) {
+    function getTestByteArray() public view returns (bytes memory) {
     	return testByteArray;
     }
 
-    function getStaticTestByteArray() public view returns (bytes) {
+    function getStaticTestByteArray() public view returns (bytes memory) {
         return testStaticByteArray;
     }
 
@@ -139,7 +139,7 @@ contract Tests {
     }
 
     function getStaticTestFixed4ByteArray() public pure returns (bytes4) {
-        return 0xDEADBEEF;
+        return hex"DEADBEEF";
     }
 
     // bytes32
@@ -153,6 +153,6 @@ contract Tests {
     }
 
     function getStaticTestFixed32ByteArray() public pure returns (bytes32) {
-        return 0xDEADBEEF;
+        return hex"DEADBEEF";
     }
 }

@@ -1,4 +1,6 @@
-﻿using System.Threading.Tasks;
+﻿using System;
+using System.Threading.Tasks;
+using Loom.Client.Internal;
 
 namespace Loom.Client
 {
@@ -9,5 +11,9 @@ namespace Loom.Client
     public interface ITxMiddlewareHandler
     {
         Task<byte[]> Handle(byte[] txData);
+
+        void HandleTxResult(BroadcastTxResult result);
+
+        void HandleTxException(LoomException exception);
     }
 }
