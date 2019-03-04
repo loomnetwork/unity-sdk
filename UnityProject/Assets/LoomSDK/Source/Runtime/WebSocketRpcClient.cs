@@ -4,16 +4,17 @@ using System.Threading.Tasks;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
+using Loom.Client.Internal;
 using Loom.Newtonsoft.Json;
 using Loom.WebSocketSharp;
 using UnityEngine;
 
-namespace Loom.Client.Internal
+namespace Loom.Client
 {
     /// <summary>
     /// WebSocket JSON-RPC client implemented with WebSocketSharp.
     /// </summary>
-    internal class WebSocketRpcClient : BaseRpcClient
+    public class WebSocketRpcClient : BaseRpcClient
     {
         private const string LogTag = "Loom.WebSocketRpcClient";
 
@@ -59,12 +60,14 @@ namespace Loom.Client.Internal
             {
                 if (base.Logger != value)
                 {
-                    this.webSocket.Log.Output = WebSocketProxyLoggerOutputFactory.CreateWebSocketProxyLoggerOutput(value);
+                    this.webSocket.Log.Output = WebSocketProxyLoggerOutputFactory.CreateWebSocketProxyLoggerOutput(this, value);
                 }
 
                 base.Logger = value;
             }
         }
+
+        public Uri Url => url;
 
         public WebSocketRpcClient(string url)
         {
@@ -108,7 +111,7 @@ namespace Loom.Client.Internal
             };
             closeHandler = (sender, e) =>
             {
-                tcs.SetException(new RpcClientException($"WebSocket closed unexpectedly with error {e.Code}: {e.Reason}", e.Code));
+                tcs.SetException(new RpcClientException($"WebSocket closed unexpectedly with error {e.Code}: {e.Reason}", e.Code, this));
             };
             this.webSocket.OnOpen += openHandler;
             this.webSocket.OnClose += closeHandler;
@@ -188,7 +191,7 @@ namespace Loom.Client.Internal
             EventHandler<MessageEventArgs> messageHandler = null;
             closeHandler = (sender, e) =>
             {
-                tcs.TrySetException(new RpcClientException($"WebSocket closed unexpectedly with error {e.Code}: {e.Reason}", e.Code));
+                tcs.TrySetException(new RpcClientException($"WebSocket closed unexpectedly with error {e.Code}: {e.Reason}", e.Code, this));
             };
 
             messageHandler = (sender, e) =>
@@ -281,7 +284,7 @@ namespace Loom.Client.Internal
                 }
                 else
                 {
-                    tcs.TrySetException(new RpcClientException("Send error", 1, errorEventArgs.Exception));
+                    tcs.TrySetException(new RpcClientException("Send error", errorEventArgs.Exception, 1,this));
                 }
             });
             this.webSocket.OnError -= errorHandler;

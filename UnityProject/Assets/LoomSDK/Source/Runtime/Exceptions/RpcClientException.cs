@@ -9,19 +9,22 @@ namespace Loom.Client
     {
         public long Code { get; }
 
-        public RpcClientException(int code)
-        {
-            this.Code = code;
-        }
+        public IRpcClient RpcClient { get; }
 
-        public RpcClientException(string message, long code) : base(message)
+        public RpcClientException(long code, IRpcClient rpcClient)
         {
-            this.Code = code;
+            Code = code;
+            RpcClient = rpcClient;
         }
-
-        public RpcClientException(string message, int code, Exception innerException) : base(message, innerException)
+        public RpcClientException(string message, long code, IRpcClient rpcClient) : base(message)
         {
-            this.Code = code;
+            Code = code;
+            RpcClient = rpcClient;
+        }
+        public RpcClientException(string message, Exception innerException, long code, IRpcClient rpcClient) : base(message, innerException)
+        {
+            Code = code;
+            RpcClient = rpcClient;
         }
     }
 }

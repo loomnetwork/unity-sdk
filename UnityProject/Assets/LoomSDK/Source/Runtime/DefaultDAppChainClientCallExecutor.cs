@@ -13,10 +13,12 @@ namespace Loom.Client
     /// 2. Calls are queued, there can be only one active call at any given moment.
     /// 3. If the blockchain reports an invalid nonce, the call will be retried a number of times.
     /// </summary>
-    public class DefaultDAppChainClientCallExecutor : IDAppChainClientCallExecutor
+    public class DefaultDAppChainClientCallExecutor : IDAppChainClientCallExecutor, ILogProducer
     {
         private readonly AsyncSemaphore callAsyncSemaphore = new AsyncSemaphore(1);
         private readonly IDAppChainClientConfigurationProvider configurationProvider;
+
+        public ILogger Logger { get; set; } = NullLogger.Instance;
 
         public DefaultDAppChainClientCallExecutor(IDAppChainClientConfigurationProvider configurationProvider)
         {
@@ -126,7 +128,7 @@ namespace Loom.Client
         {
             int badNonceCount = 0;
             float delay = 0.5f;
-            InvalidTxNonceException lastNonceException;
+            TxCommitException lastNonceException;
             do
             {
                 try
@@ -134,11 +136,14 @@ namespace Loom.Client
                     Task<Task> task = taskTaskProducer();
                     await task;
                     return await task;
-                } catch (InvalidTxNonceException e)
+                } catch (TxCommitException e) when (e is InvalidTxNonceException || e is TxAlreadyExistsInCacheException)
                 {
+                    // Treat invalid nonce and "tx already exists in cache" the same by retrying
                     badNonceCount++;
                     lastNonceException = e;
                 }
+
+                this.Logger.Log($"[NonceLog] badNonceCount == {badNonceCount}, delay: {delay:F2}");
 
                 // WaitForSecondsRealtime can throw a "get_realtimeSinceStartup can only be called from the main thread." error.
                 // WebGL doesn't have threads, so use WaitForSecondsRealtime for WebGL anyway
@@ -147,7 +152,7 @@ namespace Loom.Client
 #else
                 await Task.Delay(TimeSpan.FromSeconds(delay));
 #endif
-                delay *= 2f;
+                delay *= 1.75f;
             } while (
                 this.configurationProvider.Configuration.InvalidNonceTxRetries != 0 &&
                 badNonceCount <= this.configurationProvider.Configuration.InvalidNonceTxRetries);

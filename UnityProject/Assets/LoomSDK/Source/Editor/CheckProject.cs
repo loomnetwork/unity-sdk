@@ -1,5 +1,5 @@
-﻿#if !NET_4_6
-    #error Loom SDK requires .NET 4.6. Please go to Build Settings -> Player Settings -> Configuration and set Scripting Runtime Version to .NET 4.6
+﻿#if !NET_4_6 && !NET_STANDARD_2_0
+    #error Loom SDK requires .NET 4.x. Please go to Build Settings -> Player Settings -> Configuration and set Scripting Runtime Version to .NET 4.x Equivalent
 #endif
 
 using UnityEditor;

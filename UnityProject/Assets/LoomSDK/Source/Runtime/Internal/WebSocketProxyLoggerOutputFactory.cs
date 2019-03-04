@@ -2,14 +2,15 @@
 
 using System;
 using Loom.WebSocketSharp;
+using UnityEngine;
 
 namespace Loom.Client.Internal
 {
     internal static class WebSocketProxyLoggerOutputFactory
     {
-        public static Action<LogData, string> CreateWebSocketProxyLoggerOutput(UnityEngine.ILogger logger)
+        public static Action<LogData, string> CreateWebSocketProxyLoggerOutput(WebSocketRpcClient webSocketRpcClient, ILogger logger)
         {
-            const string tag = "WebSocket";
+            string tag = "WebSocket (" + webSocketRpcClient.Url + ")";
             return (data, s) =>
             {
                 switch (data.Level)

@@ -3,13 +3,14 @@ using System;
 using System.Collections.Generic;
 using Loom.Newtonsoft.Json;
 using System.Text;
+using Loom.Client.Internal;
 using Loom.Client.Unity.Internal.UnityAsyncAwaitUtil;
 using UnityEngine.Networking;
 using UnityEngine;
 
-namespace Loom.Client.Internal
+namespace Loom.Client
 {
-    internal class HttpRpcClient : BaseRpcClient
+    public class HttpRpcClient : BaseRpcClient
     {
         private const string LogTag = "Loom.HttpRpcClient";
 
@@ -83,7 +84,7 @@ namespace Loom.Client.Internal
         {
             if (r.isNetworkError)
             {
-                throw new RpcClientException(String.Format("HTTP '{0}' request to '{1}' failed", r.method, r.url), r.responseCode);
+                throw new RpcClientException(String.Format("HTTP '{0}' request to '{1}' failed", r.method, r.url), r.responseCode, this);
             }
             else if (r.isHttpError)
             {
@@ -91,7 +92,7 @@ namespace Loom.Client.Internal
                 {
                     // TODO: extract error message if any
                 }
-                throw new RpcClientException(String.Format("HTTP Error {0}", r.responseCode), r.responseCode);
+                throw new RpcClientException(String.Format("HTTP Error {0}", r.responseCode), r.responseCode, this);
             }
         }
     }

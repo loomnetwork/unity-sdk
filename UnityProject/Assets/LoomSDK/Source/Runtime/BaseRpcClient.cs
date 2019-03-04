@@ -4,11 +4,12 @@ using System.Linq;
 using System.Runtime.CompilerServices;
 using System.Text;
 using System.Threading.Tasks;
+using Loom.Client.Internal;
 using UnityEngine;
 
 namespace Loom.Client.Internal
 {
-    internal abstract class BaseRpcClient : IRpcClient, ILogProducer
+    public abstract class BaseRpcClient : IRpcClient, ILogProducer
     {
         private ILogger logger = NullLogger.Instance;
         private RpcConnectionState? lastConnectionState;
@@ -65,7 +66,7 @@ namespace Loom.Client.Internal
         {
             if (partialMsg.Error.Data.EndsWith("Tx already exists in cache"))
             {
-                throw new InvalidTxNonceException(int.Parse(partialMsg.Error.Code), partialMsg.Error.Data);
+                throw new TxAlreadyExistsInCacheException(int.Parse(partialMsg.Error.Code), partialMsg.Error.Data);
             }
 
             throw new RpcClientException(
@@ -75,7 +76,8 @@ namespace Loom.Client.Internal
                     partialMsg.Error.Message,
                     partialMsg.Error.Data
                 ),
-                long.Parse(partialMsg.Error.Code)
+                long.Parse(partialMsg.Error.Code),
+                this
             );
         }
 
@@ -88,7 +90,8 @@ namespace Loom.Client.Internal
             throw new RpcClientException(
                 $"Client must be in {nameof(RpcConnectionState.Connected)} state, " +
                 $"current state is {connectionState}",
-                1
+                1,
+                this
             );
         }
         
@@ -98,12 +101,12 @@ namespace Loom.Client.Internal
             
             if (connectionState == RpcConnectionState.Connecting)
             {
-                throw new RpcClientException("An attempt to connect while in process of connecting", 1);
+                throw new RpcClientException("An attempt to connect while in process of connecting", 1, this);
             }
             
             if (connectionState == RpcConnectionState.Connected)
             {
-                throw new RpcClientException("An attempt to connect when already connected", 1);
+                throw new RpcClientException("An attempt to connect when already connected", 1, this);
             }
         }
 

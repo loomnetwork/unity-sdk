@@ -67,4 +67,31 @@ namespace Loom.Client
             public byte[] Data { get; set; }
         }
     }
+
+    public class JsonRpcResponse
+    {
+        [JsonProperty("jsonrpc")]
+        public string Version;
+
+        public class ErrorData
+        {
+            [JsonProperty("code")]
+            public string Code;
+
+            [JsonProperty("message")]
+            public string Message;
+
+            [JsonProperty("data")]
+            public string Data;
+        }
+
+        [JsonProperty("error")]
+        public ErrorData Error;
+
+        /// <summary>
+        /// ID of the request associated with this response.
+        /// </summary>
+        [JsonProperty("id")]
+        public string Id;
+    }
 }

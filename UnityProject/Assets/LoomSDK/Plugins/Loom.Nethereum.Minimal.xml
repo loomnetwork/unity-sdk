@@ -1,7 +1,7 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0"?>
 <doc>
     <assembly>
-        <name>Loom.Nethereum.Minimal.Packed</name>
+        <name>Loom.Nethereum.Minimal</name>
     </assembly>
     <members>
         <member name="T:Loom.Nethereum.ABI.ABIType">
@@ -27,7 +27,7 @@
             <summary>
                 Encodes the value according to specific type rules
             </summary>
-            <param name="value" />
+            <param name="value"> </param>
         </member>
         <member name="M:Loom.Nethereum.ABI.FunctionEncoding.FunctionCallDecoder.DecodeOutput``1(System.String,Loom.Nethereum.ABI.Model.Parameter[])">
             <summary>
@@ -631,7 +631,7 @@
             <param name="S">the salt to use for this invocation.</param>
             <param name="N">CPU/Memory cost parameter. Must be larger than 1, a power of 2 and less than
                 <code>2^(128 * r / 8)</code>.</param>
-            <param name="r">the block size, must be &gt;= 1.</param>
+            <param name="r">the block size, must be >= 1.</param>
             <param name="p">Parallelization parameter. Must be a positive integer less than or equal to
                 <code>Int32.MaxValue / (128 * r * 8)</code>.</param>
             <param name="dkLen">the length of the key to generate.</param>
@@ -648,12 +648,13 @@
             Original Author: Jan Christoph Bernack (contact: jc.bernack at googlemail.com)
             Changes JB: Added parse, Fix Normalise, Added Floor, New ToString, Change Equals (normalise to validate first), Change Casting to avoid overflows (even if might be slower), Added Normalise Bigger than zero, test on operations, parsing, casting, and other test coverage for ethereum unit conversions
             Changes KJ: Added Culture formatting
-            http://stackoverflow.com/a/13813535/956364" /&gt;
+            http://stackoverflow.com/a/13813535/956364" />
             <summary>
                 Arbitrary precision Decimal.
                 All operations are exact, except for division.
                 Division never determines more digits than the given precision of 50.
-            </summary></member>
+            </summary>
+        </member>
         <member name="F:Loom.Nethereum.Util.BigDecimal.Precision">
             <summary>
                 Sets the maximum precision of division operations.
@@ -661,8 +662,9 @@
             </summary>
         </member>
         <member name="M:Loom.Nethereum.Util.BigDecimal.#ctor(System.Numerics.BigInteger,System.Int32,System.Boolean)">
-            <summary />
-            <param name="mantissa" />
+            <summary>
+            </summary>
+            <param name="mantissa"></param>
             <param name="exponent">
                 The number of decimal units for example (-18). A positive value will be normalised as 10 ^
                 exponent

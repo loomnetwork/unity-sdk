@@ -167,7 +167,7 @@ namespace Loom.Client
             if (this.writeClient == null)
                 throw new InvalidOperationException("Write client was not set");
 
-            return await this.CallExecutor.Call<BroadcastTxResult>(async () =>
+            return await this.CallExecutor.Call(async () =>
             {
                 await EnsureConnected();
 
@@ -330,7 +330,7 @@ namespace Loom.Client
         {
             if (result.Code != 0)
             {
-                if ((result.Code == 1) && result.Error.StartsWith("sequence number does not match"))
+                if ((result.Code == 1) && (result.Error.StartsWith("sequence number does not match")))
                 {
                     throw new InvalidTxNonceException(result.Code, result.Error);
                 }
