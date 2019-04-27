@@ -36,10 +36,13 @@ namespace Loom.Client.Unity.Editor.Internal
             if (target == BuildTarget.WebGL)
             {
                 CheckWebGLTemplate();
+#if !UNITY_2019_1_OR_NEWER
                 CheckWebGLPrebuiltEngine();
+#endif
             }
         }
 
+#if !UNITY_2019_1_OR_NEWER
         private void CheckWebGLPrebuiltEngine()
         {
             if (!EditorUserBuildSettings.webGLUsePreBuiltUnityEngine)
@@ -58,6 +61,7 @@ namespace Loom.Client.Unity.Editor.Internal
                 EditorUserBuildSettings.webGLUsePreBuiltUnityEngine = false;
             }
         }
+#endif
 
         private void CheckWebGLTemplate()
         {
