@@ -4,7 +4,7 @@ namespace Loom.Client
 {
     public class TxMiddleware : ITxMiddlewareHandler
     {
-        ITxMiddlewareHandler[] Handlers { get; }
+        public ITxMiddlewareHandler[] Handlers { get; }
 
         public TxMiddleware(ITxMiddlewareHandler[] handlers)
         {
@@ -19,6 +19,22 @@ namespace Loom.Client
                 data = await this.Handlers[i].Handle(data);
             }
             return data;
+        }
+
+        public void HandleTxResult(BroadcastTxResult result)
+        {
+            for (int i = 0; i < this.Handlers.Length; i++)
+            {
+                this.Handlers[i].HandleTxResult(result);
+            }
+        }
+
+        public void HandleTxException(LoomException exception)
+        {
+            for (int i = 0; i < this.Handlers.Length; i++)
+            {
+                this.Handlers[i].HandleTxException(exception);
+            }
         }
     }
 }

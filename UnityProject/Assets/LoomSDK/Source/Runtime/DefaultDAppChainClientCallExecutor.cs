@@ -3,6 +3,7 @@ using System.Runtime.ExceptionServices;
 using System.Threading;
 using System.Threading.Tasks;
 using Loom.Client.Internal.AsyncEx;
+using UnityEngine;
 
 namespace Loom.Client
 {
@@ -12,10 +13,12 @@ namespace Loom.Client
     /// 2. Calls are queued, there can be only one active call at any given moment.
     /// 3. If the blockchain reports an invalid nonce, the call will be retried a number of times.
     /// </summary>
-    public class DefaultDAppChainClientCallExecutor : IDAppChainClientCallExecutor
+    public class DefaultDAppChainClientCallExecutor : IDAppChainClientCallExecutor, ILogProducer
     {
         private readonly AsyncSemaphore callAsyncSemaphore = new AsyncSemaphore(1);
         private readonly IDAppChainClientConfigurationProvider configurationProvider;
+
+        public ILogger Logger { get; set; } = NullLogger.Instance;
 
         public DefaultDAppChainClientCallExecutor(IDAppChainClientConfigurationProvider configurationProvider)
         {
@@ -25,7 +28,7 @@ namespace Loom.Client
             this.configurationProvider = configurationProvider;
         }
 
-        public async Task<T> Call<T>(Func<Task<T>> taskProducer)
+        public virtual async Task<T> Call<T>(Func<Task<T>> taskProducer)
         {
             Task<T> task = (Task<T>) await ExecuteTaskWithRetryOnInvalidTxNonceException(
                 () => ExecuteTaskWaitForOtherTasks(
@@ -35,7 +38,7 @@ namespace Loom.Client
             return await task;
         }
 
-        public async Task Call(Func<Task> taskProducer)
+        public virtual async Task Call(Func<Task> taskProducer)
         {
             Task task = await ExecuteTaskWithRetryOnInvalidTxNonceException(
                 () => ExecuteTaskWaitForOtherTasks(
@@ -45,7 +48,7 @@ namespace Loom.Client
             await task;
         }
 
-        public async Task<T> StaticCall<T>(Func<Task<T>> taskProducer)
+        public virtual async Task<T> StaticCall<T>(Func<Task<T>> taskProducer)
         {
             Task<T> task = (Task<T>) await ExecuteTaskWaitForOtherTasks(
                 () => ExecuteTaskWithTimeout(taskProducer, this.configurationProvider.Configuration.StaticCallTimeout)
@@ -54,7 +57,7 @@ namespace Loom.Client
             return await task;
         }
 
-        public async Task StaticCall(Func<Task> taskProducer)
+        public virtual async Task StaticCall(Func<Task> taskProducer)
         {
             Task task = await ExecuteTaskWaitForOtherTasks(
                 () => ExecuteTaskWithTimeout(taskProducer, this.configurationProvider.Configuration.StaticCallTimeout)
@@ -63,19 +66,19 @@ namespace Loom.Client
             await task;
         }
 
-        public async Task<T> NonBlockingStaticCall<T>(Func<Task<T>> taskProducer)
+        public virtual async Task<T> NonBlockingStaticCall<T>(Func<Task<T>> taskProducer)
         {
             Task<T> task = (Task<T>) await ExecuteTaskWithTimeout(taskProducer, this.configurationProvider.Configuration.StaticCallTimeout);
             return await task;
         }
 
-        public async Task NonBlockingStaticCall(Func<Task> taskProducer)
+        public virtual async Task NonBlockingStaticCall(Func<Task> taskProducer)
         {
             Task task = await ExecuteTaskWithTimeout(taskProducer, this.configurationProvider.Configuration.StaticCallTimeout);
             await task;
         }
 
-        private static async Task<Task> ExecuteTaskWithTimeout(Func<Task> taskProducer, int timeoutMs)
+        protected virtual async Task<Task> ExecuteTaskWithTimeout(Func<Task> taskProducer, int timeoutMs)
         {
             Task task = taskProducer();
 #if UNITY_WEBGL && !UNITY_EDITOR
@@ -103,11 +106,11 @@ namespace Loom.Client
                 ExceptionDispatchInfo.Capture(e.InnerException).Throw();
             }
 
-            throw new TimeoutException();
+            throw new TimeoutException($"Call took longer than {timeoutMs} ms");
 #endif
         }
 
-        private async Task<Task> ExecuteTaskWaitForOtherTasks(Func<Task<Task>> taskProducer)
+        protected virtual async Task<Task> ExecuteTaskWaitForOtherTasks(Func<Task<Task>> taskProducer)
         {
             try
             {
@@ -121,9 +124,11 @@ namespace Loom.Client
             }
         }
 
-        private async Task<Task> ExecuteTaskWithRetryOnInvalidTxNonceException(Func<Task<Task>> taskTaskProducer)
+        protected virtual async Task<Task> ExecuteTaskWithRetryOnInvalidTxNonceException(Func<Task<Task>> taskTaskProducer)
         {
             int badNonceCount = 0;
+            float delay = 0.5f;
+            TxCommitException lastNonceException;
             do
             {
                 try
@@ -131,24 +136,28 @@ namespace Loom.Client
                     Task<Task> task = taskTaskProducer();
                     await task;
                     return await task;
-                } catch (InvalidTxNonceException)
+                } catch (TxCommitException e) when (e is InvalidTxNonceException || e is TxAlreadyExistsInCacheException)
                 {
+                    // Treat invalid nonce and "tx already exists in cache" the same by retrying
                     badNonceCount++;
+                    lastNonceException = e;
                 }
+
+                this.Logger.Log($"[NonceLog] badNonceCount == {badNonceCount}, delay: {delay:F2}");
 
                 // WaitForSecondsRealtime can throw a "get_realtimeSinceStartup can only be called from the main thread." error.
                 // WebGL doesn't have threads, so use WaitForSecondsRealtime for WebGL anyway
-                const float delay = 0.5f;
 #if UNITY_WEBGL && !UNITY_EDITOR
                 await new WaitForSecondsRealtime(delay);
 #else
                 await Task.Delay(TimeSpan.FromSeconds(delay));
 #endif
+                delay *= 1.75f;
             } while (
                 this.configurationProvider.Configuration.InvalidNonceTxRetries != 0 &&
                 badNonceCount <= this.configurationProvider.Configuration.InvalidNonceTxRetries);
 
-            throw new InvalidTxNonceException(1, "sequence number does not match");
+            throw lastNonceException;
         }
     }
 }

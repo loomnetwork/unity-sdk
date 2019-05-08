@@ -76,11 +76,8 @@ namespace Loom.Client
         {
             DAppChainClientConfiguration configuration = this.configuration ?? new DAppChainClientConfiguration();
             IDAppChainClientCallExecutor callExecutor =
-                this.callExecutor ?? new DefaultDAppChainClientCallExecutor(
-                    new DAppChainClientConfigurationProvider
-                    {
-                        Configuration = this.configuration
-                    });
+                this.callExecutor ?? new DefaultDAppChainClientCallExecutor(new DAppChainClientConfigurationProvider(this.configuration));
+
             return new DAppChainClient(this.writer, this.reader, configuration, callExecutor)
             {
                 TxMiddleware = this.txMiddleware,
@@ -88,9 +85,6 @@ namespace Loom.Client
             };
         }
 
-        private class DAppChainClientConfigurationProvider : IDAppChainClientConfigurationProvider
-        {
-            public DAppChainClientConfiguration Configuration { get; set; }
-        }
     }
+
 }

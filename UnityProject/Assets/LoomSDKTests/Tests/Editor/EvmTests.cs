@@ -149,9 +149,12 @@ namespace Loom.Client.Tests
 
                 await this.contract.CallAsync("setTestFixed32ByteArray", bytes32);
                 Assert.AreEqual(bytes32, await this.contract.StaticCallSimpleTypeOutputAsync<byte[]>("getTestFixed32ByteArray"));
+
+                byte[] bytes = await this.contract.StaticCallSimpleTypeOutputAsync<byte[]>("getStaticTestFixed32ByteArray");
+                bytes = bytes.Take(4).Reverse().Concat(new[] { (byte) 0 }).ToArray();
                 Assert.AreEqual(
                     new BigInteger(0xDEADBEEF),
-                    new BigInteger((await this.contract.StaticCallSimpleTypeOutputAsync<byte[]>("getStaticTestFixed32ByteArray")).Reverse().ToArray())
+                    new BigInteger(bytes)
                 );
             });
         }

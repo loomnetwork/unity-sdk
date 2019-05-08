@@ -103,7 +103,10 @@ namespace Loom.Client.Tests
                         this.testsAbi,
                         (client, _, __) => new ITxMiddlewareHandler[]
                         {
-                            new InvalidNonceTxMiddleware(publicKey, client),
+                            new ControllableNonceTxMiddleware(publicKey, client)
+                            {
+                                ForcedNextNonce = UInt64.MaxValue
+                            },
                             new SignedTxMiddleware(privateKey)
                         });
 
@@ -117,23 +120,178 @@ namespace Loom.Client.Tests
                         throw e;
                     });
                 }
-            });
+            }, timeout: 35000);
         }
 
-        private class InvalidNonceTxMiddleware : NonceTxMiddleware
+        [UnityTest]
+        public IEnumerator SpeculativeNextNonceTest()
         {
-            public InvalidNonceTxMiddleware(byte[] publicKey, DAppChainClient client) : base(publicKey, client)
+            return AsyncEditorTestUtility.AsyncTest(async () =>
+            {
+                byte[] privateKey = CryptoUtils.GeneratePrivateKey();
+                byte[] publicKey = CryptoUtils.PublicKeyFromPrivateKey(privateKey);
+
+                int callCounter = 0;
+
+                EvmContract invalidNonceContract =
+                    await ContractTestUtility.GetEvmContract(
+                        privateKey,
+                        publicKey,
+                        this.testsAbi,
+                        (client, _, __) =>
+                        {
+                            ControllableNonceTxMiddleware controllableNonceTxMiddleware = new ControllableNonceTxMiddleware(publicKey, client);
+                            controllableNonceTxMiddleware.GetNextNonceAsyncCalled += nextNonce =>
+                            {
+                                switch (callCounter)
+                                {
+                                    case 0:
+                                        Assert.AreEqual(1, nextNonce);
+                                        controllableNonceTxMiddleware.FailOnGetNonceFromNode = true;
+                                        break;
+                                    case 1:
+                                        Assert.AreEqual(2, nextNonce);
+                                        break;
+                                    case 2:
+                                        Assert.AreEqual(3, nextNonce);
+                                        controllableNonceTxMiddleware.FailOnGetNonceFromNode = false;
+                                        controllableNonceTxMiddleware.ForcedNextNonce = UInt64.MaxValue;
+                                        break;
+                                    case 3:
+                                        Assert.AreEqual(UInt64.MaxValue, nextNonce);
+                                        break;
+                                    case 4:
+                                        Assert.AreEqual(UInt64.MaxValue, nextNonce);
+                                        break;
+                                    case 5:
+                                        Assert.AreEqual(UInt64.MaxValue, nextNonce);
+                                        controllableNonceTxMiddleware.ForcedNextNonce = null;
+                                        break;
+                                    case 6:
+                                        Assert.AreEqual(4, nextNonce);
+                                        break;
+                                    case 7:
+                                        Assert.AreEqual(5, nextNonce);
+                                        break;
+                                    default:
+                                        Assert.Fail($"Unexpected call #{callCounter}");
+                                        break;
+                                }
+                                callCounter++;
+                            };
+                            return new ITxMiddlewareHandler[]
+                            {
+                                controllableNonceTxMiddleware,
+                                new SignedTxMiddleware(privateKey)
+                            };
+                        });
+
+                try
+                {
+                    await invalidNonceContract.CallAsync("setTestUint", new BigInteger(123456789));
+                    await invalidNonceContract.CallAsync("setTestUint", new BigInteger(123456789));
+                    await invalidNonceContract.CallAsync("setTestUint", new BigInteger(123456789));
+                    await invalidNonceContract.CallAsync("setTestUint", new BigInteger(123456789));
+                    await invalidNonceContract.CallAsync("setTestUint", new BigInteger(123456789));
+
+                    Assert.AreEqual(8, callCounter);
+                } catch (InvalidTxNonceException e)
+                {
+                    Assert.Catch<InvalidTxNonceException>(() =>
+                    {
+                        throw e;
+                    });
+                }
+            }, timeout: 20000);
+        }
+
+        [UnityTest]
+        public IEnumerator TxAlreadyExistsInCacheRecoverTest()
+        {
+            return AsyncEditorTestUtility.AsyncTest(async () =>
+            {
+                byte[] privateKey = CryptoUtils.GeneratePrivateKey();
+                byte[] publicKey = CryptoUtils.PublicKeyFromPrivateKey(privateKey);
+
+                int callCounter = 0;
+
+                EvmContract invalidNonceContract =
+                    await ContractTestUtility.GetEvmContract(
+                        privateKey,
+                        publicKey,
+                        this.testsAbi,
+                        (client, _, __) =>
+                        {
+                            ControllableNonceTxMiddleware controllableNonceTxMiddleware = new ControllableNonceTxMiddleware(publicKey, client);
+                            controllableNonceTxMiddleware.GetNextNonceAsyncCalled += nextNonce =>
+                            {
+                                switch (callCounter)
+                                {
+                                    case 0:
+                                        Assert.AreEqual(1, nextNonce);
+                                        controllableNonceTxMiddleware.ForcedNextNonce = 1;
+                                        break;
+                                    case 1:
+                                        Assert.AreEqual(1, nextNonce);
+                                        controllableNonceTxMiddleware.ForcedNextNonce = null;
+                                        break;
+                                    case 2:
+                                        Assert.AreEqual(2, nextNonce);
+                                        break;
+                                    default:
+                                        Assert.Fail($"Unexpected call #{callCounter}");
+                                        break;
+                                }
+                                callCounter++;
+                            };
+                            return new ITxMiddlewareHandler[]
+                            {
+                                controllableNonceTxMiddleware,
+                                new SignedTxMiddleware(privateKey)
+                            };
+                        });
+                await invalidNonceContract.CallAsync("setTestUint", new BigInteger(123456789));
+                await invalidNonceContract.CallAsync("setTestUint", new BigInteger(123456789));
+            }, timeout: 20000);
+        }
+
+        private class ControllableNonceTxMiddleware : NonceTxMiddleware
+        {
+            public ulong? ExpectedNextNonce => this.NextNonce;
+
+            public ulong? ForcedNextNonce { get; set; }
+
+            public bool FailOnGetNonceFromNode { get; set; }
+
+            public event Action<ulong> GetNextNonceAsyncCalled;
+
+            public ControllableNonceTxMiddleware(byte[] publicKey, DAppChainClient client) : base(publicKey, client)
             {
             }
 
-            public override Task<byte[]> Handle(byte[] txData)
+            protected override async Task<ulong> GetNextNonceAsync()
             {
-                var tx = new NonceTx
+                if (this.ForcedNextNonce != null)
                 {
-                    Inner = ByteString.CopyFrom(txData),
-                    Sequence = int.MaxValue
-                };
-                return Task.FromResult(tx.ToByteArray());
+                    ulong forcedNextNonce = this.ForcedNextNonce.Value;
+                    this.GetNextNonceAsyncCalled?.Invoke(this.ForcedNextNonce.Value);
+                    return forcedNextNonce;
+                }
+
+                ulong nextNonce = await base.GetNextNonceAsync();
+                this.GetNextNonceAsyncCalled?.Invoke(nextNonce);
+
+                return nextNonce;
+            }
+
+            protected override Task<ulong> GetNonceFromNodeAsync()
+            {
+                if (this.FailOnGetNonceFromNode)
+                {
+                    Assert.Fail("Call to GetNonceFromNodeAsync is not expected");
+                }
+
+                return base.GetNonceFromNodeAsync();
             }
         }
     }

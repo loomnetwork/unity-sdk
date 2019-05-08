@@ -106,12 +106,12 @@ namespace Loom.Client {
                 From = this.Caller.ToProtobufAddress(),
                 To = this.Address.ToProtobufAddress(),
                 Data = callTxBytes
-            }.ToByteString();
+            };
 
             return new Transaction
             {
                 Id = 2,
-                Data = msgTxBytes
+                Data = msgTxBytes.ToByteString()
             };
         }
     }

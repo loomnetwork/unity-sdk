@@ -36,5 +36,13 @@ namespace Loom.Client
 
             return Task.FromResult(signedTx.ToByteArray());
         }
+
+        public void HandleTxResult(BroadcastTxResult result)
+        {
+        }
+
+        public void HandleTxException(LoomException e)
+        {
+        }
     }
 }
