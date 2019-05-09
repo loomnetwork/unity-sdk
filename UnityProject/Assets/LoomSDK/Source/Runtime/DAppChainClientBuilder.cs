@@ -75,8 +75,7 @@ namespace Loom.Client
         public DAppChainClient Create()
         {
             DAppChainClientConfiguration configuration = this.configuration ?? new DAppChainClientConfiguration();
-            IDAppChainClientCallExecutor callExecutor =
-                this.callExecutor ?? new DefaultDAppChainClientCallExecutor(new DAppChainClientConfigurationProvider(this.configuration));
+            IDAppChainClientCallExecutor callExecutor = this.callExecutor ?? new DefaultDAppChainClientCallExecutor(this.configuration);
 
             return new DAppChainClient(this.writer, this.reader, configuration, callExecutor)
             {

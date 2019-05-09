@@ -89,7 +89,7 @@ namespace Loom.Client.Unity.WebGL.Internal
                     tcs.TrySetResult(null);
                 } else
                 {
-                    tcs.TrySetException(new RpcClientException(err, 1));
+                    tcs.TrySetException(new RpcClientException(err, 1, this));
                 }
             };
 

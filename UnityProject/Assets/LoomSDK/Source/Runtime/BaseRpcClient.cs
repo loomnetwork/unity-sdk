@@ -64,7 +64,7 @@ namespace Loom.Client.Internal
 
         protected void HandleJsonRpcResponseError(JsonRpcResponse partialMsg)
         {
-            if (partialMsg.Error.Data.EndsWith("Tx already exists in cache"))
+            if (partialMsg.Error.Data != null && partialMsg.Error.Data.EndsWith("Tx already exists in cache"))
             {
                 throw new TxAlreadyExistsInCacheException(int.Parse(partialMsg.Error.Code), partialMsg.Error.Data);
             }

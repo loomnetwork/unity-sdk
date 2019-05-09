@@ -27,12 +27,4 @@ namespace Loom.Client
         /// </summary>
         public int InvalidNonceTxRetries { get; set; } = 5;
     }
-
-    /// <summary>
-    /// Represents an entity that stores a <see cref="DAppChainClientConfiguration"/>.
-    /// </summary>
-    public interface IDAppChainClientConfigurationProvider
-    {
-        DAppChainClientConfiguration Configuration { get; }
-    }
 }

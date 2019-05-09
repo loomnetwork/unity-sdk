@@ -19,7 +19,7 @@ namespace Loom.Client
     /// <summary>
     /// Writes to & reads from a Loom DAppChain.
     /// </summary>
-    public class DAppChainClient : IDAppChainClientConfigurationProvider, IDisposable
+    public class DAppChainClient : IDisposable
     {
         private const string LogTag = "Loom.DAppChainClient";
 
@@ -98,7 +98,11 @@ namespace Loom.Client
         /// <param name="readClient">RPC client to use for querying DAppChain state.</param>
         /// <param name="configuration">Client configuration structure.</param>
         /// <param name="callExecutor">Blockchain call execution flow controller.</param>
-        public DAppChainClient(IRpcClient writeClient, IRpcClient readClient, DAppChainClientConfiguration configuration = null, IDAppChainClientCallExecutor callExecutor = null)
+        public DAppChainClient(
+            IRpcClient writeClient,
+            IRpcClient readClient,
+            DAppChainClientConfiguration configuration = null,
+            IDAppChainClientCallExecutor callExecutor = null)
         {
             if (writeClient == null && readClient == null)
                 throw new ArgumentException("Both write and read clients can't be null");
@@ -107,7 +111,7 @@ namespace Loom.Client
             this.readClient = readClient;
 
             this.Configuration = configuration ?? new DAppChainClientConfiguration();
-            this.CallExecutor = callExecutor ?? new DefaultDAppChainClientCallExecutor(this);
+            this.CallExecutor = callExecutor ?? new DefaultDAppChainClientCallExecutor(this.Configuration);
         }
 
         public void Dispose()
@@ -123,12 +127,12 @@ namespace Loom.Client
         /// <returns>The nonce.</returns>
         public async Task<ulong> GetNonceAsync(string key)
         {
-            return await this.CallExecutor.StaticCall(async () => await GetNonceAsyncRaw(key));
+            return await this.CallExecutor.StaticCall(async () => await GetNonceAsyncRaw(key), new CallDescription("nonce", true));
         }
 
         public async Task<ulong> GetNonceAsyncNonBlocking(string key)
         {
-            return await this.CallExecutor.NonBlockingStaticCall(async () => await GetNonceAsyncRaw(key));
+            return await this.CallExecutor.NonBlockingStaticCall(async () => await GetNonceAsyncRaw(key), new CallDescription("nonce", true));
         }
 
         /// <summary>
@@ -141,68 +145,79 @@ namespace Loom.Client
             if (this.readClient == null)
                 throw new InvalidOperationException("Read client is not set");
 
-            return await this.CallExecutor.StaticCall(async () =>
-            {
-                await EnsureConnected();
-                var addressStr = await this.readClient.SendAsync<string, ResolveParams>(
-                    "resolve",
-                    new ResolveParams { ContractName = contractName }
-                );
+            return await this.CallExecutor.StaticCall(
+                async () =>
+                {
+                    await EnsureConnected();
+                    var addressStr = await this.readClient.SendAsync<string, ResolveParams>(
+                        "resolve",
+                        new ResolveParams
+                        {
+                            ContractName = contractName
+                        }
+                    );
 
-                if (String.IsNullOrEmpty(addressStr))
-                    throw new LoomException("Unable to find a contract with a matching name");
+                    if (String.IsNullOrEmpty(addressStr))
+                        throw new LoomException("Unable to find a contract with a matching name");
 
-                return Address.FromString(addressStr);
-            });
+                    return Address.FromString(addressStr);
+                },
+                new CallDescription("resolve", true)
+            );
         }
 
         /// <summary>
         /// Commits a transaction to the DAppChain.
         /// </summary>
         /// <param name="tx">Transaction to commit.</param>
+        /// <param name="callDescription">Call high-level description.</param>
         /// <returns>Commit metadata.</returns>
         /// <exception cref="InvalidTxNonceException">Thrown when transaction is rejected by the DAppChain due to a bad nonce.</exception>
-        internal async Task<BroadcastTxResult> CommitTxAsync(IMessage tx)
+        internal async Task<BroadcastTxResult> CommitTxAsync(IMessage tx, CallDescription callDescription)
         {
             if (this.writeClient == null)
                 throw new InvalidOperationException("Write client was not set");
 
-            return await this.CallExecutor.Call(async () =>
-            {
-                await EnsureConnected();
-
-                byte[] txBytes = tx.ToByteArray();
-                if (this.TxMiddleware != null)
+            return await this.CallExecutor.Call(
+                async () =>
                 {
-                    txBytes = await this.TxMiddleware.Handle(txBytes);
-                }
+                    await EnsureConnected();
 
-                try
-                {
-                    string payload = CryptoBytes.ToBase64String(txBytes);
-                    var result = await this.writeClient.SendAsync<BroadcastTxResult, string[]>("broadcast_tx_commit", new[] { payload });
-                    if (result == null)
-                        return null;
-
-                    CheckForTxError(result.CheckTx);
-                    CheckForTxError(result.DeliverTx);
-
+                    byte[] txBytes = tx.ToByteArray();
                     if (this.TxMiddleware != null)
                     {
-                        this.TxMiddleware.HandleTxResult(result);
+                        txBytes = await this.TxMiddleware.Handle(txBytes);
                     }
 
-                    return result;
-                } catch (LoomException e)
-                {
-                    if (this.TxMiddleware != null)
+                    try
                     {
-                        this.TxMiddleware.HandleTxException(e);
-                    }
+                        string payload = CryptoBytes.ToBase64String(txBytes);
+                        var result = await this.writeClient.SendAsync<BroadcastTxResult, string[]>("broadcast_tx_commit", new[] { payload });
+                        if (result == null)
+                            return null;
 
-                    throw;
-                }
-            });
+                        CheckForTxError(result.CheckTx);
+                        CheckForTxError(result.DeliverTx);
+
+                        if (this.TxMiddleware != null)
+                        {
+                            this.TxMiddleware.HandleTxResult(result);
+                        }
+
+                        return result;
+                    }
+                    catch (LoomException e)
+                    {
+                        if (this.TxMiddleware != null)
+                        {
+                            this.TxMiddleware.HandleTxException(e);
+                        }
+
+                        throw;
+                    }
+                },
+                callDescription
+            );
         }
 
         /// <summary>
@@ -213,10 +228,11 @@ namespace Loom.Client
         /// <param name="query">Query parameters object.</param>
         /// <param name="caller">Optional caller address.</param>
         /// <param name="vmType">Virtual machine type.</param>
+        /// <param name="callDescription">Call high-level description.</param>
         /// <returns>Deserialized response.</returns>
-        internal async Task<T> QueryAsync<T>(Address contract, IMessage query, Address caller, VMType vmType)
+        internal async Task<T> QueryAsync<T>(Address contract, IMessage query, Address caller, VMType vmType, CallDescription callDescription)
         {
-            return await QueryAsync<T>(contract, query.ToByteArray(), caller, vmType);
+            return await QueryAsync<T>(contract, query.ToByteArray(), caller, vmType, callDescription);
         }
 
         /// <summary>
@@ -227,8 +243,9 @@ namespace Loom.Client
         /// <param name="query">Raw query parameters data.</param>
         /// <param name="caller">Optional caller address.</param>
         /// <param name="vmType">Virtual machine type.</param>
+        /// <param name="callDescription">Call high-level description.</param>
         /// <returns>Deserialized response.</returns>
-        internal async Task<T> QueryAsync<T>(Address contract, byte[] query, Address caller, VMType vmType = VMType.Plugin)
+        internal async Task<T> QueryAsync<T>(Address contract, byte[] query, Address caller, VMType vmType, CallDescription callDescription)
         {
             if (this.readClient == null)
                 throw new InvalidOperationException("Read client is not set");
@@ -245,11 +262,14 @@ namespace Loom.Client
                 queryParams.CallerAddress = caller.QualifiedAddress;
             }
 
-            return await this.CallExecutor.StaticCall(async () =>
-            {
-                await EnsureConnected();
-                return await this.readClient.SendAsync<T, QueryParams>("query", queryParams);
-            });
+            return await this.CallExecutor.StaticCall(
+                async () =>
+                {
+                    await EnsureConnected();
+                    return await this.readClient.SendAsync<T, QueryParams>("query", queryParams);
+                },
+                callDescription
+            );
         }
 
         private async Task<ulong> GetNonceAsyncRaw(string key)
@@ -269,24 +289,28 @@ namespace Loom.Client
             if (this.readClient == null)
                 throw new InvalidOperationException("Read client is not set");
 
-            await this.CallExecutor.Call(async () =>
-            {
-                await EnsureConnected();
-                EventHandler<JsonRpcEventData> wrapper = (sender, e) =>
+            await this.CallExecutor.Call(
+                async () =>
                 {
-                    handler(this,
-                        new RawChainEventArgs(
-                            e.ContractAddress,
-                            e.CallerAddress,
-                            UInt64.Parse(e.BlockHeight),
-                            e.Data,
-                            e.Topics
-                        ));
-                };
-                this.eventSubs.Add(handler, wrapper);
-                // FIXME: supports topics
-                await this.readClient.SubscribeAsync(wrapper, null);
-            });
+                    await EnsureConnected();
+                    EventHandler<JsonRpcEventData> wrapper = (sender, e) =>
+                    {
+                        handler(this,
+                            new RawChainEventArgs(
+                                e.ContractAddress,
+                                e.CallerAddress,
+                                UInt64.Parse(e.BlockHeight),
+                                e.Data,
+                                e.Topics
+                            ));
+                    };
+                    this.eventSubs.Add(handler, wrapper);
+
+                    // FIXME: supports topics
+                    await this.readClient.SubscribeAsync(wrapper, null);
+                },
+                new CallDescription("_subscribe", false)
+            );
         }
 
         private async void UnsubReadClient(EventHandler<RawChainEventArgs> handler)
@@ -294,11 +318,14 @@ namespace Loom.Client
             if (this.readClient == null)
                 throw new InvalidOperationException("Read client is not set");
 
-            await this.CallExecutor.Call(async () =>
-            {
-                EventHandler<JsonRpcEventData> wrapper = this.eventSubs[handler];
-                await this.readClient.UnsubscribeAsync(wrapper);
-            });
+            await this.CallExecutor.Call(
+                async () =>
+                {
+                    EventHandler<JsonRpcEventData> wrapper = this.eventSubs[handler];
+                    await this.readClient.UnsubscribeAsync(wrapper);
+                },
+                new CallDescription("_unsubscribe", false)
+            );
         }
 
         private async Task EnsureConnected()

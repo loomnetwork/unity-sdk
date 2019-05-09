@@ -100,19 +100,22 @@ namespace Loom.Client
 
         private async Task<EthFilterLogList> GetAllChangesInternal(NewFilterInput filterInput)
         {
-            return await this.Contract.Client.CallExecutor.StaticCall(async () =>
-            {
-                string base64 = await this.Contract.Client.ReadClient.SendAsync<string, FilterRpcModel>(
-                    "getevmlogs",
-                    new FilterRpcModel
-                    {
-                        Filter = JsonConvert.SerializeObject(filterInput)
-                    }
-                );
+            return await this.Contract.Client.CallExecutor.StaticCall(
+                async () =>
+                {
+                    string base64 = await this.Contract.Client.ReadClient.SendAsync<string, FilterRpcModel>(
+                        "getevmlogs",
+                        new FilterRpcModel
+                        {
+                            Filter = JsonConvert.SerializeObject(filterInput)
+                        }
+                    );
 
-                byte[] bytes = CryptoBytes.FromBase64String(base64);
-                return EthFilterLogList.Parser.ParseFrom(bytes);
-            });
+                    byte[] bytes = CryptoBytes.FromBase64String(base64);
+                    return EthFilterLogList.Parser.ParseFrom(bytes);
+                },
+                new CallDescription("getevmlogs", true)
+            );
         }
 
         private static FilterLog ConvertEthFilterLogToFilterLog(EthFilterLog log)

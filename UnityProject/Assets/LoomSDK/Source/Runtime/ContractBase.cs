@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Numerics;
 using System.Threading.Tasks;
 using Loom.Client.Internal;
 using Loom.Client.Protobuf;
@@ -64,6 +65,22 @@ namespace Loom.Client {
                 }
             }
         }
+        
+        /// <summary>
+        /// Retrieves the current block height.
+        /// </summary>
+        /// <returns></returns>
+        public async Task<BigInteger> GetBlockHeight()
+        {
+            return await this.Client.CallExecutor.StaticCall(
+                async () =>
+                {
+                    string heightString = await this.Client.ReadClient.SendAsync<string, object>("getblockheight", null);
+                    return BigInteger.Parse(heightString);
+                },
+                new CallDescription("getblockheight", true)
+            );
+        }
 
         protected void InvokeChainEvent(object sender, RawChainEventArgs e) {
             this.ContractEventReceived?.Invoke(this, TransformChainEvent(e));
@@ -84,10 +101,11 @@ namespace Loom.Client {
         /// The call into the smart contract is accomplished by committing a transaction to the DAppChain.
         /// </summary>
         /// <param name="tx">Transaction message.</param>
+        /// <param name="callDescription">Call high-level description.</param>
         /// <returns>Nothing.</returns>
-        internal async Task CallAsync(Transaction tx)
+        internal async Task CallAsync(Transaction tx, CallDescription callDescription)
         {
-            await this.Client.CommitTxAsync(tx);
+            await this.Client.CommitTxAsync(tx, callDescription);
         }
 
         internal Transaction CreateContractMethodCallTx(string hexData, VMType vmType) {

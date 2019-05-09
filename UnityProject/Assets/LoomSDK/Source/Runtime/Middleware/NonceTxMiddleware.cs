@@ -69,7 +69,7 @@ namespace Loom.Client
 
         public void HandleTxException(LoomException e)
         {
-            if (e is InvalidTxNonceException)
+            if (e is InvalidTxNonceException || e is TxAlreadyExistsInCacheException)
             {
                 this.NextNonce = null;
                 this.Client.Logger.Log("[NonceLog] Got InvalidTxNonceException, will retrieve nonce from node next time");
