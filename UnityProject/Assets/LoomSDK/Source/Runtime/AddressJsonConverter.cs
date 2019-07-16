@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Text;
 using Loom.Newtonsoft.Json;
 
 namespace Loom.Client.Internal

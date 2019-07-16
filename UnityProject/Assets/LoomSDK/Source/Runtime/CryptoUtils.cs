@@ -1,7 +1,6 @@
 ﻿using Loom.Chaos.NaCl;
 using System;
 using System.Security.Cryptography;
-using System.Text;
 using Loom.Org.BouncyCastle.Crypto.Digests;
 
 namespace Loom.Client
@@ -95,16 +94,7 @@ namespace Loom.Client
 
         public static string BytesToHexString(byte[] bytes)
         {
-            var hex = new StringBuilder(bytes.Length * 2);
-            string alphabet = "0123456789ABCDEF";
-
-            foreach (byte b in bytes)
-            {
-                hex.Append(alphabet[(int) (b >> 4)]);
-                hex.Append(alphabet[(int) (b & 0xF)]);
-            }
-
-            return hex.ToString();
+            return CryptoBytes.ToHexStringUpper(bytes);
         }
 
         /// <summary>

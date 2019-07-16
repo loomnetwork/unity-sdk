@@ -9,13 +9,14 @@ namespace Loom.Client
     public interface IRpcClient : IDisposable
     {
         event RpcClientConnectionStateChangedHandler ConnectionStateChanged;
+        event EventHandler<JsonRpcEventData> EventReceived;
 
         RpcConnectionState ConnectionState { get; }
         Task<TResult> SendAsync<TResult, TArgs>(string method, TArgs args);
         Task ConnectAsync();
         Task DisconnectAsync();
-        Task SubscribeAsync(EventHandler<JsonRpcEventData> handler, ICollection<string> topics);
-        Task UnsubscribeAsync(EventHandler<JsonRpcEventData> handler);
+        Task SubscribeToEventsAsync(ICollection<string> topics);
+        Task UnsubscribeFromEventAsync(string topic);
     }
 
     [Obsolete("Use IRpcClient", true)]

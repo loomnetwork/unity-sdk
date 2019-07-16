@@ -1,9 +1,9 @@
 using System;
 using System.Collections;
-using System.Collections.Generic;
 using System.Diagnostics;
 using System.Runtime.ExceptionServices;
 using System.Threading.Tasks;
+using UnityEditor;
 
 namespace Loom.Client.Tests
 {
@@ -19,6 +19,7 @@ namespace Loom.Client.Tests
                         testAction().Wait();
                     } catch (AggregateException e)
                     {
+                        UnityEngine.Debug.LogException(e);
                         ExceptionDispatchInfo.Capture(e.InnerException).Throw();
                     }
                 }), timeout);
@@ -37,6 +38,37 @@ namespace Loom.Client.Tests
 
             if (task.IsFaulted)
                 task.Wait();
+        }
+
+        public static async Task<bool> WaitWithTimeout(float timeout, Func<bool> isCompletedFunc)
+        {
+            if (isCompletedFunc == null)
+                throw new ArgumentNullException(nameof(isCompletedFunc));
+
+            if (timeout <= 0)
+                throw new ArgumentOutOfRangeException(nameof(timeout));
+
+            if (isCompletedFunc())
+                return false;
+
+            double startTimestamp = EditorApplication.timeSinceStartup;
+            bool timedOut = false;
+
+            while (true)
+            {
+                if (isCompletedFunc())
+                    break;
+
+                if (EditorApplication.timeSinceStartup - startTimestamp > timeout)
+                {
+                    timedOut = true;
+                    break;
+                }
+
+                await Task.Delay(200);
+            }
+
+            return timedOut;
         }
     }
 }

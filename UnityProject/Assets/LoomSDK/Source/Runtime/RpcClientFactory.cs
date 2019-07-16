@@ -1,6 +1,5 @@
 ﻿using UnityEngine;
 using System;
-using Loom.Client.Internal;
 
 namespace Loom.Client
 {
@@ -36,7 +35,7 @@ namespace Loom.Client
             return this;
         }
 
-        [Obsolete("Use WithHttp")]
+        [Obsolete("Use WithHttp", true)]
         public RpcClientFactory WithHTTP(string url)
         {
             return WithHttp(url);
@@ -60,7 +59,7 @@ namespace Loom.Client
         }
     }
 
-    [Obsolete("Use RpcClientFactory")]
+    [Obsolete("Use RpcClientFactory", true)]
     public class RPCClientFactory : RpcClientFactory
     {
     }

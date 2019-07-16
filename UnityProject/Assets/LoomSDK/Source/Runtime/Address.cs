@@ -24,12 +24,12 @@ namespace Loom.Client
         /// <summary>
         /// String representation of the address, in the format "chain:0x...".
         /// </summary>
-        public string QualifiedAddress => $"{this.ChainId}:{this.LocalAddress}";
+        public string QualifiedAddress { get; }
 
         /// <summary>
         /// Hex-string representation of the local part of the address, in the format "0x...".
         /// </summary>
-        [Obsolete("Use LocalAddress")]
+        [Obsolete("Use LocalAddress", true)]
         public string LocalAddressHexString => LocalAddress;
 
         /// <summary>
@@ -49,6 +49,7 @@ namespace Loom.Client
 
             LocalAddress = addressUtil.ConvertToChecksumAddress(localAddress);
             ChainId = chainId;
+            QualifiedAddress = $"{this.ChainId}:{this.LocalAddress}";
         }
 
         /// <summary>
@@ -72,7 +73,6 @@ namespace Loom.Client
         /// <summary>
         /// Creates an <see cref="Protobuf.Address"/> instance from an address.
         /// </summary>
-        /// <param name="address">An address.</param>
         /// <returns>A <see cref="Protobuf.Address"/> instance</returns>
         public Protobuf.Address ToProtobufAddress() {
             return new Protobuf.Address
@@ -162,7 +162,7 @@ namespace Loom.Client
         /// <param name="localAddress">Hex encoded string, may start with "0x".</param>
         /// <param name="chainId">Identifier of a DAppChain.</param>
         /// <returns>An address</returns>
-        [Obsolete("Use FromString or the constructor")]
+        [Obsolete("Use FromString or the constructor", true)]
         public static Address FromHexString(string localAddress, string chainId = DefaultChainId) {
             return new Address(localAddress, chainId);
         }
@@ -171,7 +171,7 @@ namespace Loom.Client
         /// Generates a string representation of the address, in the format "chain:0x...".
         /// </summary>
         /// <returns>A string representing the address.</returns>
-        [Obsolete("Use QualifiedAddress")]
+        [Obsolete("Use QualifiedAddress", true)]
         public string ToAddressString() {
             return QualifiedAddress;
         }

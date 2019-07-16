@@ -1,5 +1,23 @@
 # Changelog
 
+## June 17, 2019
+
+- Updated `Nethereum `to `3.3.0`.
+- Updated `Protobuf` to `3.9.0`.
+- Added full support for subscribing to specific event topics for Go contracts. Previously, this had to be done through the `IRpcClient` directly, which was error-prone and ignored the order of calls. Now, subscribing/unsubscribing are separate operations. See `DAppChainClient.SubscribeToEvents/UnsubscribeFromAllEvents/SubscribeToEvents/UnsubscribeFromEvents`.
+- Added `RawChainEventContract`, which is similar to `RawChainEventContract`, but isn't expecting the event data to be in JSON-RPC format.
+- Fixed fetching EVM logs with a filter applied not working in some cases.
+- Fixed link.xml to work on AOT platform with bytecode stripping enabled.
+
+## May 8, 2019
+
+- Prioritize write client for getting nonce.
+- Implemented speculative nonce.
+- Fixed concurrency issues in `CryptoUtils`.
+- Increment retry delay on invalid nonce exponentially instead.
+- Fixed tests to compile with Solidity 0.5.0 compiler.
+- Fixed building in Unity 2019.1.
+
 ## November 16, 2018
 
 - Use `DAppChainClientConfiguration` class for `DAppChainClient` options instead of having multiple properties inside of `DAppChainClient`. `timeout` optional parameter is now gone from `Contract.Call*` methods, modify `CallTimeout` and `StaticCallTimeout` in `DAppChainClient.Configuration` now.
