@@ -18,8 +18,6 @@ namespace Loom.Client.Unity.WebGL.Internal
 
         private readonly Uri url;
         private readonly WebSocket webSocket;
-        private event EventHandler<JsonRpcEventData> eventReceived;
-
         public override RpcConnectionState ConnectionState
         {
             get
@@ -45,6 +43,7 @@ namespace Loom.Client.Unity.WebGL.Internal
         {
             this.url = new Uri(url);
             this.webSocket = new WebSocket();
+            this.webSocket.MessageReceived += WSRPCClient_MessageReceived;
         }
         
         public override async Task ConnectAsync()
@@ -188,6 +187,7 @@ namespace Loom.Client.Unity.WebGL.Internal
         protected override void Dispose(bool disposing)
         {
             this.webSocket.Dispose();
+            this.webSocket.MessageReceived -= WSRPCClient_MessageReceived;
         }
 
         private Task SendAsync<T>(string method, T args, string msgId)
@@ -226,7 +226,7 @@ namespace Loom.Client.Unity.WebGL.Internal
                         else
                         {
                             var fullMsg = JsonConvert.DeserializeObject<JsonRpcEvent>(msgBody);
-                            this.eventReceived?.Invoke(this, fullMsg.Result);
+                            InvokeEventReceived(fullMsg.Result);
                         }
                     }
                 }
