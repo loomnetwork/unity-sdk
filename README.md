@@ -99,7 +99,7 @@ Newtonsoft.Json.dll
 
 ### Dependecy Namespace Prefixing
 
-The SDK contains quite a bit of dependencies, so there is a high chance that a Unity project will contain another version of a dependency for other purposes. Since Unity doesn't have any dependency management for third-party SDKs yet, all dependencies have `Loom.` prefix added to their namespaces. To do this, [AssemblyNamespaceChanger](https://github.com/LostPolygon/AssemblyNamespaceChanger) tool is used.
+The SDK contains quite a bit of dependencies, so there is a high chance that a Unity project will contain another version of a dependency for other purposes. Since Unity doesn't have any dependency management for third-party SDKs yet, all dependencies have `Loom.` prefix added to their namespaces. To do this, [AssemblyNamespaceChanger](https://github.com/LostPolygon/AssemblyNamespaceChanger) tool is used. The relevant version is already present n the repo.
 
 1. Acquire/build all dependency assemblies.
 2. Copy them into the `BuildScripts\PrefixDependencies\Original` folder.
