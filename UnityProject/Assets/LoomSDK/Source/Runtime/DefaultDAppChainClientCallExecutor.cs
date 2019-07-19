@@ -99,6 +99,12 @@ namespace Loom.Client
 
         protected virtual async Task<Task> ExecuteTaskWaitForOtherTasks(Func<Task<Task>> taskProducer)
         {
+            if (this.configuration.AllowAsynchronousCalls) {
+                Task<Task> task = taskProducer();
+                await task;
+                return await task;
+            }
+
             try
             {
                 await this.callAsyncSemaphore.WaitAsync();
