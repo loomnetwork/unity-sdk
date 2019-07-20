@@ -35,6 +35,9 @@ namespace Loom.Client {
         /// <param name="callerAddress">Address of the caller, generated from the public key of the transaction signer.</param>
         protected ContractBase(DAppChainClient client, Address contractAddress, Address callerAddress)
         {
+            if (client == null)
+                throw new ArgumentNullException(nameof(client));
+
             this.Client = client;
             this.Address = contractAddress;
             this.Caller = callerAddress;

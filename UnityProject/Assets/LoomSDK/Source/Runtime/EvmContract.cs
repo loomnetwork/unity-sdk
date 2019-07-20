@@ -23,15 +23,42 @@ namespace Loom.Client
         /// <param name="client">Client to use to communicate with the contract.</param>
         /// <param name="contractAddress">Address of a contract on the Loom DAppChain.</param>
         /// <param name="callerAddress">Address of the caller, generated from the public key of the transaction signer.</param>
-        /// <param name="abi">Contract Application Binary Interface as JSON object string.</param>
-        public EvmContract(DAppChainClient client, Address contractAddress, Address callerAddress, string abi) : base(client, contractAddress, callerAddress)
+        /// <param name="contractBuilder">Contract Builder object representing the contract's interface.</param>
+        public EvmContract(DAppChainClient client, Address contractAddress, Address callerAddress, ContractBuilder contractBuilder) : base(client, contractAddress, callerAddress)
         {
-            this.contractBuilder = new ContractBuilder(abi, contractAddress.LocalAddress);
+            if (contractBuilder == null)
+                throw new ArgumentNullException(nameof(contractBuilder));
+
+            this.contractBuilder = contractBuilder;
             this.topicToEventName = new Dictionary<string, string>();
             foreach (EventABI eventAbi in this.contractBuilder.ContractABI.Events)
             {
                 this.topicToEventName.Add("0x" + eventAbi.Sha3Signature, eventAbi.Name);
             }
+        }
+
+        /// <summary>
+        /// Constructor.
+        /// </summary>
+        /// <param name="client">Client to use to communicate with the contract.</param>
+        /// <param name="contractAddress">Address of a contract on the Loom DAppChain.</param>
+        /// <param name="callerAddress">Address of the caller, generated from the public key of the transaction signer.</param>
+        /// <param name="abi">Contract Application Binary Interface as JSON object string.</param>
+        public EvmContract(DAppChainClient client, Address contractAddress, Address callerAddress, string abi)
+            : this(client, contractAddress, callerAddress, new ContractBuilder(abi, contractAddress.LocalAddress))
+        {
+        }
+
+        /// <summary>
+        /// Constructor.
+        /// </summary>
+        /// <param name="client">Client to use to communicate with the contract.</param>
+        /// <param name="contractAddress">Address of a contract on the Loom DAppChain.</param>
+        /// <param name="callerAddress">Address of the caller, generated from the public key of the transaction signer.</param>
+        /// <param name="abi">Deserialized Contract Application Binary Interface representation.</param>
+        public EvmContract(DAppChainClient client, Address contractAddress, Address callerAddress, ContractABI abi)
+            : this(client, contractAddress, callerAddress, CreateContractBuilderWithContractAbi(contractAddress, abi))
+        {
         }
 
         /// <summary>
@@ -478,5 +505,16 @@ namespace Loom.Client
         }
 
         #endregion
+
+        private static ContractBuilder CreateContractBuilderWithContractAbi(Address contractAddress, ContractABI abi)
+        {
+            if (abi == null)
+                throw new ArgumentNullException(nameof(abi));
+
+            return new ContractBuilder("[]", contractAddress.LocalAddress)
+            {
+                ContractABI = abi
+            };
+        }
     }
 }
