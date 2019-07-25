@@ -1,6 +1,5 @@
 ﻿using System.Text;
 using System.Threading.Tasks;
-using Loom.Client.Internal;
 using Loom.Client.Protobuf;
 using Loom.Google.Protobuf;
 using Loom.Newtonsoft.Json;
@@ -12,7 +11,8 @@ namespace Loom.Client
     /// Each instance of this class is bound to a specific smart contract, and provides a simple way of calling
     /// into and querying that contract.
     /// </summary>
-    public class Contract : ContractBase<ChainEventArgs> {
+    public abstract class Contract<TChainEvent> : ContractBase<TChainEvent>
+    {
         /// <summary>
         /// Constructor.
         /// </summary>
@@ -29,10 +29,10 @@ namespace Loom.Client
         /// <param name="method">Smart contract method name.</param>
         /// <param name="args">Arguments object for the smart contract method.</param>
         /// <returns>Nothing.</returns>
-        public async Task CallAsync(string method, IMessage args)
+        public async Task<BroadcastTxResult> CallAsync(string method, IMessage args)
         {
             Transaction tx = this.CreateContractMethodCallTx(method, args);
-            await CallAsync(tx);
+            return await CallAsync(tx, new CallDescription(method, false));
         }
 
         /// <summary>
@@ -46,7 +46,7 @@ namespace Loom.Client
         public async Task<T> CallAsync<T>(string method, IMessage args) where T : IMessage, new()
         {
             var tx = this.CreateContractMethodCallTx(method, args);
-            return await CallAsync<T>(tx);
+            return await CallAsync<T>(tx, new CallDescription(method, false));
         }
 
         /// <summary>
@@ -59,33 +59,20 @@ namespace Loom.Client
         /// <returns>The return value of the smart contract method.</returns>
         public async Task<T> StaticCallAsync<T>(string method, IMessage args) where T : IMessage, new()
         {
+            this.Client.Logger.Log("Executing static call: " + method);
             var query = new ContractMethodCall
             {
                 Method = method,
                 Args = args.ToByteString()
             };
-            var result = await this.Client.QueryAsync<byte[]>(this.Address, query, this.Caller, VMType.Plugin);
+            var result = await this.Client.QueryAsync<byte[]>(this.Address, query, this.Caller, VMType.Plugin, new CallDescription(method, true));
+            T msg = new T();
             if (result != null)
             {
-                T msg = new T();
                 msg.MergeFrom(result);
-                return msg;
             }
-            return default(T);
-        }
 
-        protected override ChainEventArgs TransformChainEvent(RawChainEventArgs e) {
-            string jsonRpcEventString = Encoding.UTF8.GetString(e.Data);
-            JsonRpcEvent jsonRpcEvent = JsonConvert.DeserializeObject<JsonRpcEvent>(jsonRpcEventString);
-            byte[] eventData = Encoding.UTF8.GetBytes(jsonRpcEvent.Data);
-
-            return new ChainEventArgs(
-                e.ContractAddress,
-                e.CallerAddress,
-                e.BlockHeight,
-                eventData,
-                jsonRpcEvent.Method
-            );
+            return msg;
         }
 
         /// <summary>
@@ -94,11 +81,12 @@ namespace Loom.Client
         /// </summary>
         /// <typeparam name="T">Smart contract method return type.</typeparam>
         /// <param name="tx">Transaction message.</param>
+        /// <param name="callDescription">Call high-level description.</param>
         /// <returns>The return value of the smart contract method.</returns>
-        private async Task<T> CallAsync<T>(Transaction tx) where T : IMessage, new()
+        private async Task<T> CallAsync<T>(Transaction tx, CallDescription callDescription) where T : IMessage, new()
         {
-            var result = await this.Client.CommitTxAsync(tx);
-            if (result != null && result.DeliverTx.Data != null && result.DeliverTx.Data.Length != 0)
+            var result = await this.Client.CommitTxAsync(tx, callDescription);
+            if (result != null && result.DeliverTx.Data != null)
             {
                 var resp = new Response();
                 resp.MergeFrom(result.DeliverTx.Data);
@@ -114,6 +102,7 @@ namespace Loom.Client
 
         private Transaction CreateContractMethodCallTx(string method, IMessage args)
         {
+            this.Client.Logger.Log("Executing call: " + method);
             var methodTx = new ContractMethodCall
             {
                 Method = method,
@@ -128,6 +117,33 @@ namespace Loom.Client
             }.ToByteString();
 
             return CreateContractMethodCallTx(requestBytes, VMType.Plugin);
+        }
+    }
+
+    /// <summary>
+    /// The Contract class streamlines interaction with a smart contract that was deployed on a Loom DAppChain.
+    /// Each instance of this class is bound to a specific smart contract, and provides a simple way of calling
+    /// into and querying that contract.
+    /// </summary>
+    /// <remarks>Expects the event data to be a UTF8 string containing a <see cref="JsonRpcEvent"/></remarks>
+    public class Contract : Contract<ChainEventArgs> {
+        public Contract(DAppChainClient client, Address contractAddress, Address callerAddress)
+            : base(client, contractAddress, callerAddress)
+        {
+        }
+
+        protected override ChainEventArgs TransformChainEvent(RawChainEventArgs e) {
+            string jsonRpcEventString = Encoding.UTF8.GetString(e.Data);
+            JsonRpcEvent jsonRpcEvent = JsonConvert.DeserializeObject<JsonRpcEvent>(jsonRpcEventString);
+            byte[] eventData = Encoding.UTF8.GetBytes(jsonRpcEvent.Data);
+
+            return new ChainEventArgs(
+                e.ContractAddress,
+                e.CallerAddress,
+                e.BlockHeight,
+                eventData,
+                jsonRpcEvent.Method
+            );
         }
 
         private struct JsonRpcEvent

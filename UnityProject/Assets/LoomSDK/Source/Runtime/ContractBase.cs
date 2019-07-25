@@ -1,6 +1,6 @@
 ﻿using System;
+using System.Numerics;
 using System.Threading.Tasks;
-using Loom.Client.Internal;
 using Loom.Client.Protobuf;
 using Loom.Google.Protobuf;
 
@@ -10,9 +10,8 @@ namespace Loom.Client {
     /// Each instance of this class is bound to a specific smart contract, and provides a simple way of calling
     /// into and querying that contract.
     /// </summary>
-    public abstract class ContractBase<TChainEvent> {
-        protected event EventHandler<TChainEvent> ContractEventReceived;
-
+    public abstract class ContractBase
+    {
         /// <summary>
         /// Client that writes to and reads from a Loom DAppChain.
         /// </summary>
@@ -36,47 +35,28 @@ namespace Loom.Client {
         /// <param name="callerAddress">Address of the caller, generated from the public key of the transaction signer.</param>
         protected ContractBase(DAppChainClient client, Address contractAddress, Address callerAddress)
         {
+            if (client == null)
+                throw new ArgumentNullException(nameof(client));
+
             this.Client = client;
             this.Address = contractAddress;
             this.Caller = callerAddress;
         }
 
         /// <summary>
-        /// Event emitted by the corresponding smart contract.
+        /// Retrieves the current block height.
         /// </summary>
-        public event EventHandler<TChainEvent> EventReceived
+        /// <returns></returns>
+        public async Task<BigInteger> GetBlockHeight()
         {
-            add
-            {
-                var isFirstSub = this.ContractEventReceived == null;
-                this.ContractEventReceived += value;
-                if (isFirstSub)
+            return await this.Client.CallExecutor.StaticCall(
+                async () =>
                 {
-                    this.Client.ChainEventReceived += NotifyContractEventReceived;
-                }
-            }
-            remove
-            {
-                this.ContractEventReceived -= value;
-                if (this.ContractEventReceived == null)
-                {
-                    this.Client.ChainEventReceived -= NotifyContractEventReceived;
-                }
-            }
-        }
-
-        protected void InvokeChainEvent(object sender, RawChainEventArgs e) {
-            this.ContractEventReceived?.Invoke(this, TransformChainEvent(e));
-        }
-
-        protected abstract TChainEvent TransformChainEvent(RawChainEventArgs e);
-
-        protected virtual void NotifyContractEventReceived(object sender, RawChainEventArgs e)
-        {
-            if (e.ContractAddress.Equals(this.Address))
-            {
-                InvokeChainEvent(sender, e);
-            }
+                    string heightString = await this.Client.ReadClient.SendAsync<string, object>("getblockheight", null);
+                    return BigInteger.Parse(heightString);
+                },
+                new CallDescription("getblockheight", true)
+            );
         }
 
         /// <summary>
@@ -84,10 +64,11 @@ namespace Loom.Client {
         /// The call into the smart contract is accomplished by committing a transaction to the DAppChain.
         /// </summary>
         /// <param name="tx">Transaction message.</param>
+        /// <param name="callDescription">Call high-level description.</param>
         /// <returns>Nothing.</returns>
-        internal async Task CallAsync(Transaction tx)
+        internal async Task<BroadcastTxResult> CallAsync(Transaction tx, CallDescription callDescription)
         {
-            await this.Client.CommitTxAsync(tx);
+            return await this.Client.CommitTxAsync(tx, callDescription);
         }
 
         internal Transaction CreateContractMethodCallTx(string hexData, VMType vmType) {
@@ -113,6 +94,42 @@ namespace Loom.Client {
                 Id = 2,
                 Data = msgTxBytes.ToByteString()
             };
+        }
+    }
+
+    /// <summary>
+    /// The Contract class streamlines interaction with a smart contract that was deployed on a Loom DAppChain.
+    /// Each instance of this class is bound to a specific smart contract, and provides a simple way of calling
+    /// into and querying that contract.
+    /// </summary>
+    public abstract class ContractBase<TChainEvent> : ContractBase {
+        protected ContractBase(DAppChainClient client, Address contractAddress, Address callerAddress) 
+            : base(
+            client,
+            contractAddress,
+            callerAddress)
+        {
+            this.Client.ChainEventReceived += NotifyContractEventReceived;
+        }
+
+        /// <summary>
+        /// Event emitted by the corresponding smart contract.
+        /// </summary>
+        public event EventHandler<TChainEvent> EventReceived;
+
+        protected void InvokeChainEvent(object sender, RawChainEventArgs e)
+        {
+            this.EventReceived?.Invoke(this, TransformChainEvent(e));
+        }
+
+        protected abstract TChainEvent TransformChainEvent(RawChainEventArgs e);
+
+        protected virtual void NotifyContractEventReceived(object sender, RawChainEventArgs e)
+        {
+            if (e.ContractAddress == this.Address)
+            {
+                InvokeChainEvent(sender, e);
+            }
         }
     }
 }

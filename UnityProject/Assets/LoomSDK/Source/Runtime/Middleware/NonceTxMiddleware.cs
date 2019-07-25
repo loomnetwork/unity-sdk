@@ -1,7 +1,6 @@
 ﻿using Loom.Google.Protobuf;
 using System.Threading.Tasks;
 using Loom.Client.Protobuf;
-using UnityEngine;
 
 namespace Loom.Client
 {
@@ -69,10 +68,10 @@ namespace Loom.Client
 
         public void HandleTxException(LoomException e)
         {
-            if (e is InvalidTxNonceException)
+            if (e is InvalidTxNonceException || e is TxAlreadyExistsInCacheException)
             {
                 this.NextNonce = null;
-                this.Client.Logger.Log("[NonceLog] Got InvalidTxNonceException, will retrieve nonce from node next time");
+                this.Client.Logger.Log($"[NonceLog] Got {e.GetType().Name}, will retrieve nonce from node next time");
             } else if (e is TxCommitException)
             {
                 this.Client.Logger.Log($"[NonceLog] Got {e.GetType().Name} ({e.Message}), so next nonce is still {this.NextNonce}");

@@ -28,12 +28,6 @@ namespace Loom.Client.Unity.Internal.UnityAsyncAwaitUtil
             return awaiter;
         }
 
-        // Return itself so you can do things like (await new WWW(url)).bytes
-        public static SimpleCoroutineAwaiter<WWW> GetAwaiter(this WWW instruction)
-        {
-            return GetAwaiterReturnSelf(instruction);
-        }
-
         public static SimpleCoroutineAwaiter<AssetBundle> GetAwaiter(this AssetBundleCreateRequest instruction)
         {
             var awaiter = new SimpleCoroutineAwaiter<AssetBundle>();

@@ -6,7 +6,6 @@ using System.Text;
 using Loom.Client.Internal;
 using Loom.Client.Unity.Internal.UnityAsyncAwaitUtil;
 using UnityEngine.Networking;
-using UnityEngine;
 
 namespace Loom.Client
 {
@@ -16,12 +15,6 @@ namespace Loom.Client
 
         private readonly Uri url;
 
-        public override event RpcClientConnectionStateChangedHandler ConnectionStateChanged
-        {
-            add { throw new NotSupportedException(); }
-            remove { throw new NotSupportedException(); }
-        }
-
         public override RpcConnectionState ConnectionState => RpcConnectionState.NonApplicable;
 
         public HttpRpcClient(string url)
@@ -29,12 +22,12 @@ namespace Loom.Client
             this.url = new Uri(url);
         }
 
-        public override Task SubscribeAsync(EventHandler<JsonRpcEventData> handler, ICollection<string> topics)
+        public override Task SubscribeToEventsAsync(ICollection<string> topics)
         {
             throw new NotImplementedException();
         }
 
-        public override Task UnsubscribeAsync(EventHandler<JsonRpcEventData> handler)
+        public override Task UnsubscribeFromEventAsync(string topic)
         {
             throw new NotImplementedException();
         }
@@ -84,15 +77,16 @@ namespace Loom.Client
         {
             if (r.isNetworkError)
             {
-                throw new RpcClientException(String.Format("HTTP '{0}' request to '{1}' failed", r.method, r.url), r.responseCode, this);
+                throw new RpcClientException(String.Format("HTTP '{0}' request to '{1}' failed due to network error: {2}", r.method, r.error), r.responseCode, this);
             }
             else if (r.isHttpError)
             {
+                string errorMessage = "";
                 if (r.downloadHandler != null && !String.IsNullOrEmpty(r.downloadHandler.text))
                 {
-                    // TODO: extract error message if any
+                    errorMessage = r.downloadHandler.text;
                 }
-                throw new RpcClientException(String.Format("HTTP Error {0}", r.responseCode), r.responseCode, this);
+                throw new RpcClientException(String.Format("HTTP Error {0}: {1}", r.error, errorMessage), r.responseCode, this);
             }
         }
     }

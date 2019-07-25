@@ -3,7 +3,7 @@
 This repo contains the SDK code and a **Unity 2017.4** project that provides examples.
 
 The SDK currently supports the following Unity targets:
-- Desktop Win/MacOS/Linux
+- Desktop Win/macOS/Linux
 - Android
 - iOS
 - WebGL
@@ -66,29 +66,46 @@ The package is built to `Assets\~NonVersioned\loom-unity-sdk.unitypackage`.
 
 ## Dependencies
 
-For ease of use all necessary prebuilt dependencies are located in the `Assets/Plugins` directory in
-this repo, the assemblies are built to target `Any CPU`. The rest of this section contains some
-useful notes in case you need to rebuild the dependencies.
+Here are some notes on the dependencies used and how to update them.
 
 ### Chaos.NaCl
 
-Build from source https://github.com/CodesInChaos/Chaos.NaCl - then copy the build assemblies from
-`Chaos.NaCl/Chaos.NaCl/bin/Release` to `Assets/Plugins`.
+Download the latest `Chaos.NaCl` package from [NuGet](https://www.nuget.org/packages/dlech.Chaos.NaCl/), open as a ZIP archive, use the `lib\net40\Chaos.NaCl.dll` assembly.
 
 ### Google Protocol Buffers
 
-Install prebuilt [Google.Protobuf 3.5 from NuGet] and copy them to `Assets/Plugins`.
+Download the latest `Google.Protobuf` package from [NuGet](https://www.nuget.org/packages/Google.Protobuf), open as a ZIP archive, use the `lib\net45\Google.Protobuf.dll` assembly.
 
 ### Websocket-Sharp
 
-Clone https://github.com/sta/websocket-sharp and build the `Release` config for `AnyCPU`.
-The version currently was built from Git rev `000c0a76b4fb2045cabc4f0ae6a80bea03e2663e`.
+Clone https://github.com/sta/websocket-sharp, build the `Release` configuration, the output assembly is `bin\Release\websocket-sharp.dll`.
 
-### Loom.Nethereum.Minimal
+### Nethereum
 
-Clone https://github.com/loomnetwork/Nethereum/tree/loom-minimal, build solution `Loom.Nethereum.Minimal` with `Release` configuration for `AnyCPU`.
+Download the latest `net461dllsAOT.zip` release artifact from https://github.com/Nethereum/Nethereum/releases. Only those assemblies are used by the SDK:
+```
+Nethereum.ABI.dll
+Nethereum.Contracts.dll
+Nethereum.Hex.dll
+Nethereum.JsonRpc.Client.dll
+Nethereum.Model.dll
+Nethereum.RLP.dll
+Nethereum.RPC.dll
+Nethereum.Util.dll
+BouncyCastle.Crypto.dll
+Common.Logging.Core.dll
+Newtonsoft.Json.dll
+```
+
+### Dependecy Namespace Prefixing
+
+The SDK contains quite a bit of dependencies, so there is a high chance that a Unity project will contain another version of a dependency for other purposes. Since Unity doesn't have any dependency management for third-party SDKs yet, all dependencies have `Loom.` prefix added to their namespaces. To do this, [AssemblyNamespaceChanger](https://github.com/LostPolygon/AssemblyNamespaceChanger) tool is used. The relevant version is already present n the repo.
+
+1. Acquire/build all dependency assemblies.
+2. Copy them into the `BuildScripts\PrefixDependencies\Original` folder.
+3. Run the `BuildScripts\PrefixDependencies\prefix-dependencies.cmd` script. It will prefix the assemblies and put them into the `BuildScripts\PrefixDependencies\Processed` folder.
+4. Copy the prefixed assemblies from `BuildScripts\PrefixDependencies\Processed` to `UnityProject\Assets\LoomSDK\Plugins`.
 
 [Unity SDK Quickstart]: https://loomx.io/developers/docs/en/unity-sdk.html
 [Google Protocol Buffers]: https://developers.google.com/protocol-buffers/docs/csharptutorial
 [`protoc` compiler]: https://github.com/google/protobuf/releases
-[Google.Protobuf 3.5 from NuGet]: https://www.nuget.org/packages/Google.Protobuf

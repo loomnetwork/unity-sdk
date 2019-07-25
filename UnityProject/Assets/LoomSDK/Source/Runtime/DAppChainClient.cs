@@ -5,29 +5,27 @@ using System.Threading.Tasks;
 using System;
 using Loom.Newtonsoft.Json;
 using System.Collections.Generic;
-using System.Runtime.ExceptionServices;
-using System.Threading;
-using Loom.Client.Internal;
+using System.Linq;
 using Loom.Client.Protobuf;
-
-#if UNITY_WEBGL && !UNITY_EDITOR
-using Loom.Client.Unity.Internal.UnityAsyncAwaitUtil;
-#endif
 
 namespace Loom.Client
 {
     /// <summary>
     /// Writes to & reads from a Loom DAppChain.
     /// </summary>
-    public class DAppChainClient : IDAppChainClientConfigurationProvider, IDisposable
+    public class DAppChainClient : IDisposable
     {
-        private const string LogTag = "Loom.DAppChainClient";
+        /// <summary>
+        /// Topic name corresponding to all events emitted by the contract.
+        /// </summary>
+        public const string GlobalContractEventTopicName = "contract";
 
-        private readonly Dictionary<EventHandler<RawChainEventArgs>, EventHandler<JsonRpcEventData>> eventSubs =
-            new Dictionary<EventHandler<RawChainEventArgs>, EventHandler<JsonRpcEventData>>();
+        private const string LogTag = "Loom.DAppChainClient";
 
         private readonly IRpcClient writeClient;
         private readonly IRpcClient readClient;
+
+        private readonly HashSet<string> subscribedTopics = new HashSet<string>();
 
         private ILogger logger = NullLogger.Instance;
 
@@ -57,6 +55,11 @@ namespace Loom.Client
         public IDAppChainClientCallExecutor CallExecutor { get; }
 
         /// <summary>
+        /// List of topics this client is currently subscribed to.
+        /// </summary>
+        public IReadOnlyCollection<string> SubscribedTopics => subscribedTopics;
+
+        /// <summary>
         /// Logger to be used for logging, defaults to <see cref="NullLogger"/>.
         /// </summary>
         public ILogger Logger
@@ -76,20 +79,12 @@ namespace Loom.Client
             }
         }
 
+        public bool IsDisposed { get; private set; }
+
         /// <summary>
         /// Events emitted by the DAppChain.
         /// </summary>
-        public event EventHandler<RawChainEventArgs> ChainEventReceived
-        {
-            add
-            {
-                this.SubReadClient(value);
-            }
-            remove
-            {
-                this.UnsubReadClient(value);
-            }
-        }
+        public event EventHandler<RawChainEventArgs> ChainEventReceived;
 
         /// <summary>
         /// Constructs a client to read & write data from/to a Loom DAppChain.
@@ -98,7 +93,11 @@ namespace Loom.Client
         /// <param name="readClient">RPC client to use for querying DAppChain state.</param>
         /// <param name="configuration">Client configuration structure.</param>
         /// <param name="callExecutor">Blockchain call execution flow controller.</param>
-        public DAppChainClient(IRpcClient writeClient, IRpcClient readClient, DAppChainClientConfiguration configuration = null, IDAppChainClientCallExecutor callExecutor = null)
+        public DAppChainClient(
+            IRpcClient writeClient,
+            IRpcClient readClient,
+            DAppChainClientConfiguration configuration = null,
+            IDAppChainClientCallExecutor callExecutor = null)
         {
             if (writeClient == null && readClient == null)
                 throw new ArgumentException("Both write and read clients can't be null");
@@ -107,13 +106,24 @@ namespace Loom.Client
             this.readClient = readClient;
 
             this.Configuration = configuration ?? new DAppChainClientConfiguration();
-            this.CallExecutor = callExecutor ?? new DefaultDAppChainClientCallExecutor(this);
+            this.CallExecutor = callExecutor ?? new DefaultDAppChainClientCallExecutor(this.Configuration);
+
+            if (this.readClient != null)
+            {
+                this.readClient.EventReceived += ReadClientOnEventReceived;
+                this.readClient.ConnectionStateChanged += ReadClientOnConnectionStateChanged;
+            }
         }
 
-        public void Dispose()
+        public virtual void Dispose()
         {
+            if (this.IsDisposed)
+                throw new ObjectDisposedException(nameof(DAppChainClient));
+
             this.writeClient?.Dispose();
             this.readClient?.Dispose();
+
+            this.IsDisposed = true;
         }
 
         /// <summary>
@@ -123,12 +133,17 @@ namespace Loom.Client
         /// <returns>The nonce.</returns>
         public async Task<ulong> GetNonceAsync(string key)
         {
-            return await this.CallExecutor.StaticCall(async () => await GetNonceAsyncRaw(key));
+            return await this.CallExecutor.StaticCall(async () => await GetNonceAsyncRaw(key), new CallDescription("nonce", true));
         }
 
+        /// <summary>
+        /// Gets a nonce for the given public key, ignoring the call queue, if one is present.
+        /// </summary>
+        /// <param name="key">A hex encoded public key, e.g. 441B9DCC47A734695A508EDF174F7AAF76DD7209DEA2D51D3582DA77CE2756BE</param>
+        /// <returns>The nonce.</returns>
         public async Task<ulong> GetNonceAsyncNonBlocking(string key)
         {
-            return await this.CallExecutor.NonBlockingStaticCall(async () => await GetNonceAsyncRaw(key));
+            return await this.CallExecutor.NonBlockingStaticCall(async () => await GetNonceAsyncRaw(key), new CallDescription("nonce", true));
         }
 
         /// <summary>
@@ -141,68 +156,217 @@ namespace Loom.Client
             if (this.readClient == null)
                 throw new InvalidOperationException("Read client is not set");
 
-            return await this.CallExecutor.StaticCall(async () =>
+            return await this.CallExecutor.StaticCall(
+                async () =>
+                {
+                    await EnsureConnected();
+                    var addressStr = await this.readClient.SendAsync<string, ResolveParams>(
+                        "resolve",
+                        new ResolveParams
+                        {
+                            ContractName = contractName
+                        }
+                    );
+
+                    if (String.IsNullOrEmpty(addressStr))
+                        throw new LoomException("Unable to find a contract with a matching name");
+
+                    return Address.FromString(addressStr);
+                },
+                new CallDescription("resolve", true)
+            );
+        }
+
+        /// <summary>
+        /// Subscribes to chain events. Use <see cref="ChainEventReceived"/> to listen for events.
+        /// </summary>
+        /// <param name="topics">Topics to subscribe to. If empty, will subscribe to all topics.</param>
+        /// <returns></returns>
+        /// <exception cref="ArgumentNullException"></exception>
+        /// <exception cref="InvalidOperationException"></exception>
+        public async Task SubscribeToEvents(ICollection<string> topics)
+        {
+            if (topics == null)
+                throw new ArgumentNullException(nameof(topics));
+
+            if (this.readClient == null)
+                throw new InvalidOperationException("Read client is not set");
+
+            if (this.readClient.ConnectionState != RpcConnectionState.Connected)
+                throw new InvalidOperationException("Read client must be connected");
+
+            // Account for empty list meaning subscribing to all events
+            if (this.subscribedTopics.IsSupersetOf(topics))
+                return;
+
+            await this.CallExecutor.Call(
+                async () =>
+                {
+                    await EnsureConnected();
+                    await this.readClient.SubscribeToEventsAsync(topics);
+                    this.subscribedTopics.UnionWith(topics);
+                },
+                new CallDescription("_subscribe", false)
+            );
+        }
+
+        /// <summary>
+        /// Subscribes to all chain events.
+        /// </summary>
+        /// <exception cref="ArgumentNullException"></exception>
+        /// <exception cref="InvalidOperationException"></exception>
+        [Obsolete("Use " + nameof(SubscribeToAllEvents))]
+        public Task SubscribeToEvents()
+        {
+            return SubscribeToAllEvents();
+        }
+
+        /// <summary>
+        /// Subscribes to all chain events.
+        /// </summary>
+        /// <exception cref="ArgumentNullException"></exception>
+        /// <exception cref="InvalidOperationException"></exception>
+        public Task SubscribeToAllEvents()
+        {
+            return SubscribeToEvents(new[] { GlobalContractEventTopicName });
+        }
+
+        /// <summary>
+        /// Unsubscribes from all chain events.
+        /// </summary>
+        [Obsolete("Use " + nameof(UnsubscribeFromAllEvents))]
+        public async Task UnsubscribeFromEvents()
+        {
+            await UnsubscribeFromAllEvents();
+        }
+
+        /// <summary>
+        /// Unsubscribes from all chain events.
+        /// </summary>
+        public async Task UnsubscribeFromAllEvents()
+        {
+            await UnsubscribeFromEvents(this.subscribedTopics.ToArray());
+        }
+
+        /// <summary>
+        /// Unsubscribes from chain events listed in <paramref name="topics"/>.
+        /// If <paramref name="topics"/>, the client won't unsubscribe from any events.
+        /// </summary>
+        public async Task UnsubscribeFromEvents(IReadOnlyList<string> topics)
+        {
+            if (topics == null)
+                throw new ArgumentNullException(nameof(topics));
+
+            if (this.readClient == null)
+                throw new InvalidOperationException("Read client is not set");
+
+            if (this.readClient.ConnectionState != RpcConnectionState.Connected)
+                throw new InvalidOperationException("Read client must be connected");
+
+            // Not unsubscribing from anything, exit early
+            if (topics.Count == 0)
+                return;
+
+            foreach (string topic in topics)
             {
-                await EnsureConnected();
-                var addressStr = await this.readClient.SendAsync<string, ResolveParams>(
-                    "resolve",
-                    new ResolveParams { ContractName = contractName }
-                );
+                if (!this.subscribedTopics.Contains(topic))
+                    throw new ArgumentException("Not subscribed to topic: " + topic);
+            }
 
-                if (String.IsNullOrEmpty(addressStr))
-                    throw new LoomException("Unable to find a contract with a matching name");
+            await this.CallExecutor.Call(
+                async () =>
+                {
+                    await EnsureConnected();
 
-                return Address.FromString(addressStr);
-            });
+                    // For whatever reason, "subevents" takes a list of topics,
+                    // but "unsubevents" takes a single topic, so we have to unsubcribe one topic per call.
+                    List<Exception> exceptions = null;
+                    foreach (string topic in topics)
+                    {
+                        Logger.Log("Unsubscribing from topic " + topic);
+
+                        try
+                        {
+                            await this.readClient.UnsubscribeFromEventAsync(topic);
+                            this.subscribedTopics.Remove(topic);
+                        }
+                        catch (Exception e)
+                        {
+                            if (exceptions == null)
+                            {
+                                exceptions = new List<Exception>();
+                            }
+
+                            exceptions.Add(e);
+                        }
+                    }
+
+                    if (exceptions != null && exceptions.Count != 0)
+                    {
+                        throw new RpcClientException(
+                            "Unsubscribing from one or more topics has failed",
+                            new AggregateException(exceptions),
+                            -1,
+                            this.readClient
+                        );
+                    }
+                },
+                new CallDescription("_unsubscribe", false)
+            );
         }
 
         /// <summary>
         /// Commits a transaction to the DAppChain.
         /// </summary>
         /// <param name="tx">Transaction to commit.</param>
+        /// <param name="callDescription">Call high-level description.</param>
         /// <returns>Commit metadata.</returns>
         /// <exception cref="InvalidTxNonceException">Thrown when transaction is rejected by the DAppChain due to a bad nonce.</exception>
-        internal async Task<BroadcastTxResult> CommitTxAsync(IMessage tx)
+        internal async Task<BroadcastTxResult> CommitTxAsync(IMessage tx, CallDescription callDescription)
         {
             if (this.writeClient == null)
                 throw new InvalidOperationException("Write client was not set");
 
-            return await this.CallExecutor.Call(async () =>
-            {
-                await EnsureConnected();
-
-                byte[] txBytes = tx.ToByteArray();
-                if (this.TxMiddleware != null)
+            return await this.CallExecutor.Call(
+                async () =>
                 {
-                    txBytes = await this.TxMiddleware.Handle(txBytes);
-                }
+                    await EnsureConnected();
 
-                try
-                {
-                    string payload = CryptoBytes.ToBase64String(txBytes);
-                    var result = await this.writeClient.SendAsync<BroadcastTxResult, string[]>("broadcast_tx_commit", new[] { payload });
-                    if (result == null)
-                        return null;
-
-                    CheckForTxError(result.CheckTx);
-                    CheckForTxError(result.DeliverTx);
-
+                    byte[] txBytes = tx.ToByteArray();
                     if (this.TxMiddleware != null)
                     {
-                        this.TxMiddleware.HandleTxResult(result);
+                        txBytes = await this.TxMiddleware.Handle(txBytes);
                     }
 
-                    return result;
-                } catch (LoomException e)
-                {
-                    if (this.TxMiddleware != null)
+                    try
                     {
-                        this.TxMiddleware.HandleTxException(e);
-                    }
+                        string payload = CryptoBytes.ToBase64String(txBytes);
+                        var result = await this.writeClient.SendAsync<BroadcastTxResult, string[]>("broadcast_tx_commit", new[] { payload });
+                        if (result == null)
+                            return null;
 
-                    throw;
-                }
-            });
+                        CheckForTxError(result.CheckTx);
+                        CheckForTxError(result.DeliverTx);
+
+                        if (this.TxMiddleware != null)
+                        {
+                            this.TxMiddleware.HandleTxResult(result);
+                        }
+
+                        return result;
+                    }
+                    catch (LoomException e)
+                    {
+                        if (this.TxMiddleware != null)
+                        {
+                            this.TxMiddleware.HandleTxException(e);
+                        }
+
+                        throw;
+                    }
+                },
+                callDescription
+            );
         }
 
         /// <summary>
@@ -213,10 +377,11 @@ namespace Loom.Client
         /// <param name="query">Query parameters object.</param>
         /// <param name="caller">Optional caller address.</param>
         /// <param name="vmType">Virtual machine type.</param>
+        /// <param name="callDescription">Call high-level description.</param>
         /// <returns>Deserialized response.</returns>
-        internal async Task<T> QueryAsync<T>(Address contract, IMessage query, Address caller, VMType vmType)
+        internal async Task<T> QueryAsync<T>(Address contract, IMessage query, Address caller, VMType vmType, CallDescription callDescription)
         {
-            return await QueryAsync<T>(contract, query.ToByteArray(), caller, vmType);
+            return await QueryAsync<T>(contract, query.ToByteArray(), caller, vmType, callDescription);
         }
 
         /// <summary>
@@ -227,8 +392,9 @@ namespace Loom.Client
         /// <param name="query">Raw query parameters data.</param>
         /// <param name="caller">Optional caller address.</param>
         /// <param name="vmType">Virtual machine type.</param>
+        /// <param name="callDescription">Call high-level description.</param>
         /// <returns>Deserialized response.</returns>
-        internal async Task<T> QueryAsync<T>(Address contract, byte[] query, Address caller, VMType vmType = VMType.Plugin)
+        internal async Task<T> QueryAsync<T>(Address contract, byte[] query, Address caller, VMType vmType, CallDescription callDescription)
         {
             if (this.readClient == null)
                 throw new InvalidOperationException("Read client is not set");
@@ -245,11 +411,14 @@ namespace Loom.Client
                 queryParams.CallerAddress = caller.QualifiedAddress;
             }
 
-            return await this.CallExecutor.StaticCall(async () =>
-            {
-                await EnsureConnected();
-                return await this.readClient.SendAsync<T, QueryParams>("query", queryParams);
-            });
+            return await this.CallExecutor.StaticCall(
+                async () =>
+                {
+                    await EnsureConnected();
+                    return await this.readClient.SendAsync<T, QueryParams>("query", queryParams);
+                },
+                callDescription
+            );
         }
 
         private async Task<ulong> GetNonceAsyncRaw(string key)
@@ -264,41 +433,23 @@ namespace Loom.Client
             return UInt64.Parse(nonce);
         }
 
-        private async void SubReadClient(EventHandler<RawChainEventArgs> handler)
+        private void ReadClientOnEventReceived(object sender, JsonRpcEventData e)
         {
-            if (this.readClient == null)
-                throw new InvalidOperationException("Read client is not set");
+            RawChainEventArgs rawChainEventArgs =
+                new RawChainEventArgs(
+                    e.ContractAddress,
+                    e.CallerAddress,
+                    UInt64.Parse(e.BlockHeight),
+                    e.Data,
+                    e.Topics
+                );
 
-            await this.CallExecutor.Call(async () =>
-            {
-                await EnsureConnected();
-                EventHandler<JsonRpcEventData> wrapper = (sender, e) =>
-                {
-                    handler(this,
-                        new RawChainEventArgs(
-                            e.ContractAddress,
-                            e.CallerAddress,
-                            UInt64.Parse(e.BlockHeight),
-                            e.Data,
-                            e.Topics
-                        ));
-                };
-                this.eventSubs.Add(handler, wrapper);
-                // FIXME: supports topics
-                await this.readClient.SubscribeAsync(wrapper, null);
-            });
+            this.ChainEventReceived?.Invoke(this, rawChainEventArgs);
         }
 
-        private async void UnsubReadClient(EventHandler<RawChainEventArgs> handler)
+        private void ReadClientOnConnectionStateChanged(IRpcClient sender, RpcConnectionState state)
         {
-            if (this.readClient == null)
-                throw new InvalidOperationException("Read client is not set");
-
-            await this.CallExecutor.Call(async () =>
-            {
-                EventHandler<JsonRpcEventData> wrapper = this.eventSubs[handler];
-                await this.readClient.UnsubscribeAsync(wrapper);
-            });
+            this.subscribedTopics.Clear();
         }
 
         private async Task EnsureConnected()

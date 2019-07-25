@@ -1,6 +1,6 @@
 set -e
 
-solc --bin --abi --optimize --overwrite -o Compiled Tests.sol
+solc --evm-version byzantium --bin --abi --optimize --overwrite -o Compiled Tests.sol
 
 if [ ! -d  Compiled/Resources ]; then
     mkdir Compiled/Resources

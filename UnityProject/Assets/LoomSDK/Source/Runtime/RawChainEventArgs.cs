@@ -1,6 +1,4 @@
-﻿using System;
-
-namespace Loom.Client.Internal
+﻿namespace Loom.Client
 {
     public sealed class RawChainEventArgs
     {

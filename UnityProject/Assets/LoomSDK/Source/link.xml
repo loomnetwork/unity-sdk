@@ -1,7 +1,18 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
 <linker>
-  <assembly fullname="System">
-    <type fullname="System.ComponentModel.TypeConverter" preserve="all" />
-    <!-- <namespace fullname="System.ComponentModel" preserve="all" /> -->
-  </assembly>
+    <assembly fullname="Loom.Nethereum.Hex" preserve="all"/>
+    <assembly fullname="Loom.Nethereum.Util" preserve="all"/>
+    <assembly fullname="Loom.Nethereum.RLP" preserve="all"/>
+    <assembly fullname="Loom.Nethereum.ABI" preserve="all"/>
+    <assembly fullname="Loom.Nethereum.JsonRpc.Client" preserve="all"/>
+    <assembly fullname="Loom.Nethereum.Model" preserve="all"/>
+    <assembly fullname="Loom.Nethereum.RPC" preserve="all"/>
+    <assembly fullname="Loom.Nethereum.Contracts" preserve="all"/>
+    <assembly fullname="Loom.Common.Logging.Core" preserve="all"/>
+    <assembly fullname="Loom.Google.Protobuf" preserve="all"/>
+    <assembly fullname="LoomSDK" preserve="all"/>
+    <assembly fullname="System">
+        <type fullname="System.ComponentModel.TypeConverter" preserve="all"/>
+        <!-- <namespace fullname="System.ComponentModel" preserve="all" /> -->
+    </assembly>
 </linker>

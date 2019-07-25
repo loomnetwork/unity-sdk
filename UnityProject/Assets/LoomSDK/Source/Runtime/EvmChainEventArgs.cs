@@ -44,7 +44,7 @@ namespace Loom.Client
         /// <typeparam name="T"></typeparam>
         /// <returns>Decoded event DTO.</returns>
         /// <see href="https://nethereum.readthedocs.io/en/latest/contracts/calling-transactions-events/"/>
-        [Obsolete("Use DecodeEventDto")]
+        [Obsolete("Use DecodeEventDto", true)]
         public T DecodeEventDTO<T>() where T : new()
         {
             return DecodeEventDto<T>();

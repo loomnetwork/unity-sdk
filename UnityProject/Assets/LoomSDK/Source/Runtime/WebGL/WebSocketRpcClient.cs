@@ -18,8 +18,6 @@ namespace Loom.Client.Unity.WebGL.Internal
 
         private readonly Uri url;
         private readonly WebSocket webSocket;
-        private event EventHandler<JsonRpcEventData> eventReceived;
-
         public override RpcConnectionState ConnectionState
         {
             get
@@ -45,6 +43,7 @@ namespace Loom.Client.Unity.WebGL.Internal
         {
             this.url = new Uri(url);
             this.webSocket = new WebSocket();
+            this.webSocket.MessageReceived += WSRPCClient_MessageReceived;
         }
         
         public override async Task ConnectAsync()
@@ -89,7 +88,7 @@ namespace Loom.Client.Unity.WebGL.Internal
                     tcs.TrySetResult(null);
                 } else
                 {
-                    tcs.TrySetException(new RpcClientException(err, 1));
+                    tcs.TrySetException(new RpcClientException(err, 1, this));
                 }
             };
 
@@ -107,35 +106,28 @@ namespace Loom.Client.Unity.WebGL.Internal
             await tcs.Task;
         }
 
-        public override async Task SubscribeAsync(EventHandler<JsonRpcEventData> handler, ICollection<string> topics)
+        public override Task SubscribeToEventsAsync(ICollection<string> topics)
         {
-            var isFirstSub = this.eventReceived == null;
-            this.eventReceived += handler;
-            if (isFirstSub)
-            {
-                this.webSocket.MessageReceived += WSRPCClient_MessageReceived;
-            }
-
             // TODO: once re-sub on reconnect is implemented this should only
             // be done on first sub
-            Dictionary<string, ICollection<string>> result = null;
-            if (topics != null)
+            Dictionary<string, ICollection<string>> args = null;
+            if (topics != null && topics.Count > 0)
             {
-                result = new Dictionary<string, ICollection<string>>();
-                result.Add("topics", topics);
+                args = new Dictionary<string, ICollection<string>>();
+                args.Add("topics", topics);
             }
 
-            await SendAsync<string, Dictionary<string, ICollection<string>>>("subevents", result);
+            return SendAsync<object, Dictionary<string, ICollection<string>>>("subevents", args);
         }
 
-        public override async Task UnsubscribeAsync(EventHandler<JsonRpcEventData> handler)
+        public override async Task UnsubscribeFromEventAsync(string topic)
         {
-            this.eventReceived -= handler;
-            if (this.eventReceived == null)
-            {
-                this.webSocket.MessageReceived -= WSRPCClient_MessageReceived;
-                await SendAsync<string, object>("unsubevents", null);
-            }
+            if (topic == null)
+                throw new ArgumentNullException(nameof(topic));
+
+            Dictionary<string, string> args = new Dictionary<string, string>();
+            args["topic"] = topic;
+            await SendAsync<object, object>("unsubevents", args);
         }
 
         public override async Task<TResult> SendAsync<TResult, TArgs>(string method, TArgs args)
@@ -195,6 +187,7 @@ namespace Loom.Client.Unity.WebGL.Internal
         protected override void Dispose(bool disposing)
         {
             this.webSocket.Dispose();
+            this.webSocket.MessageReceived -= WSRPCClient_MessageReceived;
         }
 
         private Task SendAsync<T>(string method, T args, string msgId)
@@ -233,7 +226,7 @@ namespace Loom.Client.Unity.WebGL.Internal
                         else
                         {
                             var fullMsg = JsonConvert.DeserializeObject<JsonRpcEvent>(msgBody);
-                            this.eventReceived?.Invoke(this, fullMsg.Result);
+                            InvokeEventReceived(fullMsg.Result);
                         }
                     }
                 }

@@ -26,13 +26,13 @@ namespace Loom.Client
         /// Defaults to 5.
         /// </summary>
         public int InvalidNonceTxRetries { get; set; } = 5;
-    }
 
-    /// <summary>
-    /// Represents an entity that stores a <see cref="DAppChainClientConfiguration"/>.
-    /// </summary>
-    public interface IDAppChainClientConfigurationProvider
-    {
-        DAppChainClientConfiguration Configuration { get; }
+        /// <summary>
+        /// If disabled, calls will be collected in a queue an executed one by one in order.
+        /// If enabled, calls will be executed immediately without waiting for other calls, 
+        /// which can be useful for quickly doing a bunch of queries.
+        /// Defaults to false.
+        /// </summary>
+        public bool AllowAsynchronousCalls { get; set; } = false;
     }
 }

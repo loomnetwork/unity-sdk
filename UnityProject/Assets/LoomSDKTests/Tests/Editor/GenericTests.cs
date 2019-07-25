@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Numerics;
 using NUnit.Framework;
-using UnityEngine;
 
 namespace Loom.Client.Tests
 {
@@ -30,6 +29,18 @@ namespace Loom.Client.Tests
             BigInteger a = new BigInteger(1337);
             BigInteger b = BigInteger.Parse("1337");
             Assert.AreEqual(a, b);
+        }
+
+        [Test]
+        public void Ed25519Test() {
+            byte[] seed = {
+                22, 218, 117, 80, 91, 159, 10, 154, 78, 89, 67, 85, 7, 57, 215, 103,
+                68, 178, 222, 219, 152, 180, 172, 239, 75, 116, 88, 17, 42, 67, 227, 172,
+            };
+
+            byte[] privateKey = CryptoUtils.GeneratePrivateKey(seed);
+            string hex = CryptoUtils.BytesToHexString(privateKey);
+            Assert.AreEqual("16DA75505B9F0A9A4E5943550739D76744B2DEDB98B4ACEF4B7458112A43E3AC25AE76342B3E06911DC2CDFF70C60736A45C9DC40D7D14BBC455501779DCB04D", hex);
         }
     }
 }
